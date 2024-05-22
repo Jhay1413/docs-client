@@ -3,13 +3,15 @@ import axios from "axios";
 import { TLogin } from "../schema/AuthSchema";
 
 const authApi = import.meta.env.VITE_AUTH_API;
-axios.defaults.withCredentials = true;
+
 export const loginUser = async (data: TLogin) => {
   try {
     const response = await axios.post(`${authApi}/login`, data, {
       headers: {
         "Content-Type": "application/json",
+
       },
+      withCredentials: true ,
     });
     console.log(response)
     return response;
