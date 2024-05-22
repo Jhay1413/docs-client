@@ -23,7 +23,9 @@ export const loginUser = async (data: TLogin) => {
 
 export const checkAuth = async () => {
   try {
-    const response = await axios.post(`${authApi}/dashboardGateApi`);
+    const response = await axios.post(`${authApi}/dashboardGateApi`,{
+      withCredentials: true ,
+    });
    
     return response
   } catch (error) {
