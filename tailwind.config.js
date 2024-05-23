@@ -17,6 +17,18 @@ module.exports = {
       },
     },
     extend: {
+      width: {
+        'custom': 'calc(100% - 250px)', // replace '20px' with the amount you want to subtract
+      },
+      minwidth: {
+        'custom': 'calc(100% - 250px)', // replace '20px' with the amount you want to subtract
+      },
+      maxWidth:{
+        'custom': 'calc(100% - 250px)',
+      },
+      maxHeight:{
+        'custom-content': 'calc(100% - 77ppx)',
+      },
       colors: {
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",

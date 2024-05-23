@@ -21,7 +21,7 @@ export const UserList = () => {
   console.log(data);
 
   return (
-    <div className="flex flex-col w-full items-center justify-center p-4 bg-white rounded-lg">
+    <div className="flex flex-col w-full items-center justify-center bg-white rounded-lg">
       <div className="flex justify-start w-full text-4xl">
         <h1>List of Users</h1>
       </div>

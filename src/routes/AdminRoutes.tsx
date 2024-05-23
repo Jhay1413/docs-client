@@ -1,12 +1,11 @@
 import { PrivateAdminRoute } from "@/components/routeGuard/PrivateAdminRoute";
+import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import { TransactionForm, TransactionList } from "@/features/transactions";
 import { UserAccountList, UserFormIndex, UserList } from "@/features/users";
 import { Header } from "@/layout/Header";
 import { SideNav } from "@/layout/Sidenav";
 import { Dashboard } from "@/pages/Dashboard";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-
-
 
 import { Route, Routes } from "react-router-dom";
 
@@ -15,17 +14,17 @@ export const AdminRoutes = () => {
   return (
     <QueryClientProvider client={adminQueryClient}>
       <PrivateAdminRoute>
-        <div className="grid grid-rows-[auto,1fr] w-full bg-[#F4F4F4] min-h-screen">
-          <div className="flex w-full min-h-[77px] bg-white fixed z-10">
+        <div className="flex flex-col min-h-screen min-w-screen bg-[#f4f4f4]">
+          <div className="flex flex-none w-full min-h-[77px] bg-white z-10">
             <Header />
           </div>
 
-          <div className="flex mt-[77px] h-[calc(100%-77px)]">
-            <div className="w-[250px] bg-white fixed h-full">
+          <div className="grow flex max-h-full   ">
+            <div className="flex-none w-[250px] bg-white">
               <SideNav />
             </div>
-            <div className="flex grow w-full  ml-[250px] overflow-auto">
-              <div className="flex w-full m-4  min-h-screen p-4">
+            <div className="grow overflow-auto flex items-center justify-center px-2 ">
+              <ScrollArea className="h-[calc(100vh-90px)] bg-white p-4 w-full rounded-sm ">
                 <Routes>
                   <Route path="/overview" element={<Dashboard />} />
                   <Route path={`/profile`} element={<Dashboard />} />
@@ -37,12 +36,10 @@ export const AdminRoutes = () => {
                     path="/transactionForm"
                     element={<TransactionForm />}
                   />
-                  <Route
-                    path="/transactions"
-                    element={<TransactionList />}
-                  />
+                  <Route path="/transactions" element={<TransactionList />} />
                 </Routes>
-              </div>
+                <ScrollBar orientation="horizontal" />
+              </ScrollArea>
             </div>
           </div>
         </div>

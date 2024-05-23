@@ -20,14 +20,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { useState } from "react";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
-import { cn } from "@/lib/utils";
-import { CalendarIcon, Eye, EyeOff } from "lucide-react";
-import { Calendar } from "@/components/ui/calendar";
+import { Eye, EyeOff } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
