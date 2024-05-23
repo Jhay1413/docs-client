@@ -72,10 +72,6 @@ export const userInfoColumns: ColumnDef<UserInfo>[] = [
     }
   },
   {
-    header: "ID",
-    accessorKey: "id",
-  },
-  {
     header: "Employee ID",
     accessorKey: "employeeId",
   },
