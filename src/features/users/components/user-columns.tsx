@@ -16,6 +16,7 @@ import { Link } from "react-router-dom";
 
 const UserInfoColumns = z.object({
   id: z.string(),
+  userId: z.string(),
   assignedSection: z.string(),
   assignedDivision: z.string(),
   assignedPosition: z.string(),
@@ -49,8 +50,8 @@ export const userInfoColumns: ColumnDef<UserInfo>[] = [
     enableHiding: false,
   },
   {
-    header: "User ID",
-    accessorKey: "userId",
+    header: "Employee ID",
+    accessorKey: "employeeId",
   },
   {
     header: "First Name",
