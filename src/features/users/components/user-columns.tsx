@@ -13,6 +13,7 @@ import {
 import { z } from "zod";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Link } from "react-router-dom";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 const UserInfoColumns = z.object({
   id: z.string(),
@@ -21,13 +22,11 @@ const UserInfoColumns = z.object({
   assignedDivision: z.string(),
   assignedPosition: z.string(),
   dateStarted: z.date(),
-  birthDate : z.date(),
+  birthDate: z.date(),
   jobStatus: z.string(),
   firstName: z.string(),
   lastName: z.string(),
   signedUrl: z.string(),
-
-  
 });
 export type UserInfo = z.infer<typeof UserInfoColumns>;
 export const userInfoColumns: ColumnDef<UserInfo>[] = [
@@ -64,6 +63,19 @@ export const userInfoColumns: ColumnDef<UserInfo>[] = [
   {
     header: "First Name",
     accessorKey: "firstName",
+    cell: ({ row }) => {
+      const userInfo = row.original;
+      return (
+        <div style={{ display: "flex", alignItems: "center" }}>
+          <Avatar>
+            <AvatarImage src={userInfo.signedUrl} alt="@shadcn" />
+            <AvatarFallback>CN</AvatarFallback>
+          </Avatar>
+          {/* Assuming signedUrl is the avatar URL */}
+          <span>{userInfo.firstName}</span>
+        </div>
+      );
+    },
   },
 
   {
@@ -127,7 +139,9 @@ export const userInfoColumns: ColumnDef<UserInfo>[] = [
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
 
-            <DropdownMenuItem><Link to={`/dashboard/userForm/${userInfo.id}`}>Edit User </Link></DropdownMenuItem>
+            <DropdownMenuItem>
+              <Link to={`/dashboard/userForm/${userInfo.id}`}>Edit User </Link>
+            </DropdownMenuItem>
             <DropdownMenuItem>Delete User</DropdownMenuItem>
 
             <DropdownMenuSeparator />
