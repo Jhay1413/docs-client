@@ -6,13 +6,13 @@ import { useUserInfoHook } from "../hooks/UserHook";
 import { DataTable } from "@/components/data-table";
 
 export const UserList = () => {
-  const { data, isLoading, isError } = useUserInfoHook();
+  const { data, isLoading, isError,error } = useUserInfoHook();
 
   if (isLoading) {
     return <div>Loading...</div>;
   }
   if (isError) {
-    console.log(isError);
+    console.log(error);
     return <div>Error...</div>;
   }
   if (!data) {

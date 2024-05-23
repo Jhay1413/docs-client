@@ -8,6 +8,7 @@ export function useUserInfoHook(){
     return useQuery<TUsers[]>({
         queryKey:['user-info'],
         queryFn: getUserInfo,
+        
     })
 }
 
