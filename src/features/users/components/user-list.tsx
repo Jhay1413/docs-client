@@ -12,7 +12,7 @@ export const UserList = () => {
     return <div>Loading...</div>;
   }
   if (isError) {
-    console.log(isError)
+    console.log(isError);
     return <div>Error...</div>;
   }
   if (!data) {
