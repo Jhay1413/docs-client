@@ -21,9 +21,13 @@ const UserInfoColumns = z.object({
   assignedDivision: z.string(),
   assignedPosition: z.string(),
   dateStarted: z.date(),
+  birthDate : z.date(),
   jobStatus: z.string(),
   firstName: z.string(),
   lastName: z.string(),
+  signedUrl: z.string(),
+
+  
 });
 export type UserInfo = z.infer<typeof UserInfoColumns>;
 export const userInfoColumns: ColumnDef<UserInfo>[] = [
@@ -61,6 +65,10 @@ export const userInfoColumns: ColumnDef<UserInfo>[] = [
   {
     header: "Last Name",
     accessorKey: "lastName",
+  },
+  {
+    header: "Birthdate",
+    accessorKey: "birthDate",
   },
 
   {

@@ -70,17 +70,33 @@ export const UserFormSchema = RegisterSchema.omit({
   signedUrl: z.optional(z.string()),
 });
 
-export const UsersInfo = RegisterSchema.omit({
-  password: true,
-  imageFile: true,
-}).extend({
-  id: z.string(),
+// export const UsersInfo = RegisterSchema.omit({
+//   password: true,
+//   imageFile: true,
+// }).extend({
+//   id: z.string(),
+//   signedUrl: z.string(),
+//   createdAt: z.date(),
+//   updatedAt: z.date(),
+//   accountId: z.string(),
+//   imageUrl: z.string(),
+// });
+
+
+export const UsersInfo = z.object({
+  id:z.string(),
+  employeeId:z.string(),
+  firstName:z.string(),
+  lastName:z.string(),
+  assignedDivision:z.string(),
+  assignedSection:z.string(),
+  assignedPosition:z.string(),
+  dateStarted:z.date(),
+  jobStatus:z.string(),
+  birthDate:z.date(),
   signedUrl: z.string(),
-  createdAt: z.date(),
-  updatedAt: z.date(),
-  accountId: z.string(),
-  imageUrl: z.string(),
-});
+})
+
 export type TUserForm = z.infer<typeof UserFormSchema>;
 
 export type TUsers = z.infer<typeof UsersInfo>;
