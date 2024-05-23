@@ -33,14 +33,14 @@ export const RegisterSchema = z.object({
   assignedPosition: z.string().min(1, {
     message: "Position is required",
   }),
-  dateStarted: z.date().refine((date) => Boolean(date), {
+  dateStarted: z.date().or(z.string()).refine(val => val, {
     message: "Date Started is required",
   }),
-  jobStatus: z.enum(["PROVISIONARY", "REGULAR", "PART-TIME"], {
+  jobStatus: z.enum(["PROBATION", "REGULAR", "PART-TIME"], {
     message: "Invalid Input",
   }),
-  birthDate : z.date().refine((date) => Boolean(date), {
-    message:"Birthdate is required"
+  birthDate : z.date().or(z.string()).refine(val => val, {
+    message: "Birthdate is required",
   }),
   password: z.optional(
     z.string().min(1, {
@@ -50,7 +50,7 @@ export const RegisterSchema = z.object({
   accountRole: z.enum(["ADMIN", "SUPERADMIN", "USER"], {
     message: "Invalid Input",
   }),
-  imageFile: z
+  imageFile: z.optional(z
     .any()
     .refine((file) => !file || (!!file && file.size <= 10 * 1024 * 1024), {
       message: "The profile picture must be a maximum of 10MB.",
@@ -58,7 +58,7 @@ export const RegisterSchema = z.object({
     .refine(
       (files) => ACCEPTED_IMAGE_TYPES.includes(files?.type),
       "Only .jpg, .jpeg, .png and .webp formats are supported."
-    ),
+    )),
   contactNumber: z.string().min(1, {
     message: "Contact number is required",
   }),

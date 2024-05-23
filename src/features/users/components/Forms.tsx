@@ -26,7 +26,7 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
-import { CalendarIcon } from "lucide-react";
+import { CalendarIcon, Eye, EyeOff } from "lucide-react";
 import { Calendar } from "@/components/ui/calendar";
 import { Separator } from "@/components/ui/separator";
 
@@ -54,7 +54,7 @@ export const UserForm = ({ user }: FormProps) => {
   const [selectedDivision, setSelectedDivision] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [preview, setPreview] = useState("");
-
+  const [showPass,setShowPass] = useState(false);
   const updateUserMutaion = useUpdateUserMutation();
   const registerMutation = useRegisterUserMutation();
 
@@ -66,6 +66,8 @@ export const UserForm = ({ user }: FormProps) => {
           email: user.email,
           firstName: user.firstName,
           lastName: user.lastName,
+          middleName: user.middleName,
+          birthDate: format(new Date(user.birthDate), "yyyy-MM-dd"),
           assignedDivision: user.assignedDivision,
           assignedSection: user.assignedSection,
           assignedPosition: user.assignedPosition,
@@ -76,10 +78,28 @@ export const UserForm = ({ user }: FormProps) => {
           contactNumber: user.contactNumber,
           password: "",
         }
-      : undefined,
+      : {
+          email: "",
+          firstName: "",
+          lastName: "",
+          middleName: "",
+          assignedDivision: "",
+          assignedSection: "",
+          assignedPosition: "",
+          birthDate: format(new Date(), "yyyy-MM-dd"),
+          dateStarted: format(new Date(), "yyyy-MM-dd"),
+          jobStatus: undefined,
+          accountRole: undefined,
+          employeeId: "",
+          contactNumber: "",
+          password: "",
+          
+        
+      },
   });
   const onSuccess = () => {
     toast.success("User updated successfully");
+    form.reset();
     setSubmitting(false);
   };
 
@@ -94,9 +114,9 @@ export const UserForm = ({ user }: FormProps) => {
     Object.entries(data).forEach(([key, value]) => {
       if (key === "imageFile") {
         formData.append(key, value as File);
-      } else if (key === "dateStarted") {
-        const date = new Date(value);
-        const zodDate = z.date().parse(date);
+      } else if (key === "dateStarted" || key === "birthDate") {
+       
+        const zodDate = z.date().parse(value);
         formData.append(key, zodDate.toISOString());
       } else {
         formData.append(key, value as string);
@@ -106,8 +126,13 @@ export const UserForm = ({ user }: FormProps) => {
   };
   const onSubmit: SubmitHandler<TRegister> = (data) => {
     setSubmitting(true);
+    const {dateStarted,birthDate ,...rest} = data;
 
-    const formData = appendToFormData(data);
+    const converted_birthDate = new Date(dateStarted);
+    const converted_dateStarted = new Date(birthDate);
+
+    const newData = {birthDate:converted_birthDate, dateStarted:converted_dateStarted,...rest} 
+    const formData = appendToFormData(newData);
     if (user && user.id) {
       updateUserMutaion.mutate(
         { formData, id: user.id },
@@ -163,47 +188,11 @@ export const UserForm = ({ user }: FormProps) => {
                   label="Employee ID"
                   placeholder="Employee ID"
                 />
-                <FormField
-                  control={form.control}
+                <FormInput
                   name="dateStarted"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Date Started</FormLabel>
-                      <FormControl>
-                        <Popover>
-                          <PopoverTrigger asChild>
-                            <Button
-                              variant={"outline"}
-                              className={cn(
-                                "w-full justify-center text-center font-normal"
-                              )}
-                            >
-                              <CalendarIcon className="mr-2 h-4 w-4" />
-                              {field.value ? (
-                                format(field.value, "PPP")
-                              ) : (
-                                <span>Pick a date</span>
-                              )}
-                            </Button>
-                          </PopoverTrigger>
-                          <PopoverContent className="w-auto p-0">
-                            <Calendar
-                              mode="single"
-                              selected={field.value}
-                              onSelect={(date: Date | undefined) => {
-                                if (date) {
-                                  field.onChange(date);
-                                }
-                              }}
-                              initialFocus
-                            />
-                          </PopoverContent>
-                        </Popover>
-                      </FormControl>
-
-                      <FormMessage />
-                    </FormItem>
-                  )}
+                  label="Date Started"
+                  placeholder="Date Started"
+                  type="date"
                 />
                 <FormField
                   control={form.control}
@@ -250,47 +239,11 @@ export const UserForm = ({ user }: FormProps) => {
                   label="Last Name"
                   placeholder="Last Name"
                 />
-                <FormField
-                  control={form.control}
+                <FormInput
+                  type="date"
                   name="birthDate"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Birthdate</FormLabel>
-                      <FormControl>
-                        <Popover>
-                          <PopoverTrigger asChild>
-                            <Button
-                              variant={"outline"}
-                              className={cn(
-                                "w-full justify-center text-center font-normal"
-                              )}
-                            >
-                              <CalendarIcon className="mr-2 h-4 w-4" />
-                              {field.value ? (
-                                format(field.value, "PPP")
-                              ) : (
-                                <span>Pick a date</span>
-                              )}
-                            </Button>
-                          </PopoverTrigger>
-                          <PopoverContent className="w-auto p-0">
-                            <Calendar
-                              mode="single"
-                              selected={field.value}
-                              onSelect={(date: Date | undefined) => {
-                                if (date) {
-                                  field.onChange(date);
-                                }
-                              }}
-                              initialFocus
-                            />
-                          </PopoverContent>
-                        </Popover>
-                      </FormControl>
-
-                      <FormMessage />
-                    </FormItem>
-                  )}
+                  label="Birthdate"
+                  placeholder="Birthdate"
                 />
                 <FormField
                   control={form.control}
@@ -339,7 +292,7 @@ export const UserForm = ({ user }: FormProps) => {
                           </SelectContent>
                         </Select>
                       </FormControl>
-                      
+
                       <FormMessage />
                     </FormItem>
                   )}
@@ -430,12 +383,15 @@ export const UserForm = ({ user }: FormProps) => {
                       <FormItem>
                         <FormLabel>Password</FormLabel>
                         <FormControl>
-                          <Input
-                            type="password"
-                            placeholder="Password"
-                            {...field}
-                          />
-                        </FormControl>
+                          <div className="flex justify-start gap-2 items-center ">
+                            <Input
+                              type={`${showPass ? "text" : "password"}`}
+                              placeholder="password"
+                              {...field}
+                            />
+                            {showPass ? <Eye onClick={()=>setShowPass(!showPass)}/> :<EyeOff onClick={()=>setShowPass(!showPass)}/> }
+                          </div>
+                        </FormControl>  
                         <FormMessage />
                       </FormItem>
                     )}
