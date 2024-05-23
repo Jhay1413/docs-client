@@ -54,6 +54,10 @@ export const userInfoColumns: ColumnDef<UserInfo>[] = [
     enableHiding: false,
   },
   {
+    header: "ID",
+    accessorKey: "id",
+  },
+  {
     header: "Employee ID",
     accessorKey: "employeeId",
   },
@@ -82,6 +86,10 @@ export const userInfoColumns: ColumnDef<UserInfo>[] = [
   {
     header: "Position",
     accessorKey: "assignedPosition",
+  },
+  {
+    header: "signed URL",
+    accessorKey: "signedUrl",
   },
   {
     accessorKey: "dateStarted",
