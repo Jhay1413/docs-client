@@ -53,6 +53,25 @@ export const userInfoColumns: ColumnDef<UserInfo>[] = [
     enableHiding: false,
   },
   {
+    header:"Profile",
+    accessorKey:"profile",
+    cell:({row})=>{
+
+      const userInfo = row.original;
+      return(
+        <div className="flex w-full justify-between">
+          <Avatar>
+            <AvatarImage src={userInfo.signedUrl} alt="@shadcn" />
+            <AvatarFallback>CN</AvatarFallback>
+          </Avatar>
+          {/* Assuming signedUrl is the avatar URL */}
+      
+        </div>
+      ) 
+      
+    }
+  },
+  {
     header: "ID",
     accessorKey: "id",
   },
@@ -60,22 +79,11 @@ export const userInfoColumns: ColumnDef<UserInfo>[] = [
     header: "Employee ID",
     accessorKey: "employeeId",
   },
+  
   {
     header: "First Name",
     accessorKey: "firstName",
-    cell: ({ row }) => {
-      const userInfo = row.original;
-      return (
-        <div style={{ display: "flex", alignItems: "center" }}>
-          <Avatar>
-            <AvatarImage src={userInfo.signedUrl} alt="@shadcn" />
-            <AvatarFallback>CN</AvatarFallback>
-          </Avatar>
-          {/* Assuming signedUrl is the avatar URL */}
-          <span>{userInfo.firstName}</span>
-        </div>
-      );
-    },
+    
   },
 
   {
@@ -99,10 +107,7 @@ export const userInfoColumns: ColumnDef<UserInfo>[] = [
     header: "Position",
     accessorKey: "assignedPosition",
   },
-  {
-    header: "signed URL",
-    accessorKey: "signedUrl",
-  },
+ 
   {
     accessorKey: "dateStarted",
     header: ({ column }) => {
