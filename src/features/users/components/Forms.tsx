@@ -159,7 +159,7 @@ export const UserForm = ({ user }: FormProps) => {
               </div>
               <div className="grid grid-cols-3 gap-4 mt-4">
                 <FormInput
-                  name="employeeId "
+                  name="employeeId"
                   label="Employee ID"
                   placeholder="Employee ID"
                 />

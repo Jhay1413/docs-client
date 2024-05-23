@@ -25,7 +25,7 @@ export const getUserInfo = async () => {
   try {
     const response = await axios.get(`${userApi}/`);
     console.log(response.data)
-    return response.data.data;
+    return response.data;
   } catch (error) {
     if (axios.isAxiosError(error) && error.response) {
       throw new Error(error.response.data.message);
