@@ -16,7 +16,7 @@ import { Link } from "react-router-dom";
 
 const UserInfoColumns = z.object({
   id: z.string(),
-  userId: z.string(),
+  employeeId: z.string(),
   assignedSection: z.string(),
   assignedDivision: z.string(),
   assignedPosition: z.string(),
