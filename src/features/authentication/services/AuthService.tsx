@@ -1,4 +1,3 @@
-
 import axios from "axios";
 import { TLogin } from "../schema/AuthSchema";
 
@@ -9,28 +8,29 @@ export const loginUser = async (data: TLogin) => {
     const response = await axios.post(`${authApi}/login`, data, {
       headers: {
         "Content-Type": "application/json",
-
       },
     });
 
     return response;
   } catch (error) {
-    console.log(error)
-    // throw new Error(error.response.data.message);
+    if (axios.isAxiosError(error)) {
+      throw new Error(error.response?.data || "Something went wrong while logging in !");
+    } else {
+      throw new Error("Something went wrong while logging in !");
+    }
   }
 };
 
 export const checkAuth = async () => {
   try {
-    const response = await axios.post(`${authApi}/dashboardGateApi`,{
-    });
-   
-    return response
+    const response = await axios.post(`${authApi}/dashboardGateApi`, {});
+
+    return response;
   } catch (error) {
-    console.log(error)
+    console.log(error);
     throw new Error("Unauthorized User");
   }
-}
+};
 export const logoutUser = async () => {
   try {
     const response = await axios.get(`${authApi}/logout`);
@@ -38,4 +38,4 @@ export const logoutUser = async () => {
   } catch (error) {
     throw new Error("Something went wrong while logging out !");
   }
-}
+};

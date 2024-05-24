@@ -16,6 +16,7 @@ import { SubmitHandler, useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import { TLogin, loginUserSchema } from "../schema/AuthSchema";
 import { loginUser } from "../services/AuthService";
+import { toast } from "react-toastify";
 
 export const LoginForm = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -39,7 +40,11 @@ export const LoginForm = () => {
       localStorage.setItem("userinfo", JSON.stringify(data?.data));
       navigate("/dashboard/overview");
     },
-    onError: async () => setIsLoading(false),
+    onError: async (error) => {
+      console.log(error.message)
+      toast.error(error.message);
+      setIsLoading(false)
+    },
   });
   const onSubmit: SubmitHandler<TLogin> = (data) => {
     mutate.mutate(data);
