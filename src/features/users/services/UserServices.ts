@@ -7,11 +7,9 @@ type TUpdateUserInfoApi = {
   id: string;
 };
 
-
 export const getAccountInfoApi = async () => {
   try {
     const response = await axios.get(`${userApi}/account`);
-    console.log(response.data)
     return response.data;
   } catch (error) {
     if (axios.isAxiosError(error) && error.response) {
@@ -19,12 +17,19 @@ export const getAccountInfoApi = async () => {
     }
     throw new Error("Something went wrong while fetching account !");
   }
+};
 
-}
-export const getUserInfo = async () => {
+export const getUserInfo = async (id: string) => {
+  try {
+    const response = await axios.get(`${userApi}/${id}`);
+
+    return response.data;
+  } catch (error) {}
+};
+export const getUsersInfo = async () => {
   try {
     const response = await axios.get(`${userApi}/`);
-    console.log(response.data)
+    console.log(response.data);
     return response.data;
   } catch (error) {
     if (axios.isAxiosError(error) && error.response) {
@@ -40,9 +45,9 @@ export const updateUserInfoAPI = async ({
 }: TUpdateUserInfoApi) => {
   try {
     const response = await axios.put(`${userApi}/${id}`, formData);
-    return response.data
+    return response.data;
   } catch (error) {
-    console.log(error)
+    console.log(error);
     throw new Error("Something went wrong while updating user !");
   }
 };
@@ -61,5 +66,19 @@ export const registerUserApi = async (data: FormData) => {
     }
 
     throw new Error("Something went wrong while creating user !");
+  }
+};
+export const updateUserProfile = async ({
+  id,
+  formData,
+}: TUpdateUserInfoApi) => {
+  try {
+    const response = await axios.put(
+      `${userApi}/changeProfile/${id}`,
+      formData
+    );
+    return response.data;
+  } catch (error: any) {
+    throw new Error(error.response.data.message);
   }
 };

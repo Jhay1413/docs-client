@@ -1,8 +1,9 @@
 import {
   BookUser,
-  ChevronDown, LayoutDashboard,
+  ChevronDown,
+  LayoutDashboard,
   LibraryBig,
-  UserRoundPlus
+  UserRoundPlus,
 } from "lucide-react";
 import { NavLink, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -16,7 +17,7 @@ export const SideNav = () => {
   const [isUserOpen, setIsUserOpen] = useState(false);
   const [isTransactionOpen, setIsTransactionOpen] = useState(false);
   const userRole = useCurrentUserRole();
-  console.log(userRole);
+
   const navigate = useNavigate();
   const mutation = useMutation({
     mutationFn: logoutUser,

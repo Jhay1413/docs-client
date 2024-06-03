@@ -12,13 +12,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+
 import { useState } from "react";
 import { Eye, EyeOff } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
@@ -27,10 +21,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { z } from "zod";
 
 import { toast } from "react-toastify";
-import {
-  useRegisterUserMutation,
-  useUpdateUserMutation,
-} from "../hooks/mutation";
+
 import {
   RegisterSchema,
   TRegister,
@@ -39,6 +30,14 @@ import {
 } from "../schema/UserSchema";
 import { Divisions } from "@/data/data";
 import FormInput from "@/components/formInput";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { useUserMutation } from "../hooks/mutation";
 
 type FormProps = {
   user?: TUserForm;
@@ -47,48 +46,29 @@ export const UserForm = ({ user }: FormProps) => {
   const [selectedDivision, setSelectedDivision] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [preview, setPreview] = useState("");
-  const [showPass,setShowPass] = useState(false);
-  const updateUserMutaion = useUpdateUserMutation();
-  const registerMutation = useRegisterUserMutation();
+  const [showPass, setShowPass] = useState(false);
+  const [position, setPosition] = useState("");
+  const { useUpdateUserMutation, useRegisterUserMutation } = useUserMutation();
 
   const form = useForm<TRegister>({
     resolver: user ? zodResolver(UserFormSchema) : zodResolver(RegisterSchema),
     mode: "onChange",
-    defaultValues: user
-      ? {
-          email: user.email,
-          firstName: user.firstName,
-          lastName: user.lastName,
-          middleName: user.middleName,
-          birthDate: format(new Date(user.birthDate), "yyyy-MM-dd"),
-          assignedDivision: user.assignedDivision,
-          assignedSection: user.assignedSection,
-          assignedPosition: user.assignedPosition,
-          dateStarted: user.dateStarted,
-          jobStatus: user.jobStatus,
-          accountRole: user.accountRole,
-          employeeId: user.employeeId,
-          contactNumber: user.contactNumber,
-          password: "",
-        }
-      : {
-          email: "",
-          firstName: "",
-          lastName: "",
-          middleName: "",
-          assignedDivision: "",
-          assignedSection: "",
-          assignedPosition: "",
-          birthDate: format(new Date(), "yyyy-MM-dd"),
-          dateStarted: format(new Date(), "yyyy-MM-dd"),
-          jobStatus: undefined,
-          accountRole: undefined,
-          employeeId: "",
-          contactNumber: "",
-          password: "",
-          
-        
-      },
+    defaultValues: {
+      email: "",
+      firstName: "",
+      lastName: "",
+      middleName: "",
+      assignedDivision: "",
+      assignedSection: null,
+      assignedPosition: "",
+      birthDate: format(new Date(), "yyyy-MM-dd"),
+      dateStarted: format(new Date(), "yyyy-MM-dd"),
+      jobStatus: "",
+      accountRole: "",
+      employeeId: "",
+      contactNumber: "",
+      password: "",
+    },
   });
   const onSuccess = () => {
     toast.success("User updated successfully");
@@ -108,7 +88,6 @@ export const UserForm = ({ user }: FormProps) => {
       if (key === "imageFile") {
         formData.append(key, value as File);
       } else if (key === "dateStarted" || key === "birthDate") {
-       
         const zodDate = z.date().parse(value);
         formData.append(key, zodDate.toISOString());
       } else {
@@ -119,21 +98,19 @@ export const UserForm = ({ user }: FormProps) => {
   };
   const onSubmit: SubmitHandler<TRegister> = (data) => {
     setSubmitting(true);
-    const {dateStarted,birthDate ,...rest} = data;
+    const { dateStarted, birthDate, ...rest } = data;
 
-    const converted_birthDate = new Date(dateStarted);
-    const converted_dateStarted = new Date(birthDate);
+    const converted_birthDate = new Date(birthDate);
+    const converted_dateStarted = new Date(dateStarted);
 
-    const newData = {birthDate:converted_birthDate, dateStarted:converted_dateStarted,...rest} 
+    const newData = {
+      birthDate: converted_birthDate,
+      dateStarted: converted_dateStarted,
+      ...rest,
+    };
     const formData = appendToFormData(newData);
-    if (user && user.id) {
-      updateUserMutaion.mutate(
-        { formData, id: user.id },
-        { onSuccess, onError }
-      );
-    } else {
-      registerMutation.mutate(formData, { onSuccess, onError });
-    }
+
+    useRegisterUserMutation.mutate(formData, { onSuccess, onError });
   };
 
   return (
@@ -196,6 +173,8 @@ export const UserForm = ({ user }: FormProps) => {
                       <FormControl>
                         <Select
                           onValueChange={(value) => field.onChange(value)}
+                          defaultValue={field.value}
+                          value={field.value}
                         >
                           <SelectTrigger className="w-full">
                             <SelectValue placeholder="Select Job Status" />
@@ -263,7 +242,7 @@ export const UserForm = ({ user }: FormProps) => {
                       <FormControl>
                         <Select
                           defaultValue={
-                            user ? user.assignedDivision : undefined
+                            user ? user.assignedDivision : field.value
                           }
                           onValueChange={(value) => {
                             setSelectedDivision(value);
@@ -292,6 +271,41 @@ export const UserForm = ({ user }: FormProps) => {
                 />
                 <FormField
                   control={form.control}
+                  name="assignedPosition"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Position</FormLabel>
+                      <FormControl>
+                        <Select
+                          defaultValue={
+                            user ? user.assignedPosition : field.value
+                          }
+                          onValueChange={(value) => {
+                            if (value === "MANAGER") {
+                              form.setValue("assignedSection", null);
+                            }
+                            field.onChange(value);
+                            setPosition(value);
+                          }}
+                        >
+                          <SelectTrigger className="w-full">
+                            <SelectValue placeholder="Select Position" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="MANAGER">MANAGER</SelectItem>
+                            <SelectItem value="ADMIN">ADMIN</SelectItem>
+                            <SelectItem value="TL">TL</SelectItem>
+                            <SelectItem value="CH">CH</SelectItem>
+                            <SelectItem value="STAFF">STAFF</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
                   name="assignedSection"
                   render={({ field }) => (
                     <FormItem>
@@ -299,8 +313,8 @@ export const UserForm = ({ user }: FormProps) => {
                       <FormControl>
                         <Select
                           onValueChange={(value) => field.onChange(value)}
-                          disabled={!selectedDivision}
-                          defaultValue={user ? user.assignedSection : undefined}
+                          disabled={!selectedDivision || position === "MANAGER"}
+                          defaultValue={user?.assignedSection || ""}
                         >
                           <SelectTrigger className="w-full">
                             <SelectValue placeholder="Select Section" />
@@ -316,34 +330,6 @@ export const UserForm = ({ user }: FormProps) => {
                                 {section.name}
                               </SelectItem>
                             ))}
-                          </SelectContent>
-                        </Select>
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <FormField
-                  control={form.control}
-                  name="assignedPosition"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Position</FormLabel>
-                      <FormControl>
-                        <Select
-                          defaultValue={
-                            user ? user.assignedPosition : undefined
-                          }
-                          onValueChange={(value) => field.onChange(value)}
-                        >
-                          <SelectTrigger className="w-full">
-                            <SelectValue placeholder="Select Position" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="MANAGER">ADMIN</SelectItem>
-                            <SelectItem value="TL">TL</SelectItem>
-                            <SelectItem value="CH">CH</SelectItem>
-                            <SelectItem value="STAFF">STAFF</SelectItem>
                           </SelectContent>
                         </Select>
                       </FormControl>
@@ -382,9 +368,13 @@ export const UserForm = ({ user }: FormProps) => {
                               placeholder="password"
                               {...field}
                             />
-                            {showPass ? <Eye onClick={()=>setShowPass(!showPass)}/> :<EyeOff onClick={()=>setShowPass(!showPass)}/> }
+                            {showPass ? (
+                              <Eye onClick={() => setShowPass(!showPass)} />
+                            ) : (
+                              <EyeOff onClick={() => setShowPass(!showPass)} />
+                            )}
                           </div>
-                        </FormControl>  
+                        </FormControl>
                         <FormMessage />
                       </FormItem>
                     )}
@@ -397,24 +387,24 @@ export const UserForm = ({ user }: FormProps) => {
                         <FormLabel>Account Type</FormLabel>
                         <FormControl>
                           <Select
-                            defaultValue={user ? user.accountRole : undefined}
+                            defaultValue={user ? user.accountRole : field.value}
                             onValueChange={(value) => field.onChange(value)}
                           >
                             <SelectTrigger className="w-full">
                               <SelectValue placeholder="Select Account Role" />
                             </SelectTrigger>
                             <SelectContent>
-                              <SelectItem value="ADMIN">ADMIN</SelectItem>
                               <SelectItem value="SUPERADMIN">
                                 SUPERADMIN
                               </SelectItem>
-                              <SelectItem value="USER">USERS</SelectItem>
+                              <SelectItem value="ADMIN">ADMIN</SelectItem>
+
+                              <SelectItem value="TL">TL</SelectItem>
+                              <SelectItem value="GUEST">GUEST</SelectItem>
                             </SelectContent>
                           </Select>
                         </FormControl>
-                        <FormDescription>
-                          This is your public display name.
-                        </FormDescription>
+
                         <FormMessage />
                       </FormItem>
                     )}

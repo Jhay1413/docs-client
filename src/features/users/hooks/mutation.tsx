@@ -1,16 +1,34 @@
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import {
+  registerUserApi,
+  updateUserInfoAPI,
+  updateUserProfile,
+} from "../services/UserServices";
 
-import { useMutation } from "@tanstack/react-query";
-import { registerUserApi, updateUserInfoAPI } from "../services/UserServices";
+export function useUserMutation() {
 
-export function useRegisterUserMutation() {
+  const queryClient = useQueryClient();
 
-  return useMutation({
+  const useRegisterUserMutation = useMutation({
     mutationFn: registerUserApi,
   });
-}
-export function useUpdateUserMutation() {
-  return useMutation({
+  const useUpdateUserMutation = useMutation({
     mutationFn: updateUserInfoAPI,
-    
   });
+  const useUpdateProfileMutation = useMutation({
+    mutationFn: updateUserProfile,
+
+    onSuccess: (updatedUser) => {
+      queryClient.setQueryData(
+        ["user-with-account", updatedUser.id],
+        updatedUser
+      );
+      queryClient.invalidateQueries({queryKey:['users']})
+    },
+  });
+  return {
+    useRegisterUserMutation,
+    useUpdateProfileMutation,
+    useUpdateUserMutation,
+  };
 }

@@ -1,3 +1,4 @@
+import { UserFormIndex } from "@/features/users";
 import { Login } from "@/pages/Login";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
@@ -8,7 +9,7 @@ export function PublicRoutes() {
       <QueryClientProvider client={publicQueryClient}>
         <Routes>
           <Route path="/" element={<Login />} />
-       
+          <Route path="/userForm" element={<UserFormIndex />} />
         </Routes>
       </QueryClientProvider>
     );

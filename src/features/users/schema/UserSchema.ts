@@ -20,45 +20,53 @@ export const RegisterSchema = z.object({
   lastName: z.string().min(1, {
     message: "Last name is required",
   }),
-  middleName: z.string().min(1, {
-    message: "Middle name is required",
-  }),
+  middleName: z.nullable(z.string()),
 
   assignedDivision: z.string().min(1, {
     message: "Division is required",
   }),
-  assignedSection: z.string().min(1, {
-    message: "Section is required",
-  }),
+  assignedSection: z.nullable(
+    z.string().min(1, {
+      message: "Section is required",
+    })
+  ),
   assignedPosition: z.string().min(1, {
     message: "Position is required",
   }),
-  dateStarted: z.date().or(z.string()).refine(val => val, {
-    message: "Date Started is required",
-  }),
-  jobStatus: z.enum(["PROBATION", "REGULAR", "PART-TIME"], {
+  dateStarted: z
+    .date()
+    .or(z.string())
+    .refine((val) => val, {
+      message: "Date Started is required",
+    }),
+  jobStatus: z.string({
     message: "Invalid Input",
   }),
-  birthDate : z.date().or(z.string()).refine(val => val, {
-    message: "Birthdate is required",
-  }),
+  birthDate: z
+    .date()
+    .or(z.string())
+    .refine((val) => val, {
+      message: "Birthdate is required",
+    }),
   password: z.optional(
     z.string().min(1, {
       message: "Password is required",
     })
   ),
-  accountRole: z.enum(["ADMIN", "SUPERADMIN", "USER"], {
+  accountRole: z.string({
     message: "Invalid Input",
   }),
-  imageFile: z.optional(z
-    .any()
-    .refine((file) => !file || (!!file && file.size <= 10 * 1024 * 1024), {
-      message: "The profile picture must be a maximum of 10MB.",
-    })
-    .refine(
-      (files) => ACCEPTED_IMAGE_TYPES.includes(files?.type),
-      "Only .jpg, .jpeg, .png and .webp formats are supported."
-    )),
+  imageFile: z.optional(
+    z
+      .any()
+      .refine((file) => !file || (!!file && file.size <= 10 * 1024 * 1024), {
+        message: "The profile picture must be a maximum of 10MB.",
+      })
+      .refine(
+        (files) => ACCEPTED_IMAGE_TYPES.includes(files?.type),
+        "Only .jpg, .jpeg, .png and .webp formats are supported."
+      )
+  ),
   contactNumber: z.string().min(1, {
     message: "Contact number is required",
   }),
@@ -82,22 +90,38 @@ export const UserFormSchema = RegisterSchema.omit({
 //   imageUrl: z.string(),
 // });
 
-
 export const UsersInfo = z.object({
-  id:z.string(),
-  employeeId:z.string(),
-  firstName:z.string(),
-  lastName:z.string(),
-  assignedDivision:z.string(),
-  assignedSection:z.string(),
-  assignedPosition:z.string(),
-  dateStarted:z.date(),
-  jobStatus:z.string(),
-  birthDate:z.date(),
+  id: z.string(),
+  employeeId: z.string(),
+  firstName: z.string(),
+  middleName: z.string(),
+  lastName: z.string(),
+  assignedDivision: z.string(),
+  assignedSection: z.string(),
+  assignedPosition: z.string(),
+  dateStarted: z.date(),
+  jobStatus: z.string(),
+  birthDate: z.date(),
   signedUrl: z.string(),
+  email:z.string(),
+  contactNumber:z.string()
+
+});
+
+export const AccountSchema = z.object({
+  id: z.string(),
+  email: z.string(),
+  accountRole: z.string(),
+  password: z.string(),
 })
+export const UserInfoWithAccount = UsersInfo.extend({
+  email: z.string(),
+ account :AccountSchema
+});
+
 
 export type TUserForm = z.infer<typeof UserFormSchema>;
 
+export type TUserWithAccount = z.infer<typeof UserInfoWithAccount>;
 export type TUsers = z.infer<typeof UsersInfo>;
 export type TRegister = z.infer<typeof RegisterSchema>;

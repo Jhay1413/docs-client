@@ -5,6 +5,8 @@ import { UserAccountList, UserFormIndex, UserList } from "@/features/users";
 import { Header } from "@/layout/Header";
 import { SideNav } from "@/layout/Sidenav";
 import { Dashboard } from "@/pages/Dashboard";
+import { Profile } from "@/pages/Profile";
+
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 import { Route, Routes } from "react-router-dom";
@@ -20,14 +22,14 @@ export const AdminRoutes = () => {
           </div>
 
           <div className="grow flex max-h-full   ">
-            <div className="flex-none w-[250px] bg-white">
+            <div className="flex-none w-[250px] bg-white ">
               <SideNav />
             </div>
             <div className="grow overflow-auto flex items-center justify-center px-2 ">
-              <ScrollArea className="h-[calc(100vh-90px)] bg-white p-4 w-full rounded-sm ">
+              <ScrollArea className="h-[calc(100vh-90px)] bg-white w-full rounded-sm ">
                 <Routes>
                   <Route path="/overview" element={<Dashboard />} />
-                  <Route path={`/profile`} element={<Dashboard />} />
+                  <Route path={`/profile/:id`} element={<Profile />} />
                   <Route path={`/userAccount`} element={<UserAccountList />} />
                   <Route path={`/users`} element={<UserList />} />
                   <Route path={`/userForm/:id`} element={<UserFormIndex />} />
@@ -38,6 +40,7 @@ export const AdminRoutes = () => {
                   />
                   <Route path="/transactions" element={<TransactionList />} />
                 </Routes>
+
                 <ScrollBar orientation="horizontal" />
               </ScrollArea>
             </div>

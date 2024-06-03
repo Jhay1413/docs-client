@@ -90,6 +90,10 @@ export const userInfoColumns: ColumnDef<UserInfo>[] = [
     header: "Birthdate",
     accessorKey: "birthDate",
   },
+  {
+    header: "Date Started",
+    accessorKey: "dateStarted",
+  },
 
   {
     header: "Division",
@@ -105,7 +109,7 @@ export const userInfoColumns: ColumnDef<UserInfo>[] = [
   },
  
   {
-    accessorKey: "dateStarted",
+    accessorKey: "birthDate",
     header: ({ column }) => {
       return (
         <Button
@@ -139,10 +143,6 @@ export const userInfoColumns: ColumnDef<UserInfo>[] = [
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
-
-            <DropdownMenuItem>
-              <Link to={`/dashboard/userForm/${userInfo.id}`}>Edit User </Link>
-            </DropdownMenuItem>
             <DropdownMenuItem>Delete User</DropdownMenuItem>
 
             <DropdownMenuSeparator />
@@ -153,8 +153,8 @@ export const userInfoColumns: ColumnDef<UserInfo>[] = [
             </DropdownMenuItem>
 
             <DropdownMenuSeparator />
-            <DropdownMenuItem>View User Profile</DropdownMenuItem>
-            <DropdownMenuItem>View Account</DropdownMenuItem>
+            <DropdownMenuItem><Link to={`/dashboard/profile/${userInfo.id}`}>View Profile </Link></DropdownMenuItem>
+        
           </DropdownMenuContent>
         </DropdownMenu>
       );

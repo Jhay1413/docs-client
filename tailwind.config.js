@@ -29,6 +29,12 @@ module.exports = {
       maxHeight:{
         'custom-content': 'calc(100% - 77ppx)',
       },
+      minHeight:{
+        'custom': 'calc(100% - 77ppx)',
+      },
+      height:{
+        'custom': 'calc(100% - 77ppx)',
+      },
       colors: {
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",

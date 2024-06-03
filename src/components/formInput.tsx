@@ -12,6 +12,7 @@ type InputProps = {
   link?: string;
   disable?: boolean;
   type?: string;
+  readOnly?: boolean;
 };
 
 const FormInput = ({
@@ -21,6 +22,7 @@ const FormInput = ({
   description,
   type,
   disable,
+  readOnly
 }: InputProps) => {
   const { control } = useFormContext(); // Use useFormContext to access the form control
 
@@ -33,7 +35,7 @@ const FormInput = ({
           <FormItem>
             <FormLabel>{label}</FormLabel>
             <FormControl>
-              <Input type= {type} placeholder={placeholder} {...field} disabled={disable} />
+              <Input type= {type} placeholder={placeholder} {...field} disabled={disable} readOnly = {readOnly}/>
             </FormControl>
             {description && <FormDescription>{description}</FormDescription>}
             <FormMessage />
