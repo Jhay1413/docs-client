@@ -26,7 +26,7 @@ export const AdminRoutes = () => {
               <SideNav />
             </div>
             <div className="grow overflow-auto flex items-center justify-center px-2 ">
-              <ScrollArea className="h-[calc(100vh-90px)] bg-white w-full rounded-sm ">
+              <ScrollArea className="h-[calc(100vh-90px)] bg-white w-full rounded-sm p-8">
                 <Routes>
                   <Route path="/overview" element={<Dashboard />} />
                   <Route path={`/profile/:id`} element={<Profile />} />
