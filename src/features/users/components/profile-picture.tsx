@@ -3,11 +3,8 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Upload } from "lucide-react";
 import { ChangeEvent, useRef, useState } from "react";
-import { z } from "zod";
-import { useUser } from "../hooks/useUserHook";
 
 import { toast } from "react-toastify";
-import { useQueryClient } from "@tanstack/react-query";
 import { useUserMutation } from "../hooks/mutation";
 
 type Props = {
@@ -31,7 +28,7 @@ export const ProfilePicture = ({ signedUrl, id }: Props) => {
     console.log(data);
     toast.error("Something went wrong while updating the profile !");
   };
-  const onSuccess = (data: any) => {
+  const onSuccess = () => {
     toast.success("Profile updated ! ");
     setPreviewImg("");
     setImg(undefined);
@@ -48,7 +45,7 @@ export const ProfilePicture = ({ signedUrl, id }: Props) => {
         { id, formData },
         {
           onError: (data) => onError(data),
-          onSuccess: (data) => onSuccess(data),
+          onSuccess: () => onSuccess(),
         }
       );
     }

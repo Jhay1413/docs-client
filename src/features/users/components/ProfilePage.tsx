@@ -1,8 +1,6 @@
 import { Button } from "@/components/ui/button";
-import profile from "@/assets/jhon.png";
 import { Input } from "@/components/ui/input";
-import { useRef, useState } from "react";
-import { Upload } from "lucide-react";
+import { useState } from "react";
 import { Label } from "@/components/ui/label";
 import { EditForm, TUserWithAccount } from "@/features/users";
 import { ProfilePicture } from "./profile-picture";

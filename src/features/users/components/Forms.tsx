@@ -1,11 +1,9 @@
 import {
   Form,
-  FormControl,
-  FormDescription,
-  FormField,
+  FormControl, FormField,
   FormItem,
   FormLabel,
-  FormMessage,
+  FormMessage
 } from "@/components/ui/form";
 import { format } from "date-fns";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -48,7 +46,7 @@ export const UserForm = ({ user }: FormProps) => {
   const [preview, setPreview] = useState("");
   const [showPass, setShowPass] = useState(false);
   const [position, setPosition] = useState("");
-  const { useUpdateUserMutation, useRegisterUserMutation } = useUserMutation();
+  const {useRegisterUserMutation } = useUserMutation();
 
   const form = useForm<TRegister>({
     resolver: user ? zodResolver(UserFormSchema) : zodResolver(RegisterSchema),
