@@ -21,7 +21,7 @@ export const getAccountInfoApi = async () => {
 
 export const getUserInfo = async (id: string) => {
   try {
-    const response = await axios.get(`${userApi}/${id}/`);
+    const response = await axios.get(`${userApi}/${id}`);
     console.log(response)
     return response.data;
   } catch (error) {}
