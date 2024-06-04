@@ -12,7 +12,7 @@ type PrivateProsp = {
   };
   
 export const RouteGuard = ({ children,allowedRole }: PrivateProsp) => {
-    const [authorized,setAuthorized] = useState(false)
+
     const [isAuthenticated, setIsAuthenticated] = useState(false);
     const role =  useCurrentUserRole()
     const navigate = useNavigate();

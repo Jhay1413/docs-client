@@ -8,7 +8,6 @@ import {
 import { NavLink, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 
-import { useMutation } from "@tanstack/react-query";
 import { useState } from "react";
 import { logoutUser } from "@/features/authentication";
 import { useCurrentUserRole } from "@/hooks/use-user-hook";
