@@ -18,7 +18,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 const UserInfoColumns = z.object({
   id: z.string(),
   employeeId: z.string(),
-  assignedSection: z.string(),
+  assignedSection: z.nullable(z.string()),
   assignedDivision: z.string(),
   assignedPosition: z.string(),
   dateStarted: z.date(),

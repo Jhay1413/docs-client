@@ -6,7 +6,7 @@ import { EditForm, TUserWithAccount } from "@/features/users";
 import { ProfilePicture } from "./profile-picture";
 
 export const ProfilePage = (userInfo: TUserWithAccount) => {
-  const [isEdit, setIsEdit] = useState(false);
+
 
   const profileProps = {
     signedUrl: userInfo.signedUrl,
