@@ -71,39 +71,16 @@ export const ProfilePage = (userInfo: TUserWithAccount) => {
           <div className="flex flex-col gap-8 w-full">
             <div className="flex justify-between  w-full">
               <h1 className="text-2xl font-bold">My Profile</h1>
-              <div className="text-slate-500 space-y-2">
+              {/* <div className="text-slate-500 space-y-2">
                 <Button onClick={() => setIsEdit(!isEdit)}>Edit Info</Button>
-              </div>
+              </div> */}
             </div>
 
-            {isEdit ? (
+          
               <>
-                <EditForm {...userInfo} />
+                <EditForm {...userInfo}  />
               </>
-            ) : (
-              <div className="grid grid-cols-3 gap-4 text-2xl">
-                <h1>Name:</h1>
-                <h1 className="col-span-2 ">
-                  {userInfo.firstName +
-                    " " +
-                    userInfo.middleName +
-                    " " +
-                    userInfo.lastName}
-                </h1>
-                <h1>Position:</h1>
-                <h1 className="col-span-2 ">{userInfo.assignedPosition}</h1>
-                <h1>Division:</h1>
-                <h1 className="col-span-2">{userInfo.assignedDivision}</h1>
-                <h1>Section</h1>
-                <h1 className="col-span-2">{userInfo.assignedSection}</h1>
-                <h1>Date Started:</h1>
-                <h1 className="col-span-2">
-                  {new Date(userInfo.dateStarted).toDateString()}
-                </h1>
-                <h1>Job Status:</h1>
-                <h1 className="col-span-2">{userInfo.jobStatus}</h1>
-              </div>
-            )}
+           
           </div>
         </div>
       </div>

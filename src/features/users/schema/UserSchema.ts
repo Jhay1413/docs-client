@@ -97,7 +97,7 @@ export const UsersInfo = z.object({
   middleName: z.string(),
   lastName: z.string(),
   assignedDivision: z.string(),
-  assignedSection: z.string(),
+  assignedSection: z.nullable(z.string()),
   assignedPosition: z.string(),
   dateStarted: z.date(),
   jobStatus: z.string(),

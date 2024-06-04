@@ -1,13 +1,21 @@
 import { Button } from "@/components/ui/button";
-
-import { Form } from "@/components/ui/form";
+import { Divisions } from "@/data/data";
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import FormInput from "@/components/formInput";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { TUserWithAccount, TUsers } from "../schema/UserSchema";
 import { z } from "zod";
 import { useUserMutation } from "../hooks/mutation";
 import { toast } from "react-toastify";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { useState } from "react";
 export const EditForm = (userInfo: TUserWithAccount) => {
+
+
+  const [selectedDivision, setSelectedDivision] = useState("");
+ 
+  const [position, setPosition] = useState("");
+ 
   const { useUpdateUserMutation } = useUserMutation();
   const form = useForm<TUsers>({
     defaultValues: {
@@ -89,21 +97,112 @@ export const EditForm = (userInfo: TUserWithAccount) => {
                 label="Last Name"
                 placeholder="Last Name"
               />
-              <FormInput
-                name="assignedDivision"
-                label="Division"
-                placeholder="Division"
-              />
-              <FormInput
-                name="assignedSection"
-                label="Section"
-                placeholder="Section"
-              />
-              <FormInput
-                name="assignedPosition"
-                label="Position"
-                placeholder="Position"
-              />
+              <FormField
+                  control={form.control}
+                  name="assignedDivision"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Division</FormLabel>
+                      <FormControl>
+                        <Select
+                          defaultValue={
+                           userInfo ? userInfo.assignedDivision : field.value
+                          }
+                          onValueChange={(value) => {
+                            setSelectedDivision(value);
+                            field.onChange(value);
+                          }}
+                        >
+                          <SelectTrigger className="w-full">
+                            <SelectValue placeholder="Select Division" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            {Divisions.map((division) => (
+                              <SelectItem
+                                key={division.name}
+                                value={division.name!}
+                              >
+                                {division.name}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      </FormControl>
+
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="assignedPosition"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Position</FormLabel>
+                      <FormControl>
+                        <Select
+                          defaultValue={
+                           userInfo ? userInfo.assignedPosition : field.value
+                          }
+                          onValueChange={(value) => {
+                            if (value === "MANAGER") {
+                              form.setValue("assignedSection", null);
+                            }
+                            field.onChange(value);
+                            setPosition(value);
+                          }}
+                        >
+                          <SelectTrigger className="w-full">
+                            <SelectValue placeholder="Select Position" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="MANAGER">MANAGER</SelectItem>
+                            <SelectItem value="ADMIN">ADMIN</SelectItem>
+                            <SelectItem value="TL">TL</SelectItem>
+                            <SelectItem value="CH">CH</SelectItem>
+                            <SelectItem value="STAFF">STAFF</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="assignedSection"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Section</FormLabel>
+                      <FormControl>
+                        <Select
+                          onValueChange={(value) => field.onChange(value)}
+                          disabled={!userInfo.assignedDivision || userInfo.assignedPosition == "MANAGER" || position== "MANAGER" || !selectedDivision  }
+                          defaultValue={
+                            userInfo ? userInfo.assignedPosition : ""
+                           }
+                        >
+                          <SelectTrigger className="w-full">
+                            <SelectValue placeholder="Select Section" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            {Divisions.find(
+                              (division) => division.name === selectedDivision
+                            )?.section.map((section) => (
+                              <SelectItem
+                                key={section.name}
+                                value={section.name!}
+                              >
+                                {section.name}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
               <FormInput
                 name="jobStatus"
                 label="Job Status"
