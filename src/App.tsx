@@ -5,8 +5,8 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-import { AdminRoutes } from "./routes/AdminRoutes";
 import { PublicRoutes } from "./routes/PublicRoutes";
+import { DashboardLayout } from "./routes/Layout";
 
 
 function App() {
@@ -27,8 +27,9 @@ function App() {
       {/* Same as */}
       <BrowserRouter>
         <Routes>
-          <Route path="/dashboard/*" element={<AdminRoutes />} />
+          <Route path="/dashboard/*" element={<DashboardLayout />} />
           <Route path="/*" element={<PublicRoutes />} />
+          
         </Routes>
       </BrowserRouter>
     </>

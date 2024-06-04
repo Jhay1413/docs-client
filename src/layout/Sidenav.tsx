@@ -14,24 +14,21 @@ import { logoutUser } from "@/features/authentication";
 import { useCurrentUserRole } from "@/hooks/use-user-hook";
 
 export const SideNav = () => {
+
   const [isUserOpen, setIsUserOpen] = useState(false);
   const [isTransactionOpen, setIsTransactionOpen] = useState(false);
   const userRole = useCurrentUserRole();
 
   const navigate = useNavigate();
-  const mutation = useMutation({
-    mutationFn: logoutUser,
-    onMutate: () => console.log("onMutate"),
-    onSuccess: async (data) => {
-      console.log(data);
+
+  const logout = async() => {
+    try {
+      await logoutUser();
       localStorage.clear();
       navigate("/");
-    },
-    onError: async () => console.log("onError"),
-  });
-
-  const logout = () => {
-    mutation.mutate();
+    } catch (error) {
+      console.log("onError")
+    }
   };
 
   return (
