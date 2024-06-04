@@ -87,12 +87,32 @@ export const userInfoColumns: ColumnDef<UserInfo>[] = [
     accessorKey: "lastName",
   },
   {
-    header: "Birthdate",
     accessorKey: "birthDate",
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Birthdate
+          <ArrowUpDown className="ml-2 h-4 w-4" />
+        </Button>
+      );
+    },
   },
   {
-    header: "Date Started",
     accessorKey: "dateStarted",
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Date started
+          <ArrowUpDown className="ml-2 h-4 w-4" />
+        </Button>
+      );
+    },
   },
 
   {
@@ -108,20 +128,7 @@ export const userInfoColumns: ColumnDef<UserInfo>[] = [
     accessorKey: "assignedPosition",
   },
  
-  {
-    accessorKey: "birthDate",
-    header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          Date Started
-          <ArrowUpDown className="ml-2 h-4 w-4" />
-        </Button>
-      );
-    },
-  },
+  
   {
     header: "Job Status",
     accessorKey: "jobStatus",
