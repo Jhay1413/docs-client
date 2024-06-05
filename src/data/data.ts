@@ -45,16 +45,21 @@ export const Divisions = [
     name: "Sales/Marketing Department",
     section:[
         {
-            name:'IT Operations Team',
-            value:"ITOP"
+            name:'Sales',
+            value:"SALES"
         },
         {
-            name:"Process Optimization and Data Hub Team",
-            value:"PODHT"
+            name:"Marketing",
+            value:"MARKETING"
         },
+    ],
+  },
+  {
+    name: "HR Department",
+    section:[
         {
-            name:"Client Relations Team",
-            value:"CRT"
+            name:'HR',
+            value:"HR"
         },
     ],
   },
