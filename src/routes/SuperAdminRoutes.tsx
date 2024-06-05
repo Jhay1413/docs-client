@@ -2,6 +2,7 @@ import { RouteGuard } from "@/components/routeGuard/route-guard";
 import { TransactionForm, TransactionList } from "@/features/transactions";
 import { UserAccountList, UserFormIndex, UserList } from "@/features/users";
 import { NotFound } from "@/pages/404";
+import { Company } from "@/pages/Company";
 import { Profile } from "@/pages/Profile";
 
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
@@ -21,6 +22,7 @@ export const SuperAdminRoutes = () => {
           <Route path="/userForm" element={<UserFormIndex />} />
           <Route path="/transactionForm" element={<TransactionForm />} />
           <Route path="/transactions" element={<TransactionList />} />
+          <Route path ="/companies" element={<Company/>}/>
           <Route path="*" element={<NotFound />} />
         </Routes>
       </RouteGuard>
