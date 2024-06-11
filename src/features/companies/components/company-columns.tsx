@@ -3,20 +3,18 @@ import { MoreHorizontal } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import {
-    DropdownMenu,
-    DropdownMenuContent,
-    DropdownMenuItem,
-    DropdownMenuLabel,
-    DropdownMenuSeparator,
-    DropdownMenuTrigger,
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { z } from "zod";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Link } from "react-router-dom";
-import { TCompany } from "../schema/companySchema";
+import { TCompanyFullData } from "../schema/companySchema";
 
-
-export const companyInfoColumns: ColumnDef<TCompany>[] = [
+export const companyInfoColumns: ColumnDef<TCompanyFullData>[] = [
   {
     id: "select",
     header: ({ table }) => (
@@ -43,11 +41,10 @@ export const companyInfoColumns: ColumnDef<TCompany>[] = [
     header: "Company ID",
     accessorKey: "companyId",
   },
-  
+
   {
     header: "Comapny Name",
     accessorKey: "companyName",
-    
   },
 
   {
@@ -59,7 +56,7 @@ export const companyInfoColumns: ColumnDef<TCompany>[] = [
     accessorKey: "actions",
     id: "actions",
     cell: ({ row }) => {
-      const userInfo = row.original;
+      const companyInfo = row.original;
 
       return (
         <DropdownMenu>
@@ -71,18 +68,21 @@ export const companyInfoColumns: ColumnDef<TCompany>[] = [
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
-            <DropdownMenuItem>Delete User</DropdownMenuItem>
+            <DropdownMenuItem>Delete</DropdownMenuItem>
 
             <DropdownMenuSeparator />
             <DropdownMenuItem
-              onClick={() => navigator.clipboard.writeText(userInfo.id)}
+            
             >
               Copy User ID
             </DropdownMenuItem>
 
             <DropdownMenuSeparator />
-            <DropdownMenuItem><Link to={`/dashboard/profile/${userInfo.id}`}>View Profile </Link></DropdownMenuItem>
-        
+            <DropdownMenuItem>
+              <Link to={`/dashboard/companyProfile/${companyInfo.id}`} state={{data : companyInfo}}>
+                View Company
+              </Link>
+            </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       );

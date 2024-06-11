@@ -1,11 +1,10 @@
 import {
-  BookUser,
   ChevronDown,
   Factory,
   LayoutDashboard,
   LibraryBig,
   LogOut,
-  UserRoundPlus,
+  UserRoundPlus
 } from "lucide-react";
 import { NavLink, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";

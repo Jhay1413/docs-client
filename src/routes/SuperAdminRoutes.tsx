@@ -1,4 +1,5 @@
 import { RouteGuard } from "@/components/routeGuard/route-guard";
+import { CompanyForm, CompanyProfile } from "@/features/companies";
 import { TransactionForm, TransactionList } from "@/features/transactions";
 import { UserAccountList, UserFormIndex, UserList } from "@/features/users";
 import { NotFound } from "@/pages/404";
@@ -23,6 +24,8 @@ export const SuperAdminRoutes = () => {
           <Route path="/transactionForm" element={<TransactionForm />} />
           <Route path="/transactions" element={<TransactionList />} />
           <Route path ="/companies" element={<Company/>}/>
+          <Route path ="/companyForm" element={<CompanyForm/>}/>
+          <Route path ="/companyProfile/:id" element={<CompanyProfile/>}/>
           <Route path="*" element={<NotFound />} />
         </Routes>
       </RouteGuard>

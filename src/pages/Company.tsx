@@ -1,12 +1,16 @@
-import { CompanyList, useCompanies } from "@/features/companies"
+import { CompanyList, companyFullDataArray, useCompanies } from "@/features/companies"
 
 export const Company = () =>{
-
+   
     const {companies} = useCompanies('companies')
+   
+    const validatedData = companyFullDataArray.safeParse(companies.data)
     
-
-
+    if(!validatedData.data){
+        return ""
+    }
     return (
-        <CompanyList {...companies}/>
+        <CompanyList data = {validatedData.data}/>
+
     )
 }
