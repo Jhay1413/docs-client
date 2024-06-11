@@ -3,7 +3,7 @@ import { useQuery, useQueryClient, useMutation } from "@tanstack/react-query";
 import axios from "axios";
 const userApi = import.meta.env.VITE_USER_API;
 
-export const useUsers = <T extends { id: string }>(
+export const useUsers = <T>(
   key: string,
   url: string
 ) => {

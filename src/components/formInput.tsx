@@ -6,7 +6,7 @@ import { Input } from "@/components/ui/input";
 
 type InputProps = {
   name: string;
-  placeholder: string;
+  placeholder?: string;
   label?: string;
   description?: string;
   link?: string;

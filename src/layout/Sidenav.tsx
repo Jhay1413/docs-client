@@ -1,9 +1,10 @@
 import {
-  BookUser,
   ChevronDown,
+  Factory,
   LayoutDashboard,
   LibraryBig,
-  UserRoundPlus,
+  LogOut,
+  UserRoundPlus
 } from "lucide-react";
 import { NavLink, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -44,6 +45,20 @@ export const SideNav = () => {
           >
             <LayoutDashboard className="" />
             <h1 className="text-md">Dashboard</h1>
+          </NavLink>
+        </li>
+        <li className="relative inline-block text-left px-4 ">
+          <NavLink
+                to="/dashboard/companies"
+            className={({ isActive }) => {
+              return `justify-start items-center flex w-full p-2 space-x-4 text-lg  rounded-md ${
+                isActive ? "bg-green-500 text-white" : ""
+              }`;
+            }}
+          >
+            <Factory />
+            
+            <h1 className="text-md">Companies</h1>
           </NavLink>
         </li>
         {userRole === "SUPERADMIN" && (
@@ -166,7 +181,7 @@ export const SideNav = () => {
             onClick={() => logout()}
             className="justify-start items-center flex w-full p-2 space-x-4 text-lg  rounded-md"
           >
-            <BookUser />
+           <LogOut />
             <h1 className="text-md font-normal">Logout</h1>
           </Button>
         </li>
