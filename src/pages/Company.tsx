@@ -3,10 +3,10 @@ import { CompanyList, companyFullDataArray, useCompanies } from "@/features/comp
 export const Company = () =>{
    
     const {companies} = useCompanies('companies')
-   
+  
+
     const validatedData = companyFullDataArray.safeParse(companies.data)
-    
-    if(!validatedData.data){
+    if(!validatedData.success){
         return ""
     }
     return (
