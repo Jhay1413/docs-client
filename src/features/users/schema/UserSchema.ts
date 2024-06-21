@@ -119,6 +119,7 @@ export const UserInfoWithAccount = UsersInfo.extend({
  account :AccountSchema
 });
 
+export const UsersArray = z.array(UsersInfo);
 
 export type TUserForm = z.infer<typeof UserFormSchema>;
 

@@ -5,6 +5,7 @@ import { UserAccountList } from "./components/user-account-list";
 import { UserFormIndex } from "./components/user-form-index";
 import { UserList } from "./components/user-list";
 import { useUserHook } from "./hooks/UserHook";
+import { useUser, useUsers } from "./hooks/query-gate";
 
 
 import { TUserWithAccount, TUsers } from "./schema/UserSchema";
@@ -21,7 +22,9 @@ export {
     getAccountInfoApi,
     EditForm,
     ProfilePage,
-    useUserHook
+    useUserHook,
+    useUsers,
+    useUser
    
    
 }

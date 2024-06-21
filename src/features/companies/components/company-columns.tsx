@@ -13,6 +13,7 @@ import {
 import { Checkbox } from "@/components/ui/checkbox";
 import { Link } from "react-router-dom";
 import { TCompanyFullData } from "../schema/companySchema";
+import { useCompany } from "../hooks/query-gate";
 
 export const companyInfoColumns: ColumnDef<TCompanyFullData>[] = [
   {
@@ -57,7 +58,14 @@ export const companyInfoColumns: ColumnDef<TCompanyFullData>[] = [
     id: "actions",
     cell: ({ row }) => {
       const companyInfo = row.original;
-
+      const { remove } = useCompany(
+        `/${companyInfo.id}`,
+        "companies",
+        companyInfo.id
+      );
+      const deleteCompany = () => {
+        remove.mutate(companyInfo.companyId);
+      };
       return (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
@@ -68,19 +76,26 @@ export const companyInfoColumns: ColumnDef<TCompanyFullData>[] = [
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
-            <DropdownMenuItem>Delete</DropdownMenuItem>
+            <DropdownMenuItem onClick={deleteCompany}>Delete</DropdownMenuItem>
 
             <DropdownMenuSeparator />
-            <DropdownMenuItem
-            
-            >
-              Copy User ID
-            </DropdownMenuItem>
+            <DropdownMenuItem>Copy User ID</DropdownMenuItem>
 
             <DropdownMenuSeparator />
             <DropdownMenuItem>
-              <Link to={`/dashboard/companyProfile/${companyInfo.id}`} state={{data : companyInfo}}>
+              <Link
+                to={`/dashboard/companyProfile/${companyInfo.id}`}
+                state={{ data: companyInfo }}
+              >
                 View Company
+              </Link>
+            </DropdownMenuItem>
+            <DropdownMenuItem>
+              <Link
+                to={`${companyInfo.id}/edit`}
+                state={{ data: companyInfo }}
+              >
+                Edit Company
               </Link>
             </DropdownMenuItem>
           </DropdownMenuContent>

@@ -14,7 +14,7 @@ export const UserFormIndex = () => {
 
   return (
     <div className="flex w-full h-full">
-      {user ? <UserForm user={user} /> : <UserForm />}
+      
     </div>
   );
 };
