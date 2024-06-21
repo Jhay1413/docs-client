@@ -99,7 +99,7 @@ export const SideNav = () => {
                     <h1 className="text-md">User list</h1>
                   </NavLink>
                   <NavLink
-                    to="/dashboard/userAccount"
+                    to="/dashboard/users/userAccount"
                     className={({ isActive }) => {
                       return `w-full block px-4 py-2  rounded-md ${
                         isActive ? "bg-green-500 text-white" : ""
