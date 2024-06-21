@@ -3,8 +3,6 @@ import { TCompanyFullInfo, companyFullInfo } from "../schema/companySchema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Form } from "@/components/ui/form";
 import { Separator } from "@/components/ui/separator";
-import { Button } from "@/components/ui/button";
-import { useEffect } from "react";
 import { useCompany } from "../hooks/query-gate";
 import { CompanyForm } from "./company-form";
 import { useParams } from "react-router-dom";
@@ -43,7 +41,7 @@ export const EditComponent = () => {
     name: "companyProjects",
   });
 
-  const onSubmit: SubmitHandler<TCompanyFullInfo> = async (data) => {
+  const onSubmit: SubmitHandler<TCompanyFullInfo> = async () => {
     // add.mutate(data);
   };
   return (

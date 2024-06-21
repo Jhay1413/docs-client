@@ -10,7 +10,7 @@ import { Profile } from "./pages/Profile";
 import { UserAccountList, UserForm, UserList } from "./features/users";
 import { Users } from "./pages/user-index";
 import { TransactionForm, TransactionList } from "./features/transactions";
-import { CompanyForm, CompanyList } from "./features/companies";
+import { CompanyList } from "./features/companies";
 import { NotFound } from "./pages/404";
 import { Login } from "./pages/Login";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
