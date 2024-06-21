@@ -14,16 +14,12 @@ export const EditComponent = () => {
   const form = useForm<TCompanyFullInfo>({
     resolver: zodResolver(companyFullInfo),
     defaultValues: {
-      id:entity.data?.id,
+      id: entity.data?.id,
       companyId: entity.data?.companyId,
       companyAddress: entity.data?.companyAddress,
       companyName: entity.data?.companyName,
       companyProjects: entity.data?.companyProjects,
-      contactPersons:
-        {
-          name: entity.data?.contactPersons?.name,
-          contactNumber: entity.data?.contactPersons?.contactNumber,
-        } || null,
+      contactPersons: entity.data?.contactPersons,
     },
   });
 

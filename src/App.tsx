@@ -50,7 +50,7 @@ function App() {
             >
               <Route path ="overview"element={<Dashboard/>}/>
               <Route path="users/" element={<Users />}>
-                <Route index element={<UserList />} />
+                <Route path ="list" element={<UserList />} />
                 <Route path="form" element={<UserForm />} />
                 <Route path={`profile/:id`} element={<Profile />} />
                 <Route path={`userAccount`} element={<UserAccountList />} />
