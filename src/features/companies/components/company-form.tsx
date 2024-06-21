@@ -51,16 +51,27 @@ export const CompanyForm = ({ fields, append, remove }: Props) => {
           placeholder="Company Address"
           label="Company Address"
         />
+         <FormInput
+          name="email"
+          placeholder="Email"
+          label="Email"
+        />
         <FormInput
           name="contactPersons.name"
           placeholder="Contact Person Name"
           label="Contact Person Name"
         />
         <FormInput
+          name="contactPersons.email"
+          placeholder="Contact Person Email"
+          label="Contact Person Email"
+        />
+        <FormInput
           name="contactPersons.contactNumber"
           placeholder="Contact Person Number"
           label="Contact Person Number"
         />
+        
       </div>
       <div className="w-full flex flex-col">
         <div className="col-span-3">
@@ -91,6 +102,11 @@ export const CompanyForm = ({ fields, append, remove }: Props) => {
                 name={`companyProjects.${index}.projectAddress`}
                 label="Project Address"
                 placeholder="Project Address"
+              />
+               <FormInput
+                name={`companyProjects.${index}.email`}
+                label="Project email"
+                placeholder="Project email"
               />
               <FormField
                 control={control}
@@ -132,6 +148,11 @@ export const CompanyForm = ({ fields, append, remove }: Props) => {
                 label="Contact Number"
                 placeholder="Contact Number"
               />
+               <FormInput
+                name={`companyProjects.${index}.contactPersons.email`}
+                label="Contact Email"
+                placeholder="Contact Email"
+              />
               {retainership && (
                 <FormInput
                   type="date"
@@ -151,9 +172,11 @@ export const CompanyForm = ({ fields, append, remove }: Props) => {
                       projectAddress: "",
                       retainer: false,
                       date_expiry: null,
+                      email:null,
                       contactPersons: {
                         name: "",
                         contactNumber: "",
+                        email:null
                       },
                     })
                   }

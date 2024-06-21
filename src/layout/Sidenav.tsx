@@ -89,7 +89,7 @@ export const SideNav = () => {
                   aria-labelledby="options-menu"
                 >
                   <NavLink
-                    to="/dashboard/users"
+                    to="/dashboard/users/list"
                     className={({ isActive }) => {
                       return `w-full block px-4 py-2  rounded-md ${
                         isActive ? "bg-green-500 text-white" : ""

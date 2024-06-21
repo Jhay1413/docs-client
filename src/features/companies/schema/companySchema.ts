@@ -7,10 +7,12 @@ export const companyProject = z.object({
   projectAddress: z.string(),
   retainer: z.boolean(),
   date_expiry: z.nullable(z.date()),
+  email : z.nullable(z.string()),
 });
 export const contactPerson = z.object({
   name: z.string(),
   contactNumber: z.string(),
+  email : z.nullable(z.string()),
 });
 export const CompanyInfo = z.object({
   id: z.optional(z.string()),
@@ -18,6 +20,7 @@ export const CompanyInfo = z.object({
   companyName: z.string(),
   companyAddress: z.string(),
   contactPersons: z.nullable(contactPerson),
+  email : z.nullable(z.string()),
 });
 export const companyWithContact = CompanyInfo.extend({
   contactPerson: contactPerson,

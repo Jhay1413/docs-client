@@ -17,15 +17,18 @@ export const AddComponent = () => {
       companyId: "",
       companyAddress: "",
       companyName: "",
+      email: null,
       companyProjects: [
         {
           projectName: "",
           projectAddress: "",
           retainer: false,
           date_expiry: null,
+          email:null,
           contactPersons: {
             name: "",
             contactNumber: "",
+            email:null
           },
         },
       ],
@@ -33,6 +36,7 @@ export const AddComponent = () => {
         {
           name: "",
           contactNumber: "",
+          email: null
         } || null,
     },
   });
