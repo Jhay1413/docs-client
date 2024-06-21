@@ -29,8 +29,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { UseMutationResult } from "@tanstack/react-query";
-import { EntityWithId } from "@/hooks/use-query-hook";
 import { useUser } from "../hooks/query-gate";
 
 
@@ -90,10 +88,7 @@ export const UserForm = () => {
       ...rest,
     };
     const formData = appendToFormData(newData);
-    const payload = {
-      id: undefined,
-      formData,
-    };
+ 
     add.mutate(formData);
   };
 

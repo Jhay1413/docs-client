@@ -1,13 +1,10 @@
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
-import { useCurrentUserRole } from "@/hooks/use-user-hook";
 import { Header } from "@/layout/Header";
 import { SideNav } from "@/layout/Sidenav";
-import { SuperAdminRoutes } from "./SuperAdminRoutes";
-import { AdminRoutes } from "./AdminRoutes";
 import { Outlet } from "react-router-dom";
 
 export const DashboardLayout = () => {
-    const role = useCurrentUserRole()
+   
 
   return (
     <div className="flex flex-col min-h-screen min-w-screen bg-[#f4f4f4]">
