@@ -4,6 +4,7 @@ import { Header } from "@/layout/Header";
 import { SideNav } from "@/layout/Sidenav";
 import { SuperAdminRoutes } from "./SuperAdminRoutes";
 import { AdminRoutes } from "./AdminRoutes";
+import { Outlet } from "react-router-dom";
 
 export const DashboardLayout = () => {
     const role = useCurrentUserRole()
@@ -20,7 +21,7 @@ export const DashboardLayout = () => {
       </div>
       <div className="grow overflow-auto flex items-center justify-center px-2 ">
         <ScrollArea className="h-[calc(100vh-90px)] bg-white w-full rounded-sm p-8">
-           {role === "SUPERADMIN" ? <SuperAdminRoutes/> : <AdminRoutes/> }
+            <Outlet/>
           <ScrollBar orientation="horizontal" />
         </ScrollArea>
       </div>

@@ -1,9 +1,10 @@
 import {
   Form,
-  FormControl, FormField,
+  FormControl,
+  FormField,
   FormItem,
   FormLabel,
-  FormMessage
+  FormMessage,
 } from "@/components/ui/form";
 import { format } from "date-fns";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -18,14 +19,7 @@ import { Separator } from "@/components/ui/separator";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { z } from "zod";
 
-import { toast } from "react-toastify";
-
-import {
-  RegisterSchema,
-  TRegister,
-  TUserForm,
-  UserFormSchema,
-} from "../schema/UserSchema";
+import { RegisterSchema, TRegister } from "../schema/UserSchema";
 import { Divisions } from "@/data/data";
 import FormInput from "@/components/formInput";
 import {
@@ -35,21 +29,21 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { useUserMutation } from "../hooks/mutation";
+import { UseMutationResult } from "@tanstack/react-query";
+import { EntityWithId } from "@/hooks/use-query-hook";
+import { useUser } from "../hooks/query-gate";
 
-type FormProps = {
-  user?: TUserForm;
-};
-export const UserForm = ({ user }: FormProps) => {
+
+export const UserForm = () => {
+  const { add } = useUser("", "users", null);
   const [selectedDivision, setSelectedDivision] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [preview, setPreview] = useState("");
   const [showPass, setShowPass] = useState(false);
   const [position, setPosition] = useState("");
-  const {useRegisterUserMutation } = useUserMutation();
 
   const form = useForm<TRegister>({
-    resolver: user ? zodResolver(UserFormSchema) : zodResolver(RegisterSchema),
+    resolver: zodResolver(RegisterSchema),
     mode: "onChange",
     defaultValues: {
       email: "",
@@ -68,17 +62,6 @@ export const UserForm = ({ user }: FormProps) => {
       password: "",
     },
   });
-  const onSuccess = () => {
-    toast.success("User updated successfully");
-    form.reset();
-    setSubmitting(false);
-  };
-
-  const onError = (error: any) => {
-    toast.error(error?.message);
-    setSubmitting(false);
-  };
-
   const appendToFormData = (data: TRegister) => {
     const formData = new FormData();
 
@@ -107,8 +90,11 @@ export const UserForm = ({ user }: FormProps) => {
       ...rest,
     };
     const formData = appendToFormData(newData);
-
-    useRegisterUserMutation.mutate(formData, { onSuccess, onError });
+    const payload = {
+      id: undefined,
+      formData,
+    };
+    add.mutate(formData);
   };
 
   return (
@@ -122,7 +108,7 @@ export const UserForm = ({ user }: FormProps) => {
             <div className="flex flex-col  items-center justify-center ">
               <div className="flex flex-col space-y-4">
                 <Avatar className="w-[250px] h-[250px]">
-                  <AvatarImage src={user ? user.signedUrl : preview} />
+                  <AvatarImage src={preview} />
                   <AvatarFallback>CN</AvatarFallback>
                 </Avatar>
                 <FormField
@@ -239,9 +225,7 @@ export const UserForm = ({ user }: FormProps) => {
                       <FormLabel>Division</FormLabel>
                       <FormControl>
                         <Select
-                          defaultValue={
-                            user ? user.assignedDivision : field.value
-                          }
+                          defaultValue={field.value}
                           onValueChange={(value) => {
                             setSelectedDivision(value);
                             field.onChange(value);
@@ -275,9 +259,7 @@ export const UserForm = ({ user }: FormProps) => {
                       <FormLabel>Position</FormLabel>
                       <FormControl>
                         <Select
-                          defaultValue={
-                            user ? user.assignedPosition : field.value
-                          }
+                          defaultValue={field.value}
                           onValueChange={(value) => {
                             if (value === "MANAGER") {
                               form.setValue("assignedSection", null);
@@ -312,7 +294,7 @@ export const UserForm = ({ user }: FormProps) => {
                         <Select
                           onValueChange={(value) => field.onChange(value)}
                           disabled={!selectedDivision || position === "MANAGER"}
-                          defaultValue={user?.assignedSection || ""}
+                          defaultValue={""}
                         >
                           <SelectTrigger className="w-full">
                             <SelectValue placeholder="Select Section" />
@@ -385,7 +367,7 @@ export const UserForm = ({ user }: FormProps) => {
                         <FormLabel>Account Type</FormLabel>
                         <FormControl>
                           <Select
-                            defaultValue={user ? user.accountRole : field.value}
+                            defaultValue={field.value}
                             onValueChange={(value) => field.onChange(value)}
                           >
                             <SelectTrigger className="w-full">

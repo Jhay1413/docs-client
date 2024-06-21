@@ -5,6 +5,7 @@ import { UserAccountList, UserFormIndex, UserList } from "@/features/users";
 import { NotFound } from "@/pages/404";
 import { Company } from "@/pages/Company";
 import { Profile } from "@/pages/Profile";
+import { Users } from "@/pages/Users";
 
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
@@ -18,13 +19,13 @@ export const SuperAdminRoutes = () => {
         <Routes>
           <Route path={`/profile/:id`} element={<Profile />} />
           <Route path={`/userAccount`} element={<UserAccountList />} />
-          <Route path={`/users`} element={<UserList />} />
+          <Route path={`/users`} element={<Users/>} />
           <Route path={`/userForm/:id`} element={<UserFormIndex />} />
           <Route path="/userForm" element={<UserFormIndex />} />
           <Route path="/transactionForm" element={<TransactionForm />} />
           <Route path="/transactions" element={<TransactionList />} />
           <Route path ="/companies" element={<Company/>}/>
-          <Route path ="/companyForm" element={<CompanyForm/>}/>
+          {/* <Route path ="/companyForm" element={<CompanyForm/>}/> */}
           <Route path ="/companyProfile/:id" element={<CompanyProfile/>}/>
           <Route path="*" element={<NotFound />} />
         </Routes>

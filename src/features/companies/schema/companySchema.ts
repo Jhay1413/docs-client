@@ -1,6 +1,7 @@
 import { z } from "zod";
 
 export const companyProject = z.object({
+  projectId : z.string(),
   id: z.optional(z.string()),
   projectName: z.string(),
   projectAddress: z.string(),
@@ -47,6 +48,7 @@ export const companyFullData = companyFullInfo
     contactPersons: z.nullable(z.array(contactPerson)),
   });
 export const companyFullDataArray = z.array(companyFullData);
+
 
 export type TCompanyFullDataArray = z.infer<typeof companyFullDataArray>
 export type TCompanyFullData = z.infer<typeof companyFullData>;

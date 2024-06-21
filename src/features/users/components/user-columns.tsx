@@ -10,26 +10,13 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { z } from "zod";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Link } from "react-router-dom";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { TUsers } from "../schema/UserSchema";
 
-const UserInfoColumns = z.object({
-  id: z.string(),
-  employeeId: z.string(),
-  assignedSection: z.nullable(z.string()),
-  assignedDivision: z.string(),
-  assignedPosition: z.string(),
-  dateStarted: z.date(),
-  birthDate: z.date(),
-  jobStatus: z.string(),
-  firstName: z.string(),
-  lastName: z.string(),
-  signedUrl: z.string(),
-});
-export type UserInfo = z.infer<typeof UserInfoColumns>;
-export const userInfoColumns: ColumnDef<UserInfo>[] = [
+
+export const userInfoColumns: ColumnDef<TUsers>[] = [
   {
     id: "select",
     header: ({ table }) => (
@@ -160,7 +147,7 @@ export const userInfoColumns: ColumnDef<UserInfo>[] = [
             </DropdownMenuItem>
 
             <DropdownMenuSeparator />
-            <DropdownMenuItem><Link to={`/dashboard/profile/${userInfo.id}`}>View Profile </Link></DropdownMenuItem>
+            <DropdownMenuItem><Link to={`/dashboard/users/profile/${userInfo.id}`}>View Profile </Link></DropdownMenuItem>
         
           </DropdownMenuContent>
         </DropdownMenu>
