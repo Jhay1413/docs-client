@@ -79,8 +79,12 @@ export const useEntity = <T extends {id?:string}>(
       queryClient.setQueryData([key], (cachedEntities: T[] | undefined) =>
         cachedEntities ? [...cachedEntities, entity] : undefined
       );
+      toast.success("Data updated successfully");
       invalidateActive();
     },
+    onError:(data)=>{
+      console.log(data);
+    }
   });
   return {
     entity,
