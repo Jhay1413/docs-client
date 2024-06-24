@@ -13,7 +13,6 @@ import {
 import { Checkbox } from "@/components/ui/checkbox";
 import { Link } from "react-router-dom";
 import { TCompanyFullData } from "../schema/companySchema";
-import { useCompany } from "../hooks/query-gate";
 
 export const companyInfoColumns: ColumnDef<TCompanyFullData>[] = [
   {
