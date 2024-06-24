@@ -22,9 +22,7 @@ export const CompanyInfo = z.object({
   contactPersons: z.nullable(contactPerson),
   email : z.nullable(z.string()),
 });
-export const companyWithContact = CompanyInfo.extend({
-  contactPerson: contactPerson,
-});
+
 export const projectWithContact = companyProject.extend({
   contactPersons: z.nullable(contactPerson),
 });

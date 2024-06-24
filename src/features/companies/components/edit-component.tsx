@@ -6,16 +6,17 @@ import { Separator } from "@/components/ui/separator";
 import { useCompany } from "../hooks/query-gate";
 import { CompanyForm } from "./company-form";
 import { useParams } from "react-router-dom";
+import { Button } from "@/components/ui/button";
 
 export const EditComponent = () => {
   const { id } = useParams();
-  const { entity } = useCompany(`/${id}`, "companies", id);
-  console.log(entity.data);
+  const { entity, update } = useCompany(`${id}`, "companies", id);
   const form = useForm<TCompanyFullInfo>({
     resolver: zodResolver(companyFullInfo),
     defaultValues: {
       id: entity.data?.id,
       companyId: entity.data?.companyId,
+      email: entity.data?.email,
       companyAddress: entity.data?.companyAddress,
       companyName: entity.data?.companyName,
       companyProjects: entity.data?.companyProjects,
@@ -37,8 +38,8 @@ export const EditComponent = () => {
     name: "companyProjects",
   });
 
-  const onSubmit: SubmitHandler<TCompanyFullInfo> = async () => {
-    // add.mutate(data);
+  const onSubmit: SubmitHandler<TCompanyFullInfo> = async (data) => {
+    update.mutate(data);
   };
   return (
     <div className="flex flex-col gap-4 p-4 w-full h-full bg-white ">
@@ -52,13 +53,13 @@ export const EditComponent = () => {
           />
           <Separator className="mt-4" />
           <div className="mt-4 flex w-full justify-end">
-            {/* <Button
+            <Button
               type="submit"
               onClick={() => console.log(form.formState.errors)}
-              disabled={add.isPending}
+              disabled={update.isPending}
             >
-              {add.isPending ? "Submitting..." : "Submit"}
-            </Button> */}
+              {update.isPending ? "Submitting..." : "Submit"}
+            </Button>
           </div>
         </form>
       </Form>

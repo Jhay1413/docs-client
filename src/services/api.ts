@@ -10,5 +10,5 @@ export async function del(url:string,params?:Object){
   return await axios.delete(url,params).then((res)=>res)
 }
 export async function put(url:string,params?:Object){
-  return await axios.put(url,params).then((res)=>res)
+  return await axios.put(url,params).then((res)=>res.data)
 }

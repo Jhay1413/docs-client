@@ -104,7 +104,7 @@ export const CompanyForm = ({ fields, append, remove }: Props) => {
                 placeholder="Project Address"
               />
                <FormInput
-                name={`companyProjects.${index}.email`}
+               name={`companyProjects.${index}.email`}
                 label="Project email"
                 placeholder="Project email"
               />
@@ -172,7 +172,7 @@ export const CompanyForm = ({ fields, append, remove }: Props) => {
                       projectAddress: "",
                       retainer: false,
                       date_expiry: null,
-                      email:null,
+                      email:"",
                       contactPersons: {
                         name: "",
                         contactNumber: "",

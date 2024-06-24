@@ -57,15 +57,17 @@ export const companyInfoColumns: ColumnDef<TCompanyFullData>[] = [
     accessorKey: "actions",
     id: "actions",
     cell: ({ row }) => {
+
+      //should add prompt component for delete
       const companyInfo = row.original;
-      const { remove } = useCompany(
-        `/${companyInfo.id}`,
-        "companies",
-        companyInfo.id
-      );
-      const deleteCompany = () => {
-        remove.mutate(companyInfo.companyId);
-      };
+      // const { remove } = useCompany(
+      //   `/${companyInfo.id}`,
+      //   "companies",
+      //   companyInfo.id
+      // );
+      // const deleteCompany = () => {
+      //   remove.mutate(companyInfo.companyId);
+      // };
       return (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
@@ -76,7 +78,7 @@ export const companyInfoColumns: ColumnDef<TCompanyFullData>[] = [
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
-            <DropdownMenuItem onClick={deleteCompany}>Delete</DropdownMenuItem>
+            {/* <DropdownMenuItem onClick={(deleteCompany)}>Delete</DropdownMenuItem> */}
 
             <DropdownMenuSeparator />
             <DropdownMenuItem>Copy User ID</DropdownMenuItem>
