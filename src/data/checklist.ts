@@ -7,6 +7,10 @@ export const checkList = [
         value: "dischargePermit",
         checkList: [
           {
+            name: "Scope of Work",
+            value: "scopeOfWork",
+          },
+          {
             name: "Copy of the Government ID of the Proponent",
             value: "governmentIdOfProponent",
           },

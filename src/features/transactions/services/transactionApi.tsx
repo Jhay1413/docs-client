@@ -1,8 +1,8 @@
 import axios from "axios";
-import { TtransactionDetails } from "../schema/TransactionSchema";
+import { TFormData } from "../schema/TransactionSchema";
 
 const transactionApi = import.meta.env.VITE_TRANSACTION_API
-export const newTransaction = async (data: TtransactionDetails) => {
+export const newTransaction = async (data: TFormData) => {
     try {
         const response = await axios.post(`${transactionApi}/`,data)
         return response

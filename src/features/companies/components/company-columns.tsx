@@ -93,7 +93,7 @@ export const companyInfoColumns: ColumnDef<TCompanyFullData>[] = [
             </DropdownMenuItem>
             <DropdownMenuItem>
               <Link
-                to={`${companyInfo.id}/edit`}
+                to={`${companyInfo.id}`}
                 state={{ data: companyInfo }}
               >
                 Edit Company

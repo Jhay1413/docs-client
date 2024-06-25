@@ -9,7 +9,7 @@ import { DashboardLayout } from "./routes/Layout";
 import { Profile } from "./pages/Profile";
 import { UserAccountList, UserForm, UserList } from "./features/users";
 import { Users } from "./pages/user-index";
-import { TransactionForm, TransactionList } from "./features/transactions";
+import { InsertComponent, TransactionList } from "./features/transactions";
 import { CompanyList } from "./features/companies";
 import { NotFound } from "./pages/404";
 import { Login } from "./pages/Login";
@@ -60,10 +60,10 @@ function App() {
               <Route path="companies/" element={<CompanyIndex />}>
                 <Route index element={<CompanyList />} />
                 <Route path="add-form" element={<AddComponent />} />
-                <Route path = {`:id/edit`} element={<EditComponent/>}/>
+                <Route path = {`:id`} element={<EditComponent/>}/>
               </Route>
 
-              <Route path="transactionForm" element={<TransactionForm />} />
+              <Route path="transactionForm" element={<InsertComponent/>} />
               <Route path="transactions" element={<TransactionList />} />
             </Route>
 

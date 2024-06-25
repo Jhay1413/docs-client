@@ -5,13 +5,15 @@ export const fileData = z.object({
   fileOriginalName: z.string(),
   fileName: z.string(),
 });
-export const transactionData = z.object({
-  transactionId: z.string(),
+export const formTransactionData = z.object({
+  id:z.optional(z.string()),
+  transactionId: z.optional(z.string()),
   documentType: z.string({
     message: "Document TYPE REQUIRED",
   }),
   subject: z.string(),
   company: z.string(),
+  project :z.string(),
   forwardedTo: z.string(),
   remarks: z.string(),
   createdBy: z.string(),
@@ -41,4 +43,4 @@ export const documentInfoSchema = z.object({
 });
 export type TDcoumentInfo = z.infer<typeof documentInfoSchema>;
 //Transaction Types
-export type TtransactionDetails = z.infer<typeof transactionData>;
+export type TFormData = z.infer<typeof formTransactionData>;
