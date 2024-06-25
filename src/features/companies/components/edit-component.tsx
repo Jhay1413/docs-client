@@ -7,10 +7,18 @@ import { useCompany } from "../hooks/query-gate";
 import { CompanyForm } from "./company-form";
 import { useParams } from "react-router-dom";
 import { Button } from "@/components/ui/button";
+import { useEffect } from "react";
 
 export const EditComponent = () => {
   const { id } = useParams();
+  console.log(id);
   const { entity, update } = useCompany(`${id}`, "companies", id);
+  console.log(entity.data);
+  //   useEffect(() => {
+  //     if (add.isSuccess) {
+  //       form.reset();
+  //     }
+  //   }, [add.isSuccess, form.reset]);
   const form = useForm<TCompanyFullInfo>({
     resolver: zodResolver(companyFullInfo),
     defaultValues: {
@@ -23,12 +31,6 @@ export const EditComponent = () => {
       contactPersons: entity.data?.contactPersons,
     },
   });
-
-  //   useEffect(() => {
-  //     if (add.isSuccess) {
-  //       form.reset();
-  //     }
-  //   }, [add.isSuccess, form.reset]);
   const {
     fields: projectFields,
     append: appendProject,
@@ -41,6 +43,20 @@ export const EditComponent = () => {
   const onSubmit: SubmitHandler<TCompanyFullInfo> = async (data) => {
     update.mutate(data);
   };
+  useEffect(() => {
+    if (entity.data) {
+      form.reset({
+        id: entity.data.id,
+        companyId: entity.data.companyId,
+        email: entity.data.email,
+        companyAddress: entity.data.companyAddress,
+        companyName: entity.data.companyName,
+        companyProjects: entity.data.companyProjects,
+        contactPersons: entity.data.contactPersons,
+      });
+    }
+  }, [entity.data, form]);
+
   return (
     <div className="flex flex-col gap-4 p-4 w-full h-full bg-white ">
       <h1 className="text-4xl ">Company Form</h1>

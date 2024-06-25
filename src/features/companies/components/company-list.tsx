@@ -6,7 +6,6 @@ import { Link } from "react-router-dom";
 
 export const CompanyList = () => {
   const { entities } = useCompanies("companies", "/");
-
   if (!entities.data) {
     return "No Data !";
   }
