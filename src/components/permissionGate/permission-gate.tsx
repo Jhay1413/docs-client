@@ -26,6 +26,7 @@ export default function PermissionsGate({
   const role = useCurrentUserRole();
   const permissions = PERMISSIONS[role];
   
+  console.log(role);
   const permissionGranted = hasPermission({ permissions, scopes });
 
   if (!permissionGranted) return <></>;

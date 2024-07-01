@@ -40,7 +40,10 @@ import { useFormContext } from "react-hook-form";
 import { checkList } from "@/data/checklist";
 import FormInput from "@/components/formInput";
 import { Divisions } from "@/data/data";
-import { TCompanyFullData } from "@/features/companies";
+import { CompanyInfo } from "@/features/companies";
+import { useCurrentUserRole } from "@/hooks/hooks/use-user-hook";
+import { docRoute } from "@/data/doc-route";
+import { z } from "zod";
 
 type fileProps = {
   name: string;
@@ -49,9 +52,13 @@ type fileProps = {
 
 type props = {
   setFiles: Dispatch<SetStateAction<fileProps[]>>;
-  entities: TCompanyFullData[] | undefined;
+  entities: z.infer<typeof CompanyInfo>[] | undefined;
 };
 export const TransactionForm = ({ setFiles, entities }: props) => {
+
+  const role = useCurrentUserRole();
+  const route = docRoute.filter((data)=>data.accessRole.includes(role))
+
   const { control } = useFormContext();
   const [company, setCompany] = useState<string>("");
   const [team, setTeam] = useState("");
@@ -84,7 +91,7 @@ export const TransactionForm = ({ setFiles, entities }: props) => {
       <div className="grid grid-cols-3 gap-12 ">
         <FormField
           control={control}
-          name="company"
+          name="companyId"
           render={({ field }) => (
             <FormItem>
               <FormLabel>Company</FormLabel>
@@ -117,7 +124,7 @@ export const TransactionForm = ({ setFiles, entities }: props) => {
         />
         <FormField
           control={control}
-          name="project"
+          name="projectId"
           render={({ field }) => (
             <FormItem>
               <FormLabel>Project</FormLabel>
@@ -150,7 +157,7 @@ export const TransactionForm = ({ setFiles, entities }: props) => {
         <FormInput placeholder="Subject" label="Subject" name="subject" />
         <FormField
           control={control}
-          name="toDepartment"
+          name="targetDepartment"
           render={({ field }) => (
             <FormItem>
               <FormLabel>Department</FormLabel>
@@ -276,7 +283,10 @@ export const TransactionForm = ({ setFiles, entities }: props) => {
                     <SelectValue placeholder="Forward to " />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="ADMIN">ADMIN</SelectItem>
+                    {route.map((route,index)=>(
+                          <SelectItem key={index} value={route.name}>{route.name}</SelectItem>
+                    ))}
+                  
                   </SelectContent>
                 </Select>
               </FormControl>
@@ -367,6 +377,8 @@ export const TransactionForm = ({ setFiles, entities }: props) => {
                     <SelectItem value="ON-PROCESS">ON-PROCESS</SelectItem>
                     <SelectItem value="APPROVE">APPROVE</SelectItem>
                     <SelectItem value="DORMANT">DORMANT</SelectItem>
+                    <SelectItem value="DROP">DROP</SelectItem>
+                    <SelectItem value="RECIEVED">RECIEVED</SelectItem>
                   </SelectContent>
                 </Select>
               </FormControl>
@@ -435,7 +447,7 @@ export const TransactionForm = ({ setFiles, entities }: props) => {
           <TableHeader>
             <TableRow>
               <TableHead className="w-[100px]">Name</TableHead>
-              <TableHead>Status</TableHead>
+         
               <TableHead className="text-right">Action</TableHead>
             </TableRow>
           </TableHeader>
@@ -445,7 +457,7 @@ export const TransactionForm = ({ setFiles, entities }: props) => {
                 <TableCell className="font-medium w-[200px]">
                   {check.name}
                 </TableCell>
-                <TableCell>Not Submitted</TableCell>
+              
                 <TableCell className="flex justify-end">
                   <div className="grid w-full max-w-sm items-center gap-1.5 justify-end">
                     <Input

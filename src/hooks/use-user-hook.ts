@@ -24,6 +24,15 @@ export function getCurrentUserId(){
     }
     return null;
 }
+export function getCurrentAccountId(){
+    const userinfo = localStorage.getItem("userinfo");
+
+    if(userinfo){
+        const data = JSON.parse(userinfo);
+        return data.accountId;
+    }
+    return null;
+}
 export function useCurrentUserFirstName(){
     const userinfo = localStorage.getItem("userinfo");
     if(userinfo){

@@ -1,5 +1,5 @@
 import { SubmitHandler, useFieldArray, useForm } from "react-hook-form";
-import { TCompanyFullInfo, companyFullInfo } from "../schema/companySchema";
+
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Form } from "@/components/ui/form";
 import { Separator } from "@/components/ui/separator";
@@ -8,6 +8,8 @@ import { CompanyForm } from "./company-form";
 import { useParams } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { useEffect } from "react";
+import { CompanyInfo } from "../schema/companySchema";
+import { z } from "zod";
 
 export const EditComponent = () => {
   const { id } = useParams();
@@ -19,8 +21,8 @@ export const EditComponent = () => {
   //       form.reset();
   //     }
   //   }, [add.isSuccess, form.reset]);
-  const form = useForm<TCompanyFullInfo>({
-    resolver: zodResolver(companyFullInfo),
+  const form = useForm<z.infer<typeof CompanyInfo>>({
+    resolver: zodResolver(CompanyInfo),
     defaultValues: {
       id: entity.data?.id,
       companyId: entity.data?.companyId,
@@ -40,7 +42,7 @@ export const EditComponent = () => {
     name: "companyProjects",
   });
 
-  const onSubmit: SubmitHandler<TCompanyFullInfo> = async (data) => {
+  const onSubmit: SubmitHandler<z.infer<typeof CompanyInfo>> = async (data) => {
     update.mutate(data);
   };
   useEffect(() => {

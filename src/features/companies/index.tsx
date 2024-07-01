@@ -3,7 +3,7 @@ import { CompanyList } from "./components/company-list";
 import { CompanyProfile } from "./components/company-profile";
 import { useCompanies } from "./hooks/query-gate";
 // import { useCompanies } from "./hooks/useCompanyHooks";
-import { CompanyInfo, TCompany, TCompanyFullData, TCompanyFullInfo, companyFullData, companyFullDataArray } from "./schema/companySchema";
+import { CompanyInfo, companyProject } from "./schema/companySchema";
 
 export {
     CompanyList,
@@ -11,11 +11,6 @@ export {
     useCompanies,
     CompanyForm,
     CompanyProfile,
-    companyFullData,
-    companyFullDataArray
-}
-export type {
-    TCompany,
-    TCompanyFullInfo,
-    TCompanyFullData
+ 
+    companyProject
 }

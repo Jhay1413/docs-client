@@ -7,12 +7,13 @@ import {
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
-import { TFormData, formTransactionData } from "../schema/TransactionSchema";
-import { getCurrentUserId, useCurrentDivision } from "@/hooks/use-user-hook";
+import { getCurrentUserId, useCurrentDivision, useCurrentUserRole } from "@/hooks/use-user-hook";
 import { useTransaction } from "../hooks/query-gate";
 import { useCompanies } from "@/features/companies";
 import { TransactionForm } from "./transaction-form";
 import { uploadMultipleFiles } from "@/services/uploadFile";
+import { transactionFormData } from "../schema/TransactionSchema";
+import { z } from "zod";
 
 type fileProps = {
   name: string;
@@ -25,30 +26,33 @@ export const InsertComponent = () => {
   const [files, setFiles] = useState<fileProps[]>([]);
 
   const userId = getCurrentUserId();
+  const role = useCurrentUserRole()
   const currentDivision = useCurrentDivision();
-  const form = useForm<TFormData>({
-    resolver: zodResolver(formTransactionData),
+  const form = useForm<z.infer<typeof transactionFormData>>({
+    resolver: zodResolver(transactionFormData),
     mode: "onChange",
     defaultValues: {
       documentType: "",
       subject: "",
-      company: "",
-      project: "",
+      dueDate : null,
+      team: "",
+      status:"",
+      priority:"",
+      originDepartment:currentDivision,
+      targetDepartment:"",
+      transactionId:"",
+      companyId: "",
+      projectId: "",
       forwardedTo: "",
       remarks: "",
-      createdBy: userId,
-      fromDepartment: currentDivision,
-      toDepartment: "",
-      dueDate: new Date(),
-      forwardedBy: userId,
+      forwardedById: userId,
+      forwardedByRole:role,
       dateForwarded: new Date(), // Default value is current date
-      team: "",
       documentSubType: "",
     },
   });
 
-  const onSubmit: SubmitHandler<TFormData> = async (transactionData) => {
-
+  const onSubmit: SubmitHandler<z.infer<typeof transactionFormData>> = async (transactionData) => {
    
     const formData = new FormData();
     files.forEach((file, index) => {
@@ -59,9 +63,9 @@ export const InsertComponent = () => {
     if (!uploadFile) {
     }
     const data = uploadFile.data.data;
-    const payload = { ...transactionData, fileData: data };
-
-    add.mutate(payload);
+    const payload = { ...transactionData, fileData: data ,dueDate:new Date(transactionData.dueDate!).toISOString(),dateForwarded:new Date(transactionData.dateForwarded).toISOString()};
+    console.log(payload)
+  add.mutate(payload);
   };
   return (
     <div className="w-full h-full bg-white p-4 rounded-lg">
@@ -69,7 +73,7 @@ export const InsertComponent = () => {
         <form onSubmit={form.handleSubmit(onSubmit)}>
           <TransactionForm setFiles={setFiles} entities={entities.data} />
           <div className="flex justify-end">
-            <Button >Submit</Button>
+            <Button type="submit" onClick={()=>console.log(form.formState,form.control._formState)}>Submit</Button>
           </div>
         </form>
       </Form>
