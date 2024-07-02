@@ -11,12 +11,10 @@ import { z } from "zod";
 import { Link } from "react-router-dom";
 import { ColumnDef } from "@tanstack/react-table";
 import { MoreHorizontal } from "lucide-react";
-import { transactionInfo } from "../../schema/TransactionSchema";
+import { transactionData } from "../../schema/TransactionSchema";
 import { Checkbox } from "@/components/ui/checkbox";
-import { useTransaction } from "../../hooks/query-gate";
-import { getCurrentAccountId, getCurrentUserId } from "@/hooks/use-user-hook";
 
-type InboxColumn = z.infer<typeof transactionInfo>;
+type InboxColumn = z.infer<typeof transactionData>;
 
 export const inboxColumn: ColumnDef<InboxColumn>[] = [
   {
@@ -81,12 +79,11 @@ export const inboxColumn: ColumnDef<InboxColumn>[] = [
     header: "Forwarded By:",
     accessorKey: "forwardedBy",
     cell: ({ row }) => {
-      const transactionHistory =
-        row.original.transactionHistory && row.original.transactionHistory[0];
-        console.log(transactionHistory)
+      const transactionHistory = row.original;
+      console.log(transactionHistory);
       return (
         <div className="flex flex-col gap-4">
-          <h1>{transactionHistory?.fromDepartment}</h1>
+          <h1>{transactionHistory?.originDepartment}</h1>
           <h1>{transactionHistory?.forwardedByRole}</h1>
         </div>
       );
@@ -102,7 +99,7 @@ export const inboxColumn: ColumnDef<InboxColumn>[] = [
     accessorKey: "actions",
     id: "actions",
     cell: ({ row }) => {
-      
+      const transactionInfo = row.original;
       return (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
@@ -114,14 +111,19 @@ export const inboxColumn: ColumnDef<InboxColumn>[] = [
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
 
-            
-            <DropdownMenuItem>Delete</DropdownMenuItem>
+           <DropdownMenuItem>
+            Forward
+           </DropdownMenuItem>
 
             <DropdownMenuSeparator />
 
             <DropdownMenuSeparator />
             <DropdownMenuItem>
-              <Link to="">View Details</Link>
+              <Link
+                to={`/dashboard/transactions/history/${transactionInfo.transactionId}`}
+              >
+                View Details
+              </Link>
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>

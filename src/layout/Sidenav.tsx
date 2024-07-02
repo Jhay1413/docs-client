@@ -149,7 +149,7 @@ export const SideNav = () => {
                   <h1 className="text-md">Transaction list</h1>
                 </NavLink>
                 <NavLink
-                  to={`/dashboard/transactions/incoming-transaction/${id}`}
+                  to={`/dashboard/transactions/inbox/${id}`}
                   className={({ isActive }) => {
                     return `w-full block px-4 py-2  rounded-md ${
                       isActive ? "bg-green-500 text-white" : ""

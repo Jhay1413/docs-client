@@ -150,35 +150,43 @@ export const HistoryComponent = () => {
           <div className=" w-2 bg-green-500" />
           <div className="grid grid-cols-3 gap-10 p-4 w-full">
             <div className="flex flex-col">
-              <h1 className="text-muted-foreground text-sm">Department:</h1>
+              <h1 className="text-muted-foreground text-sm">Forwarded To:</h1>
               <h1 className="text-base font-semibold">
                 {validatedData.data?.targetDepartment}
               </h1>
             </div>
             <div className="flex flex-col">
-              <h1 className="text-muted-foreground text-sm">Section:</h1>
+              <h1 className="text-muted-foreground text-sm">Due Date:</h1>
               <h1 className="text-base font-semibold">
-                {validatedData.data?.team}
+                {validatedData.data?.dueDate}
               </h1>
             </div>
             <div className="flex flex-col">
-              <h1 className="text-muted-foreground text-sm">Document type:</h1>
+              <h1 className="text-muted-foreground text-sm">Priority:</h1>
               <h1 className="text-base font-semibold">
-                {validatedData.data?.documentType}
+                {validatedData.data?.priority}
               </h1>
             </div>
             <div className="flex flex-col">
               <h1 className="text-muted-foreground text-sm">
-                Document Sub type:
+               Status:
               </h1>
               <h1 className="text-base font-semibold">
-                {validatedData.data?.documentSubType}
+                {validatedData.data?.status}
+              </h1>
+            </div>
+            <div className="flex flex-col col-span-2">
+              <h1 className="text-muted-foreground text-sm">Remarks:</h1>
+              <h1 className="text-base font-semibold">
+                {validatedData.data?.remarks}
               </h1>
             </div>
             <div className="flex flex-col">
-              <h1 className="text-muted-foreground text-sm">Subject:</h1>
+              <h1 className="text-muted-foreground text-sm">
+               Date Forwarded:
+              </h1>
               <h1 className="text-base font-semibold">
-                {validatedData.data?.subject}
+                {validatedData.data?.dateForwarded}
               </h1>
             </div>
           </div>
