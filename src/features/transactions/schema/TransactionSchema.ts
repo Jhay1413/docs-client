@@ -22,19 +22,18 @@ export const transactionFormData = z.object({
   team:z.string(),
   status:z.string(),
   priority:z.string(),
-  companyId:z.string(),
-  projectId:z.string(),
+  companyId:z.string().optional(),
+  projectId:z.string().optional(),
   forwardedTo:z.nullable(z.string()).optional(),
   remarks:z.string(),
   receivedById:z.nullable(z.string()).optional(),
   forwardedById:z.string(),
   dateForwarded: z.nullable(z.string().datetime()),
-  dateReceived:z.nullable(z.string()).optional(),
+  dateReceived:z.nullable(z.string().datetime()).optional(),
   originDepartment:z.string(),
   targetDepartment:z.string(),
   forwardedByRole:z.string(),
   fileData: z.array(filesSchema).optional(),
-
 })
 export const transactionLogsData = z.object({
   id              :z.string().optional(),
@@ -72,10 +71,7 @@ export const transactionData = transactionFormData.extend({
   
 }).omit({
  
-  companyId:true,
-  projectId:true,
-  forwardedById:true,
-  fileData:true
+  
 })
 
 //Transaction Types

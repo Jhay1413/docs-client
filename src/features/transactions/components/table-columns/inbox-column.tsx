@@ -111,9 +111,13 @@ export const inboxColumn: ColumnDef<InboxColumn>[] = [
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
 
-           <DropdownMenuItem>
-            Forward
-           </DropdownMenuItem>
+            <DropdownMenuItem>
+              <Link
+                to={`/dashboard/transactions/update/${transactionInfo.transactionId}`}
+              >
+                Update Transaction
+              </Link>
+            </DropdownMenuItem>
 
             <DropdownMenuSeparator />
 

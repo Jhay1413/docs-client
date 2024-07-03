@@ -47,7 +47,7 @@ export const InsertComponent = () => {
       remarks: "",
       forwardedById: userId,
       forwardedByRole:role,
-      dateForwarded: new Date(), // Default value is current date
+      dateForwarded: new Date().toISOString(), // Default value is current date
       documentSubType: "",
     },
   });
@@ -63,7 +63,7 @@ export const InsertComponent = () => {
     if (!uploadFile) {
     }
     const data = uploadFile.data.data;
-    const payload = { ...transactionData, fileData: data ,dueDate:new Date(transactionData.dueDate!).toISOString(),dateForwarded:new Date(transactionData.dateForwarded).toISOString()};
+    const payload = { ...transactionData, fileData: data};
     console.log(payload)
   add.mutate(payload);
   };
@@ -71,7 +71,7 @@ export const InsertComponent = () => {
     <div className="w-full h-full bg-white p-4 rounded-lg">
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)}>
-          <TransactionForm setFiles={setFiles} entities={entities.data} />
+          <TransactionForm setFiles={setFiles} entities={entities.data} form={form}  />
           <div className="flex justify-end">
             <Button type="submit" onClick={()=>console.log(form.formState,form.control._formState)}>Submit</Button>
           </div>

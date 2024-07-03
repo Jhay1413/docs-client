@@ -16,6 +16,7 @@ import {
 import {
   Select,
   SelectContent,
+  SelectGroup,
   SelectItem,
   SelectTrigger,
   SelectValue,
@@ -53,28 +54,28 @@ type fileProps = {
 type props = {
   setFiles: Dispatch<SetStateAction<fileProps[]>>;
   entities: z.infer<typeof CompanyInfo>[] | undefined;
+  method?: string;
 };
-export const TransactionForm = ({ setFiles, entities }: props) => {
-
+export const TransactionForm = ({ setFiles, entities, method }: props) => {
   const role = useCurrentUserRole();
-  const route = docRoute.filter((data)=>data.accessRole.includes(role))
+  const route = docRoute.filter((data) => data.accessRole.includes(role));
 
-  const { control } = useFormContext();
+  const form = useFormContext();
+
   const [company, setCompany] = useState<string>("");
-  const [team, setTeam] = useState("");
+  const [team, setTeam] = useState("" )
   const [selectedDivision, setSelectedDivision] = useState("");
   const [applicationType, setApplicationType] = useState("");
 
-  const temp_section = checkList.find((check) => check.name === team);
 
+  const temp_section = checkList.find((check) => check.name === team);
   const attachmentList = temp_section?.application.find(
     (check) => check.value === applicationType
   );
-
   const sections = Divisions.find(
     (division) => division.name === selectedDivision
   );
-
+  
   const data = entities?.find((data) => data.id === company);
   const project = data?.companyProjects;
 
@@ -90,14 +91,16 @@ export const TransactionForm = ({ setFiles, entities }: props) => {
     <div className="w-full h-full bg-white p-4 rounded-lg">
       <div className="grid grid-cols-3 gap-12 ">
         <FormField
-          control={control}
+          control={form.control}
           name="companyId"
           render={({ field }) => (
             <FormItem>
               <FormLabel>Company</FormLabel>
               <FormControl>
                 <Select
+                  value={field.value}
                   onValueChange={(value) => {
+                  
                     setCompany(value);
                     field.onChange(value);
                   }}
@@ -106,15 +109,17 @@ export const TransactionForm = ({ setFiles, entities }: props) => {
                     <SelectValue placeholder="Select Company" />
                   </SelectTrigger>
                   <SelectContent>
-                    {entities &&
-                      entities.map((company) => (
-                        <SelectItem
-                          key={company.companyName}
-                          value={company.id!}
-                        >
-                          {company.companyName}
-                        </SelectItem>
-                      ))}
+                    <SelectGroup>
+                      {entities &&
+                        entities.map((company) => (
+                          <SelectItem
+                            key={company.companyName}
+                            value={company.id!}
+                          >
+                            {company.companyName}
+                          </SelectItem>
+                        ))}
+                    </SelectGroup>
                   </SelectContent>
                 </Select>
               </FormControl>
@@ -123,16 +128,19 @@ export const TransactionForm = ({ setFiles, entities }: props) => {
           )}
         />
         <FormField
-          control={control}
+          control={form.control}
           name="projectId"
           render={({ field }) => (
             <FormItem>
               <FormLabel>Project</FormLabel>
               <FormControl>
                 <Select
+                value={field.value}
                   onValueChange={(value) => {
+
                     field.onChange(value);
                   }}
+                  defaultValue={field.value}
                 >
                   <SelectTrigger className="w-full">
                     <SelectValue placeholder="Select Project" />
@@ -156,7 +164,7 @@ export const TransactionForm = ({ setFiles, entities }: props) => {
         />
         <FormInput placeholder="Subject" label="Subject" name="subject" />
         <FormField
-          control={control}
+          control={form.control}
           name="targetDepartment"
           render={({ field }) => (
             <FormItem>
@@ -185,7 +193,7 @@ export const TransactionForm = ({ setFiles, entities }: props) => {
           )}
         />
         <FormField
-          control={control}
+          control={form.control}
           name="team"
           render={({ field }) => (
             <FormItem>
@@ -196,6 +204,7 @@ export const TransactionForm = ({ setFiles, entities }: props) => {
                     setTeam(value);
                     field.onChange(value);
                   }}
+                  defaultValue={field.value}
                   disabled={!selectedDivision}
                 >
                   <SelectTrigger>
@@ -215,13 +224,14 @@ export const TransactionForm = ({ setFiles, entities }: props) => {
           )}
         />
         <FormField
-          control={control}
+          control={form.control}
           name="documentType"
           render={({ field }) => (
             <FormItem>
               <FormLabel>Document Type</FormLabel>
               <FormControl>
                 <Select
+                  value={field.value}
                   onValueChange={(value) => {
                     field.onChange(value);
                   }}
@@ -239,7 +249,7 @@ export const TransactionForm = ({ setFiles, entities }: props) => {
           )}
         />
         <FormField
-          control={control}
+          control={form.control}
           name="documentSubType"
           render={({ field }) => (
             <FormItem>
@@ -250,7 +260,7 @@ export const TransactionForm = ({ setFiles, entities }: props) => {
                     field.onChange(value);
                     setApplicationType(value);
                   }}
-                  disabled={!team}
+                  disabled={!team || !form.watch("team")}
                 >
                   <SelectTrigger className="w-full">
                     <SelectValue placeholder="Select Document Sub" />
@@ -268,7 +278,7 @@ export const TransactionForm = ({ setFiles, entities }: props) => {
           )}
         />
         <FormField
-          control={control}
+          control={form.control}
           name="forwardedTo"
           render={({ field }) => (
             <FormItem>
@@ -283,10 +293,11 @@ export const TransactionForm = ({ setFiles, entities }: props) => {
                     <SelectValue placeholder="Forward to " />
                   </SelectTrigger>
                   <SelectContent>
-                    {route.map((route,index)=>(
-                          <SelectItem key={index} value={route.name}>{route.name}</SelectItem>
+                    {route.map((route, index) => (
+                      <SelectItem key={index} value={route.name}>
+                        {route.name}
+                      </SelectItem>
                     ))}
-                  
                   </SelectContent>
                 </Select>
               </FormControl>
@@ -295,7 +306,7 @@ export const TransactionForm = ({ setFiles, entities }: props) => {
           )}
         />
         <FormField
-          control={control}
+          control={form.control}
           name="dueDate"
           render={({ field }) => (
             <FormItem className="flex flex-col gap-2 ">
@@ -322,7 +333,9 @@ export const TransactionForm = ({ setFiles, entities }: props) => {
                     <Calendar
                       mode="single"
                       selected={field.value}
-                      onSelect={(value) => field.onChange(value)}
+                      onSelect={(value) =>
+                        field.onChange(new Date(value!).toISOString())
+                      }
                       initialFocus
                     />
                   </PopoverContent>
@@ -333,7 +346,7 @@ export const TransactionForm = ({ setFiles, entities }: props) => {
           )}
         />
         <FormField
-          control={control}
+          control={form.control}
           name="priority"
           render={({ field }) => (
             <FormItem>
@@ -359,7 +372,7 @@ export const TransactionForm = ({ setFiles, entities }: props) => {
           )}
         />
         <FormField
-          control={control}
+          control={form.control}
           name="status"
           render={({ field }) => (
             <FormItem>
@@ -386,47 +399,10 @@ export const TransactionForm = ({ setFiles, entities }: props) => {
             </FormItem>
           )}
         />
-        <FormField
-          control={control}
-          name="dateForwarded"
-          render={({ field }) => (
-            <FormItem className="flex flex-col gap-2 ">
-              <FormLabel>Date Forwarded</FormLabel>
-              <FormControl>
-                <Popover>
-                  <PopoverTrigger asChild>
-                    <Button
-                      variant={"outline"}
-                      className={cn(
-                        "w-full justify-start text-left font-normal",
-                        !field.value && "text-muted-foreground"
-                      )}
-                    >
-                      <CalendarIcon className="mr-2 h-4 w-4" />
-                      {field.value ? (
-                        format(field.value, "PPP")
-                      ) : (
-                        <span>Pick a date</span>
-                      )}
-                    </Button>
-                  </PopoverTrigger>
-                  <PopoverContent className="w-auto p-0">
-                    <Calendar
-                      mode="single"
-                      selected={field.value}
-                      onSelect={(value) => field.onChange(value)}
-                      initialFocus
-                    />
-                  </PopoverContent>
-                </Popover>
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+
         <div className="">
           <FormField
-            control={control}
+            control={form.control}
             name="remarks"
             render={({ field }) => (
               <FormItem>
@@ -440,38 +416,41 @@ export const TransactionForm = ({ setFiles, entities }: props) => {
           />
         </div>
       </div>
-      <div className="flex flex-col space-y-4 mt-12">
-        <h1 className="text-2xl">List of Attachments Required</h1>
-        <Table>
-          <TableCaption>A list of your required attachments.</TableCaption>
-          <TableHeader>
-            <TableRow>
-              <TableHead className="w-[100px]">Name</TableHead>
-         
-              <TableHead className="text-right">Action</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {attachmentList?.checkList?.map((check, index) => (
-              <TableRow key={index}>
-                <TableCell className="font-medium w-[200px]">
-                  {check.name}
-                </TableCell>
-              
-                <TableCell className="flex justify-end">
-                  <div className="grid w-full max-w-sm items-center gap-1.5 justify-end">
-                    <Input
-                      name={`${check.value}`}
-                      onChange={(e) => handleFileChange(e)}
-                      type="file"
-                    />
-                  </div>
-                </TableCell>
+
+      {method != "UPDATE" && (
+        <div className="flex flex-col space-y-4 mt-12">
+          <h1 className="text-2xl">List of Attachments Required</h1>
+          <Table>
+            <TableCaption>A list of your required attachments.</TableCaption>
+            <TableHeader>
+              <TableRow>
+                <TableHead className="w-[100px]">Name</TableHead>
+
+                <TableHead className="text-right">Action</TableHead>
               </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </div>
+            </TableHeader>
+            <TableBody>
+              {attachmentList?.checkList?.map((check, index) => (
+                <TableRow key={index}>
+                  <TableCell className="font-medium w-[200px]">
+                    {check.name}
+                  </TableCell>
+
+                  <TableCell className="flex justify-end">
+                    <div className="grid w-full max-w-sm items-center gap-1.5 justify-end">
+                      <Input
+                        name={`${check.value}`}
+                        onChange={(e) => handleFileChange(e)}
+                        type="file"
+                      />
+                    </div>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </div>
+      )}
     </div>
   );
 };
