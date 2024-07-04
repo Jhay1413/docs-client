@@ -1,15 +1,16 @@
 import { CompanyInfo, companyProject } from "@/features/companies";
 import { AccountSchema } from "@/features/users";
 import { z } from "zod";
-const DocumentTypeEnum = z.enum(['INITIAL_DOC', 'FOLLOWED_UP']);
+const FileTypeEnum = z.enum(['INITIAL_DOC', 'FOLLOWED_UP']);
 
 export const filesSchema = z.object({
   id:z.string().optional(),
   remarks:z.string().optional(),
   createdAt:z.string().datetime().optional(),
-  documentType:DocumentTypeEnum.optional(),
+  fileType:FileTypeEnum.optional(),
   fileName: z.string(),
-  fileUrl: z.string(),
+  fileStatus:z.nullable(z.string()).optional(),
+  fileUrl: z.nullable(z.string()).optional(),
   fileOriginalName: z.string(),
 });
 export const transactionFormData = z.object({
@@ -27,7 +28,7 @@ export const transactionFormData = z.object({
   forwardedTo:z.nullable(z.string()).optional(),
   remarks:z.string(),
   receivedById:z.nullable(z.string()).optional(),
-  forwardedById:z.string(),
+  forwardedById:z.nullable(z.string()).optional(),
   dateForwarded: z.nullable(z.string().datetime()),
   dateReceived:z.nullable(z.string().datetime()).optional(),
   originDepartment:z.string(),

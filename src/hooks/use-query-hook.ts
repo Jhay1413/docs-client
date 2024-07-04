@@ -31,7 +31,6 @@ export const useEntity = <T extends {id?:string}>(
     queryKey: [key, id],
     queryFn: async () => {
       const { data } = await get(url, { id });
-      console.log(data)
       return data;
     },
     enabled: !!id,

@@ -1,6 +1,7 @@
 export const Divisions = [
   {
     name: "Technical Department",
+    
     section:[
         {
             name:'TERRESTRIAL, CLIMATE & TENURIAL INSTRUMENT',
