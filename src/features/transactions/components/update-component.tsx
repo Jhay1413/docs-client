@@ -4,15 +4,10 @@ import {
   transactionData,
   transactionFormData,
 } from "../schema/TransactionSchema";
-import { SubmitHandler, useForm } from "react-hook-form";
 import { z } from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useCurrentDivision } from "@/hooks/use-user-hook";
 import { TransactionForm } from "./transaction-form";
-import { Button } from "@/components/ui/button";
 import { useCompanies } from "@/features/companies";
-import { useEffect, useState } from "react";
-import { Form } from "@/components/ui/form";
+import { useState } from "react";
 
 type fileProps = {
   name: string;
@@ -33,6 +28,7 @@ export const TransactionUpdateComponent = () => {
     transactionData: z.infer<typeof transactionFormData>
   ) => {
     console.log(transactionData)
+    update.mutate(transactionData)
   };
   
   if (entity.isLoading || entities.isLoading) return <div>Loading...</div>;

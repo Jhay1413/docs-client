@@ -43,7 +43,7 @@ import { checkList } from "@/data/checklist";
 import FormInput from "@/components/formInput";
 import { Divisions } from "@/data/data";
 import { CompanyInfo } from "@/features/companies";
-import { useCurrentUserRole } from "@/hooks/hooks/use-user-hook";
+import { getCurrentUserId, useCurrentUserRole } from "@/hooks/hooks/use-user-hook";
 import { docRoute } from "@/data/doc-route";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -71,6 +71,8 @@ export const TransactionForm = ({
 }: props) => {
   const role = useCurrentUserRole();
   const currentDivision = useCurrentDivision();
+  const userId = getCurrentUserId();
+  console.log(defaultValue)
   const route = docRoute.filter((data) => data.accessRole.includes(role));
   const form = useForm<z.infer<typeof transactionFormData>>({
     resolver: zodResolver(transactionFormData),
@@ -90,14 +92,19 @@ export const TransactionForm = ({
           projectId: defaultValue?.projectId,
           forwardedTo: defaultValue?.forwardedTo,
           remarks: defaultValue?.remarks,
-          forwardedById: defaultValue?.forwardedById,
-          forwardedByRole: defaultValue?.forwardedByRole,
+          forwardedById: userId,
+          forwardedByRole: role,
           dateForwarded: new Date().toISOString(),
           documentSubType: defaultValue?.documentSubType,
         }
-      : {},
-  });
-
+      : {
+        dateForwarded : new Date().toISOString(),
+        forwardedByRole : role,
+        forwardedById: userId,
+        originDepartment: currentDivision,
+        transactionId : ""
+      },
+  });                                                                           
   const [selectedCompany, setSelectedCompany] = useState<string>(defaultValue?.companyId || "");
   const [team, setTeam] = useState(defaultValue?.team || "");
   const [selectedDivision, setSelectedDivision] = useState(defaultValue?.targetDepartment || "");
@@ -316,7 +323,7 @@ export const TransactionForm = ({
                       </SelectTrigger>
                       <SelectContent>
                         {temp_section?.application.map((type, index) => (
-                          <SelectItem key={index} value={`${type.value}`}>
+                          <SelectItem key={index} value={`${type.name}`}>
                             {type.name}
                           </SelectItem>
                         ))}
@@ -476,7 +483,7 @@ export const TransactionForm = ({
                 <TableHeader>
                   <TableRow>
                     <TableHead className="w-[100px]">Name</TableHead>
-
+            
                     <TableHead className="text-right">Action</TableHead>
                   </TableRow>
                 </TableHeader>
@@ -503,7 +510,7 @@ export const TransactionForm = ({
             </div>
           )}
           <div className="flex justify-end mt-11">
-            <Button type="submit">Submit</Button>
+            <Button type="submit" onClick={()=>console.log(form.formState.errors)}>Submit</Button>
           </div>
         </form>
       </Form>

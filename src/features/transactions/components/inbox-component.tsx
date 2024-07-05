@@ -9,10 +9,13 @@ export const InboxComponent = () => {
   const { id } = useParams();
   const { entities } = useTransactions<z.infer<typeof transactionData>>(
     "inbox",
-    `/inbox/${id}`
+    `/temp/${id}?option=INBOX`
   );
 
+  console.log(entities.isFetching)
   if (!entities.data) return "";
+
+
   return (
     <div className="flex flex-col gap-y-6">
       <span>

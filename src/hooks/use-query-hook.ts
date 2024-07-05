@@ -10,6 +10,7 @@ export const useEntities = <T extends { id?: string }>(
     queryKey: [key],
     queryFn: async () => {
       const { data } = await get(url);
+    
       return data;
     },
   });
@@ -32,6 +33,7 @@ export const useEntity = <T extends {id?:string}>(
     queryFn: async () => {
       const { data } = await get(url, { id });
       return data;
+      
     },
     enabled: !!id,
   });

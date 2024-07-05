@@ -70,8 +70,8 @@ export const historyColumn: ColumnDef<History>[] = [
       console.log(receiverInfo)
       return (
         <div className="flex gap-4 flex-col">
-          <h1>{receiverInfo?.receivedBy} </h1>
-          <h1>({receiverInfo?.dateReceived} )</h1>
+          <h1>{receiverInfo.receivedBy} </h1>
+         
         </div>
       );
     },

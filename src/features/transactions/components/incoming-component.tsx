@@ -10,7 +10,7 @@ export const IncomingComponent = () => {
 
   const { entities } = useTransactions(
     "incoming-transaction",
-    `incoming/${id}`
+    `temp/${id}?option=INCOMING`
   );
   console.log(entities.data);
 

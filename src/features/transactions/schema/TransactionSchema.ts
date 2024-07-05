@@ -64,7 +64,7 @@ export const transactionLogsData = z.object({
 
 export const transactionData = transactionFormData.extend({
   forwarder:AccountSchema.optional(),
-  receive:AccountSchema.optional(),
+  receive:z.nullable(AccountSchema).optional(),
   attachment:z.nullable(z.array(filesSchema)).optional(),
   company : CompanyInfo.optional(),
   project : companyProject.optional(),

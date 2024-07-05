@@ -93,7 +93,6 @@ export const inboxColumn: ColumnDef<InboxColumn>[] = [
     header: "Due date",
     accessorKey: "dueDate",
   },
-
   {
     header: "Actions",
     accessorKey: "actions",
