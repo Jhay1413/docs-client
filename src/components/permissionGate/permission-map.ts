@@ -25,5 +25,6 @@ export const PERMISSIONS = {
   //   SCOPES.canDelete,
   // ],
   [ROLES.MANAGER]:[SCOPES.canView],
+  [ROLES.CH]:[SCOPES.canView],
   [ROLES.RECORDS]:[SCOPES.canCreate,SCOPES.canView]
 };
