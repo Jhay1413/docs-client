@@ -373,8 +373,10 @@ export const UserForm = () => {
                                 SUPERADMIN
                               </SelectItem>
                               <SelectItem value="ADMIN">ADMIN</SelectItem>
-
-                              <SelectItem value="TL">TL</SelectItem>
+                              <SelectItem value="MANAGER">MANAGER</SelectItem>
+                              <SelectItem value="TL">TEAM LEADER</SelectItem>
+                              <SelectItem value="CH">CASE HANDLER</SelectItem>
+                              <SelectItem value="RECORDS">RECORDS</SelectItem>
                               <SelectItem value="GUEST">GUEST</SelectItem>
                             </SelectContent>
                           </Select>

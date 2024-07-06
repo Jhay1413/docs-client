@@ -4,30 +4,29 @@ import {
   LayoutDashboard,
   LibraryBig,
   LogOut,
-  UserRoundPlus
+  UserRoundPlus,
 } from "lucide-react";
 import { NavLink, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 
 import { useState } from "react";
 import { logoutUser } from "@/features/authentication";
-import { useCurrentUserRole } from "@/hooks/use-user-hook";
+import { getCurrentUserId, useCurrentUserRole } from "@/hooks/use-user-hook";
 
 export const SideNav = () => {
-
   const [isUserOpen, setIsUserOpen] = useState(false);
   const [isTransactionOpen, setIsTransactionOpen] = useState(false);
-  const userRole = useCurrentUserRole();
+  const id = getCurrentUserId();
 
   const navigate = useNavigate();
 
-  const logout = async() => {
+  const logout = async () => {
     try {
       await logoutUser();
       localStorage.clear();
       navigate("/");
     } catch (error) {
-      console.log("onError")
+      console.log("onError");
     }
   };
 
@@ -49,7 +48,7 @@ export const SideNav = () => {
         </li>
         <li className="relative inline-block text-left px-4 ">
           <NavLink
-                to="/dashboard/companies"
+            to="/dashboard/companies"
             className={({ isActive }) => {
               return `justify-start items-center flex w-full p-2 space-x-4 text-lg  rounded-md ${
                 isActive ? "bg-green-500 text-white" : ""
@@ -57,62 +56,61 @@ export const SideNav = () => {
             }}
           >
             <Factory />
-            
+
             <h1 className="text-md">Companies</h1>
           </NavLink>
         </li>
-        {userRole === "SUPERADMIN" && (
-          <li className="relative inline-block text-left px-4 ">
-            <button
-              onClick={() => setIsUserOpen(!isUserOpen)}
-              className="justify-between flex w-full p-2 text-lg  rounded-md"
-            >
-              <div className="justify-start flex  space-x-4 items-center">
-                <UserRoundPlus />
 
-                <h1 className="text-md">User</h1>
-              </div>
+        <li className="relative inline-block text-left px-4 ">
+          <button
+            onClick={() => setIsUserOpen(!isUserOpen)}
+            className="justify-between flex w-full p-2 text-lg  rounded-md"
+          >
+            <div className="justify-start flex  space-x-4 items-center">
+              <UserRoundPlus />
+
+              <h1 className="text-md">User</h1>
+            </div>
+            <div
+              className={`transition-transform duration-500 transform ${
+                isUserOpen ? "rotate-180" : ""
+              }`}
+            >
+              <ChevronDown />
+            </div>
+          </button>
+          {isUserOpen && (
+            <div className=" flex w-full rounded-md  ml-4 border-l-2 border-gray-500">
               <div
-                className={`transition-transform duration-500 transform ${
-                  isUserOpen ? "rotate-180" : ""
-                }`}
+                className="py-1 flex flex-col gap-2  px-2  mr-4 w-full"
+                role="menu"
+                aria-orientation="vertical"
+                aria-labelledby="options-menu"
               >
-                <ChevronDown />
-              </div>
-            </button>
-            {isUserOpen && (
-              <div className=" flex w-full rounded-md  ml-4 border-l-2 border-gray-500">
-                <div
-                  className="py-1 flex flex-col gap-2  px-2  mr-4 w-full"
-                  role="menu"
-                  aria-orientation="vertical"
-                  aria-labelledby="options-menu"
+                <NavLink
+                  to="/dashboard/users/users-list"
+                  className={({ isActive }) => {
+                    return `w-full block px-4 py-2  rounded-md ${
+                      isActive ? "bg-green-500 text-white" : ""
+                    }`;
+                  }}
                 >
-                  <NavLink
-                    to="/dashboard/users/list"
-                    className={({ isActive }) => {
-                      return `w-full block px-4 py-2  rounded-md ${
-                        isActive ? "bg-green-500 text-white" : ""
-                      }`;
-                    }}
-                  >
-                    <h1 className="text-md">User list</h1>
-                  </NavLink>
-                  <NavLink
-                    to="/dashboard/users/userAccount"
-                    className={({ isActive }) => {
-                      return `w-full block px-4 py-2  rounded-md ${
-                        isActive ? "bg-green-500 text-white" : ""
-                      }`;
-                    }}
-                  >
-                    <h1 className="text-md">Accounts</h1>
-                  </NavLink>
-                </div>
+                  <h1 className="text-md">User list</h1>
+                </NavLink>
+                <NavLink
+                  to="/dashboard/users/userAccount"
+                  className={({ isActive }) => {
+                    return `w-full block px-4 py-2  rounded-md ${
+                      isActive ? "bg-green-500 text-white" : ""
+                    }`;
+                  }}
+                >
+                  <h1 className="text-md">Accounts</h1>
+                </NavLink>
               </div>
-            )}
-          </li>
-        )}
+            </div>
+          )}
+        </li>
 
         <li className="relative inline-block text-left px-4 ">
           <button
@@ -141,7 +139,7 @@ export const SideNav = () => {
                 aria-labelledby="options-menu"
               >
                 <NavLink
-                  to="/dashboard/transactions"
+                  to="/dashboard/transactions/list"
                   className={({ isActive }) => {
                     return `w-full block px-4 py-2  rounded-md ${
                       isActive ? "bg-green-500 text-white" : ""
@@ -151,17 +149,17 @@ export const SideNav = () => {
                   <h1 className="text-md">Transaction list</h1>
                 </NavLink>
                 <NavLink
-                  to="/dashboard/transactionForm"
+                  to={`/dashboard/transactions/inbox/${id}`}
                   className={({ isActive }) => {
                     return `w-full block px-4 py-2  rounded-md ${
                       isActive ? "bg-green-500 text-white" : ""
                     }`;
                   }}
                 >
-                  <h1 className="text-md">Add transaction</h1>
+                  <h1 className="text-md">Inbox</h1>
                 </NavLink>
                 <NavLink
-                  to="/"
+                  to={`/dashboard/transactions/incoming-transaction/${id}`}
                   className={({ isActive }) => {
                     return `w-full block px-4 py-2  rounded-md ${
                       isActive ? "bg-green-500 text-white" : ""
@@ -181,7 +179,7 @@ export const SideNav = () => {
             onClick={() => logout()}
             className="justify-start items-center flex w-full p-2 space-x-4 text-lg  rounded-md"
           >
-           <LogOut />
+            <LogOut />
             <h1 className="text-md font-normal">Logout</h1>
           </Button>
         </li>

@@ -1,46 +1,78 @@
+import { CompanyInfo, companyProject } from "@/features/companies";
+import { AccountSchema } from "@/features/users";
 import { z } from "zod";
+const FileTypeEnum = z.enum(['INITIAL_DOC', 'FOLLOWED_UP']);
 
-export const fileData = z.object({
-  fileUrl: z.string(),
-  fileOriginalName: z.string(),
+export const filesSchema = z.object({
+  id:z.string().optional(),
+  remarks:z.string().optional(),
+  createdAt:z.string().datetime().optional(),
+  fileType:FileTypeEnum.optional(),
   fileName: z.string(),
+  fileStatus:z.nullable(z.string()).optional(),
+  fileUrl: z.nullable(z.string()).optional(),
+  fileOriginalName: z.string(),
 });
-export const formTransactionData = z.object({
-  id:z.optional(z.string()),
-  transactionId: z.optional(z.string()),
-  documentType: z.string({
-    message: "Document TYPE REQUIRED",
-  }),
-  subject: z.string(),
-  company: z.string(),
-  project :z.string(),
-  forwardedTo: z.string(),
-  remarks: z.string(),
-  createdBy: z.string(),
-  fromDepartment: z.string(),
-  toDepartment: z.string(),
-  dueDate: z.date(),
-  forwardedBy: z.string(),
-  dateForwarded: z.date(),
-  team: z.string(),
-  documentSubType: z.string(),
-  fileData: z.array(fileData).optional(),
-});
+export const transactionFormData = z.object({
+  id:z.string().optional(),
+  transactionId:z.string(),
+  documentType : z.string(),
+  documentSubType:z.string(),
+  subject :z.string(),
+  dueDate  :  z.nullable(z.string().datetime()),
+  team:z.string(),
+  status:z.string(),
+  priority:z.string(),
+  companyId:z.string().optional(),
+  projectId:z.string().optional(),
+  forwardedTo:z.nullable(z.string()).optional(),
+  remarks:z.string(),
+  receivedById:z.nullable(z.string()).optional(),
+  forwardedById:z.nullable(z.string()).optional(),
+  dateForwarded: z.nullable(z.string().datetime()),
+  dateReceived:z.nullable(z.string().datetime()).optional(),
+  originDepartment:z.string(),
+  targetDepartment:z.string(),
+  forwardedByRole:z.string(),
+  fileData: z.array(filesSchema).optional(),
+})
+export const transactionLogsData = z.object({
+  id              :z.string().optional(),
+  transactionId    :z.string(),
+  documentType     :z.string(),
+  subject          :z.string(),
+  dueDate          :z.string().datetime(),
+  documentSubType  :z.string(),
+  createdAt        :z.string().datetime().optional(),    
+  updatedAt        :z.string().datetime().optional(),    
+  team             :z.string(),
+  status           :z.string(),
+  priority         :z.string(),
+  company          :z.string(),
+  project          :z.string(),
+  forwardedTo      :z.string(),
+  remarks          :z.string(),
+  receivedBy       :z.nullable(z.string()).optional(),
+  forwardedBy      :z.string(),
+  dateForwarded    :z.string(),
+  dateReceived     :z.nullable(z.string()).optional(),
+  originDepartment :z.string(),
+  targetDepartment :z.string(),
+  forwardedByRole  :z.string(),
+  attachments :  z.array(filesSchema).optional()
+})
 
-export const documentInfoSchema = z.object({
-  id: z.string(),
-  documentType: z.string(),
-  subject: z.string(),
-  dueDate: z.date(),
-  createdAt: z.date(),
-  updatedAt: z.date(),
-  createdBy: z.string(),
-  documentSubType: z.string(),
-  team: z.string(),
-  createdByName: z.string(),
-  fromDepartment: z.string(),
-  toDepartment: z.string(),
-});
-export type TDcoumentInfo = z.infer<typeof documentInfoSchema>;
+export const transactionData = transactionFormData.extend({
+  forwarder:AccountSchema.optional(),
+  receive:z.nullable(AccountSchema).optional(),
+  attachment:z.nullable(z.array(filesSchema)).optional(),
+  company : CompanyInfo.optional(),
+  project : companyProject.optional(),
+  transactionLogs:z.array(transactionLogsData).optional()
+  
+}).omit({
+ 
+  
+})
+
 //Transaction Types
-export type TFormData = z.infer<typeof formTransactionData>;

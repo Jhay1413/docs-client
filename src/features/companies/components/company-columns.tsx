@@ -12,9 +12,10 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Link } from "react-router-dom";
-import { TCompanyFullData } from "../schema/companySchema";
+import { CompanyInfo} from "../schema/companySchema";
+import { z } from "zod";
 
-export const companyInfoColumns: ColumnDef<TCompanyFullData>[] = [
+export const companyInfoColumns: ColumnDef<z.infer<typeof CompanyInfo>>[] = [
   {
     id: "select",
     header: ({ table }) => (

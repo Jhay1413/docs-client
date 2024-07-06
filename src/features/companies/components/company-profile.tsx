@@ -1,11 +1,13 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Pencil } from "lucide-react";
-import { TCompanyFullData } from "../schema/companySchema";
+
 import { useLocation } from "react-router-dom";
+import { CompanyInfo, contactPerson } from "../schema/companySchema";
+import { z } from "zod";
 export const CompanyProfile = () => {
   let { state } = useLocation();
-  console.log(state.data);
-  const company: TCompanyFullData = state.data;
+
+  const company: z.infer<typeof CompanyInfo> = state.data;
   return (
     <div className="flex flex-col w-full min-h-[calc(100vh-90px)] bg-white">
       <div className="flex h-[200px] bg-blue-900">
@@ -25,12 +27,12 @@ export const CompanyProfile = () => {
             <div className="mt-4">
               <h1 className="text-2xl">Contact Person</h1>
             </div>
-            {company.contactPersons?.map((contact,index) => (
-              <div className="flex  flex-col" key={index}>
-                <h1>{contact.name}</h1>
-                <h1>{contact.contactNumber}</h1>
+            
+              <div className="flex  flex-col" >
+                <h1>{company.contactPersons?.name}</h1>
+                <h1>{company.contactPersons?.contactNumber}</h1>
               </div>
-            ))}
+           
           </div>
         </div>
       </div>
@@ -66,19 +68,19 @@ export const CompanyProfile = () => {
                     <h1>Banilad</h1>
                   </div>
                 </div>
-                {project.contactPersons?.map((person, index) => (
+                
                   <div className="flex flex-col gap-4 " key={index}>
                     <h1 className="text-2xl font-semibold">Contact Person</h1>
                     <div className="flex flex-col">
                       <h1 className="font-semibold">Name:</h1>
-                      <h1>{person.name}</h1>
+                      <h1>{project.contactPersons?.name}</h1>
                     </div>
                     <div className="flex flex-col">
                       <h1 className="font-semibold">Contact Number:</h1>
-                      <h1>{person.contactNumber}</h1>
+                      <h1>{project.contactPersons?.contactNumber}</h1>
                     </div>
                   </div>
-                ))}
+             
 
                 <div className="relative w-full">
                   <Pencil className="absolute top-0 right-0" />
