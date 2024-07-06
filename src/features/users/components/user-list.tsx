@@ -22,7 +22,7 @@ export const UserList = () => {
       </div>
       <div className="justify-start w-full flex mt-12 ">
         <Link
-          to="form"
+          to="/dashboard/users/form"
           className="bg-black px-4 py-2 text-lg flex  items-center justify-center space-x-2 rounded-lg text-white"
         >
           <Plus size={24} />
