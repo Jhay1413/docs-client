@@ -1,4 +1,12 @@
 import { TransactionForm } from "./components/transaction-form";
 import { InsertComponent } from "./components/insert-component";
 import { TransactionList } from "./components/transaction-list";
-export { TransactionForm, TransactionList, InsertComponent };
+import { HistoryComponent } from "./components/history-components";
+import { TransactionUpdateComponent } from "./components/update-component";
+export {
+  TransactionForm,
+  TransactionList,
+  InsertComponent,
+  HistoryComponent,
+  TransactionUpdateComponent,
+};

@@ -6,7 +6,7 @@ import { UserList } from "./components/user-list";
 import { useUserHook } from "./hooks/UserHook";
 import { useUser, useUsers } from "./hooks/query-gate";
 
-import { TUserWithAccount, TUsers } from "./schema/UserSchema";
+import { AccountSchema, TUserWithAccount, TUsers } from "./schema/UserSchema";
 import { getAccountInfoApi, getUserInfo } from "./services/UserServices";
 
 export {
@@ -20,5 +20,6 @@ export {
   useUserHook,
   useUsers,
   useUser,
+  AccountSchema
 };
 export type { TUsers, TUserWithAccount };

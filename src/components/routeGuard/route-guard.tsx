@@ -1,6 +1,5 @@
 
 import { checkAuth } from "@/features/authentication";
-import { useCurrentUserRole } from "@/hooks/use-user-hook";
 import { ReactNode, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
@@ -8,13 +7,12 @@ import { toast } from "react-toastify";
 
 type PrivateProsp = {
     children: ReactNode;
-    allowedRole:string
+
   };
   
-export const RouteGuard = ({ children,allowedRole }: PrivateProsp) => {
+export const RouteGuard = ({ children}: PrivateProsp) => {
 
     const [isAuthenticated, setIsAuthenticated] = useState(false);
-    const role =  useCurrentUserRole()
     const navigate = useNavigate();
   
     useEffect(() => {
@@ -22,10 +20,7 @@ export const RouteGuard = ({ children,allowedRole }: PrivateProsp) => {
         try {
           await checkAuth();
           setIsAuthenticated(true);
-          if(role !== allowedRole){
-            toast.error("Unauthorized")
-            navigate("/")
-          }
+        
         } catch (error) {
           toast.error("Unauthorized");
           navigate("/");

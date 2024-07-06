@@ -1,5 +1,5 @@
 import { FieldArrayWithId, UseFieldArrayAppend, UseFieldArrayRemove, useFormContext } from "react-hook-form";
-import { TCompanyFullInfo } from "../schema/companySchema";
+
 import {
   FormControl,
   FormField,
@@ -19,10 +19,12 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { useState } from "react";
+import { CompanyInfo } from "../schema/companySchema";
+import { z } from "zod";
 
 type Props = {
-  fields: FieldArrayWithId<TCompanyFullInfo, "companyProjects">[];
-  append: UseFieldArrayAppend<TCompanyFullInfo, "companyProjects">;
+  fields: FieldArrayWithId<z.infer<typeof CompanyInfo>, "companyProjects">[];
+  append: UseFieldArrayAppend<z.infer<typeof CompanyInfo>, "companyProjects">;
   remove: UseFieldArrayRemove;
 };
 

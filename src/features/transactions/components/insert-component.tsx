@@ -1,18 +1,12 @@
-import { Button } from "@/components/ui/button";
-import {
-  Form
-} from "@/components/ui/form";
 
-
-import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
-import { SubmitHandler, useForm } from "react-hook-form";
-import { TFormData, formTransactionData } from "../schema/TransactionSchema";
-import { getCurrentUserId, useCurrentDivision } from "@/hooks/use-user-hook";
 import { useTransaction } from "../hooks/query-gate";
 import { useCompanies } from "@/features/companies";
 import { TransactionForm } from "./transaction-form";
 import { uploadMultipleFiles } from "@/services/uploadFile";
+import { filesSchema, transactionFormData } from "../schema/TransactionSchema";
+import { z } from "zod";
+import { checkList } from "@/data/checklist";
 
 type fileProps = {
   name: string;
@@ -24,32 +18,9 @@ export const InsertComponent = () => {
 
   const [files, setFiles] = useState<fileProps[]>([]);
 
-  const userId = getCurrentUserId();
-  const currentDivision = useCurrentDivision();
-  const form = useForm<TFormData>({
-    resolver: zodResolver(formTransactionData),
-    mode: "onChange",
-    defaultValues: {
-      documentType: "",
-      subject: "",
-      company: "",
-      project: "",
-      forwardedTo: "",
-      remarks: "",
-      createdBy: userId,
-      fromDepartment: currentDivision,
-      toDepartment: "",
-      dueDate: new Date(),
-      forwardedBy: userId,
-      dateForwarded: new Date(), // Default value is current date
-      team: "",
-      documentSubType: "",
-    },
-  });
-
-  const onSubmit: SubmitHandler<TFormData> = async (transactionData) => {
-
-   
+  const onSubmit = async (
+    transactionData: z.infer<typeof transactionFormData>
+  ) => {
     const formData = new FormData();
     files.forEach((file, index) => {
       formData.append("files", file.file);
@@ -58,21 +29,34 @@ export const InsertComponent = () => {
     const uploadFile = await uploadMultipleFiles(formData);
     if (!uploadFile) {
     }
-    const data = uploadFile.data.data;
-    const payload = { ...transactionData, fileData: data };
+    const data= uploadFile.data.data as z.infer<typeof filesSchema>[];
 
+    
+
+    const temp_section = checkList.find((check) => check.name === transactionData.team);
+    const attachmentList = temp_section?.application.find((check) => check.value === transactionData.documentType);
+    // const filePayload:z.infer<typeof filesSchema[]>= attachmentList?.checkList?.map((attachment)=>{
+        
+    //     const matchAttachment = data.find(data=> data.fileName === attachment.name);
+
+
+    //     if(matchAttachment){
+    //         return matchAttachment
+    //     }
+    //     return {fileName:attachment.name}
+    // })
+    
+    const payload = { ...transactionData, fileData: data };
+    console.log(payload);
     add.mutate(payload);
   };
   return (
     <div className="w-full h-full bg-white p-4 rounded-lg">
-      <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)}>
-          <TransactionForm setFiles={setFiles} entities={entities.data} />
-          <div className="flex justify-end">
-            <Button >Submit</Button>
-          </div>
-        </form>
-      </Form>
+      <TransactionForm
+        setFiles={setFiles}
+        company={entities.data}
+        mutateFn={onSubmit}
+      />
     </div>
   );
 };

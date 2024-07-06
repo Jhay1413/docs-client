@@ -1,5 +1,4 @@
 import { SubmitHandler, useFieldArray, useForm } from "react-hook-form";
-import { TCompanyFullInfo, companyFullInfo } from "../schema/companySchema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Form } from "@/components/ui/form";
 import { Separator } from "@/components/ui/separator";
@@ -7,12 +6,14 @@ import { Button } from "@/components/ui/button";
 import { useEffect } from "react";
 import { useCompany } from "../hooks/query-gate";
 import { CompanyForm } from "./company-form";
+import { CompanyInfo } from "../schema/companySchema";
+import { z } from "zod";
 
 export const AddComponent = () => {
   const { add } = useCompany("/", "companies", null);
 
-  const form = useForm<TCompanyFullInfo>({
-    resolver: zodResolver(companyFullInfo),
+  const form = useForm<z.infer<typeof CompanyInfo>>({
+    resolver: zodResolver(CompanyInfo),
     defaultValues: {
       companyId: "",
       companyAddress: "",
@@ -55,7 +56,7 @@ export const AddComponent = () => {
     name: "companyProjects",
   });
 
-  const onSubmit: SubmitHandler<TCompanyFullInfo> = async (data) => {
+  const onSubmit: SubmitHandler<z.infer<typeof CompanyInfo>> = async (data) => {
     add.mutate(data);
   };
   return (

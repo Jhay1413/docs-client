@@ -10,6 +10,7 @@ export const useEntities = <T extends { id?: string }>(
     queryKey: [key],
     queryFn: async () => {
       const { data } = await get(url);
+    
       return data;
     },
   });
@@ -19,7 +20,8 @@ export const useEntities = <T extends { id?: string }>(
 export const useEntity = <T extends {id?:string}>(
   key: string,
   url: string,
-  id: string | undefined | null
+  id: string | undefined | null,
+  method?: string
 ) => {
   const queryClient = useQueryClient();
 
@@ -31,6 +33,7 @@ export const useEntity = <T extends {id?:string}>(
     queryFn: async () => {
       const { data } = await get(url, { id });
       return data;
+      
     },
     enabled: !!id,
   });
@@ -50,6 +53,7 @@ export const useEntity = <T extends {id?:string}>(
       invalidateActive();
     },
     onError: (error) => {
+      console.log(error)
       toast.error(error.message);
     },
   });
@@ -68,17 +72,26 @@ export const useEntity = <T extends {id?:string}>(
       invalidateActive();
     },
   });
-  const update = useMutation<T, Error, T, any>({
-    mutationFn: async (entity:T): Promise<T> => {
+  const update = useMutation<T | string, Error, T, any>({
+    mutationFn: async (entity:T): Promise<T | string> => {
       const { data } = await put(url, entity);
+      console.log(data)
       return data;
     },
     onSuccess: (updatedEntity) => {
-      console.log(updatedEntity);
-      queryClient.setQueryData([key,id], entity);
-      queryClient.setQueryData([key], (cachedEntities: T[] | undefined) =>
-        cachedEntities ? [...cachedEntities, entity] : undefined
+      if(method == "UPDATEREMOVE"){
+        queryClient.setQueryData([key, id], null);
+        queryClient.setQueryData([key], (cachedEntities: T[] | undefined) =>
+          cachedEntities?.filter((cachedEntity) => cachedEntity.id !== updatedEntity)
+        );
+      }
+      else{
+        console.log("entity",updatedEntity)
+        queryClient.setQueryData([key,id], updatedEntity);
+        queryClient.setQueryData([key], (cachedEntities: T[] | undefined) =>
+        cachedEntities ? [...cachedEntities, updatedEntity] : undefined
       );
+    }
       toast.success("Data updated successfully");
       invalidateActive();
     },
