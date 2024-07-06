@@ -3,6 +3,7 @@ import { Calendar } from "@/components/ui/calendar";
 import {
   Form,
   FormControl,
+  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -37,18 +38,30 @@ import { cn } from "@/lib/utils";
 
 import { format } from "date-fns";
 import { CalendarIcon } from "lucide-react";
-import { ChangeEvent, Dispatch, SetStateAction, useState } from "react";
-import { SubmitHandler, useForm } from "react-hook-form";
+import {
+  ChangeEvent,
+  Dispatch,
+  SetStateAction,
+  memo,
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
+import { SubmitHandler, useFieldArray, useForm } from "react-hook-form";
 import { checkList } from "@/data/checklist";
 import FormInput from "@/components/formInput";
 import { Divisions } from "@/data/data";
 import { CompanyInfo } from "@/features/companies";
-import { getCurrentUserId, useCurrentUserRole } from "@/hooks/hooks/use-user-hook";
+import {
+  getCurrentUserId,
+  useCurrentUserRole,
+} from "@/hooks/hooks/use-user-hook";
 import { docRoute } from "@/data/doc-route";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { transactionFormData } from "../schema/TransactionSchema";
 import { useCurrentDivision } from "@/hooks/use-user-hook";
+import FormTextArea from "@/components/formTextArea";
 
 type fileProps = {
   name: string;
@@ -69,14 +82,35 @@ export const TransactionForm = ({
   defaultValue,
   mutateFn,
 }: props) => {
-  const role = useCurrentUserRole();
-  const currentDivision = useCurrentDivision();
-  const userId = getCurrentUserId();
-  console.log(defaultValue)
-  const route = docRoute.filter((data) => data.accessRole.includes(role));
+ 
+  
+  const role = useMemo(() => useCurrentUserRole(), []);
+  const currentDivision = useMemo(()=> useCurrentDivision(),[]);
+  const userId = useMemo(()=>getCurrentUserId(),[]);
+  const route = docRoute.find((data) => data.name === role);
+
+  const [selectedCompany, setSelectedCompany] = useState<string>(
+    defaultValue?.companyId || ""
+  );
+  const [team, setTeam] = useState(defaultValue?.team || "");
+  const [selectedDivision, setSelectedDivision] = useState(
+    defaultValue?.targetDepartment || ""
+  );
+  const [subType, setSubType] = useState("");
+
+  const temp_section = checkList.find((check) => check.name === team);
+  const attachmentList = useMemo(()=>temp_section?.application.find(
+    (check) => check.name === subType
+  ),[subType,temp_section ]);
+  const sections = Divisions.find(
+    (division) => division.name === selectedDivision
+  );
+
+  const filteredCompany = company?.find((data) => data.id === selectedCompany);
+  const project = filteredCompany?.companyProjects;
   const form = useForm<z.infer<typeof transactionFormData>>({
     resolver: zodResolver(transactionFormData),
-    mode: "onChange",
+    mode: "onSubmit",
     defaultValues: defaultValue
       ? {
           documentType: defaultValue?.documentType,
@@ -98,25 +132,49 @@ export const TransactionForm = ({
           documentSubType: defaultValue?.documentSubType,
         }
       : {
-        dateForwarded : new Date().toISOString(),
-        forwardedByRole : role,
-        forwardedById: userId,
-        originDepartment: currentDivision,
-        transactionId : ""
-      },
-  });                                                                           
-  const [selectedCompany, setSelectedCompany] = useState<string>(defaultValue?.companyId || "");
-  const [team, setTeam] = useState(defaultValue?.team || "");
-  const [selectedDivision, setSelectedDivision] = useState(defaultValue?.targetDepartment || "");
-  const [applicationType, setApplicationType] = useState("");
+          dateForwarded: new Date().toISOString(),
+          forwardedByRole: role,
+          forwardedById: userId,
+          originDepartment: currentDivision,
+          transactionId: "",
+          fileData: attachmentList?.checkList?.map((item) => ({
+            fileName: item.name,
+            fileOriginalName: undefined,
+            remarks: "",
+            fileType: "INITIAL_DOC",
+            fileStatus: null,
+            fileUrl: null,
+            file: undefined,
+          })),
+        },
+  });
 
-  const temp_section = checkList.find((check) => check.name === team);
-  const attachmentList = temp_section?.application.find((check) => check.value === applicationType);
-  const sections = Divisions.find((division) => division.name === selectedDivision);
+  const MemoizedTextarea = memo((props) => (
+    <Textarea placeholder="Enter Remarks" {...props} />
+  ));
+ useEffect(() => {
 
-  const filteredCompany = company?.find((data) => data.id === selectedCompany);
-  const project = filteredCompany?.companyProjects;
+   form.setValue(
+    "fileData",
+    attachmentList?.checkList?.map((item) => ({
+      fileName: item.name,
+      fileOriginalName: undefined,
+      remarks: "",
+      fileType: "INITIAL_DOC",
+      fileStatus: null,
+      fileUrl: null,
+      file: undefined,
+    })) || []  // Ensure to handle case when attachmentList or checkList might be undefined
+  );
+  console.log("asdad")
+ }, [attachmentList]);
 
+  console.log("rerender")
+
+  const { fields, append, remove } = useFieldArray({
+    control: form.control,
+    name: "fileData",
+  });
   const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     const name = e.target.name;
@@ -149,7 +207,7 @@ export const TransactionForm = ({
                         setSelectedCompany(value);
                         field.onChange(value);
                       }}
-                      disabled={(method === "UPDATE") && role !=="RECORDS"}
+                      disabled={method === "UPDATE" && role !== "RECORDS"}
                     >
                       <SelectTrigger className="w-full">
                         <SelectValue placeholder="Select Company" />
@@ -186,7 +244,7 @@ export const TransactionForm = ({
                         field.onChange(value);
                       }}
                       defaultValue={field.value}
-                      disabled={(method === "UPDATE") && role !=="RECORDS"}
+                      disabled={method === "UPDATE" && role !== "RECORDS"}
                     >
                       <SelectTrigger className="w-full">
                         <SelectValue placeholder="Select Project" />
@@ -222,6 +280,7 @@ export const TransactionForm = ({
                         setSelectedDivision(value);
                         field.onChange(value);
                       }}
+                      disabled={method === "UPDATE" && role !== "RECORDS"}
                     >
                       <SelectTrigger className="w-full">
                         <SelectValue placeholder="Select Department" />
@@ -255,7 +314,10 @@ export const TransactionForm = ({
                         field.onChange(value);
                       }}
                       defaultValue={field.value}
-                      disabled={!selectedDivision}
+                      disabled={
+                        (method === "UPDATE" && role !== "RECORDS") ||
+                        !selectedDivision
+                      }
                     >
                       <SelectTrigger>
                         <SelectValue placeholder="Select team" />
@@ -288,7 +350,7 @@ export const TransactionForm = ({
                       onValueChange={(value) => {
                         field.onChange(value);
                       }}
-                      disabled={(method === "UPDATE") && role !=="RECORDS"}
+                      disabled={method === "UPDATE" && role !== "RECORDS"}
                     >
                       <SelectTrigger className="w-full">
                         <SelectValue placeholder="Select Document Type" />
@@ -310,13 +372,12 @@ export const TransactionForm = ({
                   <FormLabel>Document Sub Type</FormLabel>
                   <FormControl>
                     <Select
-                    value = {field.value}
+                      value={field.value}
                       onValueChange={(value) => {
                         field.onChange(value);
-                        setApplicationType(value);
+                        setSubType(value);
                       }}
-                      disabled={(method === "UPDATE" && role !=="RECORDS") || !team}
-                      
+                      disabled={method === "UPDATE" && role !== "RECORDS"}
                     >
                       <SelectTrigger className="w-full">
                         <SelectValue placeholder="Select Document Sub" />
@@ -349,9 +410,9 @@ export const TransactionForm = ({
                         <SelectValue placeholder="Forward to " />
                       </SelectTrigger>
                       <SelectContent>
-                        {route.map((route, index) => (
-                          <SelectItem key={index} value={route.name}>
-                            {route.name}
+                        {route?.accessRole.map((route, index) => (
+                          <SelectItem key={index} value={route}>
+                            {route}
                           </SelectItem>
                         ))}
                       </SelectContent>
@@ -376,7 +437,11 @@ export const TransactionForm = ({
                             "w-full justify-start text-left font-normal",
                             !field.value && "text-muted-foreground"
                           )}
-                          disabled={method === "UPDATE" && role !== "MANAGER"}
+                          disabled={
+                            method === "UPDATE" &&
+                            role !== "RECORDS" &&
+                            role !== "MANAGER"
+                          }
                         >
                           <CalendarIcon className="mr-2 h-4 w-4" />
                           {field.value ? (
@@ -412,6 +477,11 @@ export const TransactionForm = ({
                       onValueChange={(value) => {
                         field.onChange(value);
                       }}
+                      disabled={
+                        method === "UPDATE" &&
+                        role !== "RECORDS" &&
+                        role !== "MANAGER"
+                      }
                     >
                       <SelectTrigger className="w-full">
                         <SelectValue placeholder="Select priority" />
@@ -438,6 +508,11 @@ export const TransactionForm = ({
                       onValueChange={(value) => {
                         field.onChange(value);
                       }}
+                      disabled={
+                        method === "UPDATE" &&
+                        role !== "RECORDS" &&
+                        role !== "MANAGER"
+                      }
                     >
                       <SelectTrigger className="w-full">
                         <SelectValue placeholder="Select status" />
@@ -448,6 +523,7 @@ export const TransactionForm = ({
                         <SelectItem value="DORMANT">DORMANT</SelectItem>
                         <SelectItem value="DROP">DROP</SelectItem>
                         <SelectItem value="RECIEVED">RECIEVED</SelectItem>
+                        <SelectItem value="ARCHIEVED">FOR ARCHIEVE</SelectItem>
                       </SelectContent>
                     </Select>
                   </FormControl>
@@ -459,12 +535,12 @@ export const TransactionForm = ({
             <div className="">
               <FormField
                 control={form.control}
-                name="remarks"
+                name="remarks"  
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Remarks</FormLabel>
                     <FormControl>
-                      <Textarea placeholder="Enter Remarks" {...field} />
+                    <Textarea placeholder="Enter Remarks" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -483,34 +559,169 @@ export const TransactionForm = ({
                 <TableHeader>
                   <TableRow>
                     <TableHead className="w-[100px]">Name</TableHead>
-            
+
                     <TableHead className="text-right">Action</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {attachmentList?.checkList?.map((check, index) => (
+                  {fields.map((item, index) => (
                     <TableRow key={index}>
-                      <TableCell className="font-medium w-[200px]">
-                        {check.name}
+                      <TableCell className="font-medium w-[300px]">
+                        <FormInput
+                          name={`fileData.${index}.fileName`}
+                          label="Filename"
+                        />
+                      </TableCell>
+
+                      <TableCell className="font-medium w-[300px]">
+                        <FormField
+                          control={form.control}
+                          name={`fileData.${index}.fileType`}
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel>File type</FormLabel>
+                              <FormControl>
+                                <Select
+                                  onValueChange={(value) => {
+                                    field.onChange(value);
+                                  }}
+                                  disabled={
+                                    method === "UPDATE" &&
+                                    role !== "RECORDS" &&
+                                    role !== "MANAGER"
+                                  }
+                                >
+                                  <SelectTrigger className="w-full">
+                                    <SelectValue placeholder="Select type" />
+                                  </SelectTrigger>
+                                  <SelectContent>
+                                    <SelectItem value="INITIAL_DOC">
+                                      Initial documents
+                                    </SelectItem>
+                                    <SelectItem value="FOLLOWED_UP">
+                                      Follow-up documents
+                                    </SelectItem>
+                                  </SelectContent>
+                                </Select>
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+                      </TableCell>
+                      <TableCell>
+                        <FormField
+                          control={form.control}
+                          name={`fileData.${index}.fileStatus`}
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel>File status</FormLabel>
+                              <FormControl>
+                                <Select
+                                  onValueChange={(value) => {
+                                    field.onChange(value);
+                                  }}
+                                  disabled={
+                                    method === "UPDATE" &&
+                                    role !== "RECORDS" &&
+                                    role !== "MANAGER"
+                                  }
+                                >
+                                  <SelectTrigger className="w-full">
+                                    <SelectValue placeholder="Select status" />
+                                  </SelectTrigger>
+                                  <SelectContent>
+                                    <SelectItem value="FOR_REVIEW">
+                                      For Review
+                                    </SelectItem>
+                                    <SelectItem value="FINAL_ATTACHMENT">
+                                      Final Attachment
+                                    </SelectItem>
+                                  </SelectContent>
+                                </Select>
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+                      </TableCell>
+                      <TableCell className="font-medium w-[500px]">
+                        <FormTextArea
+                          name={`fileData.${index}.remarks`}
+                          label="Remarks"
+                        />
                       </TableCell>
 
                       <TableCell className="flex justify-end">
                         <div className="grid w-full max-w-sm items-center gap-1.5 justify-end">
-                          <Input
-                            name={`${check.value}`}
-                            onChange={(e) => handleFileChange(e)}
-                            type="file"
+                          <FormField
+                            control={form.control}
+                            name={`fileData.${index}.file`}
+                            render={({ field: { onChange }, ...field }) => (
+                              <FormItem>
+                                <FormLabel>File</FormLabel>
+                                <FormControl>
+                                  <Input
+                                    type="file"
+                                    accept="application/pdf"
+                                    {...field}
+                                    onChange={(event) =>
+                                      onChange(event.target.files)
+                                    }
+                                  />
+                                </FormControl>
+                                <FormDescription></FormDescription>
+                                <FormMessage />
+                              </FormItem>
+                            )}
                           />
                         </div>
                       </TableCell>
+                      <TableCell>
+                        <Button
+                          onClick={() => {
+                            remove(index);
+                          }}
+                          type="button"
+                          disabled={item.fileName}
+                        >
+                          Remove
+                        </Button>
+                      </TableCell>
                     </TableRow>
                   ))}
+                  <TableCell>
+                    <Input id="picture" type="file" />
+                  </TableCell>
+                  <TableCell>
+                    <Button
+                      onClick={() => {
+                        append({
+                          fileName: "",
+                          fileOriginalName: "",
+                          remarks: "",
+                          fileType: "INITIAL_DOC",
+                          fileStatus: null,
+                          fileUrl: null,
+                          file: undefined,
+                        });
+                      }}
+                      type="button"
+                    >
+                      Add
+                    </Button>
+                  </TableCell>
                 </TableBody>
               </Table>
             </div>
           )}
           <div className="flex justify-end mt-11">
-            <Button type="submit" onClick={()=>console.log(form.formState.errors)}>Submit</Button>
+            <Button
+              type="submit"
+              onClick={() => console.log(form.formState.errors)}
+            >
+              Submit
+            </Button>
           </div>
         </form>
       </Form>

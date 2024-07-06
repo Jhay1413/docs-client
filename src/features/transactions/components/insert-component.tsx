@@ -21,34 +21,36 @@ export const InsertComponent = () => {
   const onSubmit = async (
     transactionData: z.infer<typeof transactionFormData>
   ) => {
-    const formData = new FormData();
-    files.forEach((file, index) => {
-      formData.append("files", file.file);
-      formData.append(`fileNames[${index}]`, file.name);
-    });
-    const uploadFile = await uploadMultipleFiles(formData);
-    if (!uploadFile) {
-    }
-    const data= uploadFile.data.data as z.infer<typeof filesSchema>[];
+    // const formData = new FormData();
+    // files.forEach((file, index) => {
+    //   formData.append("files", file.file);
+    //   formData.append(`fileNames[${index}]`, file.name);
+    // });
+    // const uploadFile = await uploadMultipleFiles(formData);
+    // if (!uploadFile) {
+    // }
+    // const data= uploadFile.data.data as z.infer<typeof filesSchema>[];
 
     
 
-    const temp_section = checkList.find((check) => check.name === transactionData.team);
-    const attachmentList = temp_section?.application.find((check) => check.value === transactionData.documentType);
-    // const filePayload:z.infer<typeof filesSchema[]>= attachmentList?.checkList?.map((attachment)=>{
+    // const temp_section = checkList.find((check) => check.name === transactionData.team);
+    // const attachmentList = temp_section?.application.find((check) => check.value === transactionData.documentType);
+    // // const filePayload:z.infer<typeof filesSchema[]>= attachmentList?.checkList?.map((attachment)=>{
         
-    //     const matchAttachment = data.find(data=> data.fileName === attachment.name);
+    // //     const matchAttachment = data.find(data=> data.fileName === attachment.name);
 
 
-    //     if(matchAttachment){
-    //         return matchAttachment
-    //     }
-    //     return {fileName:attachment.name}
-    // })
+    // //     if(matchAttachment){
+    // //         return matchAttachment
+    // //     }
+    // //     return {fileName:attachment.name}
+    // // })
     
-    const payload = { ...transactionData, fileData: data };
-    console.log(payload);
-    add.mutate(payload);
+    // const payload = { ...transactionData, fileData: data };
+    // console.log(payload);
+    // add.mutate(payload);
+    console.log(transactionData)
+   
   };
   return (
     <div className="w-full h-full bg-white p-4 rounded-lg">
