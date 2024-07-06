@@ -35,16 +35,16 @@ export const InsertComponent = () => {
 
     const temp_section = checkList.find((check) => check.name === transactionData.team);
     const attachmentList = temp_section?.application.find((check) => check.value === transactionData.documentType);
-    const filePayload:z.infer<typeof filesSchema[]>= attachmentList?.checkList?.map((attachment)=>{
+    // const filePayload:z.infer<typeof filesSchema[]>= attachmentList?.checkList?.map((attachment)=>{
         
-        const matchAttachment = data.find(data=> data.fileName === attachment.name);
+    //     const matchAttachment = data.find(data=> data.fileName === attachment.name);
 
 
-        if(matchAttachment){
-            return matchAttachment
-        }
-        return {fileName:attachment.name}
-    })
+    //     if(matchAttachment){
+    //         return matchAttachment
+    //     }
+    //     return {fileName:attachment.name}
+    // })
     
     const payload = { ...transactionData, fileData: data };
     console.log(payload);
