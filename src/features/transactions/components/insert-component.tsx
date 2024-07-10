@@ -20,7 +20,13 @@ export const InsertComponent = () => {
 
   const onSubmit = async (
     transactionData: z.infer<typeof transactionFormData>
+
+    
   ) => {
+    // const attachments = transactionData.fileData?.filter(data=> data.file?.length! > 0);
+
+    // console.log(attachments);
+
     // const formData = new FormData();
     // files.forEach((file, index) => {
     //   formData.append("files", file.file);

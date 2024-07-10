@@ -148,12 +148,7 @@ export const TransactionForm = ({
           })),
         },
   });
-
-  const MemoizedTextarea = memo((props) => (
-    <Textarea placeholder="Enter Remarks" {...props} />
-  ));
  useEffect(() => {
-
    form.setValue(
     "fileData",
     attachmentList?.checkList?.map((item) => ({
@@ -690,9 +685,7 @@ export const TransactionForm = ({
                       </TableCell>
                     </TableRow>
                   ))}
-                  <TableCell>
-                    <Input id="picture" type="file" />
-                  </TableCell>
+                 
                   <TableCell>
                     <Button
                       onClick={() => {
