@@ -7,6 +7,7 @@ export const uploadMultipleFiles = async (data:FormData) => {
         const response = await axios.post(`${transactionApi}/upload`,data)
         return response
     } catch (error) {
+        console.log(error)
         throw new Error("Error uploading files")
     }
 }

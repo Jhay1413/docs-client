@@ -23,7 +23,7 @@ export const filesSchema = z.object({
   fileName: z.nullable(z.string()),
   fileStatus: z.nullable(z.string()).optional(),
   fileUrl: z.nullable(z.string()).optional(),
-  fileOriginalName: z.string().optional(),
+  fileOriginalName: z.nullable(z.string()).optional(),
     file:  z
     .custom<FileList>()
     .refine((files) => {
@@ -63,7 +63,7 @@ export const transactionFormData = z.object({
   originDepartment: z.string(),
   targetDepartment: z.string(),
   forwardedByRole: z.string(),
-  fileData: z.array(filesSchema).optional(),
+  attachments: z.array(filesSchema).optional(),
 });
 export const transactionLogsData = z.object({
   id: z.string().optional(),
