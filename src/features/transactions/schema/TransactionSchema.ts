@@ -101,5 +101,16 @@ export const transactionData = transactionFormData
     transactionLogs: z.array(transactionLogsData).optional(),
   })
   .omit({});
+export const signedUrlData = z.object({
 
+  company:z.string(),
+  fileName:z.string(),
+  signedUrl:z.string().optional(),
+  uploadStatus:z.boolean().optional(),
+  signedStatus : z.boolean().optional(),
+  key:z.nullable(z.string()).optional(),
+  fileOriginalName:z.nullable(z.string()).optional()
+})
+
+export const signedUrlDataArray = z.array(signedUrlData)
 //Transaction Types

@@ -1,17 +1,18 @@
-import { useState } from "react";
+
 import { useTransaction } from "../hooks/query-gate";
 import { useCompanies } from "@/features/companies";
 import { TransactionForm } from "./transaction-form";
-import { uploadMultipleFiles } from "@/services/uploadFile";
-import { filesSchema, transactionFormData } from "../schema/TransactionSchema";
+import {
+  signedUrlDataArray,
+  transactionFormData
+} from "../schema/TransactionSchema";
 import { z } from "zod";
-import { checkList } from "@/data/checklist";
-import { prepare_file_payload, prepare_transaction_payload, } from "../utils/pre-process-data";
+import {
+  prepare_file_payload,
+  prepare_transaction_payload,
+} from "../utils/pre-process-data";
+import { getSignedUrl } from "../services/getSignedUrl";
 
-type fileProps = {
-  name: string;
-  file: File;
-};
 export const InsertComponent = () => {
   const { add } = useTransaction("", "transaction", null);
   const { entities } = useCompanies("companies", "");
@@ -19,22 +20,35 @@ export const InsertComponent = () => {
   const onSubmit = async (
     transactionData: z.infer<typeof transactionFormData>
   ) => {
-  
-    const formData:FormData = prepare_file_payload(transactionData)
+    const attachments = transactionData.attachments?.filter((data) => data.file?.length! > 0);
 
-    const uploadFile = await uploadMultipleFiles(formData);
+    if(!attachments || attachments.length === 0 ) return add.mutate(transactionData);
 
-    if(!uploadFile) return null
+    const selectedCompany = entities?.data?.find((company) => transactionData.companyId === company.id);
 
-    const payload = prepare_transaction_payload(transactionData,uploadFile.data.data);
-    add.mutate(payload);
+    const signedUrlPayload = attachments?.map((attachment) => {
+      return {
+        company: selectedCompany!.companyName!,
+        fileName: attachment.fileName!,
+      };
+    });
+
+    if (signedUrlPayload && signedUrlPayload?.length > 0) {
+      const getSignedUrlForUpload = await getSignedUrl(signedUrlPayload);
+      const validatedData = signedUrlDataArray.safeParse(getSignedUrlForUpload);
+
+      if (!validatedData.success) return null;
+
+      const res = await prepare_file_payload(attachments,validatedData.data)
+      console.log(res)
+      const payload = prepare_transaction_payload(transactionData,res);
+      console.log(payload)
+      add.mutate(payload);
+    } 
   };
   return (
     <div className="w-full h-full bg-white p-4 rounded-lg">
-      <TransactionForm
-        company={entities.data}
-        mutateFn={onSubmit}
-      />
+      <TransactionForm company={entities.data} mutateFn={onSubmit} />
     </div>
   );
 };

@@ -11,10 +11,7 @@ import { useState } from "react";
 import { prepare_file_payload, prepare_transaction_payload } from "../utils/pre-process-data";
 import { uploadMultipleFiles } from "@/services/uploadFile";
 
-type fileProps = {
-  name: string;
-  file: File;
-};
+
 export const TransactionUpdateComponent = () => {
   const { id } = useParams();
   const { entities } = useCompanies("companies", "");

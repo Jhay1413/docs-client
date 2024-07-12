@@ -63,11 +63,6 @@ import { transactionFormData } from "../schema/TransactionSchema";
 import { useCurrentDivision } from "@/hooks/use-user-hook";
 import FormTextArea from "@/components/formTextArea";
 
-type fileProps = {
-  name: string;
-  file: File;
-};
-
 type props = {
   company: z.infer<typeof CompanyInfo>[] | undefined;
   method?: string;
@@ -638,30 +633,36 @@ export const TransactionForm = ({
                       />
                     </TableCell>
 
-                    <TableCell className="flex justify-end">
-                      <div className="grid w-full max-w-sm items-center gap-1.5 justify-end">
-                        <FormField
-                          control={form.control}
-                          name={`attachments.${index}.file`}
-                          render={({ field: { onChange }, ...field }) => (
-                            <FormItem>
-                              <FormLabel>File</FormLabel>
-                              <FormControl>
-                                <Input
-                                  type="file"
-                                  accept="application/pdf"
-                                  {...field}
-                                  onChange={(event) =>
-                                    onChange(event.target.files)
-                                  }
-                                />
-                              </FormControl>
-                              <FormDescription></FormDescription>
-                              <FormMessage />
-                            </FormItem>
-                          )}
-                        />
-                      </div>
+                    <TableCell className="flex  items-center justify-center ">
+                      {!item.fileUrl ? (
+                        <div className="">
+                          <FormField
+                            control={form.control}
+                            name={`attachments.${index}.file`}
+                            render={({ field: { onChange }, ...field }) => (
+                              <FormItem>
+                                <FormLabel>File</FormLabel>
+                                <FormControl>
+                                  <Input
+                                    type="file"
+                                    accept="application/pdf"
+                                    {...field}
+                                    onChange={(event) =>
+                                      onChange(event.target.files)
+                                    }
+                                  />
+                                </FormControl>
+                                <FormDescription></FormDescription>
+                                <FormMessage />
+                              </FormItem>
+                            )}
+                          />
+                        </div>
+                      ) : (
+                        <div className="flex items-center justify-center bg-black">
+                          <Button>{item.fileOriginalName}</Button>
+                        </div>
+                      )}
                     </TableCell>
                     <TableCell>
                       <Button
