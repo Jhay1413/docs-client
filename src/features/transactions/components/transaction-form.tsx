@@ -45,6 +45,7 @@ import {
   memo,
   useEffect,
   useMemo,
+  useRef,
   useState,
 } from "react";
 import { SubmitHandler, useFieldArray, useForm } from "react-hook-form";
@@ -62,6 +63,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { transactionFormData } from "../schema/TransactionSchema";
 import { useCurrentDivision } from "@/hooks/use-user-hook";
 import FormTextArea from "@/components/formTextArea";
+import { Label } from "@/components/ui/label";
+import { getSignUrlForView } from "../services/getSignedUrl";
 
 type props = {
   company: z.infer<typeof CompanyInfo>[] | undefined;
@@ -83,6 +86,7 @@ export const TransactionForm = ({
   const [selectedCompany, setSelectedCompany] = useState<string>(
     defaultValue?.companyId || ""
   );
+  const fileInputRef = useRef<(HTMLInputElement | null)[]>([]);
   const [team, setTeam] = useState(defaultValue?.team || "");
   const [selectedDivision, setSelectedDivision] = useState(
     defaultValue?.targetDepartment || ""
@@ -155,10 +159,7 @@ export const TransactionForm = ({
         })) || [] // Ensure to handle case when attachmentList or checkList might be undefined
       );
     }
-    console.log("asdad");
   }, [attachmentList]);
-
-  console.log("rerender");
 
   const { fields, append, remove } = useFieldArray({
     control: form.control,
@@ -169,6 +170,18 @@ export const TransactionForm = ({
     data
   ) => {
     mutateFn(data);
+  };
+
+  const viewFile = async (key: string) => {
+    const signedUrl = await getSignUrlForView(key);
+    if (signedUrl) {
+      window.open(signedUrl);
+    }
+  };
+  const reattachFile = (index: number) => {
+    if (fileInputRef && fileInputRef.current![index]) {
+      fileInputRef!.current![index]!.click();
+    }
   };
   return (
     <div className="w-full h-full bg-white p-4 rounded-lg">
@@ -538,7 +551,9 @@ export const TransactionForm = ({
               <TableHeader>
                 <TableRow>
                   <TableHead className="w-[100px]">Name</TableHead>
-
+                  <TableHead className="w-[100px]">Type</TableHead>
+                  <TableHead className="w-[100px]">Status</TableHead>
+                  <TableHead className="w-[100px]">Remarks</TableHead>
                   <TableHead className="text-right">Action</TableHead>
                 </TableRow>
               </TableHeader>
@@ -565,11 +580,7 @@ export const TransactionForm = ({
                                 onValueChange={(value) => {
                                   field.onChange(value);
                                 }}
-                                disabled={
-                                  method === "UPDATE" &&
-                                  role !== "RECORDS" &&
-                                  role !== "MANAGER"
-                                }
+                                
                               >
                                 <SelectTrigger className="w-full">
                                   <SelectValue placeholder="Select type" />
@@ -602,11 +613,7 @@ export const TransactionForm = ({
                                 onValueChange={(value) => {
                                   field.onChange(value);
                                 }}
-                                disabled={
-                                  method === "UPDATE" &&
-                                  role !== "RECORDS" &&
-                                  role !== "MANAGER"
-                                }
+                               
                               >
                                 <SelectTrigger className="w-full">
                                   <SelectValue placeholder="Select status" />
@@ -633,9 +640,9 @@ export const TransactionForm = ({
                       />
                     </TableCell>
 
-                    <TableCell className="flex  items-center justify-center ">
-                      {!item.fileUrl ? (
-                        <div className="">
+                    <TableCell className="h-full w-96 ">
+                      <div className="w-full">
+                        <div className={`${item.fileUrl && "hidden"}`}>
                           <FormField
                             control={form.control}
                             name={`attachments.${index}.file`}
@@ -650,6 +657,7 @@ export const TransactionForm = ({
                                     onChange={(event) =>
                                       onChange(event.target.files)
                                     }
+                                    ref={el => fileInputRef.current![index] = el}
                                   />
                                 </FormControl>
                                 <FormDescription></FormDescription>
@@ -658,22 +666,30 @@ export const TransactionForm = ({
                             )}
                           />
                         </div>
-                      ) : (
-                        <div className="flex items-center justify-center bg-black">
-                          <Button>{item.fileOriginalName}</Button>
+
+                        <div className={`${!item.fileUrl && "hidden"}`}>
+                          <Label>Actions</Label>
+                          <div className="flex  gap-4">
+                            <Button
+                              type="button"
+                              onClick={() => viewFile(item.fileUrl!)}
+                            >
+                              View file
+                            </Button>
+                            <Button type="button" onClick={() => reattachFile(index)}>Update</Button>
+                            <Button
+                              onClick={() => {
+                                remove(index);
+                              }}
+                              type="button"
+                              
+                              disabled={item.fileName ? true : false}
+                            >
+                              Remove
+                            </Button>
+                          </div>
                         </div>
-                      )}
-                    </TableCell>
-                    <TableCell>
-                      <Button
-                        onClick={() => {
-                          remove(index);
-                        }}
-                        type="button"
-                        disabled={item.fileName ? true : false}
-                      >
-                        Remove
-                      </Button>
+                      </div>
                     </TableCell>
                   </TableRow>
                 ))}
