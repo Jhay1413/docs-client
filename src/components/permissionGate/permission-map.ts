@@ -27,5 +27,6 @@ export const PERMISSIONS = {
   [ROLES.TL] : [SCOPES.canView],
   [ROLES.CH] :[SCOPES.canView],
   [ROLES.MANAGER]:[SCOPES.canView],
+  [ROLES.CH]:[SCOPES.canView],
   [ROLES.RECORDS]:[SCOPES.canCreate,SCOPES.canView]
 };
