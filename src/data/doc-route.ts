@@ -1,7 +1,7 @@
 export const docRoute = [
   {
     name: "MANAGER",
-    accessRole: ["RECORDS"],
+    accessRole: ["RECORDS","TL"],
   },
   {
     name: "TL",
@@ -9,7 +9,7 @@ export const docRoute = [
   },
   {
     name: "CH",
-    accessRole: ["RECORDS","MANAGER","TL","CH"],
+    accessRole: ["TL"],
   },
   {
     name:"RECORDS",
