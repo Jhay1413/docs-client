@@ -16,6 +16,7 @@ export const HistoryComponent = () => {
     return "loading";
   }
   if (!validatedData.success) {
+    console.log(entity.data)
     console.log(validatedData.error.errors);
   }
   if (!entity.data) {
