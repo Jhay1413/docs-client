@@ -1,4 +1,3 @@
-import axios from "axios"
 
 export const uploadFile = async(signedUrl:string,file:File)=>{
     try {

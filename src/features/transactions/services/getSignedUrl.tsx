@@ -13,3 +13,11 @@ export const getSignedUrl = async(data:z.infer<typeof signedUrlData>[])=>{
         console.log(error)
     }
 }
+export const getSignUrlForView = async(key:string)=>{
+    try {
+        const response = await axios.get(`${baseUrl}/transactionGetUrl?key=${key}`);
+        return response.data
+    } catch (error) {
+        console.log(error)
+    }
+}
