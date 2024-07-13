@@ -102,7 +102,7 @@ export const historyColumn: ColumnDef<History>[] = [
     accessorKey: "actions",
     id: "actions",
     cell: ({ row }) => {
-      const userInfo = row.original;
+      const transactionInfo = row.original;
 
       return (
         <DropdownMenu>
@@ -116,21 +116,12 @@ export const historyColumn: ColumnDef<History>[] = [
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
 
             <DropdownMenuItem>
-              <Link to={`/dashboard/userForm/${userInfo.id}`}>Edit</Link>
+              <Link to={`/dashboard/transactions/log/${transactionInfo.id}` } state= {{transactionInfo}}>View</Link>
             </DropdownMenuItem>
-            <DropdownMenuItem>Delete</DropdownMenuItem>
+      
 
             <DropdownMenuSeparator />
-            <DropdownMenuItem
-              onClick={() =>
-                navigator.clipboard.writeText(userInfo.id ? userInfo.id : "")
-              }
-            >
-              Copy Transaction ID
-            </DropdownMenuItem>
-
-            <DropdownMenuSeparator />
-            <DropdownMenuItem></DropdownMenuItem>
+           
           </DropdownMenuContent>
         </DropdownMenu>
       );

@@ -3,7 +3,25 @@
 import { z } from "zod";
 import { filesSchema, signedUrlData, signedUrlDataArray, transactionFormData } from "../schema/TransactionSchema";
 import { uploadFile } from "../services/uploadFile";
+import { CompanyInfo } from "@/features/companies";
 
+
+
+export const findContainFile = (transactionData: z.infer<typeof transactionFormData>,companies : z.infer<typeof CompanyInfo>[]) =>{
+  const attachments = transactionData.attachments?.filter((data) => data.file?.length! > 0);
+
+    if(!attachments || attachments.length === 0 ) return null;
+
+    const selectedCompany = companies?.find((company) => transactionData.companyId === company.id);
+
+    const signedUrlPayload = attachments?.map((attachment) => {
+      return {
+        company: selectedCompany!.companyName!,
+        fileName: attachment.fileName!,
+      };
+    });
+    return signedUrlPayload
+}
 export const prepare_file_payload = async(
   
   attachments : z.infer<typeof filesSchema>[],

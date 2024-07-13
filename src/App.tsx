@@ -22,6 +22,7 @@ import { Dashboard } from "./pages/Dashboard";
 import { TransactionIndex } from "./pages/transaction-index";
 import { IncomingComponent } from "./features/transactions/components/incoming-component";
 import { InboxComponent } from "./features/transactions/components/inbox-component";
+import { ViewHistory } from "./features/transactions/components/view-history";
 
 const queryClient = new QueryClient();
 function App() {
@@ -70,6 +71,7 @@ function App() {
                 <Route path="incoming-transaction/:id" element={<IncomingComponent/>} />
                 <Route path="inbox/:id" element={<InboxComponent/>} />
                 <Route path ="update/:id" element={<TransactionUpdateComponent/>}/>
+                <Route path ="log/:id" element={<ViewHistory/>}/>
               </Route>
             </Route>
             <Route path="/" element={<PublicRoutes />}>
