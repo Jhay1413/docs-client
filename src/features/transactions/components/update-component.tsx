@@ -25,7 +25,7 @@ export const TransactionUpdateComponent = () => {
     "UPDATEREMOVE"
   );
   const navigate = useNavigate();
-  //For review !! temporarily separated the update and add component with the same logic
+  //For review !! temporarily separated the update and add component  with the same logic
   const mutateFn = async (
     transactionData: z.infer<typeof transactionFormData>
   ) => {

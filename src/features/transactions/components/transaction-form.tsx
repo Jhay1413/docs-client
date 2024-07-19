@@ -39,17 +39,13 @@ import { cn } from "@/lib/utils";
 import { format } from "date-fns";
 import { CalendarIcon } from "lucide-react";
 import {
-  ChangeEvent,
-  Dispatch,
-  SetStateAction,
-  memo,
   useEffect,
   useMemo,
   useRef,
-  useState,
+  useState
 } from "react";
 import { SubmitHandler, useFieldArray, useForm } from "react-hook-form";
-import { checkList } from "@/data/checklist";
+
 import FormInput from "@/components/formInput";
 import { Divisions } from "@/data/data";
 import { CompanyInfo } from "@/features/companies";
@@ -65,6 +61,7 @@ import { useCurrentDivision } from "@/hooks/use-user-hook";
 import FormTextArea from "@/components/formTextArea";
 import { Label } from "@/components/ui/label";
 import { getSignUrlForView } from "../services/getSignedUrl";
+import { checkList } from "@/data/checklist-new";
 
 type props = {
   company: z.infer<typeof CompanyInfo>[] | undefined;
@@ -134,7 +131,7 @@ export const TransactionForm = ({
           originDepartment: currentDivision,
           transactionId: "",
           attachments: attachmentList?.checkList?.map((item) => ({
-            fileName: item.name,
+            fileName: item,
             fileOriginalName: undefined,
             remarks: "",
             fileType: "INITIAL_DOC",
@@ -149,7 +146,7 @@ export const TransactionForm = ({
       form.setValue(
         "attachments",
         attachmentList?.checkList?.map((item) => ({
-          fileName: item.name,
+          fileName: item,
           fileOriginalName: undefined,
           remarks: "",
           fileType: "INITIAL_DOC",

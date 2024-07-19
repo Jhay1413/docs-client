@@ -4,7 +4,7 @@ export const Divisions = [
     
     section:[
         {
-            name:'TERRESTRIAL, CLIMATE & TENURIAL INSTRUMENT',
+            name:'Terrestrial, Climate & Tenurial Instrument',
             value:"TCTI"
         },
         {
@@ -13,7 +13,7 @@ export const Divisions = [
         },
         {
             name:"EIA & Chemical Substances",
-            value:"ECS"
+            value:"EIA"
         },
         {
             name:"Environmental Planning & Design",
