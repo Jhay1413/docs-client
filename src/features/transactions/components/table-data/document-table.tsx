@@ -30,7 +30,7 @@ export const DocumentTable = ({ data }: Props) => {
         <TableHeader>
           <TableRow>
             <TableHead className="w-[100px]">Name</TableHead>
-            <TableHead className="w-[100px]">Type</TableHead>
+
             <TableHead className="w-[100px]">Status</TableHead>
             <TableHead className="w-[100px]">Remarks</TableHead>
             <TableHead className="w-[100px]">Created at</TableHead>
@@ -46,9 +46,6 @@ export const DocumentTable = ({ data }: Props) => {
                 <h1>{item.fileName}</h1>
               </TableCell>
 
-              <TableCell className="font-medium w-[300px]">
-                <h1>{item.fileType}</h1>
-              </TableCell>
               <TableCell className="font-medium w-[300px]">
                 <h1>{item.fileStatus}</h1>
               </TableCell>

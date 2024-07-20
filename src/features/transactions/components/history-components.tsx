@@ -8,10 +8,17 @@ import { DataTable } from "@/components/data-table";
 import { TransactionDetails } from "./transaction-details";
 import { useState } from "react";
 import { IerPage } from "./table-data/ier-summary";
+import { CompleteStaffWorkForm } from "../forms/csw-form";
 
+
+enum View {
+  IER,
+  CSW,
+  DETAILS
+}
 export const HistoryComponent = () => {
   const { id } = useParams();
-
+  const [view,setView] = useState<View>(View.DETAILS)
   const [isIerOpen, setIierOpen] = useState(false);
   const [isCswOpen, setIsCswOpen] = useState(false);
   const [isDetailsOpen, setDetailsIsOpen] = useState(false);
@@ -33,10 +40,17 @@ export const HistoryComponent = () => {
 
   const openDetailsPage = () => {
     setDetailsIsOpen(true);
+    setIsCswOpen(false);
     setIierOpen(false);
   };
   const openIerPage = () => {
-    setIierOpen(true);
+    setIierOpen(true);  
+    setIsCswOpen(false);
+    setDetailsIsOpen(false);
+  };
+  const openCswPage = () => {
+    setIsCswOpen(true);
+    setIierOpen(false);
     setDetailsIsOpen(false);
   };
   return (
@@ -48,9 +62,9 @@ export const HistoryComponent = () => {
             <Button
               variant="link"
               className={`w-full hover:text-white ${
-                isDetailsOpen ? "bg-green-500" : ""
+                view === View.DETAILS ? "bg-green-500" : ""
               }`}
-              onClick={openDetailsPage}
+              onClick={()=>setView(View.DETAILS)}
             >
               Details
             </Button>
@@ -59,8 +73,10 @@ export const HistoryComponent = () => {
           <div className="flex w-32  bg-white border-2 shadow-xl border-gray-200 rounded-md hover:bg-green-500 ">
             <Button
               variant="link"
-              className="w-full hover:text-white"
-              onClick={openIerPage}
+              className={`w-full hover:text-white ${
+                view === View.CSW ? "bg-green-500" : ""
+              }`}
+              onClick={()=>setView(View.CSW)}
             >
               CSW
             </Button>
@@ -71,9 +87,9 @@ export const HistoryComponent = () => {
               variant="link"
               type="button"
               className={`w-full hover:text-white ${
-                isIerOpen ? "bg-green-500" : ""
+                view === View.IER ? "bg-green-500" : ""
               }`}
-              onClick={openIerPage}
+              onClick={()=>setView(View.IER)}
             >
               IER
             </Button>
@@ -81,8 +97,13 @@ export const HistoryComponent = () => {
         </div>
         <Separator className="h" />
 
-        {isIerOpen ? (
+        {view === View.IER ? (
           <IerPage data={attachmentForIer} />
+        ) : view === View.CSW ? (
+          <CompleteStaffWorkForm
+            transactionId={validatedData.data.id || ""}
+            data={validatedData.data.completeStaffWork || []}
+          />
         ) : (
           <>
             <TransactionDetails data={validatedData.data} />

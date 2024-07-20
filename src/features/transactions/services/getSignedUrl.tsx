@@ -11,6 +11,7 @@ export const getSignedUrl = async(data:z.infer<typeof signedUrlData>[])=>{
         return response.data
     } catch (error) {
         console.log(error)
+        throw new Error("Something went wrong ! ")
     }
 }
 export const getSignUrlForView = async(key:string)=>{

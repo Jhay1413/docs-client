@@ -107,6 +107,27 @@ export const transactionColumns: ColumnDef<TransactionInfo>[] = [
     accessorKey: "dueDate",
   },
   {
+    header:"Percentage",
+    accessorKey:"percentage",
+    cell:({row})=>{
+      const transactionInfo = row.original;
+
+
+      const numberOfFinalAttachment = transactionInfo.attachments?.filter(attachment=>attachment.fileStatus==="FINAL_ATTACHMENT").length;
+      const numberOfAttachment = transactionInfo.attachments?.length;
+      console.log(numberOfAttachment,"attachment");
+      console.log(numberOfFinalAttachment,"final")
+      const percentage = Math.floor((numberOfFinalAttachment!/numberOfAttachment!) * 100)
+
+      return(
+        <div className="">
+          <span>{percentage}%</span>
+        </div>
+      )
+
+    }
+  },
+  {
     header: "Actions",
     accessorKey: "actions",
     id: "actions",

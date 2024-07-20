@@ -1,6 +1,6 @@
 import { useTransaction } from "../hooks/query-gate";
 import { useCompanies } from "@/features/companies";
-import { TransactionForm } from "./transaction-form";
+import { TransactionForm } from "../forms/transaction-form";
 import {
   signedUrlDataArray,
   transactionFormData,

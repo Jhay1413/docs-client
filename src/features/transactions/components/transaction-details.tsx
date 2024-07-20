@@ -137,7 +137,7 @@ export const TransactionDetails = ({data}:Props) =>{
                 {data?.status}
               </h1>
             </div>
-            <div className="flex flex-col col-span-2">
+            <div className="flex flex-col col-span-2 row-span-2 ">
               <h1 className="text-muted-foreground text-sm">Remarks:</h1>
               <h1 className="text-base font-semibold">
                 {data?.remarks}

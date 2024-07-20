@@ -6,7 +6,7 @@ import {
   transactionFormData,
 } from "../schema/TransactionSchema";
 import { z } from "zod";
-import { TransactionForm } from "./transaction-form";
+import { TransactionForm } from "../forms/transaction-form";
 import { useCompanies } from "@/features/companies";
 import { useEffect } from "react";
 import { prepare_file_payload, prepare_transaction_payload } from "../utils/pre-process-data";
