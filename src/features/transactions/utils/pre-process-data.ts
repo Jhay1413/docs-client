@@ -40,10 +40,10 @@ export const prepare_file_payload = async (
         (attachment) => attachment.fileName === data.fileName
       );
 
-      if (!data.signedStatus) return data;
+      if (!data.signedStatus || !data.signedUrl) return data;
 
       const response = await uploadFile(
-        data.signedUrl!,
+        data.signedUrl,
         attachmentToUpload?.file![0]!
       );
 

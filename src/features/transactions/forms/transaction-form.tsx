@@ -75,9 +75,9 @@ export const TransactionForm = ({
   defaultValue,
   mutateFn,
 }: props) => {
-  const role = useMemo(() => useCurrentUserRole(), []);
-  const currentDivision = useMemo(() => useCurrentDivision(), []);
-  const userId = useMemo(() => getCurrentUserId(), []);
+  const role = useCurrentUserRole();
+  const currentDivision = useCurrentDivision();
+  const userId = getCurrentUserId();
   const route = docRoute.find((data) => data.name === role);
 
   const [selectedCompany, setSelectedCompany] = useState<string>(

@@ -48,7 +48,7 @@ type Props = {
 };
 
 export const CompleteStaffWorkForm = ({ data, transactionId }: Props) => {
-  const { update } = useTransaction(`${transactionId}/csw`, "transactions");
+  // const { update } = useTransaction(`${transactionId}/csw`, "transactions");
   const form = useForm<FormValues>({
     mode: "onSubmit",
     defaultValues: {
@@ -69,9 +69,9 @@ export const CompleteStaffWorkForm = ({ data, transactionId }: Props) => {
         }))
       );
     }
-  }, [data]);
+  }, [data,form]);
 
-  const { fields, append, remove } = useFieldArray({
+  const { fields, append} = useFieldArray({
     control: form.control,
     name: "csw",
   });
@@ -80,14 +80,22 @@ export const CompleteStaffWorkForm = ({ data, transactionId }: Props) => {
       const signedUrlPayload = data.csw.map((data, index) => {
         return {
           company: "Envicomm",
-          fileName: data.attachmentFile?.item.name!,
+          fileName: data.attachmentFile?.item.name || "",
           index: index,
         };
       });
       const signedUrl = await getSignedUrl(signedUrlPayload);
-    } catch (error) {}
 
-    update.mutate({ ...data });
+      const cswWithSignedUrl = data.csw.map((data,index)=>{
+          const data = 
+      })
+      const res = await Promise.all(sign)
+      
+    } catch (error) {
+      console.log(error)
+    }
+
+    // update.mutate({ ...data });
   };
   return (
     <Form {...form}>

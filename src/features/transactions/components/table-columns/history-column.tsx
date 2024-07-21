@@ -84,6 +84,14 @@ export const historyColumn: ColumnDef<History>[] = [
   {
     header: "Date Forwarded",
     accessorKey: "dateForwarded",
+    cell: ({ row }) => {
+      const dateForwarded = row.original.dateForwarded;
+      return (
+        <div>
+          <h1>{dateForwarded ? new Date(dateForwarded).toDateString() : ""}</h1>
+        </div>
+      );
+    },
   },
   {
     header: "Date Received",
@@ -92,7 +100,7 @@ export const historyColumn: ColumnDef<History>[] = [
       const dateReceived = row.original.dateReceived;
       return (
         <div>
-          <h1>{dateReceived ? dateReceived : ""}</h1>
+          <h1>{dateReceived ? new Date(dateReceived).toDateString() : ""}</h1>
         </div>
       );
     },

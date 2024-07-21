@@ -47,7 +47,7 @@ export const DocumentTable = ({ data }: Props) => {
               </TableCell>
 
               <TableCell className="font-medium w-[300px]">
-                <h1>{item.fileStatus}</h1>
+                <h1>{item.fileStatus?.split("_").join(" ")}</h1>
               </TableCell>
               <TableCell className="font-medium w-[500px]">
                 <h1>{item.remarks}</h1>

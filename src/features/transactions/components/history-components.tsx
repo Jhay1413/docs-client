@@ -19,9 +19,6 @@ enum View {
 export const HistoryComponent = () => {
   const { id } = useParams();
   const [view,setView] = useState<View>(View.DETAILS)
-  const [isIerOpen, setIierOpen] = useState(false);
-  const [isCswOpen, setIsCswOpen] = useState(false);
-  const [isDetailsOpen, setDetailsIsOpen] = useState(false);
 
   const { entity } = useTransaction(`${id}`, "transactions", id);
   const validatedData = transactionData.safeParse(entity.data);
@@ -38,21 +35,7 @@ export const HistoryComponent = () => {
       (attachment) => attachment.fileType === "INITIAL_DOC"
     ) || [];
 
-  const openDetailsPage = () => {
-    setDetailsIsOpen(true);
-    setIsCswOpen(false);
-    setIierOpen(false);
-  };
-  const openIerPage = () => {
-    setIierOpen(true);  
-    setIsCswOpen(false);
-    setDetailsIsOpen(false);
-  };
-  const openCswPage = () => {
-    setIsCswOpen(true);
-    setIierOpen(false);
-    setDetailsIsOpen(false);
-  };
+  
   return (
     <div className="flex flex-col w-full  p-4 rounded-lg">
       <div className="flex flex-col space-y-12">

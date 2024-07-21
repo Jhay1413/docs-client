@@ -1,10 +1,9 @@
 import axios from "axios"
-import { signedUrlData } from "../schema/TransactionSchema";
-import { z } from "zod";
+
 const baseUrl = import.meta.env.VITE_TRANSACTION_API;
 
 
-export const getSignedUrl = async(data:z.infer<typeof signedUrlData>[])=>{
+export const getSignedUrl = async <T>(data: T[]): Promise<T[]> => {
 
     try {
         const response = await axios.post(`${baseUrl}/transactionSignedUrl`,data);

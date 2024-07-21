@@ -98,7 +98,7 @@ export const ViewHistory = () => {
             <div className="flex flex-col">
               <h1 className="text-muted-foreground text-sm">Date Forwarded:</h1>
               <h1 className="text-base font-semibold">
-                {validatedData.data?.dateForwarded}
+                {new Date(validatedData.data?.dateForwarded).toDateString()}
               </h1>
             </div>
           </div>
