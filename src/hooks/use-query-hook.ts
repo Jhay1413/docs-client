@@ -72,8 +72,8 @@ export const useEntity = <T extends {id?:string}>(
       invalidateActive();
     },
   });
-  const update = useMutation<T | string, Error, T, any>({
-    mutationFn: async (entity:T): Promise<T | string> => {
+  const update = useMutation<T | string, Error, T | T[], any>({
+    mutationFn: async (entity:T | T[]): Promise<T | string> => {
       const { data } = await put(url, entity);
       console.log(data)
       return data;
