@@ -49,20 +49,20 @@ export const transactionFormData = z.object({
   documentSubType: z.string(),
   subject: z.string(),
   dueDate: z.nullable(z.string().datetime()),
-  team: z.string(),
+  team: z.string().optional(),
   status: z.string(),
   priority: z.string(),
   companyId: z.string().optional(),
   projectId: z.string().optional(),
   forwardedTo: z.nullable(z.string()).optional(),
-  remarks: z.string(),
+  remarks: z.string().optional(),
   receivedById: z.nullable(z.string()).optional(),
   forwardedById: z.nullable(z.string()).optional(),
   dateForwarded: z.nullable(z.string().datetime()),
   dateReceived: z.nullable(z.string().datetime()).optional(),
   originDepartment: z.string(),
   targetDepartment: z.string(),
-  forwardedByRole: z.string(),
+  forwardedByRole: z.string().optional(),
   attachments: z.array(filesSchema).optional(),
 });
 export const transactionLogsData = z.object({
@@ -74,7 +74,7 @@ export const transactionLogsData = z.object({
   documentSubType: z.string(),
   createdAt: z.string().datetime().optional(),
   updatedAt: z.string().datetime().optional(),
-  team: z.string(),
+  team: z.string().optional(),
   status: z.string(),
   priority: z.string(),
   company: z.string(),
@@ -124,6 +124,7 @@ export const transactionData = transactionFormData
     project: companyProject.optional(),
     transactionLogs: z.array(transactionLogsData).optional(),
     completeStaffWork : z.array(completeStaffWork).optional(),
+    percentage : z.string().optional()
   })
   .omit({});
 

@@ -1,5 +1,10 @@
 import { useFieldArray, useForm } from "react-hook-form";
-import { completeStaffWork, filesSchema, signedUrlData } from "../schema/TransactionSchema";
+import {
+  completeStaffWork,
+  filesSchema,
+  signedUrlData,
+  transactionData,
+} from "../schema/TransactionSchema";
 import { z } from "zod";
 import { useEffect, useState } from "react";
 import { Form } from "@/components/ui/form";
@@ -38,6 +43,9 @@ import { CalendarIcon } from "lucide-react";
 import FormTextArea from "@/components/formTextArea";
 import { getSignedUrl } from "../services/getSignedUrl";
 import { PrintButton } from "@/components/print-button";
+import { uploadFile } from "../services/uploadFile";
+import { toast } from "react-toastify";
+import { UseMutationResult } from "@tanstack/react-query";
 
 type FormValues = {
   id: string;
@@ -49,7 +57,12 @@ type Props = {
 };
 
 export const CompleteStaffWorkForm = ({ data, transactionId }: Props) => {
-  const { update } = useTransaction(`${transactionId}/csw`, "transactions");
+  const { entity, update } = useTransaction({
+    key: "transaction",
+    url: `v2/${transactionId}`,
+    id: transactionId,
+    updateUrl: `v2/${transactionId}/csw`,
+  });
   const [isEdit, setIsEdit] = useState(false);
   const form = useForm<FormValues>({
     mode: "onSubmit",
@@ -78,25 +91,45 @@ export const CompleteStaffWorkForm = ({ data, transactionId }: Props) => {
     name: "csw",
   });
   const submit = async (data: FormValues) => {
-     try {
-       const signedUrlPayload = data.csw.map((data, index) => {
-         return {
-           company: "Envicomm",
-           fileName: data.attachmentFile?.item.name || "",
-           index: index,
-         };
-       });
-       const signedUrl = await getSignedUrl<z.infer<typeof signedUrlData>>(signedUrlPayload);
+    const dataToUpdate = data.csw.filter((data) => data.attachmentFile);
+    if (!dataToUpdate || dataToUpdate.length < 0)
+      return update.mutate(data.csw);
 
-       const cswWithSignedUrl = data.csw.map((data,index)=>{
+    const signedUrlPayload = data.csw.map((data, index) => {
+      return {
+        company: "Envicomm",
+        fileName: data.attachmentFile?.item.name || "",
+        index: index,
+      };
+    });
+    const signedUrl = await getSignedUrl<z.infer<typeof signedUrlData>>(
+      signedUrlPayload
+    );
 
-       })
+    const uploadedFile = await Promise.all(
+      dataToUpdate.map(async (csw, index) => {
+        const attachmentToUpload = signedUrl.find(
+          (signed) => signed.index === index
+        );
 
-     } catch (error) {
-       console.log(error)
-     }
-    const payload = data.csw.map((csw) => {
-      return { ...csw, attachmentUrl: "", id: undefined };
+        if (!attachmentToUpload?.signedStatus || !attachmentToUpload.signedUrl)
+          return csw;
+        const response = await uploadFile(
+          attachmentToUpload.signedUrl,
+          csw.attachmentFile![0]
+        );
+
+        if (!response?.ok) return csw;
+
+        return {
+          ...csw,
+          attachmentUrl: attachmentToUpload.key,
+        };
+      })
+    );
+    const payload = uploadedFile.map((uploadedFile) => {
+      const { attachmentFile, ...newData } = uploadedFile;
+      return { ...newData, id: undefined };
     });
     update.mutate(payload);
   };
@@ -212,7 +245,9 @@ export const CompleteStaffWorkForm = ({ data, transactionId }: Props) => {
               >
                 Add
               </Button>
-              <Button type="submit">Submit</Button>
+              <Button type="submit" disabled={update.isPending}>
+                Submit
+              </Button>
             </div>
           </form>
         </Form>

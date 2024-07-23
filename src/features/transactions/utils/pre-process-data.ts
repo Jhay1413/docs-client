@@ -48,7 +48,7 @@ export const prepare_file_payload = async (
       );
 
       if (!response?.ok) return { ...data, uploadStatus: false };
-
+      
       return {
         ...data,
         uploadStatus: true,

@@ -113,15 +113,10 @@ export const transactionColumns: ColumnDef<TransactionInfo>[] = [
       const transactionInfo = row.original;
 
 
-      const numberOfFinalAttachment = transactionInfo.attachments?.filter(attachment=>attachment.fileStatus==="FINAL_ATTACHMENT").length;
-      const numberOfAttachment = transactionInfo.attachments?.length;
-      console.log(numberOfAttachment,"attachment");
-      console.log(numberOfFinalAttachment,"final")
-      const percentage = Math.floor((numberOfFinalAttachment!/numberOfAttachment!) * 100)
-
+    
       return(
         <div className="">
-          <span>{percentage}%</span>
+          <span>{transactionInfo.percentage}%</span>
         </div>
       )
 
@@ -162,7 +157,7 @@ export const transactionColumns: ColumnDef<TransactionInfo>[] = [
             <DropdownMenuSeparator />
             <DropdownMenuItem>
               <Link
-                to={`/dashboard/transactions/history/${userInfo.transactionId}`}
+                to={`/dashboard/transactions/history/${userInfo.id}`}
               >
                 View Details
               </Link>

@@ -9,7 +9,7 @@ import PermissionsGate from "@/components/permissionGate/permission-gate";
 import { SCOPES } from "@/components/permissionGate/permission-map";
 
 export const TransactionList = () => {
-  const { entities } = useTransactions("transactions", "");
+  const { entities } = useTransactions("transactions", "v2/");
 
   if (entities.isLoading) return <div>Loading...</div>;
 

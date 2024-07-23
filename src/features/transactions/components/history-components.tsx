@@ -20,7 +20,8 @@ export const HistoryComponent = () => {
   const { id } = useParams();
   const [view,setView] = useState<View>(View.DETAILS)
 
-  const { entity } = useTransaction(`${id}`, "transactions", id);
+  const { entity,update } = useTransaction({key:`transactions`,url:`v2/${id}`,id});
+
   const validatedData = transactionData.safeParse(entity.data);
 
   if (entity.isLoading) return "loading";
@@ -86,6 +87,8 @@ export const HistoryComponent = () => {
           <CompleteStaffWorkForm
             transactionId={validatedData.data.id || ""}
             data={validatedData.data.completeStaffWork || []}
+          
+         
           />
         ) : (
           <>

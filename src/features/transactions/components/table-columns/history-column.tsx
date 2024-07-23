@@ -67,7 +67,6 @@ export const historyColumn: ColumnDef<History>[] = [
     id: "receiver",
     cell: ({ row }) => {
       const receiverInfo = row.original;
-      console.log(receiverInfo)
       return (
         <div className="flex gap-4 flex-col">
           <h1>{receiverInfo.receivedBy} </h1>
