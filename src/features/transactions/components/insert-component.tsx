@@ -1,6 +1,6 @@
 import { useTransaction } from "../hooks/query-gate";
 import { useCompanies } from "@/features/companies";
-import { TransactionForm } from "./transaction-form";
+import { TransactionForm } from "../forms/transaction-form";
 import {
   signedUrlDataArray,
   transactionFormData,
@@ -15,7 +15,7 @@ import { redirect, useNavigate } from "react-router-dom";
 import { useEffect } from "react";
 
 export const InsertComponent = () => {
-  const { add } = useTransaction("", "inbox", null);
+  const { add } = useTransaction({key:"inbox",url:""});
   const { entities } = useCompanies("companies", "");
 
   const navigate = useNavigate();

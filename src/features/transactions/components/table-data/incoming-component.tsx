@@ -1,9 +1,9 @@
 import { useParams } from "react-router-dom";
-import { useTransactions } from "../hooks/query-gate";
+import { useTransactions } from "../../hooks/query-gate";
 import { DataTable } from "@/components/data-table";
-import { transactionData, transactionFormData } from "../schema/TransactionSchema";
+import { transactionData, transactionFormData } from "../../schema/TransactionSchema";
 import { z } from "zod";
-import { incomingColumns } from "./table-columns/incoming-column";
+import { incomingColumns } from "../table-columns/incoming-column";
 
 export const IncomingComponent = () => {
   const { id } = useParams();

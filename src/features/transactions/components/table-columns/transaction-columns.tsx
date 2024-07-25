@@ -107,6 +107,22 @@ export const transactionColumns: ColumnDef<TransactionInfo>[] = [
     accessorKey: "dueDate",
   },
   {
+    header:"Percentage",
+    accessorKey:"percentage",
+    cell:({row})=>{
+      const transactionInfo = row.original;
+
+
+    
+      return(
+        <div className="">
+          <span>{transactionInfo.percentage}%</span>
+        </div>
+      )
+
+    }
+  },
+  {
     header: "Actions",
     accessorKey: "actions",
     id: "actions",
@@ -141,7 +157,7 @@ export const transactionColumns: ColumnDef<TransactionInfo>[] = [
             <DropdownMenuSeparator />
             <DropdownMenuItem>
               <Link
-                to={`/dashboard/transactions/history/${userInfo.transactionId}`}
+                to={`/dashboard/transactions/history/${userInfo.id}`}
               >
                 View Details
               </Link>
