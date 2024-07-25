@@ -1,4 +1,5 @@
 
+import { UserForm } from "@/features/users";
 import { NotFound } from "@/pages/404";
 import { Login } from "@/pages/Login";
 
@@ -9,7 +10,7 @@ export function PublicRoutes() {
      
         <Routes>
           <Route path="/" element={<Login />} />
-         
+          <Route path="form" element={<UserForm />} />
           <Route path="*" element={<NotFound/>}/>
         </Routes>
      

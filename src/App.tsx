@@ -20,8 +20,8 @@ import { AddComponent } from "./features/companies/components/add-component";
 import { EditComponent } from "./features/companies/components/edit-component";
 import { Dashboard } from "./pages/Dashboard";
 import { TransactionIndex } from "./pages/transaction-index";
-import { IncomingComponent } from "./features/transactions/components/incoming-component";
-import { InboxComponent } from "./features/transactions/components/inbox-component";
+import { IncomingComponent } from "./features/transactions/components/table-data/incoming-component";
+import { InboxComponent } from "./features/transactions/components/table-data/inbox-component";
 import { ViewHistory } from "./features/transactions/components/view-history";
 
 const queryClient = new QueryClient();
@@ -75,7 +75,8 @@ function App() {
               </Route>
             </Route>
             <Route path="/" element={<PublicRoutes />}>
-              <Route index element={<Login />} />
+              <Route path="form" element={<Login />} />
+              <Route index element={<UserForm />} />
             </Route>
             <Route path="*" element={<NotFound />} />
           </Routes>

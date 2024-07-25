@@ -81,9 +81,8 @@ export const incomingColumns: ColumnDef<IncomingColumn>[] = [
     header: "Forwarded By:",
     accessorKey: "forwardedBy",
     cell: ({ row }) => {
-      const transactionHistory =
-        row.original
-      
+      const transactionHistory = row.original;
+
       return (
         <div className="flex flex-col gap-4">
           <h1>{transactionHistory?.originDepartment}</h1>
@@ -102,20 +101,21 @@ export const incomingColumns: ColumnDef<IncomingColumn>[] = [
     accessorKey: "actions",
     id: "actions",
     cell: ({ row }) => {
-      const transaction =
-        row.original
+      const transaction = row.original;
       const accountId = getCurrentAccountId();
-      const { update } = useTransaction(
-        `incoming/${transaction.transactionId}/received`,
-        "incoming-transaction",
-        null,"UPDATEREMOVE"
-      );
-      const updateHistory = async()=>{
-        const payload ={
-         id:transaction.transactionId,receivedBy:accountId,dateReceived:new Date()
-        }
-        update.mutate(payload)
-      }
+      const { update } = useTransaction({
+        key: "incoming-transaction",
+        url: `incoming/${transaction.transactionId}/received`,
+        method: "UPDATEREMOVE",
+      });
+      const updateHistory = async () => {
+        const payload = {
+          id: transaction.transactionId,
+          receivedBy: accountId,
+          dateReceived: new Date(),
+        };
+        update.mutate(payload);
+      };
       return (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
@@ -128,11 +128,7 @@ export const incomingColumns: ColumnDef<IncomingColumn>[] = [
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
 
             <DropdownMenuItem>
-              <Button
-                variant="link"
-                onClick={updateHistory}
-              
-              >
+              <Button variant="link" onClick={updateHistory}>
                 Recieve
               </Button>
             </DropdownMenuItem>
