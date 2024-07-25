@@ -1,10 +1,5 @@
 import { useFieldArray, useForm } from "react-hook-form";
-import {
-  completeStaffWork,
-  filesSchema,
-  signedUrlData,
-  transactionData,
-} from "../schema/TransactionSchema";
+import { completeStaffWork, signedUrlData } from "../schema/TransactionSchema";
 import { z } from "zod";
 import { useEffect, useState } from "react";
 import { Form } from "@/components/ui/form";
@@ -42,10 +37,7 @@ import { CalendarIcon } from "lucide-react";
 
 import FormTextArea from "@/components/formTextArea";
 import { getSignedUrl } from "../services/getSignedUrl";
-import { PrintButton } from "@/components/print-button";
 import { uploadFile } from "../services/uploadFile";
-import { toast } from "react-toastify";
-import { UseMutationResult } from "@tanstack/react-query";
 
 type FormValues = {
   id: string;
@@ -57,11 +49,9 @@ type Props = {
 };
 
 export const CompleteStaffWorkForm = ({ data, transactionId }: Props) => {
-  const { entity, update } = useTransaction({
+  const { update } = useTransaction({
     key: "transaction",
-    url: `v2/${transactionId}`,
-    id: transactionId,
-    updateUrl: `v2/${transactionId}/csw`,
+    url: `v2/${transactionId}/csw`,
   });
   const [isEdit, setIsEdit] = useState(false);
   const form = useForm<FormValues>({

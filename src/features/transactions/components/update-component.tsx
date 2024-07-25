@@ -20,13 +20,17 @@ export const TransactionUpdateComponent = () => {
   const { id } = useParams();
   const userId = getCurrentUserId();
   const { entities } = useCompanies("companies", "");
-  const { entity, update } = useTransaction<z.infer<typeof transactionData>>({
+  const { entity, update } = useTransaction({
     key: "inbox",
-    url: `v2/${id}`,
+    url: `${id}`,
     id,
     method: "UPDATEREMOVE",
   });
   const navigate = useNavigate();
+  console.log(entity.data)
+  const validatedData = transactionData.safeParse(entity.data);
+  if(!validatedData.data || validatedData.error) 
+  console.log(validatedData.error.errors)
   //For review !! temporarily separated the update and add component  with the same logic
   const mutateFn = async (
     transactionData: z.infer<typeof transactionFormData>
@@ -76,7 +80,7 @@ export const TransactionUpdateComponent = () => {
         company={entities.data}
         method="UPDATE"
         mutateFn={mutateFn}
-        defaultValue={entity.data}
+        defaultValue={validatedData.data}
       />
     </div>
   );

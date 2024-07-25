@@ -9,6 +9,7 @@ import { TransactionDetails } from "./transaction-details";
 import { useState } from "react";
 import { IerPage } from "./table-data/ier-summary";
 import { CompleteStaffWorkForm } from "../forms/csw-form";
+import { CswComponent } from "./table-data/csw-list";
 
 
 enum View {
@@ -84,7 +85,7 @@ export const HistoryComponent = () => {
         {view === View.IER ? (
           <IerPage data={attachmentForIer} />
         ) : view === View.CSW ? (
-          <CompleteStaffWorkForm
+          <CswComponent
             transactionId={validatedData.data.id || ""}
             data={validatedData.data.completeStaffWork || []}
           

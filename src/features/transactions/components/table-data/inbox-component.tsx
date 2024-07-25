@@ -7,22 +7,19 @@ import { z } from "zod";
 
 export const InboxComponent = () => {
   const { id } = useParams();
-  const { entities } = useTransactions<z.infer<typeof transactionData>>(
-    "inbox",
-    `/temp/${id}?option=INBOX`
-  );
+  const { entities } = useTransactions("inbox", `/temp/${id}?option=INBOX`);
 
-  console.log(entities.isFetching)
-  if (!entities.data) return "";
+  if (entities.isFetching) return "loading....";
+  const validateData = z.array(transactionData).safeParse(entities.data);
 
-
+  if (!validateData.success || !validateData.data) return "Something went wrong ! ";
   return (
     <div className="flex flex-col gap-y-6">
       <span>
         <h1>Inbox</h1>
       </span>
 
-      <DataTable columns={inboxColumn} data={entities.data} />
+      <DataTable columns={inboxColumn} data={validateData.data} />
     </div>
   );
 };

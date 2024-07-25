@@ -112,7 +112,7 @@ export const inboxColumn: ColumnDef<InboxColumn>[] = [
 
             <DropdownMenuItem>
               <Link
-                to={`/dashboard/transactions/update/${transactionInfo.transactionId}`}
+                to={`/dashboard/transactions/update/${transactionInfo.id}`}
               >
                 Update Transaction
               </Link>
@@ -123,7 +123,7 @@ export const inboxColumn: ColumnDef<InboxColumn>[] = [
             <DropdownMenuSeparator />
             <DropdownMenuItem>
               <Link
-                to={`/dashboard/transactions/history/${transactionInfo.transactionId}`}
+                to={`/dashboard/transactions/history/${transactionInfo.id}`}
               >
                 View Details
               </Link>

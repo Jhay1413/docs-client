@@ -19,5 +19,6 @@ export const getSignUrlForView = async(key:string)=>{
         return response.data
     } catch (error) {
         console.log(error)
+        throw new Error("Something went wrong while requesting signedUrl !")
     }
 }
