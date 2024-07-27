@@ -20,7 +20,8 @@ export const InsertComponent = () => {
 
   const navigate = useNavigate();
   const onSubmit = async (
-    transactionData: z.infer<typeof transactionFormData>
+    transactionData: z.infer<typeof transactionFormData>,
+    setIsSubmitting : (value:boolean)=>void
   ) => {
     const attachments = transactionData.attachments?.filter(
       (data) => data.file?.length! > 0
@@ -50,7 +51,11 @@ export const InsertComponent = () => {
 
       const payload = prepare_transaction_payload(transactionData, res);
 
-      add.mutate(payload);
+      await add.mutateAsync(payload);
+
+      if(!add.isPending){
+        setIsSubmitting(false)
+      }
     }
   };
 

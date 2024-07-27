@@ -27,14 +27,18 @@ export const TransactionUpdateComponent = () => {
     method: "UPDATEREMOVE",
   });
   const navigate = useNavigate();
-  console.log(entity.data)
+
+
+  console.log(entity.data);
   const validatedData = transactionData.safeParse(entity.data);
   if(!validatedData.data || validatedData.error) 
   console.log(validatedData.error.errors)
   //For review !! temporarily separated the update and add component  with the same logic
   const mutateFn = async (
-    transactionData: z.infer<typeof transactionFormData>
+    transactionData: z.infer<typeof transactionFormData>,
+    setIsSubmitting : (value:boolean)=>void ,
   ) => {
+    
     const attachments = transactionData.attachments?.filter(
       (data) => data.file?.length! > 0
     );
@@ -63,7 +67,11 @@ export const TransactionUpdateComponent = () => {
       console.log(res);
       const payload = prepare_transaction_payload(transactionData, res);
       console.log(payload);
-      update.mutate(payload);
+      await update.mutateAsync(payload);
+
+      if(!update.isPending){
+        setIsSubmitting(false)
+      }
     }
   };
 

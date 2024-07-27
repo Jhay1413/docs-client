@@ -37,6 +37,8 @@ import { useForm } from "react-hook-form";
 import { useTransaction } from "../hooks/query-gate";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { getSignedUrl } from "../services/getSignedUrl";
+import { useState } from "react";
+import { uploadFile } from "../services/uploadFile";
 type Props = {
   data?: z.infer<typeof completeStaffWork>[];
   transactionId: string;
@@ -48,6 +50,8 @@ export function CompleStaffWorkDialog({ transactionId }: Props) {
     id: transactionId,
     updateUrl: `v2/${transactionId}/csw`,
   });
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
   const form = useForm<z.infer<typeof completeStaffWork>>({
     resolver: zodResolver(completeStaffWork),
     mode: "onSubmit",
@@ -59,28 +63,32 @@ export function CompleStaffWorkDialog({ transactionId }: Props) {
   });
 
   const submit = async (data: z.infer<typeof completeStaffWork>) => {
+    setIsSubmitting(true);
     try {
       const signedUrlPayload = [
         {
-          company: "Envicomm",
-          fileName: data.attachmentFile?.item.name || "",
+          company: "Envicomm/csw",
+          fileName: data.attachmentFile?.name || "",
         },
       ];
       const signedUrl = await getSignedUrl<z.infer<typeof signedUrlData>>(
         signedUrlPayload
       );
 
-      const payload = signedUrl.map((datawithUrl) => {
-        if (!datawithUrl.signedStatus) return data;
-        return { ...data, attachmentUrl: datawithUrl.key };
-      });
-      update.mutate(payload[0]);
+      await uploadFile(signedUrl[0].signedUrl!, data.attachmentFile!);
+      const payload = { ...data, attachmentUrl: signedUrl[0].key };
+
+      await update.mutateAsync(payload);
+      setIsSubmitting(false);
+      setIsOpen(false);
     } catch (error) {
       console.log(error);
+      setIsSubmitting(false);
     }
   };
+
   return (
-    <Dialog>
+    <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
         <Button variant="outline">Add CSW</Button>
       </DialogTrigger>
@@ -125,6 +133,7 @@ export function CompleStaffWorkDialog({ transactionId }: Props) {
                             field.onChange(new Date(value!).toISOString());
                           }}
                           initialFocus
+                          disabled={update.isPending}
                         />
                       </PopoverContent>
                     </Popover>
@@ -134,7 +143,11 @@ export function CompleStaffWorkDialog({ transactionId }: Props) {
               )}
             />
 
-            <FormTextArea name="remarks" label="Remarks" />
+            <FormTextArea
+              name="remarks"
+              label="Remarks"
+              disable={update.isPending}
+            />
 
             <div className="w-full">
               <FormField
@@ -145,10 +158,11 @@ export function CompleStaffWorkDialog({ transactionId }: Props) {
                     <FormLabel>File</FormLabel>
                     <FormControl>
                       <Input
+                        disabled={update.isPending}
                         type="file"
                         accept="application/pdf"
                         {...field}
-                        onChange={(event) => onChange(event.target.files)}
+                        onChange={(event) => onChange(event.target.files![0])}
                       />
                     </FormControl>
                     <FormDescription></FormDescription>
@@ -159,7 +173,9 @@ export function CompleStaffWorkDialog({ transactionId }: Props) {
             </div>
 
             <DialogFooter>
-              <Button type="submit" disabled={update.isPending}>Save changes</Button>
+              <Button type="submit" disabled={isSubmitting}>
+                Save changes
+              </Button>
             </DialogFooter>
           </form>
         </Form>
