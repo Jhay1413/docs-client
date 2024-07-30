@@ -8,8 +8,12 @@ export const uploadFile = async(signedUrl:string,file:File)=>{
             },
             body: file
         });
+        if (!response.ok) {
+            throw new Error(`Upload failed with status ${response.status}`);
+          }
         return response
     } catch (error) {
         console.log(error)
+        throw new Error(`Upload failed: ${error.message}`);
     }
 }

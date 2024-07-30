@@ -1,5 +1,6 @@
 import {
   ChevronDown,
+  Dot,
   Factory,
   LayoutDashboard,
   LibraryBig,
@@ -12,8 +13,11 @@ import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import { logoutUser } from "@/features/authentication";
 import { getCurrentUserId, useCurrentUserRole } from "@/hooks/use-user-hook";
+import { useNotificationStore } from "@/global-states/notification-store";
 
 export const SideNav = () => {
+  const notification = useNotificationStore((state) => state.notification);
+
   const [isUserOpen, setIsUserOpen] = useState(false);
   const [isTransactionOpen, setIsTransactionOpen] = useState(false);
   const id = getCurrentUserId();
@@ -112,18 +116,23 @@ export const SideNav = () => {
           )}
         </li>
 
-        <li className="relative inline-block text-left px-4 ">
+        <li className="relative inline-block px-4 ">
           <button
             onClick={() => setIsTransactionOpen(!isTransactionOpen)}
-            className="justify-between items-center flex w-full p-2 space-x-2 text-lg rounded-md"
+            className="items-center flex w-full p-2 space-x-2 text-lg rounded-md"
           >
             <div className="justify-start flex items-center space-x-4">
               <LibraryBig />
-
-              <h1 className="text-md">Transactions</h1>
+              <div className="flex justify-start items-center ">
+                <h1 className="text-md">Transactions</h1>
+                {(notification?.inbox !== 0 ||
+                  notification?.incoming !== 0) && (
+                    <Dot size={48} className="text-red-700" />
+                  )}
+              </div>
             </div>
             <div
-              className={`transition-transform duration-500 transform ${
+              className={`transition-transform duration-500 flex items-end transform ${
                 isTransactionOpen ? "rotate-180" : ""
               }`}
             >
@@ -156,7 +165,10 @@ export const SideNav = () => {
                     }`;
                   }}
                 >
-                  <h1 className="text-md">Inbox</h1>
+                   <div className="flex gap-2">
+                    <h1 className="text-md">Inbox</h1>
+                    {notification?.inbox !==0 && <span className="text-red-700 text-sm font-extrabold">{notification?.inbox}</span>}
+                  </div>
                 </NavLink>
                 <NavLink
                   to={`/dashboard/transactions/incoming-transaction/${id}`}
@@ -166,7 +178,10 @@ export const SideNav = () => {
                     }`;
                   }}
                 >
-                  <h1 className="text-md">Incoming files</h1>
+                  <div className="flex gap-2">
+                    <h1 className="text-md">Incoming files</h1>
+                    {notification?.incoming !==0 && <span className="text-red-700 text-sm font-extrabold">{notification?.incoming}</span>}
+                  </div>
                 </NavLink>
               </div>
             </div>

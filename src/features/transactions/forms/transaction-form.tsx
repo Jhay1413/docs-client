@@ -67,7 +67,7 @@ type props = {
   company: z.infer<typeof CompanyInfo>[] | undefined;
   method?: string;
   defaultValue?: z.infer<typeof transactionFormData>;
-  mutateFn: (data: z.infer<typeof transactionFormData>) => void;
+  mutateFn: (data: z.infer<typeof transactionFormData>,isSubmitting:(value:boolean)=>void) => void;
 };
 export const TransactionForm = ({
   company,
@@ -89,7 +89,7 @@ export const TransactionForm = ({
     defaultValue?.targetDepartment || ""
   );
   const [subType, setSubType] = useState("");
-
+  const [isSubmitting,setIsSubmitting] = useState(false);
   const temp_section = checkList.find((check) => check.name === team);
   const attachmentList = useMemo(
     () => temp_section?.application.find((check) => check.name === subType),
@@ -166,7 +166,8 @@ export const TransactionForm = ({
   const onSubmit: SubmitHandler<z.infer<typeof transactionFormData>> = async (
     data
   ) => {
-    mutateFn(data);
+    setIsSubmitting(true);
+    mutateFn(data,setIsSubmitting);
   };
 
   const viewFile = async (key: string) => {
@@ -717,6 +718,7 @@ export const TransactionForm = ({
             <Button
               type="submit"
               onClick={() => console.log(form.formState.errors)}
+              disabled={isSubmitting}
             >
               Submit
             </Button>

@@ -97,20 +97,16 @@ export const completeStaffWork = z.object({
   createdAt:z.string().optional(),
   updatedAt :z.string().optional(),
   transactionId : z.string().optional(),
-  attachmentFile :  z
-  .custom<FileList>()
-  .refine((files) => {
-    return Array.from(files ?? []).length !== 0;
-  }, "Image is required")
-  .refine((files) => {
-    return Array.from(files ?? []).every(
-      (file) => sizeInMB(file.size) <= MAX_FILE_SIZE_10MB
-    );
-  }, `The maximum image size is ${MAX_FILE_SIZE_10MB}MB`)
-  .refine((files) => {
-    return Array.from(files ?? []).every((file) =>
-      ACCEPTED_FILE_TYPES.includes(file.type)
-    );
+  attachmentFile : z
+  .instanceof(File)
+  .refine((file) => {
+    return file.size > 0;
+  }, "File is required")
+  .refine((file) => {
+    return sizeInMB(file.size) <= MAX_FILE_SIZE_10MB;
+  }, `The maximum file size is ${MAX_FILE_SIZE_10MB}MB`)
+  .refine((file) => {
+    return ACCEPTED_FILE_TYPES.includes(file.type);
   }, "File type is not supported").optional(),
   attachmentUrl : z.string().optional()
 

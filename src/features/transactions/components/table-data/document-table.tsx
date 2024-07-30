@@ -34,7 +34,7 @@ export const DocumentTable = ({ data }: Props) => {
             <TableHead className="w-[100px]">Status</TableHead>
             <TableHead className="w-[100px]">Remarks</TableHead>
             <TableHead className="w-[100px]">Created at</TableHead>
-            <TableHead className="w-[100px]">Has File</TableHead>
+            <TableHead className="w-[100px]">Final</TableHead>
 
             <TableHead className="text-center">Action</TableHead>
           </TableRow>
@@ -56,7 +56,7 @@ export const DocumentTable = ({ data }: Props) => {
                 <h1>{new Date(item.createdAt!).toDateString()}</h1>
               </TableCell>
               <TableCell className="font-medium w-[500px]">
-                {item.fileUrl ? (
+                {item.fileStatus == "FINAL_ATTACHMENT" ? (
                   <Check className="text-green-500" />
                 ) : (
                   <X className="text-red-500" />
