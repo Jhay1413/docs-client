@@ -88,7 +88,7 @@ export const CompleteStaffWorkForm = ({ data, transactionId }: Props) => {
     const signedUrlPayload = data.csw.map((data, index) => {
       return {
         company: "Envicomm",
-        fileName: data.attachmentFile?.item.name || "",
+        fileName: data.attachmentFile?.name || "",
         index: index,
       };
     });
@@ -106,7 +106,7 @@ export const CompleteStaffWorkForm = ({ data, transactionId }: Props) => {
           return csw;
         const response = await uploadFile(
           attachmentToUpload.signedUrl,
-          csw.attachmentFile![0]
+          csw.attachmentFile!
         );
 
         if (!response?.ok) return csw;
