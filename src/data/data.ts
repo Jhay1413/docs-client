@@ -64,6 +64,24 @@ export const Divisions = [
         },
     ],
   },
+  {
+    name: "Admin Department",
+    section:[
+        {
+            name:"Admin",
+            value:"ADMIN"
+        },
+    ],
+  },
+  {
+    name: "Finance",
+    section:[
+        {
+            name:"Finance",
+            value:"FINANCE"
+        }
+    ]
+  }
 ];
 
 export const Positions = ['ADMIN','TL','CH']
