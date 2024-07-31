@@ -13,6 +13,6 @@ export const docRoute = [
   },
   {
     name:"RECORDS",
-    accessRole:["MANAGER"]
+    accessRole:["MANAGER","QA"]
   }
 ];

@@ -16,7 +16,7 @@ export const InboxComponent = () => {
   return (
     <div className="flex flex-col gap-y-6">
       <span>
-        <h1>Inbox</h1>
+        <h1 className="text-4xl">Inbox</h1>
       </span>
 
       <DataTable columns={inboxColumn} data={validateData.data} />

@@ -15,6 +15,7 @@ import { transactionData } from "../../schema/TransactionSchema";
 import { Checkbox } from "@/components/ui/checkbox";
 import { useTransaction } from "../../hooks/query-gate";
 import { getCurrentAccountId, getCurrentUserId } from "@/hooks/use-user-hook";
+import { useNotificationStore } from "@/global-states/notification-store";
 
 type IncomingColumn = z.infer<typeof transactionData>;
 
@@ -101,6 +102,12 @@ export const incomingColumns: ColumnDef<IncomingColumn>[] = [
     accessorKey: "actions",
     id: "actions",
     cell: ({ row }) => {
+      const notification = useNotificationStore((state) => state.notification);
+      const setIncoming = useNotificationStore(
+        (state) => state.setNotification
+      );
+      const refetch = useNotificationStore((state) => state.refetch);
+
       const transaction = row.original;
       const accountId = getCurrentAccountId();
       const { update } = useTransaction({
@@ -114,7 +121,17 @@ export const incomingColumns: ColumnDef<IncomingColumn>[] = [
           receivedBy: accountId,
           dateReceived: new Date(),
         };
-        update.mutate(payload);
+        update.mutateAsync(payload);
+        if (refetch) {
+          console.log("were inside");
+          if (notification && notification.incoming)
+            setIncoming({
+              ...notification,
+              incoming: notification.incoming - 1,
+              inbox : notification.inbox + 1
+            });
+          refetch();
+        }
       };
       return (
         <DropdownMenu>

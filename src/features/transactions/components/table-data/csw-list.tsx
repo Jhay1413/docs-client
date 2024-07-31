@@ -5,6 +5,7 @@ import { completeStaffWork } from "../../schema/TransactionSchema";
 import { cswColumn } from "../table-columns/csw-column";
 import { CompleStaffWorkDialog } from "../../forms/csw-form-2";
 import { useQueryClient } from "@tanstack/react-query";
+import { useCurrentUserRole } from "@/hooks/hooks/use-user-hook";
 
 type Props = {
   transactionId: string;
@@ -12,12 +13,15 @@ type Props = {
 };
 
 export const CswComponent = ({ transactionId, data }: Props) => {
+  const role = useCurrentUserRole();
 
   return (
     <div className="flex flex-col gap-4">
-      <div className="">
-        <CompleStaffWorkDialog transactionId={transactionId} />
-      </div>
+      {role === "CH" && (
+        <div className="">
+          <CompleStaffWorkDialog transactionId={transactionId} />
+        </div>
+      )}
       <DataTable columns={cswColumn} data={data} />
     </div>
   );
