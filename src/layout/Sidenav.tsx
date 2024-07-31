@@ -1,6 +1,4 @@
 import {
-  ChevronDown,
-  Dot,
   Factory,
   LayoutDashboard,
   LibraryBig,
@@ -8,18 +6,17 @@ import {
   UserRoundPlus,
 } from "lucide-react";
 import { NavLink, useNavigate } from "react-router-dom";
-import { Button } from "@/components/ui/button";
 
 import { useState } from "react";
 import { logoutUser } from "@/features/authentication";
-import { getCurrentUserId, useCurrentUserRole } from "@/hooks/use-user-hook";
+import { getCurrentUserId } from "@/hooks/use-user-hook";
 import { useNotificationStore } from "@/global-states/notification-store";
+import { Label } from "@/components/ui/label";
+import { Button } from "@/components/ui/button";
 
 export const SideNav = () => {
   const notification = useNotificationStore((state) => state.notification);
-
-  const [isUserOpen, setIsUserOpen] = useState(false);
-  const [isTransactionOpen, setIsTransactionOpen] = useState(false);
+  console.log(notification);
   const id = getCurrentUserId();
 
   const navigate = useNavigate();
@@ -35,159 +32,137 @@ export const SideNav = () => {
   };
 
   return (
-    <div className="flex w-full min-h-full ">
-      <ul className="flex flex-col mt-24 space-y-4 w-full   mx-2 text-gray-500">
-        <li className="relative inline-block text-left px-4 ">
-          <NavLink
-            to={`/dashboard/overview`}
-            className={({ isActive }) => {
-              return `justify-start items-center flex w-full p-2 space-x-4 text-lg  rounded-md ${
-                isActive ? "bg-green-500 text-white" : ""
-              }`;
-            }}
-          >
-            <LayoutDashboard className="" />
-            <h1 className="text-md">Dashboard</h1>
-          </NavLink>
-        </li>
-        <li className="relative inline-block text-left px-4 ">
-          <NavLink
-            to="/dashboard/companies"
-            className={({ isActive }) => {
-              return `justify-start items-center flex w-full p-2 space-x-4 text-lg  rounded-md ${
-                isActive ? "bg-green-500 text-white" : ""
-              }`;
-            }}
-          >
-            <Factory />
+    <div className="flex flex-col gap-4 w-full min-h-full ">
+      <div className="h-24"></div>
+      <div className="flex flex-col w-full min-h-full items-center gap-6">
+        <Label className="text-muted-foreground px-4 font-medium flex w-full text-sm">
+          MENU
+        </Label>
+        <ul className="flex flex-col  space-y-4 w-full   mx-2 text-gray-500 ">
+          <li className="relative inline-block text-left px-4 ">
+            <NavLink
+              to={`/dashboard/overview`}
+              className={({ isActive }) => {
+                return `justify-start items-center flex w-full p-2 space-x-4 text-lg  rounded-md ${
+                  isActive ? "bg-green-500 text-white" : ""
+                }`;
+              }}
+            >
+              <LayoutDashboard className="" />
+              <h1 className="text-md">Dashboard</h1>
+            </NavLink>
+          </li>
+          <li className="relative inline-block text-left px-4 ">
+            <NavLink
+              to="/dashboard/companies"
+              className={({ isActive }) => {
+                return `justify-start items-center flex w-full p-2 space-x-4 text-lg  rounded-md ${
+                  isActive ? "bg-green-500 text-white" : ""
+                }`;
+              }}
+            >
+              <Factory />
 
-            <h1 className="text-md">Companies</h1>
-          </NavLink>
-        </li>
-
-        <li className="relative inline-block text-left px-4 ">
-          <button
-            onClick={() => setIsUserOpen(!isUserOpen)}
-            className="justify-between flex w-full p-2 text-lg  rounded-md"
-          >
-            <div className="justify-start flex  space-x-4 items-center">
+              <h1 className="text-md">Companies</h1>
+            </NavLink>
+          </li>
+        </ul>
+        <Label className="text-muted-foreground px-4 font-medium flex w-full text-sm">
+          USERS & ACCOUNTS
+        </Label>
+        <ul className="flex flex-col  space-y-4 w-full   mx-2 text-gray-500">
+          <li className="relative inline-block text-left px-4 ">
+            <NavLink
+              to="/dashboard/users/users-list"
+              className={({ isActive }) => {
+                return `justify-start items-center flex w-full p-2 space-x-4 text-lg  rounded-md ${
+                  isActive ? "bg-green-500 text-white" : ""
+                }`;
+              }}
+            >
               <UserRoundPlus />
 
-              <h1 className="text-md">User</h1>
-            </div>
-            <div
-              className={`transition-transform duration-500 transform ${
-                isUserOpen ? "rotate-180" : ""
-              }`}
+              <h1 className="text-md">List of Users</h1>
+            </NavLink>
+          </li>
+          <li className="relative inline-block text-left px-4 ">
+            <NavLink
+              to="/dashboard/users/userAccount"
+              className={({ isActive }) => {
+                return `justify-start items-center flex w-full p-2 space-x-4 text-lg  rounded-md ${
+                  isActive ? "bg-green-500 text-white" : ""
+                }`;
+              }}
             >
-              <ChevronDown />
-            </div>
-          </button>
-          {isUserOpen && (
-            <div className=" flex w-full rounded-md  ml-4 border-l-2 border-gray-500">
-              <div
-                className="py-1 flex flex-col gap-2  px-2  mr-4 w-full"
-                role="menu"
-                aria-orientation="vertical"
-                aria-labelledby="options-menu"
-              >
-                <NavLink
-                  to="/dashboard/users/users-list"
-                  className={({ isActive }) => {
-                    return `w-full block px-4 py-2  rounded-md ${
-                      isActive ? "bg-green-500 text-white" : ""
-                    }`;
-                  }}
-                >
-                  <h1 className="text-md">User list</h1>
-                </NavLink>
-                <NavLink
-                  to="/dashboard/users/userAccount"
-                  className={({ isActive }) => {
-                    return `w-full block px-4 py-2  rounded-md ${
-                      isActive ? "bg-green-500 text-white" : ""
-                    }`;
-                  }}
-                >
-                  <h1 className="text-md">Accounts</h1>
-                </NavLink>
-              </div>
-            </div>
-          )}
-        </li>
+              <UserRoundPlus />
 
-        <li className="relative inline-block px-4 ">
-          <button
-            onClick={() => setIsTransactionOpen(!isTransactionOpen)}
-            className="items-center flex w-full p-2 space-x-2 text-lg rounded-md"
-          >
-            <div className="justify-start flex items-center space-x-4">
+              <h1 className="text-md">List of Accounts</h1>
+            </NavLink>
+          </li>
+        </ul>
+        <Label className="text-muted-foreground px-4 font-medium flex w-full text-sm">
+          TRANSACTIONS
+        </Label>
+        <ul className="flex flex-col  space-y-4 w-full   mx-2 text-gray-500">
+          <li className="relative inline-block text-left px-4 ">
+            <NavLink
+               to="/dashboard/transactions/list"
+              className={({ isActive }) => {
+                return `justify-start items-center flex w-full p-2 space-x-4 text-lg  rounded-md ${
+                  isActive ? "bg-green-500 text-white" : ""
+                }`;
+              }}
+            >
+              <UserRoundPlus />
+
+              <h1 className="text-md">Transactions</h1>
+            </NavLink>
+          </li>
+          <li className="relative inline-block text-left px-4 ">
+            <NavLink
+              to={`/dashboard/transactions/inbox/${id}`}
+              className={({ isActive }) => {
+                return `justify-start items-center flex w-full p-2 space-x-4 text-lg  rounded-md ${
+                  isActive ? "bg-green-500 text-white" : ""
+                }`;
+              }}
+            >
               <LibraryBig />
-              <div className="flex justify-start items-center ">
-                <h1 className="text-md">Transactions</h1>
-                {(notification?.inbox !== 0 ||
-                  notification?.incoming !== 0) && (
-                    <Dot size={48} className="text-red-700" />
-                  )}
+              <div className="flex gap-2">
+                <h1 className="text-md">Inbox</h1>
+                {notification?.inbox !== 0 && (
+                  <span className="text-red-700 text-sm font-extrabold">
+                    {notification?.inbox}
+                  </span>
+                )}
               </div>
-            </div>
-            <div
-              className={`transition-transform duration-500 flex items-end transform ${
-                isTransactionOpen ? "rotate-180" : ""
-              }`}
+            </NavLink>
+          </li>
+          <li className="relative inline-block text-left px-4 ">
+            <NavLink
+              to={`/dashboard/transactions/incoming-transaction/${id}`}
+              className={({ isActive }) => {
+                return `justify-start items-center flex w-full p-2 space-x-4 text-lg  rounded-md ${
+                  isActive ? "bg-green-500 text-white" : ""
+                }`;
+              }}
             >
-              <ChevronDown />
-            </div>
-          </button>
-          {isTransactionOpen && (
-            <div className=" flex w-full ml-4 rounded-md  border-l-2 border-gray-500 ">
-              <div
-                className="py-1 flex flex-col gap-2  px-2 mr-4 w-full"
-                role="menu"
-                aria-orientation="vertical"
-                aria-labelledby="options-menu"
-              >
-                <NavLink
-                  to="/dashboard/transactions/list"
-                  className={({ isActive }) => {
-                    return `w-full block px-4 py-2  rounded-md ${
-                      isActive ? "bg-green-500 text-white" : ""
-                    }`;
-                  }}
-                >
-                  <h1 className="text-md">Transaction list</h1>
-                </NavLink>
-                <NavLink
-                  to={`/dashboard/transactions/inbox/${id}`}
-                  className={({ isActive }) => {
-                    return `w-full block px-4 py-2  rounded-md ${
-                      isActive ? "bg-green-500 text-white" : ""
-                    }`;
-                  }}
-                >
-                   <div className="flex gap-2">
-                    <h1 className="text-md">Inbox</h1>
-                    {notification?.inbox !==0 && <span className="text-red-700 text-sm font-extrabold">{notification?.inbox}</span>}
-                  </div>
-                </NavLink>
-                <NavLink
-                  to={`/dashboard/transactions/incoming-transaction/${id}`}
-                  className={({ isActive }) => {
-                    return `w-full block px-4 py-2  rounded-md ${
-                      isActive ? "bg-green-500 text-white" : ""
-                    }`;
-                  }}
-                >
-                  <div className="flex gap-2">
-                    <h1 className="text-md">Incoming files</h1>
-                    {notification?.incoming !==0 && <span className="text-red-700 text-sm font-extrabold">{notification?.incoming}</span>}
-                  </div>
-                </NavLink>
+              <LibraryBig />
+              <div className="flex gap-2">
+                <h1 className="text-md">Incoming files</h1>
+                {notification?.incoming !== 0 && (
+                  <span className="text-red-700 text-sm font-extrabold">
+                    {notification?.incoming}
+                  </span>
+                )}
               </div>
-            </div>
-          )}
-        </li>
-
+            </NavLink>
+          </li>
+        </ul>
+        <Label className="text-muted-foreground px-4 font-medium flex w-full text-sm">
+          SETTINGS
+        </Label>
+        <ul className="flex flex-col  space-y-4 w-full   mx-2 text-gray-500 ">
         <li className="relative inline-block text-left text-sm px-4">
           <Button
             variant="ghost"
@@ -198,7 +173,8 @@ export const SideNav = () => {
             <h1 className="text-md font-normal">Logout</h1>
           </Button>
         </li>
-      </ul>
+        </ul>
+      </div>
     </div>
   );
 };

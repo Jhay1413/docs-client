@@ -14,6 +14,6 @@ export const uploadFile = async(signedUrl:string,file:File)=>{
         return response
     } catch (error) {
         console.log(error)
-        throw new Error(`Something went wrong ! `);
+        throw new Error("Something went wrong ! ");
     }
 }

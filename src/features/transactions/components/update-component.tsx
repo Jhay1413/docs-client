@@ -15,8 +15,14 @@ import {
 } from "../utils/pre-process-data";
 import { getSignedUrl } from "../services/getSignedUrl";
 import { getCurrentUserId } from "@/hooks/hooks/use-user-hook";
+import { useNotificationStore } from "@/global-states/notification-store";
 
 export const TransactionUpdateComponent = () => {
+  const notification = useNotificationStore((state) => state.notification);
+  const setNotification = useNotificationStore(
+    (state) => state.setNotification
+  );
+  const refetch = useNotificationStore((state) => state.refetch);
   const { id } = useParams();
   const userId = getCurrentUserId();
   const { entities } = useCompanies("companies", "");
@@ -28,17 +34,15 @@ export const TransactionUpdateComponent = () => {
   });
   const navigate = useNavigate();
 
-
   console.log(entity.data);
   const validatedData = transactionData.safeParse(entity.data);
-  if(!validatedData.data || validatedData.error) 
-  console.log(validatedData.error.errors)
+  if (!validatedData.data || validatedData.error)
+    console.log(validatedData.error.errors);
   //For review !! temporarily separated the update and add component  with the same logic
   const mutateFn = async (
     transactionData: z.infer<typeof transactionFormData>,
-    setIsSubmitting : (value:boolean)=>void ,
+    setIsSubmitting: (value: boolean) => void
   ) => {
-    
     const attachments = transactionData.attachments?.filter(
       (data) => data.file?.length! > 0
     );
@@ -69,17 +73,20 @@ export const TransactionUpdateComponent = () => {
       console.log(payload);
       await update.mutateAsync(payload);
 
-      if(!update.isPending){
-        setIsSubmitting(false)
+      if (!update.isPending) {
+        setIsSubmitting(false);
       }
     }
   };
 
   useEffect(() => {
     if (update.isSuccess) {
+      if (notification) {
+        setNotification({ ...notification, inbox: notification?.inbox - 1 });
+      }
       navigate(`/dashboard/transactions/inbox/${userId}`);
     }
-  });
+  }, [update.isSuccess]);
   if (entity.isLoading || entities.isLoading) return <div>Loading...</div>;
 
   return (

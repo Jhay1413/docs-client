@@ -377,6 +377,7 @@ export const UserForm = () => {
                               <SelectItem value="TL">TEAM LEADER</SelectItem>
                               <SelectItem value="CH">CASE HANDLER</SelectItem>
                               <SelectItem value="RECORDS">RECORDS</SelectItem>
+                              <SelectItem value="QA">QUALITY ASSURANCE</SelectItem>
                               <SelectItem value="GUEST">GUEST</SelectItem>
                             </SelectContent>
                           </Select>
