@@ -38,12 +38,7 @@ import { cn } from "@/lib/utils";
 
 import { format } from "date-fns";
 import { CalendarIcon } from "lucide-react";
-import {
-  useEffect,
-  useMemo,
-  useRef,
-  useState
-} from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { SubmitHandler, useFieldArray, useForm } from "react-hook-form";
 
 import FormInput from "@/components/formInput";
@@ -63,11 +58,26 @@ import { Label } from "@/components/ui/label";
 import { getSignUrlForView } from "../services/getSignedUrl";
 import { checkList } from "@/data/checklist-new";
 
+import { Check, ChevronsUpDown } from "lucide-react";
+
+import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+  CommandSeparator,
+} from "@/components/ui/command";
+
 type props = {
   company: z.infer<typeof CompanyInfo>[] | undefined;
   method?: string;
   defaultValue?: z.infer<typeof transactionFormData>;
-  mutateFn: (data: z.infer<typeof transactionFormData>,isSubmitting:(value:boolean)=>void) => void;
+  mutateFn: (
+    data: z.infer<typeof transactionFormData>,
+    isSubmitting: (value: boolean) => void
+  ) => void;
 };
 export const TransactionForm = ({
   company,
@@ -89,7 +99,7 @@ export const TransactionForm = ({
     defaultValue?.targetDepartment || ""
   );
   const [subType, setSubType] = useState("");
-  const [isSubmitting,setIsSubmitting] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const temp_section = checkList.find((check) => check.name === team);
   const attachmentList = useMemo(
     () => temp_section?.application.find((check) => check.name === subType),
@@ -114,7 +124,7 @@ export const TransactionForm = ({
           originDepartment: currentDivision,
           targetDepartment: defaultValue?.targetDepartment,
           transactionId: defaultValue?.transactionId,
-          companyId: defaultValue?.companyId,
+          companyId: defaultValue?.companyId || "",
           projectId: defaultValue?.projectId,
           forwardedTo: defaultValue?.forwardedTo,
           remarks: defaultValue?.remarks,
@@ -167,7 +177,7 @@ export const TransactionForm = ({
     data
   ) => {
     setIsSubmitting(true);
-    mutateFn(data,setIsSubmitting);
+    mutateFn(data, setIsSubmitting);
   };
 
   const viewFile = async (key: string) => {
@@ -181,6 +191,7 @@ export const TransactionForm = ({
       fileInputRef!.current![index]!.click();
     }
   };
+
   return (
     <div className="w-full h-full bg-white p-4 rounded-lg">
       <Form {...form}>
@@ -190,7 +201,73 @@ export const TransactionForm = ({
               control={form.control}
               name="companyId"
               render={({ field }) => (
-                <FormItem>
+                <FormItem className="flex flex-col justify-end">
+                  <FormLabel>Company</FormLabel>
+
+                  <Popover>
+                    <PopoverTrigger asChild>
+                      <FormControl>
+                        <Button
+                          variant="outline"
+                          role="combobox"
+                          className={cn(
+                            " justify-between",
+                            !field.value && "text-muted-foreground"
+                          )}
+                        >
+                          {field.value
+                            ? company?.find((comp) => comp.id === field.value)
+                                ?.companyName
+                            : "Select Company"}
+                          <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                        </Button>
+                      </FormControl>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-[400px] p-0">
+                      <Command>
+                        <CommandInput placeholder="Search Company..." />
+                        <CommandList>
+                          <CommandEmpty>No company found.</CommandEmpty>
+                          <CommandGroup>
+                            {company?.map((comp) => (
+                              <CommandItem
+                                value={comp.companyName}
+                                key={comp.id}
+                                onSelect={(currentValue) => {
+                                  const selected = company.find(
+                                    (comp) =>
+                                      comp.companyName.trim().toLowerCase() ===
+                                      currentValue.trim().toLowerCase()
+                                  );
+
+                                  form.setValue("companyId", selected?.id);
+                                  setSelectedCompany(selected?.id || "");
+                                }}
+                              >
+                                <Check
+                                  className={cn(
+                                    "mr-2 h-4 w-4",
+                                    comp.id === field.value
+                                      ? "opacity-100"
+                                      : "opacity-0"
+                                  )}
+                                />
+                                {comp.companyName}
+                              </CommandItem>
+                            ))}
+                          </CommandGroup>
+                        </CommandList>
+                      </Command>
+                    </PopoverContent>
+                  </Popover>
+                </FormItem>
+              )}
+            />
+            {/* <FormField
+              control={form.control}
+              name="companyId"
+              render={({ field }) => (
+                <FormItem className="bg-black">
                   <FormLabel>Company</FormLabel>
                   <FormControl>
                     <Select
@@ -222,7 +299,7 @@ export const TransactionForm = ({
                   <FormMessage />
                 </FormItem>
               )}
-            />
+            /> */}
             <FormField
               control={form.control}
               name="projectId"
@@ -578,7 +655,6 @@ export const TransactionForm = ({
                                 onValueChange={(value) => {
                                   field.onChange(value);
                                 }}
-                                
                               >
                                 <SelectTrigger className="w-full">
                                   <SelectValue placeholder="Select type" />
@@ -611,7 +687,6 @@ export const TransactionForm = ({
                                 onValueChange={(value) => {
                                   field.onChange(value);
                                 }}
-                               
                               >
                                 <SelectTrigger className="w-full">
                                   <SelectValue placeholder="Select status" />
@@ -655,7 +730,9 @@ export const TransactionForm = ({
                                     onChange={(event) =>
                                       onChange(event.target.files)
                                     }
-                                    ref={el => fileInputRef.current![index] = el}
+                                    ref={(el) =>
+                                      (fileInputRef.current![index] = el)
+                                    }
                                   />
                                 </FormControl>
                                 <FormDescription></FormDescription>
@@ -674,13 +751,17 @@ export const TransactionForm = ({
                             >
                               View file
                             </Button>
-                            <Button type="button" onClick={() => reattachFile(index)}>Update</Button>
+                            <Button
+                              type="button"
+                              onClick={() => reattachFile(index)}
+                            >
+                              Update
+                            </Button>
                             <Button
                               onClick={() => {
                                 remove(index);
                               }}
                               type="button"
-                              
                               disabled={item.fileName ? true : false}
                             >
                               Remove

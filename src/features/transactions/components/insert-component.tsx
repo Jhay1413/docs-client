@@ -58,12 +58,14 @@ export const InsertComponent = () => {
       }
     }
   };
-
+  
   useEffect(() => {
     if (add.isSuccess) {
       navigate("/dashboard/transactions/list");
     }
   }, [add.isSuccess]);
+
+  if(entities.isLoading) return "loading"
   return (
     <div className="w-full h-full bg-white p-4 rounded-lg">
       <TransactionForm company={entities.data} mutateFn={onSubmit} />
