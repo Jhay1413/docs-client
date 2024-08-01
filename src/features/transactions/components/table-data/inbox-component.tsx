@@ -7,7 +7,10 @@ import { z } from "zod";
 
 export const InboxComponent = () => {
   const { id } = useParams();
-  const { entities } = useTransactions("inbox", `/temp/${id}?option=INBOX`);
+  const { entities } = useTransactions(
+    "incoming-transaction",
+    `/v2/${id}/transactions?option=INBOX`
+  );
 
   if (entities.isFetching) return "loading....";
   const validateData = z.array(transactionData).safeParse(entities.data);

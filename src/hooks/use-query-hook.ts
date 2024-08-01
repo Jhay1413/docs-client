@@ -10,7 +10,7 @@ export const useEntities = <T extends { id?: string }>(
     queryKey: [key],
     queryFn: async () => {
       const { data } = await get(url);
-
+      console.log(data)
       return data;
     },
   });

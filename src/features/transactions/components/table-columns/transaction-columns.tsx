@@ -56,14 +56,14 @@ export const transactionColumns: ColumnDef<TransactionInfo>[] = [
     accessorKey: "subject",
   },
   {
-    header: "Forwarded By:",
-    accessorKey: "forwardedByRole",
+    header: "Forwarded By",
+    accessorKey: "forwarder",
     cell: ({ row }) => {
       const data = row.original;
 
       return (
         <div className="">
-          <h1>{data.forwardedByRole}</h1>
+          <h1>{data.forwarder?.accountRole}</h1>
           <h1>{data.originDepartment}</h1>
         </div>
       );
@@ -77,7 +77,7 @@ export const transactionColumns: ColumnDef<TransactionInfo>[] = [
 
       return (
         <div className="">
-          <h1>{data.forwardedTo}</h1>
+          <h1>{data.receiver?.accountRole}</h1>
           <h1>{data.targetDepartment}</h1>
         </div>
       );
@@ -105,22 +105,28 @@ export const transactionColumns: ColumnDef<TransactionInfo>[] = [
   {
     header: "Due date",
     accessorKey: "dueDate",
-  },
-  {
-    header:"Percentage",
-    accessorKey:"percentage",
-    cell:({row})=>{
+    cell: ({ row }) => {
       const transactionInfo = row.original;
 
+      return (
+        <div className="">
+          <span>{new Date(transactionInfo.dueDate!).toDateString()}</span>
+        </div>
+      );
+    },
+  },
+  {
+    header: "Percentage",
+    accessorKey: "percentage",
+    cell: ({ row }) => {
+      const transactionInfo = row.original;
 
-    
-      return(
+      return (
         <div className="">
           <span>{transactionInfo.percentage}%</span>
         </div>
-      )
-
-    }
+      );
+    },
   },
   {
     header: "Actions",
@@ -156,9 +162,7 @@ export const transactionColumns: ColumnDef<TransactionInfo>[] = [
 
             <DropdownMenuSeparator />
             <DropdownMenuItem>
-              <Link
-                to={`/dashboard/transactions/history/${userInfo.id}`}
-              >
+              <Link to={`/dashboard/transactions/history/${userInfo.id}`}>
                 View Details
               </Link>
             </DropdownMenuItem>

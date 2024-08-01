@@ -9,10 +9,10 @@ import PermissionsGate from "@/components/permissionGate/permission-gate";
 import { SCOPES } from "@/components/permissionGate/permission-map";
 
 export const TransactionList = () => {
-  const { entities } = useTransactions("transactions", "v2/");
+  const { entities } = useTransactions("transactions", "/v2");
 
   if (entities.isLoading) return <div>Loading...</div>;
-
+  console.log(entities.data)
   if (!entities.data) return <div>No data</div>;
 
   const validatedData = z.array(transactionData).safeParse(entities.data);

@@ -87,7 +87,7 @@ export const incomingColumns: ColumnDef<IncomingColumn>[] = [
       return (
         <div className="flex flex-col gap-4">
           <h1>{transactionHistory?.originDepartment}</h1>
-          <h1>{transactionHistory?.forwardedByRole}</h1>
+          <h1>{transactionHistory?.forwarder?.email}</h1>
         </div>
       );
     },
@@ -112,7 +112,7 @@ export const incomingColumns: ColumnDef<IncomingColumn>[] = [
       const accountId = getCurrentAccountId();
       const { update } = useTransaction({
         key: "incoming-transaction",
-        url: `incoming/${transaction.transactionId}/received`,
+        url: `/v2/incoming/${transaction.transactionId}/received`,
         method: "UPDATEREMOVE",
       });
       const updateHistory = async () => {

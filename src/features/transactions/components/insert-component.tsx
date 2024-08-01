@@ -15,7 +15,7 @@ import { redirect, useNavigate } from "react-router-dom";
 import { useEffect } from "react";
 
 export const InsertComponent = () => {
-  const { add } = useTransaction({key:"inbox",url:""});
+  const { add } = useTransaction({key:"inbox",url:"/v2"});
   const { entities } = useCompanies("companies", "");
 
   const navigate = useNavigate();

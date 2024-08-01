@@ -29,7 +29,7 @@ export const historyColumn: ColumnDef<History>[] = [
       return (
         <div className="flex flex-col gap-2">
           <h1>{historyData.originDepartment}</h1>
-          <h1>{historyData.forwardedByRole}</h1>
+          <h1>{historyData.forwarder}</h1>
         </div>
       );
     },
@@ -43,7 +43,7 @@ export const historyColumn: ColumnDef<History>[] = [
       return (
         <div className="flex flex-col gap-2">
           <h1>{historyData.targetDepartment}</h1>
-          <h1>{historyData.forwardedTo}</h1>
+          <h1>{historyData.receiver}</h1>
         </div>
       );
     },
@@ -56,7 +56,7 @@ export const historyColumn: ColumnDef<History>[] = [
       const forwarderInfo = row.original;
       return (
         <div>
-          <h1>{forwarderInfo?.forwardedBy}</h1>
+          <h1>{forwarderInfo?.forwarder}</h1>
         </div>
       );
     },
@@ -69,7 +69,7 @@ export const historyColumn: ColumnDef<History>[] = [
       const receiverInfo = row.original;
       return (
         <div className="flex gap-4 flex-col">
-          <h1>{receiverInfo.receivedBy} </h1>
+          <h1>{receiverInfo.receiver} </h1>
          
         </div>
       );

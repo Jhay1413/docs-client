@@ -28,7 +28,7 @@ export const TransactionUpdateComponent = () => {
   const { entities } = useCompanies("companies", "");
   const { entity, update } = useTransaction({
     key: "inbox",
-    url: `${id}`,
+    url: `v2/${id}`,
     id,
     method: "UPDATEREMOVE",
   });
