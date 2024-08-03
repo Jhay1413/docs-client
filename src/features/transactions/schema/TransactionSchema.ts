@@ -3,7 +3,7 @@ export const MAX_FILE_SIZE_10MB = 10;
 const ACCEPTED_FILE_TYPES = [
   "application/pdf",
   "application/msword",
-  "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+  "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
 ];
 
 import { CompanyInfo, companyProject } from "@/features/companies";
@@ -24,7 +24,7 @@ export const filesSchema = z.object({
   fileStatus: z.nullable(z.string()).optional(),
   fileUrl: z.nullable(z.string()).optional(),
   fileOriginalName: z.nullable(z.string()).optional(),
-    file:  z
+  file: z
     .custom<FileList>()
     .refine((files) => {
       return Array.from(files ?? []).length !== 0;
@@ -40,7 +40,6 @@ export const filesSchema = z.object({
       );
     }, "File type is not supported")
     .optional(),
-
 });
 export const transactionFormData = z.object({
   id: z.string().optional(),
@@ -54,15 +53,13 @@ export const transactionFormData = z.object({
   priority: z.string(),
   companyId: z.string().optional(),
   projectId: z.string().optional(),
-  forwardedTo: z.nullable(z.string()).optional(),
   remarks: z.string().optional(),
-  receivedById: z.nullable(z.string()).optional(),
-  forwardedById: z.nullable(z.string()).optional(),
+  receiverId: z.nullable(z.string()).optional(),
+  forwarderId: z.nullable(z.string()).optional(),
   dateForwarded: z.nullable(z.string().datetime()),
   dateReceived: z.nullable(z.string().datetime()).optional(),
   originDepartment: z.string(),
   targetDepartment: z.string(),
-  forwardedByRole: z.string().optional(),
   attachments: z.array(filesSchema).optional(),
 });
 export const transactionLogsData = z.object({
@@ -79,63 +76,79 @@ export const transactionLogsData = z.object({
   priority: z.string(),
   company: z.string(),
   project: z.string(),
-  forwardedTo: z.string(),
+
   remarks: z.string(),
-  receivedBy: z.nullable(z.string()).optional(),
-  forwardedBy: z.string(),
+  receiver: z.nullable(z.string()).optional(),
+  forwarder: z.string(),
   dateForwarded: z.string(),
   dateReceived: z.nullable(z.string()).optional(),
   originDepartment: z.string(),
   targetDepartment: z.string(),
-  forwardedByRole: z.string(),
   attachments: z.array(filesSchema).optional(),
 });
 export const completeStaffWork = z.object({
-  id:z.string().optional(),
+  id: z.string().optional(),
   date: z.string().datetime(),
-  remarks :z.string(),
-  createdAt:z.string().optional(),
-  updatedAt :z.string().optional(),
-  transactionId : z.string().optional(),
-  attachmentFile : z
-  .instanceof(File)
-  .refine((file) => {
-    return file.size > 0;
-  }, "File is required")
-  .refine((file) => {
-    return sizeInMB(file.size) <= MAX_FILE_SIZE_10MB;
-  }, `The maximum file size is ${MAX_FILE_SIZE_10MB}MB`)
-  .refine((file) => {
-    return ACCEPTED_FILE_TYPES.includes(file.type);
-  }, "File type is not supported").optional(),
-  attachmentUrl : z.string().optional()
-
-})
+  remarks: z.string(),
+  createdAt: z.string().optional(),
+  updatedAt: z.string().optional(),
+  transactionId: z.string().optional(),
+  attachmentFile: z
+    .instanceof(File)
+    .refine((file) => {
+      return file.size > 0;
+    }, "File is required")
+    .refine((file) => {
+      return sizeInMB(file.size) <= MAX_FILE_SIZE_10MB;
+    }, `The maximum file size is ${MAX_FILE_SIZE_10MB}MB`)
+    .refine((file) => {
+      return ACCEPTED_FILE_TYPES.includes(file.type);
+    }, "File type is not supported")
+    .optional(),
+  attachmentUrl: z.string().optional(),
+});
 export const transactionData = transactionFormData
   .extend({
     forwarder: AccountSchema.optional(),
-    receive: z.nullable(AccountSchema).optional(),
+    receiver: z.nullable(AccountSchema).optional(),
     attachment: z.nullable(z.array(filesSchema)).optional(),
     company: CompanyInfo.optional(),
     project: companyProject.optional(),
     transactionLogs: z.array(transactionLogsData).optional(),
-    completeStaffWork : z.array(completeStaffWork).optional(),
-    percentage : z.string().optional()
+    completeStaffWork: z.array(completeStaffWork).optional(),
+    percentage: z.string().optional(),
   })
   .omit({});
 
 
-export const signedUrlData = z.object({
+export const archievedTransaction = z.object({
+  id:z.string(),
+  transactionId:z.string(),
+  company:CompanyInfo,
+  project:companyProject,
+  documentSubType:z.string(),
+  remarks:z.string(),
+  createdAt: z.string().datetime().optional(),
 
-  company:z.string(),
-  fileName:z.string(),
-  signedUrl:z.string().optional(),
-  uploadStatus:z.boolean().optional(),
-  signedStatus : z.boolean().optional(),
-  key:z.nullable(z.string()).optional(),
-  fileOriginalName:z.nullable(z.string()).optional(),
-  index:z.number().optional(),
 })
-
-export const signedUrlDataArray = z.array(signedUrlData)
+export const signedUrlData = z.object({
+  company: z.string(),
+  fileName: z.string(),
+  signedUrl: z.string().optional(),
+  uploadStatus: z.boolean().optional(),
+  signedStatus: z.boolean().optional(),
+  key: z.nullable(z.string()).optional(),
+  fileOriginalName: z.nullable(z.string()).optional(),
+  index: z.number().optional(),
+});
+export const departmentEntities = z.object({
+  id: z.string(),
+  role: z.string(),
+  email: z.string(),
+  division: z.string(),
+  section: z.nullable(z.string()),
+  position: z.string(),
+  fullname: z.string(),
+});
+export const signedUrlDataArray = z.array(signedUrlData);
 //Transaction Types

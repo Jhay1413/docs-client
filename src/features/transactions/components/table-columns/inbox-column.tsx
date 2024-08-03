@@ -84,7 +84,7 @@ export const inboxColumn: ColumnDef<InboxColumn>[] = [
       return (
         <div className="flex flex-col gap-4">
           <h1>{transactionHistory?.originDepartment}</h1>
-          <h1>{transactionHistory?.forwardedByRole}</h1>
+          <h1>{transactionHistory?.forwarder?.accountRole}</h1>
         </div>
       );
     },

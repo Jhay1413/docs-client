@@ -15,7 +15,7 @@ import { redirect, useNavigate } from "react-router-dom";
 import { useEffect } from "react";
 
 export const InsertComponent = () => {
-  const { add } = useTransaction({key:"inbox",url:""});
+  const { add } = useTransaction({key:"inbox",url:"/v2"});
   const { entities } = useCompanies("companies", "");
 
   const navigate = useNavigate();
@@ -58,12 +58,14 @@ export const InsertComponent = () => {
       }
     }
   };
-
+  
   useEffect(() => {
     if (add.isSuccess) {
       navigate("/dashboard/transactions/list");
     }
   }, [add.isSuccess]);
+
+  if(entities.isLoading) return "loading"
   return (
     <div className="w-full h-full bg-white p-4 rounded-lg">
       <TransactionForm company={entities.data} mutateFn={onSubmit} />

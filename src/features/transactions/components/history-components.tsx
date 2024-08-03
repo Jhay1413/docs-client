@@ -24,7 +24,7 @@ export const HistoryComponent = () => {
   const { entity,update } = useTransaction({key:`transactions`,url:`v2/${id}`,id});
 
   const validatedData = transactionData.safeParse(entity.data);
-
+  console.log(validatedData.data)
   if (entity.isLoading) return "loading";
 
   if (!validatedData.success || !validatedData.data) {
