@@ -104,6 +104,7 @@ export const TransactionForm = ({
   const [selectedDivision, setSelectedDivision] = useState(
     defaultValue?.targetDepartment || ""
   );
+  console.log(team)
   const [subType, setSubType] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const temp_section = checkList.find((check) => check.name === team);
@@ -481,6 +482,7 @@ export const TransactionForm = ({
                       onValueChange={(value) => {
                         field.onChange(value);
                       }}
+                      disabled = {form.getValues("status") === "ARCHIEVED"}
                     >
                       <SelectTrigger className="w-full">
                         <SelectValue placeholder="Forward to " />

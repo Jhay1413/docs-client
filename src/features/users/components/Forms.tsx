@@ -300,7 +300,7 @@ export const UserForm = () => {
                             )?.section.map((section) => (
                               <SelectItem
                                 key={section.name}
-                                value={section.name!}
+                                value={section.value!}
                               >
                                 {section.name}
                               </SelectItem>

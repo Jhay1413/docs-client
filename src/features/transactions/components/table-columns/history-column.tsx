@@ -81,6 +81,10 @@ export const historyColumn: ColumnDef<History>[] = [
     accessorKey: "remarks",
   },
   {
+    header:"status",
+    accessorKey:"status"
+  },
+  {
     header: "Date Forwarded",
     accessorKey: "dateForwarded",
     cell: ({ row }) => {

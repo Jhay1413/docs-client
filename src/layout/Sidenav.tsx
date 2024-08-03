@@ -1,5 +1,7 @@
 import {
+  ClipboardList,
   Factory,
+  FileCode,
   LayoutDashboard,
   LibraryBig,
   LogOut,
@@ -147,7 +149,7 @@ export const SideNav = () => {
                 }`;
               }}
             >
-              <LibraryBig />
+             <ClipboardList />
               <div className="flex gap-2">
                 <h1 className="text-md">Incoming files</h1>
                 {notification?.incoming !== 0 && (
@@ -155,6 +157,21 @@ export const SideNav = () => {
                     {notification?.incoming}
                   </span>
                 )}
+              </div>
+            </NavLink>
+          </li>
+          <li className="relative inline-block text-left px-4 ">
+            <NavLink
+              to={`/dashboard/transactions/archieved`}
+              className={({ isActive }) => {
+                return `justify-start items-center flex w-full p-2 space-x-4 text-lg  rounded-md ${
+                  isActive ? "bg-green-500 text-white" : ""
+                }`;
+              }}
+            >
+              <FileCode />
+              <div className="flex gap-2">
+                <h1 className="text-md">Archieved</h1>
               </div>
             </NavLink>
           </li>

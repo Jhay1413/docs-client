@@ -120,6 +120,17 @@ export const transactionData = transactionFormData
   })
   .omit({});
 
+
+export const archievedTransaction = z.object({
+  id:z.string(),
+  transactionId:z.string(),
+  company:CompanyInfo,
+  project:companyProject,
+  documentSubType:z.string(),
+  remarks:z.string(),
+  createdAt: z.string().datetime().optional(),
+
+})
 export const signedUrlData = z.object({
   company: z.string(),
   fileName: z.string(),

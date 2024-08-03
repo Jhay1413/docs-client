@@ -22,7 +22,7 @@ export const TransactionUpdateComponent = () => {
   const setNotification = useNotificationStore(
     (state) => state.setNotification
   );
-  const refetch = useNotificationStore((state) => state.refetch);
+  // const refetch = useNotificationStore((state) => state.refetch);
   const { id } = useParams();
   const userId = getCurrentUserId();
   const { entities } = useCompanies("companies", "");
@@ -69,8 +69,10 @@ export const TransactionUpdateComponent = () => {
 
       const res = await prepare_file_payload(attachments, validatedData.data);
       console.log(res);
-      const payload = prepare_transaction_payload(transactionData, res);
-      console.log(payload);
+      let payload = prepare_transaction_payload(transactionData, res);
+      if(payload.status === "ARCHIEVED") {
+       payload  = {...payload , receiverId : null}
+      }
       await update.mutateAsync(payload);
 
       if (!update.isPending) {
