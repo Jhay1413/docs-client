@@ -10,7 +10,7 @@ export const DashboardLayout = () => {
   const setNotification = useNotificationStore(
     (state) => state.setNotification
   );
-  console.log("rerender")
+  console.log("rerender");
   const setRefetch = useNotificationStore((state) => state.setRefetch);
   const { data, isLoading, error, refetch } = useNofications();
 

@@ -15,9 +15,11 @@ import { getCurrentUserId } from "@/hooks/use-user-hook";
 import { useNotificationStore } from "@/global-states/notification-store";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
+import { useQueryClient } from "@tanstack/react-query";
 
 export const SideNav = () => {
   const notification = useNotificationStore((state) => state.notification);
+  const queryClient = useQueryClient(); 
   console.log(notification);
   const id = getCurrentUserId();
 
@@ -26,10 +28,11 @@ export const SideNav = () => {
   const logout = async () => {
     try {
       await logoutUser();
-      localStorage.clear();
-      navigate("/");
+      queryClient.clear(); // Clear all query caches
+      localStorage.clear(); // Clear localStorage
+      navigate("/"); // Navigate to the home page
     } catch (error) {
-      console.log("onError");
+      console.log("Logout Error:", error);
     }
   };
 
@@ -171,7 +174,7 @@ export const SideNav = () => {
             >
               <FileCode />
               <div className="flex gap-2">
-                <h1 className="text-md">Archieved</h1>
+                <h1 className="text-md">Archive</h1>
               </div>
             </NavLink>
           </li>
