@@ -51,7 +51,10 @@ import {
 import { docRoute } from "@/data/doc-route";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { departmentEntities, transactionFormData } from "../schema/TransactionSchema";
+import {
+  departmentEntities,
+  transactionFormData,
+} from "../schema/TransactionSchema";
 import { useCurrentDivision } from "@/hooks/use-user-hook";
 import FormTextArea from "@/components/formTextArea";
 import { Label } from "@/components/ui/label";
@@ -92,8 +95,10 @@ export const TransactionForm = ({
   const currentDivision = useCurrentDivision();
   const userId = getCurrentUserId();
   const route = docRoute.find((data) => data.name === role);
-  const {entities} = useTransactions("transactionEntities","v2/departmentEntities")
-
+  const { entities } = useTransactions(
+    "transactionEntities",
+    "v2/departmentEntities"
+  );
 
   const validateEntities = z.array(departmentEntities).safeParse(entities.data);
   const [selectedCompany, setSelectedCompany] = useState<string>(
@@ -104,7 +109,6 @@ export const TransactionForm = ({
   const [selectedDivision, setSelectedDivision] = useState(
     defaultValue?.targetDepartment || ""
   );
-  console.log(team)
   const [subType, setSubType] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const temp_section = checkList.find((check) => check.name === team);
@@ -118,8 +122,12 @@ export const TransactionForm = ({
   const filteredCompany = company?.find((data) => data.id === selectedCompany);
   const project = filteredCompany?.companyProjects;
 
-
-  const filterdForwardedTo = useForwardedToUser(validateEntities.data,role,selectedDivision,team);
+  const filterdForwardedTo = useForwardedToUser(
+    validateEntities.data,
+    role,
+    selectedDivision,
+    team
+  )
   const form = useForm<z.infer<typeof transactionFormData>>({
     resolver: zodResolver(transactionFormData),
     mode: "onSubmit",
@@ -141,7 +149,9 @@ export const TransactionForm = ({
           forwarderId: userId,
           dateForwarded: new Date().toISOString(),
           documentSubType: defaultValue?.documentSubType,
-          attachments: defaultValue.attachments,
+          attachments: defaultValue.attachments?.sort((a, b) =>
+            (b.fileUrl || "").localeCompare(a.fileUrl || "")
+          )
         }
       : {
           dateForwarded: new Date().toISOString(),
@@ -199,7 +209,6 @@ export const TransactionForm = ({
       fileInputRef!.current![index]!.click();
     }
   };
-
   return (
     <div className="w-full h-full bg-white p-4 rounded-lg">
       <Form {...form}>
@@ -482,7 +491,7 @@ export const TransactionForm = ({
                       onValueChange={(value) => {
                         field.onChange(value);
                       }}
-                      disabled = {form.getValues("status") === "ARCHIEVED"}
+                      disabled={form.getValues("status") === "ARCHIEVED"}
                     >
                       <SelectTrigger className="w-full">
                         <SelectValue placeholder="Forward to " />
@@ -645,155 +654,145 @@ export const TransactionForm = ({
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {fields
-                    .sort((a, b) => {
-                      const aValue = a.fileUrl;
-                      const bValue = b.fileUrl;
+                  {fields.map((item, index) => (
+                    <TableRow key={index}>
+                      <TableCell className="font-medium w-[300px]">
+                        <FormInput
+                          name={`attachments.${index}.fileName`}
+                          label="Filename"
+                        />
+                      </TableCell>
 
-                      if (aValue == null || aValue === "") return 1;
-                      if (bValue == null || bValue === "") return -1;
-
-                      return aValue.localeCompare(bValue);
-                    })
-                    .map((item, index) => (
-                      <TableRow key={index}>
-                        <TableCell className="font-medium w-[300px]">
-                          <FormInput
-                            name={`attachments.${index}.fileName`}
-                            label="Filename"
-                          />
-                        </TableCell>
-
-                        <TableCell className="font-medium w-[300px]">
-                          <FormField
-                            control={form.control}
-                            name={`attachments.${index}.fileType`}
-                            render={({ field }) => (
-                              <FormItem>
-                                <FormLabel>File type</FormLabel>
-                                <FormControl>
-                                  <Select
-                                    value={field.value || ""}
-                                    onValueChange={(value) => {
-                                      field.onChange(value);
-                                    }}
-                                  >
-                                    <SelectTrigger className="w-full">
-                                      <SelectValue placeholder="Select type" />
-                                    </SelectTrigger>
-                                    <SelectContent>
-                                      <SelectItem value="INITIAL_DOC">
-                                        Initial documents
-                                      </SelectItem>
-                                      <SelectItem value="FOLLOWED_UP">
-                                        Follow-up documents
-                                      </SelectItem>
-                                    </SelectContent>
-                                  </Select>
-                                </FormControl>
-                                <FormMessage />
-                              </FormItem>
-                            )}
-                          />
-                        </TableCell>
-                        <TableCell>
-                          <FormField
-                            control={form.control}
-                            name={`attachments.${index}.fileStatus`}
-                            render={({ field }) => (
-                              <FormItem>
-                                <FormLabel>File status</FormLabel>
-                                <FormControl>
-                                  <Select
-                                    value={field.value || ""}
-                                    onValueChange={(value) => {
-                                      field.onChange(value);
-                                    }}
-                                  >
-                                    <SelectTrigger className="w-full">
-                                      <SelectValue placeholder="Select status" />
-                                    </SelectTrigger>
-                                    <SelectContent>
-                                      <SelectItem value="FOR_REVIEW">
-                                        For Review
-                                      </SelectItem>
-                                      <SelectItem value="FINAL_ATTACHMENT">
-                                        Final Attachment
-                                      </SelectItem>
-                                    </SelectContent>
-                                  </Select>
-                                </FormControl>
-                                <FormMessage />
-                              </FormItem>
-                            )}
-                          />
-                        </TableCell>
-                        <TableCell className="font-medium w-[500px]">
-                          <FormTextArea
-                            name={`attachments.${index}.remarks`}
-                            label="Remarks"
-                          />
-                        </TableCell>
-
-                        <TableCell className="h-full w-96 ">
-                          <div className="w-full">
-                            <div className={`${item.fileUrl && "hidden"}`}>
-                              <FormField
-                                control={form.control}
-                                name={`attachments.${index}.file`}
-                                render={({ field: { onChange }, ...field }) => (
-                                  <FormItem>
-                                    <FormLabel>File</FormLabel>
-                                    <FormControl>
-                                      <Input
-                                        type="file"
-                                        accept="application/pdf"
-                                        {...field}
-                                        onChange={(event) =>
-                                          onChange(event.target.files)
-                                        }
-                                        ref={(el) =>
-                                          (fileInputRef.current![index] = el)
-                                        }
-                                      />
-                                    </FormControl>
-                                    <FormDescription></FormDescription>
-                                    <FormMessage />
-                                  </FormItem>
-                                )}
-                              />
-                            </div>
-
-                            <div className={`${!item.fileUrl && "hidden"}`}>
-                              <Label>Actions</Label>
-                              <div className="flex  gap-4">
-                                <Button
-                                  type="button"
-                                  onClick={() => viewFile(item.fileUrl!)}
-                                >
-                                  View file
-                                </Button>
-                                <Button
-                                  type="button"
-                                  onClick={() => reattachFile(index)}
-                                >
-                                  Update
-                                </Button>
-                                <Button
-                                  onClick={() => {
-                                    remove(index);
+                      <TableCell className="font-medium w-[300px]">
+                        <FormField
+                          control={form.control}
+                          name={`attachments.${index}.fileType`}
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel>File type</FormLabel>
+                              <FormControl>
+                                <Select
+                                  value={field.value || ""}
+                                  onValueChange={(value) => {
+                                    field.onChange(value);
                                   }}
-                                  type="button"
-                                  disabled={item.fileName ? true : false}
                                 >
-                                  Remove
-                                </Button>
-                              </div>
+                                  <SelectTrigger className="w-full">
+                                    <SelectValue placeholder="Select type" />
+                                  </SelectTrigger>
+                                  <SelectContent>
+                                    <SelectItem value="INITIAL_DOC">
+                                      Initial documents
+                                    </SelectItem>
+                                    <SelectItem value="FOLLOWED_UP">
+                                      Follow-up documents
+                                    </SelectItem>
+                                  </SelectContent>
+                                </Select>
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+                      </TableCell>
+                      <TableCell>
+                        <FormField
+                          control={form.control}
+                          name={`attachments.${index}.fileStatus`}
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel>File status</FormLabel>
+                              <FormControl>
+                                <Select
+                                  value={field.value || ""}
+                                  onValueChange={(value) => {
+                                    field.onChange(value);
+                                  }}
+                                >
+                                  <SelectTrigger className="w-full">
+                                    <SelectValue placeholder="Select status" />
+                                  </SelectTrigger>
+                                  <SelectContent>
+                                    <SelectItem value="FOR_REVIEW">
+                                      For Review
+                                    </SelectItem>
+                                    <SelectItem value="FINAL_ATTACHMENT">
+                                      Final Attachment
+                                    </SelectItem>
+                                  </SelectContent>
+                                </Select>
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+                      </TableCell>
+                      <TableCell className="font-medium w-[500px]">
+                        <FormTextArea
+                          name={`attachments.${index}.remarks`}
+                          label="Remarks"
+                        />
+                      </TableCell>
+
+                      <TableCell className="h-full w-96 ">
+                        <div className="w-full">
+                          <div className={`${item.fileUrl && "hidden"}`}>
+                            <FormField
+                              control={form.control}
+                              name={`attachments.${index}.file`}
+                              render={({ field: { onChange }, ...field }) => (
+                                <FormItem>
+                                  <FormLabel>File</FormLabel>
+                                  <FormControl>
+                                    <Input
+                                      type="file"
+                                      accept="application/pdf"
+                                      {...field}
+                                      onChange={(event) =>
+                                        onChange(event.target.files)
+                                      }
+                                      ref={(el) =>
+                                        (fileInputRef.current![index] = el)
+                                      }
+                                    />
+                                  </FormControl>
+                                  <FormDescription></FormDescription>
+                                  <FormMessage />
+                                </FormItem>
+                              )}
+                            />
+                          </div>
+
+                          <div className={`${!item.fileUrl && "hidden"}`}>
+                            <Label>Actions</Label>
+                            <div className="flex  gap-4">
+                              <Button
+                                type="button"
+                                onClick={() => viewFile(item.fileUrl!)}
+                              >
+                                View file
+                              </Button>
+                              <Button
+                                type="button"
+                                onClick={() => reattachFile(index)}
+                              >
+                                Update
+                              </Button>
+                              <Button
+                                onClick={() => {
+                                  remove(index);
+                                }}
+                                type="button"
+                                disabled={item.fileName ? true : false}
+                              >
+                                Remove
+                              </Button>
                             </div>
                           </div>
-                        </TableCell>
-                      </TableRow>
-                    ))}
+                        </div>
+                      </TableCell>
+                    </TableRow>
+                  ))}
 
                   <TableCell>
                     <Button
