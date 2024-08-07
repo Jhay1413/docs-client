@@ -1,33 +1,25 @@
-
-import { checkAuth } from "@/features/authentication";
-import { ReactNode, useEffect, useState } from "react";
+import { ReactNode } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import { useIsAuthenticated } from "@/hooks/custom-hook"; // Custom hook using TanStack Query
 
+type PrivateProps = {
+  children: ReactNode;
+};
 
-type PrivateProsp = {
-    children: ReactNode;
+export const RouteGuard = ({ children }: PrivateProps) => {
+  const navigate = useNavigate();
+  const { isLoading, isError, data: isAuthenticated } = useIsAuthenticated();
 
-  };
-  
-export const RouteGuard = ({ children}: PrivateProsp) => {
+  if (isLoading) {
+    return <div>Loading...</div>; // Display a loading indicator while checking authentication
+  }
 
-    const [isAuthenticated, setIsAuthenticated] = useState(false);
-    const navigate = useNavigate();
-  
-    useEffect(() => {
-      const checkerAuth = async () => {
-        try {
-          await checkAuth();
-          setIsAuthenticated(true);
-        
-        } catch (error) {
-          toast.error("Unauthorized");
-          navigate("/");
-        }
-      };
-      checkerAuth();
-    }, []);
-  
-    return isAuthenticated ?  <>{children}</> : <h1>asdasdasdsa</h1>;
-  };
+  if (isError) {
+    toast.error("Authentication failed. Redirecting to login.");
+    navigate("/"); // Redirect to login page
+    return null; // Ensure the component doesn't render children while redirecting
+  }
+
+  return <>{children}</>; // Render children if authenticated
+};

@@ -14,7 +14,6 @@ import { CompanyList } from "./features/companies";
 import { NotFound } from "./pages/404";
 import { Login } from "./pages/Login";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { RouteGuard } from "./components/routeGuard/route-guard";
 import { CompanyIndex } from "./pages/company-index";
 import { AddComponent } from "./features/companies/components/add-component";
 import { EditComponent } from "./features/companies/components/edit-component";
@@ -23,6 +22,8 @@ import { TransactionIndex } from "./pages/transaction-index";
 import { IncomingComponent } from "./features/transactions/components/table-data/incoming-component";
 import { InboxComponent } from "./features/transactions/components/table-data/inbox-component";
 import { ViewHistory } from "./features/transactions/components/view-history";
+import { RouteGuard } from "./components/routeGuard/route-guard";
+
 
 const queryClient = new QueryClient();
 function App() {
