@@ -19,6 +19,7 @@ import { loginUser } from "../services/AuthService";
 import { toast } from "react-toastify";
 
 export const LoginForm = () => {
+
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
   const form = useForm<TLogin>({
@@ -34,7 +35,6 @@ export const LoginForm = () => {
     mutationFn: loginUser,
     onMutate: () => setIsLoading(true),
     onSuccess: async (data) => {
-      console.log(data?.data);
       setIsLoading(false);
     
       localStorage.setItem("userinfo", JSON.stringify(data?.data));
