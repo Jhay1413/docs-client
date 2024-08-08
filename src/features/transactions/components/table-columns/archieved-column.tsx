@@ -11,18 +11,13 @@ import { z } from "zod";
 import { Link } from "react-router-dom";
 import { ColumnDef } from "@tanstack/react-table";
 import { MoreHorizontal } from "lucide-react";
-import {
-  archievedTransaction,
-  completeStaffWork,
-  transactionLogsData,
-} from "../../schema/TransactionSchema";
-import { getSignUrlForView } from "../../services/getSignedUrl";
+import { archivedTransaction } from "../../schema/TransactionSchema";
 
-type TArchieved = z.infer<typeof archievedTransaction>;
+type TArchieved = z.infer<typeof archivedTransaction>;
 
-export const archievedColumn: ColumnDef<TArchieved>[] = [
+export const archivedColumn: ColumnDef<TArchieved>[] = [
   {
-    header: "transaction ID",
+    header: "Transaction   ID",
     accessorKey: "transactionId",
   },
   {
@@ -52,6 +47,19 @@ export const archievedColumn: ColumnDef<TArchieved>[] = [
     },
   },
   {
+    header: "Application",
+    accessorKey: "application",
+    cell: ({ row }) => {
+      const data = row.original;
+
+      return (
+        <div>
+          <h1>{data.documentSubType}</h1>
+        </div>
+      );
+    },
+  },
+  {
     header: "Project Address",
     accessorKey: "projectAddress",
     cell: ({ row }) => {
@@ -65,19 +73,6 @@ export const archievedColumn: ColumnDef<TArchieved>[] = [
     },
   },
   {
-    header: "Project ID",
-    accessorKey: "projectId",
-    cell: ({ row }) => {
-      const data = row.original;
-
-      return (
-        <div>
-          <h1>{data.project.projectId}</h1>
-        </div>
-      );
-    },
-  },
-  {
     header: "Date Created",
     accessorKey: "createdAt",
     cell: ({ row }) => {
@@ -85,7 +80,7 @@ export const archievedColumn: ColumnDef<TArchieved>[] = [
 
       return (
         <div>
-          <h1>{new Date(data.createdAt!).toDateString()}</h1>
+          <h1>{new Date(data.updatedAt!).toDateString()}</h1>
         </div>
       );
     },
