@@ -28,7 +28,6 @@ export const DashboardLayout = () => {
   const setRefetch = useNotificationStore((state) => state.setRefetch);
   const setRefetchAll = useNotificationStore((state) => state.setRefetchAll);
 
-  console.log("asdasd");
   //needs to revise terms used
   const { data, isLoading, error, refetch } = useNofications();
   const {

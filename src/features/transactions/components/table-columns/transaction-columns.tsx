@@ -145,21 +145,6 @@ export const transactionColumns: ColumnDef<TransactionInfo>[] = [
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
-
-            <DropdownMenuItem>
-              <Link to={`/dashboard/userForm/${userInfo.id}`}>Edit</Link>
-            </DropdownMenuItem>
-            <DropdownMenuItem>Delete</DropdownMenuItem>
-
-            <DropdownMenuSeparator />
-            <DropdownMenuItem
-              onClick={() =>
-                navigator.clipboard.writeText(userInfo.id ? userInfo.id : "")
-              }
-            >
-              Copy Transaction ID
-            </DropdownMenuItem>
-
             <DropdownMenuSeparator />
             <DropdownMenuItem>
               <Link to={`/dashboard/transactions/history/${userInfo.id}`}>
