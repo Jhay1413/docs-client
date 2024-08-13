@@ -119,7 +119,7 @@ export const inboxColumn: ColumnDef<InboxColumn>[] = [
             </DropdownMenuItem>
 
             <DropdownMenuSeparator />
-
+            
             <DropdownMenuSeparator />
             <DropdownMenuItem>
               <Link
