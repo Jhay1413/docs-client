@@ -22,6 +22,7 @@ export const TransactionUpdateComponent = () => {
   const setNotification = useNotificationStore(
     (state) => state.setNotification
   );
+ 
   // const refetch = useNotificationStore((state) => state.refetch);
   const { id } = useParams();
   const userId = getCurrentUserId();
@@ -70,7 +71,7 @@ export const TransactionUpdateComponent = () => {
       const res = await prepare_file_payload(attachments, validatedData.data);
       console.log(res);
       let payload = prepare_transaction_payload(transactionData, res);
-      if(payload.status === "ARCHIEVED") {
+      if(payload.status === "ARCHIVED") {
        payload  = {...payload , receiverId : null}
       }
       await update.mutateAsync(payload);
@@ -78,11 +79,13 @@ export const TransactionUpdateComponent = () => {
       if (!update.isPending) {
         setIsSubmitting(false);
       }
+
     }
   };
 
   useEffect(() => {
     if (update.isSuccess) {
+       
       if (notification) {
         setNotification({ ...notification, inbox: notification?.inbox - 1 });
       }

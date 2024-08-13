@@ -106,7 +106,7 @@ export const incomingColumns: ColumnDef<IncomingColumn>[] = [
       const setIncoming = useNotificationStore(
         (state) => state.setNotification
       );
-      const refetch = useNotificationStore((state) => state.refetch);
+      const refetch = useNotificationStore((state)=>state.refetchAll)
 
       const transaction = row.original;
       const accountId = getCurrentAccountId();

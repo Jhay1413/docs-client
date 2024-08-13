@@ -118,13 +118,15 @@ export const TransactionForm = ({
   );
   const filteredCompany = company?.find((data) => data.id === selectedCompany);
   const project = filteredCompany?.companyProjects;
-
+  console.log(selectedDivision , "division");
+  console.log(team,"team")
   const filterdForwardedTo = useForwardedToUser(
     validateEntities.data,
     role,
     selectedDivision,
     team
   )
+  console.log(filterdForwardedTo)
   const form = useForm<z.infer<typeof transactionFormData>>({
     resolver: zodResolver(transactionFormData),
     mode: "onSubmit",

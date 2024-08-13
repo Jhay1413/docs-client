@@ -151,5 +151,15 @@ export const departmentEntities = z.object({
   position: z.string(),
   fullname: z.string(),
 });
+
+export const notification = z.object({
+  id:z.string().optional(),
+  createdAt: z.string().datetime(),
+  message:z.string(),
+  transactionId:z.string(),
+  forwarderId:z.string(),
+  receiverId:z.string(),
+  isRead: z.boolean()
+})
 export const signedUrlDataArray = z.array(signedUrlData);
 //Transaction Types
