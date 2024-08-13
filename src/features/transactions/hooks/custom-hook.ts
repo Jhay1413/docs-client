@@ -3,7 +3,7 @@ import { departmentEntities } from "../schema/TransactionSchema";
 import { useMemo } from "react";
 
 const useForwardedToUser = (data: z.infer<typeof departmentEntities>[] | undefined, role: string, selectedDivision: string, team?: string) => {
-
+    
     return useMemo (()=>{
 
         console.log(role,team,selectedDivision)
