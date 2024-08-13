@@ -5,7 +5,8 @@ export const ROLES = {
   TL:"TL",
   CH:"CH",
   MANAGER:"MANAGER",
-  RECORDS:"RECORDS"
+  RECORDS:"RECORDS",
+  QA:"QA"
 };
 
 export const SCOPES = {
@@ -18,6 +19,7 @@ export const SCOPES = {
 export const PERMISSIONS = {
   [ROLES.superAdmin]: [SCOPES.canView],
   [ROLES.admin]: [SCOPES.canView, SCOPES.canEdit],
+  [ROLES.QA] : [SCOPES.canView],
   // [ROLES.user]: [
   //   SCOPES.canView,
   //   SCOPES.canEdit,

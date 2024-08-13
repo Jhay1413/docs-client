@@ -7,6 +7,7 @@ const baseUrl = import.meta.env.VITE_TRANSACTION_API;
 const fetchNotifications = async () => {
     const id = getCurrentUserId();
   const response = await axios.get(`${baseUrl}/v2/${id}/notification`);
+  console.log(response)
   return response.data;
 };
 const fetchAllNotifications = async()=>{
@@ -24,7 +25,7 @@ const readAllNotifications = async ()=>{
 export const useNofications = () => {
   return useQuery({
     queryKey: ["notification"],
-    queryFn: fetchNotifications
+    queryFn: fetchNotifications,
   });
 };
 export const useAllNotications = () => {

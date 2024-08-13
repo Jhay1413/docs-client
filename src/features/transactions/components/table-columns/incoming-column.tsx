@@ -106,7 +106,7 @@ export const incomingColumns: ColumnDef<IncomingColumn>[] = [
       const setIncoming = useNotificationStore(
         (state) => state.setNotification
       );
-      const refetch = useNotificationStore((state)=>state.refetchAll)
+      const refetch = useNotificationStore((state)=>state.refetch)
 
       const transaction = row.original;
       const accountId = getCurrentAccountId();
@@ -121,16 +121,11 @@ export const incomingColumns: ColumnDef<IncomingColumn>[] = [
           receivedBy: accountId,
           dateReceived: new Date(),
         };
-        update.mutateAsync(payload);
+        await update.mutateAsync(payload);
         if (refetch) {
-          console.log("were inside");
-          if (notification && notification.incoming)
-            setIncoming({
-              ...notification,
-              incoming: notification.incoming - 1,
-              inbox : notification.inbox + 1
-            });
-          refetch();
+         
+          const result  = await refetch();
+          console.log(result)
         }
       };
       return (
@@ -148,14 +143,6 @@ export const incomingColumns: ColumnDef<IncomingColumn>[] = [
               <Button variant="link" onClick={updateHistory}>
                 Recieve
               </Button>
-            </DropdownMenuItem>
-            <DropdownMenuItem>Delete</DropdownMenuItem>
-
-            <DropdownMenuSeparator />
-
-            <DropdownMenuSeparator />
-            <DropdownMenuItem>
-              <Link to="">View Details</Link>
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>

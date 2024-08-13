@@ -10,7 +10,8 @@ const useForwardedToUser = (data: z.infer<typeof departmentEntities>[] | undefin
         if (!data) return [];
 
         const filters: Record<string, (data: z.infer<typeof departmentEntities>[]) => z.infer<typeof departmentEntities>[]> = {
-          RECORDS: (data) => data.filter(d => d.division === selectedDivision && d.role === "MANAGER"),
+          RECORDS: (data) => data.filter(d =>( d.division === selectedDivision && d.role === "MANAGER") || d.role==="QA"),
+          QA : (data)=>data.filter(d=>d.role === "RECORDS"),
           MANAGER: (data) => data.filter(d =>
             (d.division === selectedDivision && d.section === team && d.role === "TL") ||
              d.role === "RECORDS"),
@@ -18,7 +19,7 @@ const useForwardedToUser = (data: z.infer<typeof departmentEntities>[] | undefin
             CH : (data) => data.filter(d=>d.division === selectedDivision && d.section === team && d.role === "TL")
         }
         const filterFunction = filters[role];
-        if (!filterFunction) return []; // Return empty array if role is not valid
+        if (!filterFunction) return []; 
     
         return filterFunction(data);
     },[data, role, selectedDivision, team])

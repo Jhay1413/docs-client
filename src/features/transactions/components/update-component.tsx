@@ -19,10 +19,8 @@ import { useNotificationStore } from "@/global-states/notification-store";
 
 export const TransactionUpdateComponent = () => {
   const notification = useNotificationStore((state) => state.notification);
-  const setNotification = useNotificationStore(
-    (state) => state.setNotification
-  );
- 
+  const refetch = useNotificationStore((state) => state.refetch);
+
   // const refetch = useNotificationStore((state) => state.refetch);
   const { id } = useParams();
   const userId = getCurrentUserId();
@@ -71,26 +69,27 @@ export const TransactionUpdateComponent = () => {
       const res = await prepare_file_payload(attachments, validatedData.data);
       console.log(res);
       let payload = prepare_transaction_payload(transactionData, res);
-      if(payload.status === "ARCHIVED") {
-       payload  = {...payload , receiverId : null}
+      if (payload.status === "ARCHIVED") {
+        payload = { ...payload, receiverId: null };
       }
       await update.mutateAsync(payload);
 
       if (!update.isPending) {
         setIsSubmitting(false);
       }
-
     }
   };
 
   useEffect(() => {
-    if (update.isSuccess) {
-       
-      if (notification) {
-        setNotification({ ...notification, inbox: notification?.inbox - 1 });
+    async function isSuccess() {
+      if (update.isSuccess) {
+        if (notification) {
+         await refetch!();
+        }
+        navigate(`/dashboard/transactions/inbox/${userId}`);
       }
-      navigate(`/dashboard/transactions/inbox/${userId}`);
     }
+    isSuccess();
   }, [update.isSuccess]);
   if (entity.isLoading || entities.isLoading) return <div>Loading...</div>;
 

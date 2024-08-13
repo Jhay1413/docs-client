@@ -72,6 +72,7 @@ import {
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import { useTransactions } from "../hooks/query-gate";
 import { useForwardedToUser } from "../hooks/custom-hook";
+import { toast } from "react-toastify";
 
 type props = {
   company: z.infer<typeof CompanyInfo>[] | undefined;
@@ -208,10 +209,15 @@ export const TransactionForm = ({
       fileInputRef!.current![index]!.click();
     }
   };
+  const onError = () =>{
+    if(form.formState.errors) toast.error("Please check all required fields . ",{
+      position: "bottom-right",
+    })
+  }
   return (
     <div className="w-full h-full bg-white p-4 rounded-lg">
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)}>
+        <form onSubmit={form.handleSubmit(onSubmit,onError)}>
           <div className="grid grid-cols-3 gap-12 ">
             <FormField
               control={form.control}
@@ -279,43 +285,6 @@ export const TransactionForm = ({
                 </FormItem>
               )}
             />
-            {/* <FormField
-              control={form.control}
-              name="companyId"
-              render={({ field }) => (
-                <FormItem className="bg-black">
-                  <FormLabel>Company</FormLabel>
-                  <FormControl>
-                    <Select
-                      value={field.value}
-                      onValueChange={(value) => {
-                        setSelectedCompany(value);
-                        field.onChange(value);
-                      }}
-                      disabled={method === "UPDATE" && role !== "RECORDS"}
-                    >
-                      <SelectTrigger className="w-full">
-                        <SelectValue placeholder="Select Company" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectGroup>
-                          {company &&
-                            company.map((company) => (
-                              <SelectItem
-                                key={company.companyName}
-                                value={company.id!}
-                              >
-                                {company.companyName}
-                              </SelectItem>
-                            ))}
-                        </SelectGroup>
-                      </SelectContent>
-                    </Select>
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            /> */}
             <FormField
               control={form.control}
               name="projectId"
