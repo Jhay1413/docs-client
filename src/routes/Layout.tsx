@@ -1,6 +1,9 @@
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import { notification } from "@/features/transactions/schema/TransactionSchema";
-import { useNotificationStore } from "@/global-states/notification-store";
+import {
+  NotificationType,
+  useNotificationStore,
+} from "@/global-states/notification-store";
 import useRealtimeStore from "@/global-states/real-time-notification";
 import { getCurrentUserId } from "@/hooks/hooks/use-user-hook";
 import { useAllNotications, useNofications } from "@/hooks/use-custom-query";
@@ -16,6 +19,7 @@ export const DashboardLayout = () => {
   const { socket } = useRealtimeStore();
   const { messages, addNotification } = useRealtimeStore();
   const currentUserId = getCurrentUserId();
+  const quantityNotif = useNotificationStore((state)=>state.notification)
   const setNotification = useNotificationStore(
     (state) => state.setNotification
   );
@@ -29,20 +33,27 @@ export const DashboardLayout = () => {
   const setRefetchAll = useNotificationStore((state) => state.setRefetchAll);
 
   //needs to revise terms used
-  const { data, isLoading, error, refetch } = useNofications();
+  const { data, isLoading, error, refetch, isSuccess } = useNofications();
   const {
     data: allNotif,
     isLoading: allNotifLoading,
     error: errorNotif,
     refetch: refetchAll,
+    isSuccess: isSuccessNotif,
   } = useAllNotications();
 
   useEffect(() => {
     socket.on(
       "notification",
-      (message: string, notifications: z.infer<typeof notification>[]) => {
+      (
+        message: string,
+        notifications: z.infer<typeof notification>[],
+        quantityTracker: NotificationType
+      ) => {
         console.log(notifications);
         setAllNotification(notifications);
+        console.log(quantityTracker);
+        setNotification(quantityTracker);
         toast(message);
       }
     );
@@ -55,12 +66,15 @@ export const DashboardLayout = () => {
 
   useEffect(() => {
     refetchAll();
+    refetch();
   }, []);
   if (isLoading || allNotifLoading) return "loading";
 
   if (data) {
-    setNotification(data);
-    setRefetch(refetch);
+    if (!quantityNotif) {
+      setNotification(data);
+      setRefetch(refetch);
+    }
   }
   if (allNotif) {
     console.log(allNotif);

@@ -4,8 +4,8 @@ import { create } from "zustand";
 export type NotificationType = {
   inbox: number;
   incoming: number;
-  refetch: () => void;
-  refetchAll:()=>void
+  refetch?: () => void;
+  refetchAll?:()=>void
   
 };
 
