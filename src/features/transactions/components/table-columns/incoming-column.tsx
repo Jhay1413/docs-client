@@ -103,7 +103,7 @@ export const incomingColumns: ColumnDef<IncomingColumn>[] = [
     id: "actions",
     cell: ({ row }) => {
       const notification = useNotificationStore((state) => state.notification);
-      const setIncoming = useNotificationStore(
+      const setNotification = useNotificationStore(
         (state) => state.setNotification
       );
       const refetch = useNotificationStore((state)=>state.refetch)
@@ -123,7 +123,7 @@ export const incomingColumns: ColumnDef<IncomingColumn>[] = [
         };
         await update.mutateAsync(payload);
         if (refetch) {
-         
+          setNotification(null)
           const result  = await refetch();
           console.log(result)
         }

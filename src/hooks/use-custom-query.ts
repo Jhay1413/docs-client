@@ -26,6 +26,7 @@ export const useNofications = () => {
   return useQuery({
     queryKey: ["notification"],
     queryFn: fetchNotifications,
+    enabled:false
   });
 };
 export const useAllNotications = () => {
