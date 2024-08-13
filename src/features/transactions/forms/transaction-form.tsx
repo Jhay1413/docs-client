@@ -17,11 +17,9 @@ import {
 } from "@/components/ui/popover";
 import {
   Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
+  SelectContent, SelectItem,
   SelectTrigger,
-  SelectValue,
+  SelectValue
 } from "@/components/ui/select";
 import {
   Table,
@@ -69,11 +67,10 @@ import {
   CommandGroup,
   CommandInput,
   CommandItem,
-  CommandList,
-  CommandSeparator,
+  CommandList
 } from "@/components/ui/command";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
-import { useTransaction, useTransactions } from "../hooks/query-gate";
+import { useTransactions } from "../hooks/query-gate";
 import { useForwardedToUser } from "../hooks/custom-hook";
 
 type props = {
@@ -121,13 +118,15 @@ export const TransactionForm = ({
   );
   const filteredCompany = company?.find((data) => data.id === selectedCompany);
   const project = filteredCompany?.companyProjects;
-
+  console.log(selectedDivision , "division");
+  console.log(team,"team")
   const filterdForwardedTo = useForwardedToUser(
     validateEntities.data,
     role,
     selectedDivision,
     team
   )
+  console.log(filterdForwardedTo)
   const form = useForm<z.infer<typeof transactionFormData>>({
     resolver: zodResolver(transactionFormData),
     mode: "onSubmit",
@@ -442,7 +441,7 @@ export const TransactionForm = ({
                         <SelectValue placeholder="Select Document Type" />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="application">APPLICATION</SelectItem>
+                        <SelectItem value="Application">APPLICATION</SelectItem>
                         <SelectItem value="Others">Others</SelectItem>
                       </SelectContent>
                     </Select>
@@ -611,7 +610,7 @@ export const TransactionForm = ({
                         <SelectItem value="DORMANT">DORMANT</SelectItem>
                         <SelectItem value="DROP">DROP</SelectItem>
                         <SelectItem value="RECIEVED">RECIEVED</SelectItem>
-                        <SelectItem value="ARCHIEVED">FOR ARCHIEVE</SelectItem>
+                        <SelectItem value="ARCHIVED">FOR ARCHIVE</SelectItem>
                       </SelectContent>
                     </Select>
                   </FormControl>

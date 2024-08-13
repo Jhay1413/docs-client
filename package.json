@@ -40,6 +40,7 @@
     "react-router-dom": "^6.24.1",
     "react-stately": "^3.31.1",
     "react-toastify": "^10.0.5",
+    "socket.io-client": "^4.7.5",
     "sort-by": "^1.2.0",
     "tailwind-merge": "^2.3.0",
     "tailwindcss-animate": "^1.0.7",

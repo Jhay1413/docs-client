@@ -7,14 +7,17 @@ import { DataTable } from "@/components/data-table";
 
 
 import { useUsers } from "../hooks/query-gate";
+import useRealtimeStore from "@/global-states/real-time-notification";
 
 export const UserList = () => {
+ 
   const { entities } = useUsers("users", "/");
-
+ 
   if (!entities.data) {
     return "";
   }
-
+  
+  
   return (
     <div className="flex flex-col w-full items-center justify-center bg-white rounded-lg">
       <div className="flex justify-start w-full text-4xl">

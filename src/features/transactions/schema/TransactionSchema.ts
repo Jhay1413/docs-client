@@ -121,7 +121,7 @@ export const transactionData = transactionFormData
   .omit({});
 
 
-export const archievedTransaction = z.object({
+export const archivedTransaction = z.object({
   id:z.string(),
   transactionId:z.string(),
   company:CompanyInfo,
@@ -129,6 +129,7 @@ export const archievedTransaction = z.object({
   documentSubType:z.string(),
   remarks:z.string(),
   createdAt: z.string().datetime().optional(),
+  updatedAt:z.string().datetime().optional()
 
 })
 export const signedUrlData = z.object({
@@ -150,5 +151,15 @@ export const departmentEntities = z.object({
   position: z.string(),
   fullname: z.string(),
 });
+
+export const notification = z.object({
+  id:z.string().optional(),
+  createdAt: z.string().datetime(),
+  message:z.string(),
+  transactionId:z.string(),
+  forwarderId:z.string(),
+  receiverId:z.string(),
+  isRead: z.boolean()
+})
 export const signedUrlDataArray = z.array(signedUrlData);
 //Transaction Types

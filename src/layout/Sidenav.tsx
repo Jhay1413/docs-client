@@ -165,7 +165,7 @@ export const SideNav = () => {
           </li>
           <li className="relative inline-block text-left px-4 ">
             <NavLink
-              to={`/dashboard/transactions/archieved`}
+              to={`/dashboard/transactions/archived`}
               className={({ isActive }) => {
                 return `justify-start items-center flex w-full p-2 space-x-4 text-lg  rounded-md ${
                   isActive ? "bg-green-500 text-white" : ""

@@ -9,7 +9,7 @@ import { DashboardLayout } from "./routes/Layout";
 import { Profile } from "./pages/Profile";
 import { UserAccountList, UserForm, UserList } from "./features/users";
 import { Users } from "./pages/user-index";
-import { ArchievedList, HistoryComponent, InsertComponent, TransactionList, TransactionUpdateComponent } from "./features/transactions";
+import {ArchivedList, HistoryComponent, InsertComponent, TransactionList, TransactionUpdateComponent } from "./features/transactions";
 import { CompanyList } from "./features/companies";
 import { NotFound } from "./pages/404";
 import { Login } from "./pages/Login";
@@ -23,6 +23,7 @@ import { IncomingComponent } from "./features/transactions/components/table-data
 import { InboxComponent } from "./features/transactions/components/table-data/inbox-component";
 import { ViewHistory } from "./features/transactions/components/view-history";
 import { RouteGuard } from "./components/routeGuard/route-guard";
+
 
 
 const queryClient = new QueryClient();
@@ -73,7 +74,7 @@ function App() {
                 <Route path="inbox/:id" element={<InboxComponent/>} />
                 <Route path ="update/:id" element={<TransactionUpdateComponent/>}/>
                 <Route path ="log/:id" element={<ViewHistory/>}/>
-                <Route path = "archieved" element={<ArchievedList/>}/>
+                <Route path = "archived" element={<ArchivedList/>}/>
               </Route>
             </Route>
             <Route path="/" element={<PublicRoutes />}>
