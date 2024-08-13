@@ -12,10 +12,10 @@ interface NotificationState {
 }
 
 const useRealtimeStore = create<NotificationState>((set) => ({
-  socket: io("http://localhost:3001"), 
+  socket: io("https://docs-api-9r6n.onrender.com"), 
   receiverId:null,// Initialize the socket here
   initializeSocket: () => set((state) => ({
-    socket: io("http://localhost:3001"), // Reinitialize if needed
+    socket: io("https://docs-api-9r6n.onrender.com"), // Reinitialize if needed
   })),
   messages: [],
   addNotification: (message) => set((state) => ({ messages: [...state.messages, message] })),
