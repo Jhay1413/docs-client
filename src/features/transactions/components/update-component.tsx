@@ -19,9 +19,9 @@ import { useNotificationStore } from "@/global-states/notification-store";
 
 export const TransactionUpdateComponent = () => {
   const notification = useNotificationStore((state) => state.notification);
-  const refetch = useNotificationStore((state) => state.refetch);
-  const setNotification = useNotificationStore((state)=>state.setNotification)
-  // const refetch = useNotificationStore((state) => state.refetch);
+  const setNotification = useNotificationStore(
+    (state) => state.setNotification
+  );
   const { id } = useParams();
   const userId = getCurrentUserId();
   const { entities } = useCompanies("companies", "");
@@ -83,10 +83,7 @@ export const TransactionUpdateComponent = () => {
   useEffect(() => {
     async function isSuccess() {
       if (update.isSuccess) {
-        if (notification) {
-          setNotification(null)
-         await refetch!();
-        }
+        setNotification({incoming : notification?.incoming !== 0 ? notification?.incoming! : 0,inbox : notification?.inbox! - 1})
         navigate(`/dashboard/transactions/inbox/${userId}`);
       }
     }

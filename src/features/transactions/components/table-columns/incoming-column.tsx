@@ -3,19 +3,17 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
+  DropdownMenuLabel, DropdownMenuTrigger
 } from "@/components/ui/dropdown-menu";
 import { z } from "zod";
-import { Link } from "react-router-dom";
 import { ColumnDef } from "@tanstack/react-table";
 import { MoreHorizontal } from "lucide-react";
 import { transactionData } from "../../schema/TransactionSchema";
 import { Checkbox } from "@/components/ui/checkbox";
 import { useTransaction } from "../../hooks/query-gate";
-import { getCurrentAccountId, getCurrentUserId } from "@/hooks/use-user-hook";
+import { getCurrentAccountId } from "@/hooks/use-user-hook";
 import { useNotificationStore } from "@/global-states/notification-store";
+import { toast } from "react-toastify";
 
 type IncomingColumn = z.infer<typeof transactionData>;
 
@@ -106,8 +104,6 @@ export const incomingColumns: ColumnDef<IncomingColumn>[] = [
       const setNotification = useNotificationStore(
         (state) => state.setNotification
       );
-      const refetch = useNotificationStore((state)=>state.refetch)
-
       const transaction = row.original;
       const accountId = getCurrentAccountId();
       const { update } = useTransaction({
@@ -116,17 +112,21 @@ export const incomingColumns: ColumnDef<IncomingColumn>[] = [
         method: "UPDATEREMOVE",
       });
       const updateHistory = async () => {
-        const payload = {
-          id: transaction.transactionId,
-          receivedBy: accountId,
-          dateReceived: new Date(),
-        };
-        await update.mutateAsync(payload);
-        if (refetch) {
-          setNotification(null)
-          const result  = await refetch();
-          console.log(result)
+        try {
+          const payload = {
+            id: transaction.transactionId,
+            receivedBy: accountId,
+            dateReceived: new Date(),
+          };
+          await update.mutateAsync(payload);
+
+          setNotification({...notification,incoming : notification?.incoming === 0 ? 0 :  notification?.incoming! - 1 ,inbox : notification?.inbox! + 1})
+        } catch (error) {
+          console.log(error);
+          toast("Something went wrong please refresh the page ")
         }
+       
+
       };
       return (
         <DropdownMenu>
