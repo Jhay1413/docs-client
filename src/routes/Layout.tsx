@@ -6,83 +6,50 @@ import {
 } from "@/global-states/notification-store";
 import useRealtimeStore from "@/global-states/real-time-notification";
 import { getCurrentUserId } from "@/hooks/hooks/use-user-hook";
-import { useAllNotications, useNofications } from "@/hooks/use-custom-query";
 import { Header } from "@/layout/Header";
 import { SideNav } from "@/layout/Sidenav";
 import { useEffect } from "react";
 import { Outlet } from "react-router-dom";
 import { toast } from "react-toastify";
-import { io } from "socket.io-client";
 import { z } from "zod";
-
+const toastId= "notification-toast"
 export const DashboardLayout = () => {
-  const { socket } = useRealtimeStore();
-  const { messages, addNotification } = useRealtimeStore();
-  const currentUserId = getCurrentUserId();
-  const quantityNotif = useNotificationStore((state)=>state.notification)
+  const { socket, } = useRealtimeStore();
+  const currentUserId = getCurrentUserId()
   const setNotification = useNotificationStore(
     (state) => state.setNotification
   );
   const setAllNotification = useNotificationStore(
     (state) => state.setAllNotification
   );
-  const allNotifications = useNotificationStore(
-    (state) => state.allNotification
-  );
-  const setRefetch = useNotificationStore((state) => state.setRefetch);
-  const setRefetchAll = useNotificationStore((state) => state.setRefetchAll);
-
-  //needs to revise terms used
-  const { data, isLoading, error, refetch, isSuccess } = useNofications();
-  const {
-    data: allNotif,
-    isLoading: allNotifLoading,
-    error: errorNotif,
-    refetch: refetchAll,
-    isSuccess: isSuccessNotif,
-  } = useAllNotications();
-
-  useEffect(() => {
+  useEffect(()=>{
     socket.on(
-      "notification",
-      (
-        message: string,
-        notifications: z.infer<typeof notification>[],
-        quantityTracker: NotificationType
-      ) => {
-        console.log(notifications);
-        setAllNotification(notifications);
-        console.log(quantityTracker);
-        setNotification(quantityTracker);
-        toast(message);
-      }
-    );
-    socket.emit("register", currentUserId);
+        "notification",
+        (
+          message: string,
+          notifications: z.infer<typeof notification>[],
+          quantityTracker: NotificationType
+        ) => {
+            setNotification(quantityTracker)
+            setAllNotification(notifications)
+            if (message) {
+              toast(message,{
+                position:"bottom-right",
+                toastId:toastId
+              });
+            }
+          
+        }
+      );
+      socket.emit("register", currentUserId);
+  
+      return () => {
+        socket.off("notification");
+      };
 
-    return () => {
-      socket.off("message");
-    };
-  }, [socket]);
+  },[socket])
 
-  useEffect(() => {
-    refetchAll();
-    refetch();
-  }, []);
-  if (isLoading || allNotifLoading) return "loading";
 
-  if (data) {
-    if (!quantityNotif) {
-      setNotification(data);
-      setRefetch(refetch);
-    }
-  }
-  if (allNotif) {
-    console.log(allNotif);
-    if (!allNotifications) {
-      setAllNotification(allNotif);
-      setRefetchAll(refetchAll);
-    }
-  }
 
   return (
     <div className="flex flex-col min-h-screen min-w-screen bg-[#f4f4f4]">

@@ -459,7 +459,7 @@ export const TransactionForm = ({
                       onValueChange={(value) => {
                         field.onChange(value);
                       }}
-                      disabled={form.getValues("status") === "ARCHIEVED"}
+                      disabled={form.getValues("status") === "ARCHIVED"}
                     >
                       <SelectTrigger className="w-full">
                         <SelectValue placeholder="Forward to " />

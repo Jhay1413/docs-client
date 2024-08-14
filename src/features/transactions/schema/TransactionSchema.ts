@@ -117,6 +117,7 @@ export const transactionData = transactionFormData
     transactionLogs: z.array(transactionLogsData).optional(),
     completeStaffWork: z.array(completeStaffWork).optional(),
     percentage: z.string().optional(),
+    projectName:z.string().optional()
   })
   .omit({});
 

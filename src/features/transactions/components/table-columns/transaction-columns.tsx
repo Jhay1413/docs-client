@@ -44,6 +44,10 @@ export const transactionColumns: ColumnDef<TransactionInfo>[] = [
     accessorKey: "transactionId",
   },
   {
+    header: "Project Name",
+    accessorKey: "projectName",
+  },
+  {
     header: "Document type",
     accessorKey: "documentType",
   },
