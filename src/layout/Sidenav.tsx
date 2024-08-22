@@ -54,12 +54,12 @@ export const SideNav = () => {
               to={`/dashboard/overview`}
               className={({ isActive }) => {
                 return `justify-start items-center flex w-full p-2 space-x-4 text-lg  rounded-md ${
-                  isActive ? "bg-green-500 text-white" : ""
+                  isActive ? "bg-green-100/30 text-white" : ""
                 }`;
               }}
             >
-              <LayoutDashboard className="" />
-              <h1 className="text-md">Dashboard</h1>
+              <LayoutDashboard size={28} className="" />
+              <h1 className="text-base">Dashboard</h1>
             </NavLink>
           </li>
           <li className="relative inline-block text-left px-4 ">
@@ -67,13 +67,13 @@ export const SideNav = () => {
               to="/dashboard/companies"
               className={({ isActive }) => {
                 return `justify-start items-center flex w-full p-2 space-x-4 text-lg  rounded-md ${
-                  isActive ? "bg-green-500 text-white" : ""
+                  isActive ? "bg-green-100/30 text-white" : ""
                 }`;
               }}
             >
               <Factory />
 
-              <h1 className="text-md">Companies</h1>
+              <h1 className="text-base">Companies</h1>
             </NavLink>
           </li>
         </ul>
@@ -86,12 +86,12 @@ export const SideNav = () => {
               to="/dashboard/users/users-list"
               className={({ isActive }) => {
                 return `justify-start items-center flex w-full p-2 space-x-4 text-lg  rounded-md ${
-                  isActive ? "bg-green-500 text-white" : ""
+                  isActive ? "bg-green-100/30 text-white" : ""
                 }`;
               }}
             >
               <Users />
-              <h1 className="text-md">List of Users</h1>
+              <h1 className="text-base">List of Users</h1>
             </NavLink>
           </li>
           <li className="relative inline-block text-left px-4 ">
@@ -99,13 +99,13 @@ export const SideNav = () => {
               to="/dashboard/users/userAccount"
               className={({ isActive }) => {
                 return `justify-start items-center flex w-full p-2 space-x-4 text-lg  rounded-md ${
-                  isActive ? "bg-green-500 text-white" : ""
+                  isActive ? "bg-green-100/30 text-white" : ""
                 }`;
               }}
             >
               <UserSearch />
 
-              <h1 className="text-md">List of Accounts</h1>
+              <h1 className="text-base">List of Accounts</h1>
             </NavLink>
           </li>
         </ul>
@@ -118,13 +118,13 @@ export const SideNav = () => {
               to="/dashboard/transactions/list"
               className={({ isActive }) => {
                 return `justify-start items-center flex w-full p-2 space-x-4 text-lg  rounded-md ${
-                  isActive ? "bg-green-500 text-white" : ""
+                  isActive ? "bg-green-100/30 text-white" : ""
                 }`;
               }}
             >
               <FileText />
 
-              <h1 className="text-md">Transactions</h1>
+              <h1 className="text-base">Transactions</h1>
             </NavLink>
           </li>
           <li className="relative inline-block text-left px-4 ">
@@ -132,13 +132,13 @@ export const SideNav = () => {
               to={`/dashboard/transactions/inbox/${id}`}
               className={({ isActive }) => {
                 return `justify-start items-center flex w-full p-2 space-x-4 text-lg  rounded-md ${
-                  isActive ? "bg-green-500 text-white" : ""
+                  isActive ? "bg-green-100/30 text-white" : ""
                 }`;
               }}
             >
               <LibraryBig />
               <div className="flex gap-2">
-                <h1 className="text-md">Inbox</h1>
+                <h1 className="text-base">Inbox</h1>
                 {notification?.inbox !== 0 && (
                   <span className="text-red-700 text-sm font-extrabold">
                     {notification?.inbox}
@@ -152,13 +152,13 @@ export const SideNav = () => {
               to={`/dashboard/transactions/incoming-transaction/${id}`}
               className={({ isActive }) => {
                 return `justify-start items-center flex w-full p-2 space-x-4 text-lg  rounded-md ${
-                  isActive ? "bg-green-500 text-white" : ""
+                  isActive ? "bg-green-100/30 text-white" : ""
                 }`;
               }}
             >
               <ClipboardList />
               <div className="flex gap-2">
-                <h1 className="text-md">Incoming files</h1>
+                <h1 className="text-base">Incoming files</h1>
                 {notification?.incoming !== 0 && (
                   <span className="text-red-700 text-sm font-extrabold">
                     {notification?.incoming}
@@ -172,13 +172,13 @@ export const SideNav = () => {
               to={`/dashboard/transactions/archived`}
               className={({ isActive }) => {
                 return `justify-start items-center flex w-full p-2 space-x-4 text-lg  rounded-md ${
-                  isActive ? "bg-green-500 text-white" : ""
+                  isActive ? "bg-green-100/30 text-white" : ""
                 }`;
               }}
             >
               <FileCode />
               <div className="flex gap-2">
-                <h1 className="text-md">Archive</h1>
+                <h1 className="text-base">Archive</h1>
               </div>
             </NavLink>
           </li>
@@ -194,7 +194,7 @@ export const SideNav = () => {
               className="justify-start items-center flex w-full p-2 space-x-4 text-lg  rounded-md"
             >
               <LogOut />
-              <h1 className="text-md font-normal">Logout</h1>
+              <h1 className="text-base font-normal">Logout</h1>
             </Button>
           </li>
         </ul>

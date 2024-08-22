@@ -42,6 +42,16 @@ export const transactionColumns: ColumnDef<TransactionInfo>[] = [
   {
     header: "ID",
     accessorKey: "transactionId",
+    cell: ({ row }) => {
+      const data = row.original;
+
+      return (
+        <div className="w-32">
+          <h1>{data.transactionId}</h1>
+        
+        </div>
+      );
+    },
   },
   {
     header: "Project Name",
@@ -50,6 +60,16 @@ export const transactionColumns: ColumnDef<TransactionInfo>[] = [
   {
     header: "Document type",
     accessorKey: "documentType",
+    cell: ({ row }) => {
+      const data = row.original;
+
+      return (
+        <div className="w-32">
+          <h1>{data.documentType}</h1>
+        
+        </div>
+      );
+    },
   },
   {
     header: "Document sub type",
@@ -66,7 +86,7 @@ export const transactionColumns: ColumnDef<TransactionInfo>[] = [
       const data = row.original;
 
       return (
-        <div className="">
+        <div className="w-32">
           <h1>{data.forwarder?.accountRole}</h1>
           <h1>{data.originDepartment}</h1>
         </div>
@@ -80,7 +100,7 @@ export const transactionColumns: ColumnDef<TransactionInfo>[] = [
       const data = row.original;
 
       return (
-        <div className="">
+        <div className="w-32">
           <h1>{data.receiver?.accountRole}</h1>
           <h1>{data.targetDepartment}</h1>
         </div>
@@ -113,7 +133,7 @@ export const transactionColumns: ColumnDef<TransactionInfo>[] = [
       const transactionInfo = row.original;
 
       return (
-        <div className="">
+        <div className="w-32">
           <span>{new Date(transactionInfo.dueDate!).toDateString()}</span>
         </div>
       );
