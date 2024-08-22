@@ -51,6 +51,7 @@ export const LoginForm = () => {
   };
   return (
     <div className="flex flex-col w-full ">
+      
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(onSubmit)}
@@ -61,7 +62,7 @@ export const LoginForm = () => {
             name="email"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Email</FormLabel>
+                <FormLabel className="text-muted-foreground">Email</FormLabel>
                 <FormControl>
                   <Input placeholder="Email" {...field} />
                 </FormControl>
@@ -73,14 +74,14 @@ export const LoginForm = () => {
             name="password"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Password</FormLabel>
+                <FormLabel className="text-muted-foreground">Password</FormLabel>
                 <FormControl>
                   <Input type="password" placeholder="password" {...field} />
                 </FormControl>
               </FormItem>
             )}
           />
-          <Button type="submit" disabled = {isLoading}>{isLoading ? "Loading" : "Login"}</Button>
+          <Button className="bg-primaryColor text-sm  " type="submit" disabled = {isLoading}>{isLoading ? "Loading" : "Login"}</Button>
         </form>
       </Form>
     </div>

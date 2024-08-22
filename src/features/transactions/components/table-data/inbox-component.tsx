@@ -18,10 +18,14 @@ export const InboxComponent = () => {
   if (!validateData.success || !validateData.data) return "Something went wrong ! ";
   return (
     <div className="flex flex-col gap-y-6">
-      <span>
-        <h1 className="text-4xl">Inbox</h1>
-      </span>
-
+      <div className="flex justify-start w-full flex-col ">
+        <h1 className="text-[#404041] font-medium text-[28px]">
+          Inbox
+        </h1>
+        <p className="text-muted-foreground text-[12px]">
+          Lorem ipsum dolor sit amet, consectetur adipiscing.
+        </p>
+      </div>
       <DataTable columns={inboxColumn} data={validateData.data} />
     </div>
   );

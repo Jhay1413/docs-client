@@ -58,7 +58,7 @@ export const DashboardLayout = () => {
       </div>
 
       <div className="grow flex max-h-full">
-        <ScrollArea className="h-[calc(100vh-90px)] w-[250px] bg-white mt-2">
+        <ScrollArea className="h-[calc(100vh-80px)] w-[250px] bg-secondaryColor text-white">
           <SideNav />
         </ScrollArea>
         <div className="grow overflow-auto flex items-center justify-center px-2 ">

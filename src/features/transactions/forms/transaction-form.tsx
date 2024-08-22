@@ -17,9 +17,10 @@ import {
 } from "@/components/ui/popover";
 import {
   Select,
-  SelectContent, SelectItem,
+  SelectContent,
+  SelectItem,
   SelectTrigger,
-  SelectValue
+  SelectValue,
 } from "@/components/ui/select";
 import {
   Table,
@@ -35,7 +36,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { cn } from "@/lib/utils";
 
 import { format } from "date-fns";
-import { CalendarIcon } from "lucide-react";
+import { CalendarIcon, X } from "lucide-react";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { SubmitHandler, useFieldArray, useForm } from "react-hook-form";
 
@@ -67,7 +68,7 @@ import {
   CommandGroup,
   CommandInput,
   CommandItem,
-  CommandList
+  CommandList,
 } from "@/components/ui/command";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import { useTransactions } from "../hooks/query-gate";
@@ -119,15 +120,15 @@ export const TransactionForm = ({
   );
   const filteredCompany = company?.find((data) => data.id === selectedCompany);
   const project = filteredCompany?.companyProjects;
-  console.log(selectedDivision , "division");
-  console.log(team,"team")
+  console.log(selectedDivision, "division");
+  console.log(team, "team");
   const filterdForwardedTo = useForwardedToUser(
     validateEntities.data,
     role,
     selectedDivision,
     team
-  )
-  console.log(filterdForwardedTo)
+  );
+  console.log(filterdForwardedTo);
   const form = useForm<z.infer<typeof transactionFormData>>({
     resolver: zodResolver(transactionFormData),
     mode: "onSubmit",
@@ -151,7 +152,7 @@ export const TransactionForm = ({
           documentSubType: defaultValue?.documentSubType,
           attachments: defaultValue.attachments?.sort((a, b) =>
             (b.fileUrl || "").localeCompare(a.fileUrl || "")
-          )
+          ),
         }
       : {
           dateForwarded: new Date().toISOString(),
@@ -209,15 +210,16 @@ export const TransactionForm = ({
       fileInputRef!.current![index]!.click();
     }
   };
-  const onError = () =>{
-    if(form.formState.errors) toast.error("Please check all required fields . ",{
-      position: "bottom-right",
-    })
-  }
+  const onError = () => {
+    if (form.formState.errors)
+      toast.error("Please check all required fields . ", {
+        position: "bottom-right",
+      });
+  };
   return (
     <div className="w-full h-full bg-white p-4 rounded-lg">
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit,onError)}>
+        <form onSubmit={form.handleSubmit(onSubmit, onError)}>
           <div className="grid grid-cols-3 gap-12 ">
             <FormField
               control={form.control}
@@ -757,6 +759,13 @@ export const TransactionForm = ({
                               </Button>
                             </div>
                           </div>
+                        </div>
+                      </TableCell>
+                      <TableCell className="w-32 ">
+                        <div className="flex w-full items-center justify-center">
+                          <button type="button" onClick={()=>remove(index)}  >
+                            <X className="text-red-800" />
+                          </button>
                         </div>
                       </TableCell>
                     </TableRow>

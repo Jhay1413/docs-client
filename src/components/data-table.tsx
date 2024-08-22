@@ -9,7 +9,6 @@ import {
   useReactTable,
   ColumnFiltersState,
   VisibilityState,
-  
 } from "@tanstack/react-table";
 import {
   Table,
@@ -28,6 +27,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
+import { Search,Text } from "lucide-react";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -42,6 +42,7 @@ export function DataTable<TData, TValue>({
   const [filtering, setFiltering] = useState("");
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
   const [rowSelection, setRowSelection] = useState({});
+
   const table = useReactTable({
     data,
     columns,
@@ -66,19 +67,23 @@ export function DataTable<TData, TValue>({
   return (
     <div className="w-full h-full flex flex-col items-center justify-center space-y-12 ">
       <div className="flex flex-col w-full items-center justify-center">
-        <div className="flex  w-full items-center justify-center">
-          <div className="flex items-center py-4 justify-start w-full">
+        <div className="flex  w-full items-center justify-center gap-2">
+          <div className="flex items-center py-4 justify-end w-full ">
             <Input
               placeholder="Search ...."
               value={filtering}
               onChange={(event) => setFiltering(event.target.value)}
-              className="max-w-sm"
+              className="w-[289px] rounded-none focus:outline-none focus:border-transparent"
             />
+            <button className="p-2 bg-primaryColor text-white">
+              <Search />
+            </button>
           </div>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="outline" className="ml-auto">
-                Columns
+              <Button variant="outline" className="ml-auto flex gap-2">
+              <Text />
+              <h1>Filter By</h1>
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
@@ -104,12 +109,12 @@ export function DataTable<TData, TValue>({
         </div>
 
         <Table>
-          <TableHeader>
+          <TableHeader className="bg-[#BBD979]">
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id}>
                 {headerGroup.headers.map((header) => {
                   return (
-                    <TableHead className="" key={header.id}>
+                    <TableHead className="text-black" key={header.id}>
                       {header.isPlaceholder
                         ? null
                         : flexRender(

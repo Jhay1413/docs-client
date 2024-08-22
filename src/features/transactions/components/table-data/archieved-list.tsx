@@ -18,7 +18,19 @@ export const ArchivedList= () => {
   if (!validateData.data || !validateData.success) return "Error data ! ";
 
   return (
-    <div className="flex flex-col gap-4">
+    <div className="flex flex-col ">
+       <div className="flex flex-col w-full items-center justify-center p-4 bg-white rounded-lg">
+      <div className="flex justify-start w-full flex-col ">
+        <h1 className="text-[#404041] font-medium text-[28px]">
+          List of Archive Transactions
+        </h1>
+        <p className="text-muted-foreground text-[12px]">
+          Lorem ipsum dolor sit amet, consectetur adipiscing.
+        </p>
+      </div>
+      
+        
+      </div>
       <DataTable columns={archivedColumn} data={validateData.data} />
     </div>
   );

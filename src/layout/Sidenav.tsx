@@ -2,10 +2,13 @@ import {
   ClipboardList,
   Factory,
   FileCode,
+  FileText,
   LayoutDashboard,
   LibraryBig,
   LogOut,
   UserRoundPlus,
+  UserSearch,
+  Users
 } from "lucide-react";
 import { NavLink, useNavigate } from "react-router-dom";
 
@@ -19,7 +22,7 @@ import { useQueryClient } from "@tanstack/react-query";
 
 export const SideNav = () => {
   const notification = useNotificationStore((state) => state.notification);
-  const queryClient = useQueryClient(); 
+  const queryClient = useQueryClient();
   console.log(notification);
   const id = getCurrentUserId();
 
@@ -40,10 +43,10 @@ export const SideNav = () => {
     <div className="flex flex-col gap-4 w-full min-h-full ">
       <div className="h-24"></div>
       <div className="flex flex-col w-full min-h-full items-center gap-6">
-        <Label className="text-muted-foreground px-4 font-medium flex w-full text-sm">
+        <Label className="text-[#DCFF8E] px-4 font-medium flex w-full text-sm">
           MENU
         </Label>
-        <ul className="flex flex-col  space-y-4 w-full   mx-2 text-gray-500 ">
+        <ul className="flex flex-col  space-y-4 w-full   mx-2 ">
           <li className="relative inline-block text-left px-4 ">
             <NavLink
               to={`/dashboard/overview`}
@@ -72,10 +75,10 @@ export const SideNav = () => {
             </NavLink>
           </li>
         </ul>
-        <Label className="text-muted-foreground px-4 font-medium flex w-full text-sm">
+        <Label className="text-[#DCFF8E] px-4 font-medium flex w-full text-sm">
           USERS & ACCOUNTS
         </Label>
-        <ul className="flex flex-col  space-y-4 w-full   mx-2 text-gray-500">
+        <ul className="flex flex-col  space-y-4 w-full   mx-2">
           <li className="relative inline-block text-left px-4 ">
             <NavLink
               to="/dashboard/users/users-list"
@@ -85,8 +88,7 @@ export const SideNav = () => {
                 }`;
               }}
             >
-              <UserRoundPlus />
-
+              <Users />
               <h1 className="text-md">List of Users</h1>
             </NavLink>
           </li>
@@ -99,26 +101,26 @@ export const SideNav = () => {
                 }`;
               }}
             >
-              <UserRoundPlus />
+              <UserSearch />
 
               <h1 className="text-md">List of Accounts</h1>
             </NavLink>
           </li>
         </ul>
-        <Label className="text-muted-foreground px-4 font-medium flex w-full text-sm">
+        <Label className="text-[#DCFF8E] px-4 font-medium flex w-full text-sm">
           TRANSACTIONS
         </Label>
-        <ul className="flex flex-col  space-y-4 w-full   mx-2 text-gray-500">
+        <ul className="flex flex-col  space-y-4 w-full   mx-2">
           <li className="relative inline-block text-left px-4 ">
             <NavLink
-               to="/dashboard/transactions/list"
+              to="/dashboard/transactions/list"
               className={({ isActive }) => {
                 return `justify-start items-center flex w-full p-2 space-x-4 text-lg  rounded-md ${
                   isActive ? "bg-green-500 text-white" : ""
                 }`;
               }}
             >
-              <UserRoundPlus />
+              <FileText />
 
               <h1 className="text-md">Transactions</h1>
             </NavLink>
@@ -152,7 +154,7 @@ export const SideNav = () => {
                 }`;
               }}
             >
-             <ClipboardList />
+              <ClipboardList />
               <div className="flex gap-2">
                 <h1 className="text-md">Incoming files</h1>
                 {notification?.incoming !== 0 && (
@@ -179,20 +181,20 @@ export const SideNav = () => {
             </NavLink>
           </li>
         </ul>
-        <Label className="text-muted-foreground px-4 font-medium flex w-full text-sm">
+        <Label className="text-[#DCFF8E] px-4 font-medium flex w-full text-sm">
           SETTINGS
         </Label>
-        <ul className="flex flex-col  space-y-4 w-full   mx-2 text-gray-500 ">
-        <li className="relative inline-block text-left text-sm px-4">
-          <Button
-            variant="ghost"
-            onClick={() => logout()}
-            className="justify-start items-center flex w-full p-2 space-x-4 text-lg  rounded-md"
-          >
-            <LogOut />
-            <h1 className="text-md font-normal">Logout</h1>
-          </Button>
-        </li>
+        <ul className="flex flex-col  space-y-4 w-full   mx-2 ">
+          <li className="relative inline-block text-left text-sm px-4">
+            <Button
+              variant="ghost"
+              onClick={() => logout()}
+              className="justify-start items-center flex w-full p-2 space-x-4 text-lg  rounded-md"
+            >
+              <LogOut />
+              <h1 className="text-md font-normal">Logout</h1>
+            </Button>
+          </li>
         </ul>
       </div>
     </div>

@@ -40,7 +40,14 @@ export const IncomingComponent = () => {
 
   return (
     <div className="flex flex-col gap-y-4 ">
-      <h1 className="text-4xl">Incoming Transaction</h1>
+      <div className="flex justify-start w-full flex-col ">
+        <h1 className="text-[#404041] font-medium text-[28px]">
+          Incoming
+        </h1>
+        <p className="text-muted-foreground text-[12px]">
+          Lorem ipsum dolor sit amet, consectetur adipiscing.
+        </p>
+      </div>
       <DataTable columns={incomingColumns} data={validatedData.data} />
     </div>
   );
