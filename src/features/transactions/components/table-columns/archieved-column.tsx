@@ -12,6 +12,10 @@ import { Link } from "react-router-dom";
 import { ColumnDef } from "@tanstack/react-table";
 import { MoreHorizontal } from "lucide-react";
 import { archivedTransaction } from "../../schema/TransactionSchema";
+import {
+  getCurrentUserId,
+  useCurrentUserRole,
+} from "@/hooks/hooks/use-user-hook";
 
 type TArchieved = z.infer<typeof archivedTransaction>;
 
@@ -104,7 +108,7 @@ export const archivedColumn: ColumnDef<TArchieved>[] = [
     id: "actions",
     cell: ({ row }) => {
       const data = row.original;
-
+      const currentUser = useCurrentUserRole();
       return (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
@@ -120,6 +124,13 @@ export const archivedColumn: ColumnDef<TArchieved>[] = [
                 View Details
               </Link>
             </DropdownMenuItem>
+            {currentUser === "RECORDS" && (
+              <DropdownMenuItem>
+                <Link to={`/dashboard/transactions/update/${data.id}`}>
+                  Edit
+                </Link>
+              </DropdownMenuItem>
+            )}
 
             <DropdownMenuSeparator />
           </DropdownMenuContent>
