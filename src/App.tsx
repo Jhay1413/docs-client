@@ -23,6 +23,7 @@ import { IncomingComponent } from "./features/transactions/components/table-data
 import { InboxComponent } from "./features/transactions/components/table-data/inbox-component";
 import { ViewHistory } from "./features/transactions/components/view-history";
 import { RouteGuard } from "./components/routeGuard/route-guard";
+import { DashboardNewLayout } from "./routes/new-layout";
 
 
 
@@ -50,7 +51,7 @@ function App() {
               path="dashboard/"
               element={
                 <RouteGuard>
-                  <DashboardLayout />
+                  <DashboardNewLayout />
                 </RouteGuard>
               }
             >

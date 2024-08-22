@@ -40,8 +40,10 @@ export const SideNav = () => {
   };
 
   return (
-    <div className="flex flex-col gap-4 w-full min-h-full ">
-      <div className="h-24"></div>
+    <div className="flex flex-col gap-4 w-full min-h-full pb-8 ">
+       <div className="flex items-center justify-center h-32 ">
+        <img src="/Logov6.png" className="h-[32px] w-[151px] " />
+      </div>
       <div className="flex flex-col w-full min-h-full items-center gap-6">
         <Label className="text-[#DCFF8E] px-4 font-medium flex w-full text-sm">
           MENU

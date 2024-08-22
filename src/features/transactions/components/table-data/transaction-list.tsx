@@ -7,6 +7,8 @@ import { z } from "zod";
 import { transactionData } from "../../schema/TransactionSchema";
 import PermissionsGate from "@/components/permissionGate/permission-gate";
 import { SCOPES } from "@/components/permissionGate/permission-map";
+import { ScrollArea } from "@radix-ui/react-scroll-area";
+import { ScrollBar } from "@/components/ui/scroll-area";
 
 export const TransactionList = () => {
   const { entities } = useTransactions("transactions", "/v2");
@@ -28,7 +30,7 @@ export const TransactionList = () => {
           List of Transactions
         </h1>
         <p className="text-muted-foreground text-[12px]">
-        Review the details below to track and manage recent activities.
+          Review the details below to track and manage recent activities.
         </p>
       </div>
       <div className="flex  bg-black w-full relative">
@@ -44,10 +46,13 @@ export const TransactionList = () => {
           </div>
         </PermissionsGate>
       </div>
-      <DataTable
-        columns={transactionColumns}
-        data={validatedData.data}
-      ></DataTable>
+     
+        <DataTable
+          columns={transactionColumns}
+          data={validatedData.data}
+        ></DataTable>
+        
+    
     </div>
   );
 };

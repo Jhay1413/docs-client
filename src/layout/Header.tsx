@@ -24,10 +24,7 @@ export const Header = () => {
     setOpenNotif(!openNotif);
   };
   return (
-    <div className="flex w-full justify-between shadow-lg">
-      <div className="flex items-center ml-6 ">
-        <img src="/Logov2.png" className="h-[32px] w-[151px] " />
-      </div>
+    <div className="flex w-full justify-end items-center ">
       <div className="flex items-center mr-6">
         <div className="flex justify-center items-center gap-4">
           <div className="w-[400px] h-[77px] relative ">
@@ -87,7 +84,7 @@ export const Header = () => {
               )}
             </div>
           </div>
-          <button>
+          <button className="flex justify-center items-center relative rounded-full bg-white  w-[44px] h-[44px]">
             <Settings className=" w-[20px] h-[20px]" />
           </button>
           <div className="flex  items-center justify-center">

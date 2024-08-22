@@ -27,7 +27,8 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
-import { Search,Text } from "lucide-react";
+import { Search, Text } from "lucide-react";
+import { ScrollArea, ScrollBar } from "./ui/scroll-area";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -82,8 +83,8 @@ export function DataTable<TData, TValue>({
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="outline" className="ml-auto flex gap-2">
-              <Text />
-              <h1>Filter By</h1>
+                <Text />
+                <h1>Filter By</h1>
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
@@ -131,7 +132,7 @@ export function DataTable<TData, TValue>({
             {table.getRowModel().rows?.length ? (
               table.getRowModel().rows.map((row) => (
                 <TableRow
-                  className="text-xs"
+                  className="text-[12px]"
                   key={row.id}
                   data-state={row.getIsSelected() && "selected"}
                 >
