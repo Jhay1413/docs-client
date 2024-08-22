@@ -74,9 +74,9 @@ export function DataTable<TData, TValue>({
               placeholder="Search ...."
               value={filtering}
               onChange={(event) => setFiltering(event.target.value)}
-              className="w-[289px] rounded-none focus:outline-none focus:border-transparent"
+              className="w-[289px] rounded-none  rounded-l-md"
             />
-            <button className="p-2 bg-primaryColor text-white">
+            <button className="p-2 bg-primaryColor text-white rounded-r-md ">
               <Search />
             </button>
           </div>
