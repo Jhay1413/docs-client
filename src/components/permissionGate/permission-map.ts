@@ -6,7 +6,8 @@ export const ROLES = {
   CH:"CH",
   MANAGER:"MANAGER",
   RECORDS:"RECORDS",
-  QA:"QA"
+  QA:"QA",
+  GUEST:"GUEST"
 };
 
 export const SCOPES = {
@@ -30,5 +31,6 @@ export const PERMISSIONS = {
   [ROLES.CH] :[SCOPES.canView],
   [ROLES.MANAGER]:[SCOPES.canView],
   [ROLES.CH]:[SCOPES.canView],
+  [ROLES.GUEST]:[SCOPES.canView],
   [ROLES.RECORDS]:[SCOPES.canCreate,SCOPES.canView]
 };
