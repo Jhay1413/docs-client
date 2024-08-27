@@ -36,13 +36,13 @@ const chartConfig = {
 } satisfies ChartConfig
 export function PriorityBarChart() {
   return (
-    <Card className=" w-full h-full  absolute inset-0 flex flex-col">
-    <CardHeader>
-      <CardTitle>Bar Chart - Custom Label</CardTitle>
-      <CardDescription>January - June 2024</CardDescription>
-    </CardHeader>
-    <CardContent className="flex-grow w-full h-full">
-      <ChartContainer config={chartConfig} >
+    <Card className=" absolute inset-0 flex flex-col">
+      <CardHeader>
+        <CardTitle>Bar Chart - Custom Label</CardTitle>
+        <CardDescription>January - June 2024</CardDescription>
+      </CardHeader>
+      <CardContent className="flex-grow w-full relative h-full">
+        <ChartContainer config={chartConfig} className="absolute h-full  ">
           <BarChart accessibilityLayer data={chartData}>
             <CartesianGrid vertical={false} />
             <XAxis

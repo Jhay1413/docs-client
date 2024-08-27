@@ -52,7 +52,7 @@ export const DashboardNewLayout = () => {
 
   return (
     <div className="flex justify-start min-h-screen max-h-screen w-full bg-[#f4f4f4] overflow-hidden ">
-      <div className={`max-h-screen w-[250px] bg-secondaryColor rounded-r-xl text-white ${open ? "hidden" : "flex"}`}>
+      <div className={`max-h-screen w-[250px] bg-secondaryColor rounded-r-xl text-white ${open ? "flex" : "hidden"}`}>
         <ScrollArea className="flex max-h-screen w-full text-white ">
           <SideNav />
         </ScrollArea>
