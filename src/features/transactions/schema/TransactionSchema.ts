@@ -31,9 +31,9 @@ export const filesSchema = z.object({
     }, "Image is required")
     .refine((files) => {
       return Array.from(files ?? []).every(
-        (file) => sizeInMB(file.size) <= MAX_FILE_SIZE_10MB
+        (file) => sizeInMB(file.size) <= MAX_FILE_SIZE_50MB
       );
-    }, `The maximum image size is ${MAX_FILE_SIZE_10MB}MB`)
+    }, `The maximum image size is ${MAX_FILE_SIZE_50MB}MB`)
     .refine((files) => {
       return Array.from(files ?? []).every((file) =>
         ACCEPTED_FILE_TYPES.includes(file.type)
