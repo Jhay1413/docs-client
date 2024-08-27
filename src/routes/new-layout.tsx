@@ -5,6 +5,7 @@ import {
   useNotificationStore,
 } from "@/global-states/notification-store";
 import useRealtimeStore from "@/global-states/real-time-notification";
+import useSidebarState from "@/global-states/sidebar-function-store";
 import { getCurrentUserId } from "@/hooks/hooks/use-user-hook";
 import { Header } from "@/layout/Header";
 import { SideNav } from "@/layout/Sidenav";
@@ -16,6 +17,8 @@ const toastId = "notification-toast";
 export const DashboardNewLayout = () => {
   const { socket } = useRealtimeStore();
   const currentUserId = getCurrentUserId();
+  const {open} = useSidebarState()
+
   const setNotification = useNotificationStore(
     (state) => state.setNotification
   );
@@ -48,8 +51,8 @@ export const DashboardNewLayout = () => {
   }, [socket]);
 
   return (
-    <div className="flex justify-start min-h-screen max-h-screen min-w-screen bg-[#f4f4f4] overflow-hidden ">
-      <div className="flex max-h-screen min-w-[250px] bg-secondaryColor rounded-r-xl text-white ">
+    <div className="flex justify-start min-h-screen max-h-screen w-full bg-[#f4f4f4] overflow-hidden ">
+      <div className={`max-h-screen w-[250px] bg-secondaryColor rounded-r-xl text-white ${open ? "hidden" : "flex"}`}>
         <ScrollArea className="flex max-h-screen w-full text-white ">
           <SideNav />
         </ScrollArea>
@@ -59,7 +62,7 @@ export const DashboardNewLayout = () => {
           <Header />
         </div>
 
-        <ScrollArea className="max-h-full   bg-white w-full rounded-sm p-4 my-2">
+        <ScrollArea className="max-h-full min-w-full rounded-sm p-4 my-2">
           <Outlet />
           <ScrollBar orientation="horizontal" />
         </ScrollArea>

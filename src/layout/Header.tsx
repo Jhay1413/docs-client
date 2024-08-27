@@ -1,13 +1,14 @@
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { useNotificationStore } from "@/global-states/notification-store";
+import useSidebarState from "@/global-states/sidebar-function-store";
 import {
   getCurrentUserId,
   useCurrentUserFirstName,
 } from "@/hooks/hooks/use-user-hook";
 import { Avatar, AvatarFallback, AvatarImage } from "@radix-ui/react-avatar";
 
-import { Bell, Dot, Settings } from "lucide-react";
+import { Bell, Dot, ListCollapse, Settings } from "lucide-react";
 import { useState } from "react";
 import { Link } from "react-router-dom";
 
@@ -15,6 +16,7 @@ export const Header = () => {
   const userFirstName = useCurrentUserFirstName();
   const id = getCurrentUserId();
   const { allNotification } = useNotificationStore();
+  const { open, setIsOpen } = useSidebarState();
   const numOfUnreadNotif = allNotification?.filter(
     (data) => data.isRead === false
   ).length;
@@ -23,9 +25,29 @@ export const Header = () => {
   const openNotification = () => {
     setOpenNotif(!openNotif);
   };
+  const setSideBarState = () =>{
+   
+    setIsOpen(!open);
+  }
   return (
-    <div className="flex w-full justify-end items-center ">
-      <div className="flex items-center mr-6">
+    <div className="flex w-full between items-center ">
+      <div className="flex w-full ">
+      <button
+        className="flex justify-center items-center relative rounded-full bg-white w-[44px] h-[44px] transition-transform duration-300"
+        onClick={setSideBarState}
+        type="button"
+      >
+        <ListCollapse
+          className={`w-[20px] h-[20px] transform transition-transform duration-300 ${
+            open ? 'rotate-180' : 'rotate-0'
+          }`}
+        />
+          <span className="absolute top-0 right-4 text-red-500 font-black">
+            {numOfUnreadNotif ? numOfUnreadNotif : ""}
+          </span>
+        </button>
+      </div>
+      <div className="flex items-center justify-end w-full  mr-6">
         <div className="flex justify-center items-center gap-4">
           <div className="w-[400px] h-[77px] relative ">
             <div className="flex w-full h-full">

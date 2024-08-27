@@ -54,9 +54,12 @@ export const DashboardLayout = () => {
       </div>
 
       <div className="grow flex max-h-full">
-        <ScrollArea className="h-[calc(100vh-80px)] w-[250px] bg-secondaryColor text-white">
-          <SideNav />
-        </ScrollArea>
+        <div className="hidden ">
+          <ScrollArea className="h-[calc(100vh-80px)] w-[250px] bg-secondaryColor text-white ">
+            <SideNav />
+          </ScrollArea>
+        </div>
+
         <div className="grow overflow-auto flex items-center justify-center px-2 max-w-[calc(100vw-250px)] ">
           <ScrollArea className="h-[calc(100vh-90px)] bg-white w-full rounded-sm p-8">
             <Outlet />
