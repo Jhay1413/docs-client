@@ -41,11 +41,11 @@ const FormTextArea = ({
       control={control}
       name={name}
       render={({ field }) => (
-        <FormItem>
+        <FormItem    className="w-full h-full"> 
           <FormLabel>{label}</FormLabel>
-          <FormControl>
+          <FormControl className="w-full h-full">
             <Textarea
-              
+              className="grow"
               placeholder={placeholder}
               {...field}
               disabled={disable}

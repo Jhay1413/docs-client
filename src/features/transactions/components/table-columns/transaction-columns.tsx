@@ -46,7 +46,7 @@ export const transactionColumns: ColumnDef<TransactionInfo>[] = [
       const data = row.original;
 
       return (
-        <div className="w-32">
+        <div className="" >
           <h1>{data.transactionId}</h1>
         
         </div>
@@ -64,7 +64,7 @@ export const transactionColumns: ColumnDef<TransactionInfo>[] = [
       const data = row.original;
 
       return (
-        <div className="w-32">
+        <div >
           <h1>{data.documentType}</h1>
         
         </div>
@@ -86,7 +86,7 @@ export const transactionColumns: ColumnDef<TransactionInfo>[] = [
       const data = row.original;
 
       return (
-        <div className="w-32">
+        <div  className="">
           <h1>{data.forwarder?.accountRole}</h1>
           <h1>{data.originDepartment}</h1>
         </div>
@@ -100,7 +100,7 @@ export const transactionColumns: ColumnDef<TransactionInfo>[] = [
       const data = row.original;
 
       return (
-        <div className="w-32">
+        <div>
           <h1>{data.receiver?.accountRole}</h1>
           <h1>{data.targetDepartment}</h1>
         </div>
@@ -133,7 +133,7 @@ export const transactionColumns: ColumnDef<TransactionInfo>[] = [
       const transactionInfo = row.original;
 
       return (
-        <div className="w-32">
+        <div className="">
           <span>{new Date(transactionInfo.dueDate!).toDateString()}</span>
         </div>
       );

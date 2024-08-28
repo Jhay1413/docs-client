@@ -62,7 +62,7 @@ export const DashboardNewLayout = () => {
           <Header />
         </div>
 
-        <ScrollArea className="max-h-full min-w-full rounded-sm p-4 my-2">
+        <ScrollArea className="max-h-full max-[100%-250px] overflow-auto rounded-sm p-4 my-2">
           <Outlet />
           <ScrollBar orientation="horizontal" />
         </ScrollArea>
