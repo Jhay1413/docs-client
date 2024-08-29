@@ -33,6 +33,7 @@ export const DashboardNewLayout = () => {
         notifications: z.infer<typeof notification>[],
         quantityTracker: NotificationType
       ) => {
+        console.log(notifications);
         setNotification(quantityTracker);
         setAllNotification(notifications);
         if (message) {
