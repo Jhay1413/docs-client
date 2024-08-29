@@ -44,6 +44,7 @@ export const DashboardNewLayout = () => {
         }
       }
     );
+
     socket.emit("register", currentUserId);
 
     return () => {

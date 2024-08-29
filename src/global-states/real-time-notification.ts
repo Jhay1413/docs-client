@@ -18,6 +18,8 @@ const useRealtimeStore = create<NotificationState>((set) => {
     mode == "DEVELOPMENT"
       ? import.meta.env.VITE_DEV_API
       : import.meta.env.VITE_PROD_API;
+
+      console.log(backendUrl)
   return {
     socket: io(backendUrl),
     //socket: io("http://localhost:3001"),
