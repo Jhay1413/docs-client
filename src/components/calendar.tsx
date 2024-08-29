@@ -1,5 +1,5 @@
-import React, { useMemo, useCallback } from 'react';
-import { Calendar, momentLocalizer, Event, Views } from 'react-big-calendar';
+import React, { useMemo, useCallback, useState } from 'react';
+import { Calendar, momentLocalizer, Event, Views, SlotInfo } from 'react-big-calendar';
 import moment from 'moment';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 
@@ -12,6 +12,7 @@ interface CustomEvent extends Event {
 }
 
 const MyCalendar: React.FC = () => {
+  const [newEvents, setEvents] = useState<any[]>([]);
   const events: CustomEvent[] = useMemo(() => [
     {
       title: 'Team Meeting',
@@ -33,17 +34,32 @@ const MyCalendar: React.FC = () => {
   const handleSelectEvent = useCallback((event: CustomEvent) => {
     alert(`Event: ${event.title}`);
   }, []);
-
+  const handleSelectSlot = (slotInfo: SlotInfo) => {
+    const title = window.prompt('Enter the title for the new event');
+    if (title) {
+      setEvents([
+        ...newEvents,
+        {
+          title,
+          start: slotInfo.start,
+          end: slotInfo.end,
+          allDay: slotInfo.action === 'doubleClick' ? false : true,
+        },
+      ]);
+    }
+  };
   return (
     <div className='absolute w-full h-full '>
       <Calendar
-        localizer={localizer}
+        localizer={localizer} 
         events={events}
         startAccessor="start"
         endAccessor="end"
+        selectable
         style={{ position: "absolute", height:"100%", width:"100%"}}
         defaultView={Views.MONTH}
         onSelectEvent={handleSelectEvent}
+        onSelectSlot={handleSelectSlot}
       />
     </div>
   );

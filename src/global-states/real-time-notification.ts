@@ -14,12 +14,15 @@ interface NotificationState {
 const useRealtimeStore = create<NotificationState>((set) => {
   const mode = import.meta.env.VITE_MODE;
 
-  const backendUrl =
-    mode == "DEVELOPMENT"
-      ? import.meta.env.VITE_DEV_API
-      : import.meta.env.VITE_PROD_API;
+  let backendUrl = "";
 
-      console.log(backendUrl)
+  if (mode === "DEVELOPMENT") {
+    backendUrl = import.meta.env.VITE_DEV_API;
+  } else if (mode === "LOCAL") {
+    backendUrl = import.meta.env.VITE_LOCAL_API;
+  } else {
+    backendUrl = import.meta.env.VITE_PROD_API;
+  }
   return {
     socket: io(backendUrl),
     //socket: io("http://localhost:3001"),
