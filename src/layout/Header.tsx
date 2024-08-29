@@ -25,26 +25,22 @@ export const Header = () => {
   const openNotification = () => {
     setOpenNotif(!openNotif);
   };
-  const setSideBarState = () =>{
-   
+  const setSideBarState = () => {
     setIsOpen(!open);
-  }
+  };
   return (
     <div className="flex w-full between items-center ">
       <div className="flex w-full ">
-      <button
-        className="flex justify-center items-center relative rounded-full bg-white w-[44px] h-[44px] transition-transform duration-300"
-        onClick={setSideBarState}
-        type="button"
-      >
-        <ListCollapse
-          className={`w-[20px] h-[20px] transform transition-transform duration-300 ${
-            open ? 'rotate-180' : 'rotate-0'
-          }`}
-        />
-          <span className="absolute top-0 right-4 text-red-500 font-black">
-            {numOfUnreadNotif ? numOfUnreadNotif : ""}
-          </span>
+        <button
+          className="flex justify-center items-center relative rounded-full bg-white w-[44px] h-[44px] transition-transform duration-300"
+          onClick={setSideBarState}
+          type="button"
+        >
+          <ListCollapse
+            className={`w-[20px] h-[20px] transform transition-transform duration-300 ${
+              open ? "rotate-180" : "rotate-0"
+            }`}
+          />
         </button>
       </div>
       <div className="flex items-center justify-end w-full  mr-6">
@@ -53,17 +49,17 @@ export const Header = () => {
             <div className="flex w-full h-full">
               <div className="flex w-full justify-end items-center">
                 <button
-                  className="flex justify-center items-center relative rounded-full bg-white  w-[44px] h-[44px]"
+                  className="flex justify-center items-center relative rounded-full bg-white  w-[44px] h-[44px] "
                   onClick={openNotification}
                 >
                   <Bell className=" w-[20px] h-[20px]" />
-                  <span className="absolute top-0 right-4 text-red-500 font-black">
-                    {numOfUnreadNotif ? numOfUnreadNotif : ""}
+                  <span className="absolute top-0 right-0 text-red-500">
+                  {numOfUnreadNotif ?  <Dot absoluteStrokeWidth size={25}/> : ""}
                   </span>
                 </button>
               </div>
               {openNotif && (
-                <div className="absolute h-[500px] w-full border top-full rounded-lg">
+                <div className="absolute h-[500px] w-full  top-full rounded-lg z-10">
                   <ScrollArea className="flex w-full h-full flex-col gap-4 bg-white">
                     {allNotification && allNotification.length > 0 ? (
                       allNotification.map((data) => (
