@@ -22,32 +22,76 @@ import {
   ChartTooltipContent,
 } from "@/components/ui/chart";
 const chartData = [
-  { month: "January", desktop: 186, mobile: 80 },
-  { month: "February", desktop: 305, mobile: 200 },
-  { month: "March", desktop: 237, mobile: 120 },
-  { month: "April", desktop: 73, mobile: 190 },
-  { month: "May", desktop: 209, mobile: 130 },
-  { month: "June", desktop: 214, mobile: 140 },
+  {
+    title: "BALAMBAN SEPTIC TANK AND WASTE COLLECTION SERVICES",
+    id: "ECC-2024-0001",
+    percentage: 80,
+  },
+  {
+    title:
+      "PROPOSED PIGGERY WITH WAREHOUSE & BIOGAS DIGESTER PROJECT EXECUTIVE SUMMARY THE PROPOSED PROJECT INVOLVES THE ESTABLISHMENT OF A MOD",
+    id: "ECC-2024-0001",
+    percentage: 100,
+  },
+  {
+    title: "NC HARDROCK TRADING COMPANY",
+    id: "ECC-2024-0001",
+    percentage: 100,
+  },
+  {
+    title: "NC HARDROCK TRADING COMPANY",
+    id: "ECC-2024-0001",
+    percentage: 100,
+  },
+  { title: "SHIPYARD PROJECT", id: "ECC-2024-0001", percentage: 100 },
+  {
+    title: "NC HARDROCK TRADING COMPANY",
+    id: "ECC-2024-0001",
+    percentage: 100,
+  },
+  {
+    title: "NC HARDROCK TRADING COMPANY",
+    id: "ECC-2024-0001",
+    percentage: 100,
+  },
+  {
+    title: "NC HARDROCK TRADING COMPANY",
+    id: "ECC-2024-0001",
+    percentage: 100,
+  },
+  {
+    title: "NC HARDROCK TRADING COMPANY",
+    id: "ECC-2024-0001",
+    percentage: 100,
+  },
+  { title: "NC HARDROCK TRADING COMPANY", id: "ECC-2024-0001", percentage: 40 },
+  {
+    title: "NC HARDROCK TRADING COMPANY",
+    id: "ECC-2024-0001",
+    percentage: 100,
+  },
 ];
+
 const chartConfig = {
-  desktop: {
-    label: "Desktop",
+  id: {
+    label: "ID",
     color: "hsl(var(--chart-1))",
   },
-  mobile: {
-    label: "Mobile",
+  percentage: {
+    label: "Percentage",
     color: "hsl(var(--chart-2))",
   },
   label: {
     color: "hsl(var(--background))",
   },
 } satisfies ChartConfig;
+
 export function PriorityChart() {
   return (
-    <Card className=" absolute inset-0 flex flex-col">
+    <Card className="absolute inset-0 flex flex-col">
       <CardHeader>
-        <CardTitle>Bar Chart - Custom Label</CardTitle>
-        <CardDescription>January - June 2024</CardDescription>
+        <CardTitle>Priority</CardTitle>
+        <CardDescription></CardDescription>
       </CardHeader>
       <CardContent className="flex-grow w-full relative h-full">
         <ChartContainer config={chartConfig} className="absolute h-full w-full">
@@ -56,41 +100,40 @@ export function PriorityChart() {
             data={chartData}
             layout="vertical"
             margin={{
-              right: 16,
+              right: 100, // Increase the right margin to accommodate labels
             }}
           >
-            <CartesianGrid horizontal={false} />
             <YAxis
-              dataKey="month"
+              dataKey="title"
               type="category"
               tickLine={false}
               tickMargin={10}
               axisLine={false}
-              tickFormatter={(value) => value.slice(0, 3)}
+              tickFormatter={(value) => value.slice(0, 12)}
               hide
             />
-            <XAxis dataKey="desktop" type="number" hide />
+            <XAxis dataKey="percentage" type="number" hide />
             <ChartTooltip
               cursor={false}
               content={<ChartTooltipContent indicator="line" />}
             />
             <Bar
-              dataKey="desktop"
+              dataKey="percentage"
               layout="vertical"
-              fill="var(--color-desktop)"
+              fill="var(--color-id)"
               radius={4}
             >
               <LabelList
-                dataKey="month"
+                dataKey="id"
                 position="insideLeft"
                 offset={8}
                 className="fill-[--color-label]"
                 fontSize={12}
               />
               <LabelList
-                dataKey="desktop"
+                dataKey="percentage"
                 position="right"
-                offset={8}
+                offset={10} // Adjust offset to space out labels from the end of the bars
                 className="fill-foreground"
                 fontSize={12}
               />
@@ -99,11 +142,8 @@ export function PriorityChart() {
         </ChartContainer>
       </CardContent>
       <CardFooter className="flex-col items-start gap-2 text-sm">
-        <div className="flex gap-2 font-medium leading-none">
-          Trending up by 5.2% this month <TrendingUp className="h-4 w-4" />
-        </div>
-        <div className="leading-none text-muted-foreground">
-          Showing total visitors for the last 6 months
+        <div className="leading-none text-muted-foreground mt-4 font-semibold">
+          Showing transaction priority
         </div>
       </CardFooter>
     </Card>

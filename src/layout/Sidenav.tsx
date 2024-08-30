@@ -77,6 +77,7 @@ export const SideNav = () => {
             </NavLink>
           </li>
         </ul>
+        
         <Label className="text-[#DCFF8E] px-4 font-medium flex w-full text-sm">
           USERS & ACCOUNTS
         </Label>

@@ -17,36 +17,35 @@ import {
   ChartTooltipContent,
 } from "@/components/ui/chart"
 const chartData = [
-  { month: "January", desktop: 186, mobile: 80 },
-  { month: "February", desktop: 305, mobile: 200 },
-  { month: "March", desktop: 237, mobile: 120 },
-  { month: "April", desktop: 73, mobile: 190 },
-  { month: "May", desktop: 209, mobile: 130 },
-  { month: "June", desktop: 214, mobile: 140 },
+  { application: "ECC", value: 186, mobile: 80 },
+  { application: "DP", value: 305, mobile: 200 },
+  { application: "PCO", value: 237, mobile: 120 },
+  { application: "HWID", value: 73, mobile: 190 },
+  { application: "CNC", value: 209, mobile: 130 },
+  { application: "PO", value: 214, mobile: 140 },
 ]
 const chartConfig = {
-  desktop: {
-    label: "Desktop",
+  value: {
+    label: "Value",
     color: "hsl(var(--chart-1))",
   },
-  mobile: {
-    label: "Mobile",
-    color: "hsl(var(--chart-2))",
-  },
+ 
 } satisfies ChartConfig
 export function PriorityBarChart() {
   return (
     <Card className=" absolute inset-0 flex flex-col">
       <CardHeader>
-        <CardTitle>Bar Chart - Custom Label</CardTitle>
-        <CardDescription>January - June 2024</CardDescription>
+        <CardTitle>Application</CardTitle>
+       
       </CardHeader>
       <CardContent className="flex-grow w-full relative h-full">
-        <ChartContainer config={chartConfig} className="absolute h-full  ">
-          <BarChart accessibilityLayer data={chartData}>
+        <ChartContainer config={chartConfig} className="absolute h-full w-full  ">
+          <BarChart accessibilityLayer data={chartData} margin={{
+              right: 40, // Increase the right margin to accommodate labels
+            }}>
             <CartesianGrid vertical={false} />
             <XAxis
-              dataKey="month"
+              dataKey="application"
               tickLine={false}
               tickMargin={10}
               axisLine={false}
@@ -55,26 +54,19 @@ export function PriorityBarChart() {
             <ChartTooltip content={<ChartTooltipContent hideLabel />} />
             <ChartLegend content={<ChartLegendContent />} />
             <Bar
-              dataKey="desktop"
+              dataKey="value"
               stackId="a"
-              fill="var(--color-desktop)"
+              fill="var(--color-value)"
               radius={[0, 0, 4, 4]}
             />
-            <Bar
-              dataKey="mobile"
-              stackId="a"
-              fill="var(--color-mobile)"
-              radius={[4, 4, 0, 0]}
-            />
+            
           </BarChart>
         </ChartContainer>
       </CardContent>
       <CardFooter className="flex-col items-start gap-2 text-sm">
-        <div className="flex gap-2 font-medium leading-none">
-          Trending up by 5.2% this month <TrendingUp className="h-4 w-4" />
-        </div>
+       
         <div className="leading-none text-muted-foreground">
-          Showing total visitors for the last 6 months
+          Showing total each application
         </div>
       </CardFooter>
     </Card>

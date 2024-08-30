@@ -11,20 +11,23 @@ import { IerPage } from "./table-data/ier-summary";
 import { CompleteStaffWorkForm } from "../forms/csw-form";
 import { CswComponent } from "./table-data/csw-list";
 
-
 enum View {
   IER,
   CSW,
-  DETAILS
+  DETAILS,
 }
 export const HistoryComponent = () => {
   const { id } = useParams();
-  const [view,setView] = useState<View>(View.DETAILS)
+  const [view, setView] = useState<View>(View.DETAILS);
 
-  const { entity,update } = useTransaction({key:`transactions`,url:`v2/${id}`,id});
+  const { entity, update } = useTransaction({
+    key: `transactions`,
+    url: `v2/${id}`,
+    id,
+  });
 
   const validatedData = transactionData.safeParse(entity.data);
-  console.log(validatedData.data)
+  console.log(validatedData.data);
   if (entity.isLoading) return "loading";
 
   if (!validatedData.success || !validatedData.data) {
@@ -37,59 +40,61 @@ export const HistoryComponent = () => {
       (attachment) => attachment.fileType === "INITIAL_DOC"
     ) || [];
 
-  
   return (
     <div className="flex flex-col w-full  p-4 rounded-lg">
-      <div className="flex flex-col space-y-12">
-        <h1 className="font-roboto text-xl">{id}</h1>
-        <div className="flex gap-4 justify-start">
-          <div className="flex w-32  bg-white border-2 shadow-xl border-gray-200 rounded-md hover:bg-green-500 ">
-            <Button
-              variant="link"
-              className={`w-full hover:text-white ${
-                view === View.DETAILS ? "bg-green-500" : ""
+      <div className=" space-y-8">
+        {/* <h1 className="font-roboto text-xl">{id}</h1> */}
+        <div className="flex justify-start px-2 gap-4 ">
+          <div className="flex w-16  shadow-xl ">
+            <button
+              className={`w-full text-sm bg-transparent border-0 shadow-none focus:outline-none flex items-center justify-center  p-2   ${
+                view === View.DETAILS
+                  ? "border-b-2 border-b-green-500 text-sm"
+                  : ""
               }`}
-              onClick={()=>setView(View.DETAILS)}
+              onClick={() => setView(View.DETAILS)}
+              type="button"
             >
               Details
-            </Button>
+            </button>
           </div>
 
-          <div className="flex w-32  bg-white border-2 shadow-xl border-gray-200 rounded-md hover:bg-green-500 ">
-            <Button
-              variant="link"
-              className={`w-full hover:text-white ${
-                view === View.CSW ? "bg-green-500" : ""
+          <div className="flex w-16  shadow-xl ">
+            <button
+                 className={`w-full text-sm bg-transparent border-0 shadow-none focus:outline-none flex items-center justify-center  p-2   ${
+                view === View.CSW
+                   ? "border-b-2 border-b-green-500 text-sm"
+                  : "text-sm"
               }`}
-              onClick={()=>setView(View.CSW)}
+              onClick={() => setView(View.CSW)}
             >
               CSW
-            </Button>
+            </button>
           </div>
 
-          <div className="flex w-32  bg-white border-2 shadow-xl border-gray-200 rounded-md hover:bg-green-500 ">
-            <Button
-              variant="link"
-              type="button"
-              className={`w-full hover:text-white ${
-                view === View.IER ? "bg-green-500" : ""
+          <div className="flex w-16  shadow-xl ">
+          <button
+                 className={`w-full text-sm bg-transparent border-0 shadow-none focus:outline-none flex items-center justify-center  p-2   ${
+                view === View.IER
+                    ? "border-b-2 border-b-green-500 text-sm"
+                  : "text-sm"
               }`}
-              onClick={()=>setView(View.IER)}
+              onClick={() => setView(View.IER)}
             >
               IER
-            </Button>
+            </button>
           </div>
         </div>
         <Separator className="h" />
-
+            <div className="">
+              <h1 className="text-xl font-normal">{validatedData.data.transactionId}</h1>
+            </div>
         {view === View.IER ? (
           <IerPage data={attachmentForIer} />
         ) : view === View.CSW ? (
           <CswComponent
             transactionId={validatedData.data.id || ""}
             data={validatedData.data.completeStaffWork || []}
-          
-         
           />
         ) : (
           <>

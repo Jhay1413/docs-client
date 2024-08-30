@@ -91,7 +91,6 @@
       --chart-5: 340 75% 55%;
     }
   }
-  
-  .body{
-
+  .hide-on-print{
+    display: hidden;
   }
