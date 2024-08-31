@@ -190,21 +190,7 @@ export const SideNav = () => {
             </NavLink>
           </li>
         </ul>
-        <Label className="text-[#DCFF8E] px-4 font-medium flex w-full text-sm">
-          SETTINGS
-        </Label>
-        <ul className="flex flex-col  space-y-4 w-full   mx-2 ">
-          <li className="relative inline-block text-left text-sm px-4">
-            <Button
-              variant="ghost"
-              onClick={() => logout()}
-              className="justify-start items-center flex w-full p-2 space-x-4 text-lg  rounded-md"
-            >
-              <LogOut />
-              <h1 className="text-base font-normal">Logout</h1>
-            </Button>
-          </li>
-        </ul>
+
       </div>
     </div>
   );
