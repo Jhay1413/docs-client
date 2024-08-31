@@ -16,7 +16,7 @@ import { useReactToPrint } from "react-to-print";
 import { useRef } from "react";
 type Props = {
   data: z.infer<typeof filesSchema>[];
-  percentage:string
+  percentage?:string
 };
 export const DocumentTable = ({ data,percentage }: Props) => {
   const componentRef = useRef<HTMLDivElement | null>(null);
