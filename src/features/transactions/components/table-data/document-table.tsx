@@ -16,8 +16,9 @@ import { useReactToPrint } from "react-to-print";
 import { useRef } from "react";
 type Props = {
   data: z.infer<typeof filesSchema>[];
+  percentage:string
 };
-export const DocumentTable = ({ data }: Props) => {
+export const DocumentTable = ({ data,percentage }: Props) => {
   const componentRef = useRef<HTMLDivElement | null>(null);
   const viewFile = async (key: string) => {
     const signedUrl = await getSignUrlForView(key);
@@ -32,6 +33,7 @@ export const DocumentTable = ({ data }: Props) => {
     <div className="flex flex-col  " ref={componentRef}>
       <div className="justify-between w-full flex items-center bg-[#BBD979] h-16 px-4  ">
         <h1 className="text-2xl text-[#414140]">Initial Evaluation Report</h1>
+        <span className="text-black">{percentage}%</span>
       </div>
 
       <Table>
