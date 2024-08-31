@@ -94,3 +94,10 @@
   .hide-on-print{
     display: hidden;
   }
+
+
+  @media print {
+    .print-hide {
+      display: none !important;
+    }
+  }

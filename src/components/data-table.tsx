@@ -33,10 +33,12 @@ import { ScrollArea, ScrollBar } from "./ui/scroll-area";
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
+  hasSearch?: boolean;
 }
 export function DataTable<TData, TValue>({
   columns,
   data,
+  hasSearch,
 }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
@@ -68,46 +70,48 @@ export function DataTable<TData, TValue>({
   return (
     <div className="w-full h-full flex flex-col items-center justify-center space-y-12 ">
       <div className="flex flex-col w-full items-center justify-center">
-        <div className="flex  w-full items-center justify-center gap-2">
-          <div className="flex items-center py-4 justify-end w-full ">
-            <Input
-              placeholder="Search ...."
-              value={filtering}
-              onChange={(event) => setFiltering(event.target.value)}
-              className="w-[289px] rounded-none  rounded-l-md"
-            />
-            <button className="p-2 bg-primaryColor text-white rounded-r-md ">
-              <Search />
-            </button>
+        {hasSearch && (
+          <div className="flex  w-full items-center justify-center gap-2">
+            <div className="flex items-center py-4 justify-end w-full ">
+              <Input
+                placeholder="Search ...."
+                value={filtering}
+                onChange={(event) => setFiltering(event.target.value)}
+                className="w-[289px] rounded-none  rounded-l-md"
+              />
+              <button className="p-2 bg-primaryColor text-white rounded-r-md ">
+                <Search />
+              </button>
+            </div>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="outline" className="ml-auto flex gap-2">
+                  <Text />
+                  <h1>Filter By</h1>
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                {table
+                  .getAllColumns()
+                  .filter((column) => column.getCanHide())
+                  .map((column) => {
+                    return (
+                      <DropdownMenuCheckboxItem
+                        key={column.id}
+                        className="capitalize"
+                        checked={column.getIsVisible()}
+                        onCheckedChange={(value) =>
+                          column.toggleVisibility(!!value)
+                        }
+                      >
+                        {column.id}
+                      </DropdownMenuCheckboxItem>
+                    );
+                  })}
+              </DropdownMenuContent>
+            </DropdownMenu>
           </div>
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="outline" className="ml-auto flex gap-2">
-                <Text />
-                <h1>Filter By</h1>
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
-              {table
-                .getAllColumns()
-                .filter((column) => column.getCanHide())
-                .map((column) => {
-                  return (
-                    <DropdownMenuCheckboxItem
-                      key={column.id}
-                      className="capitalize"
-                      checked={column.getIsVisible()}
-                      onCheckedChange={(value) =>
-                        column.toggleVisibility(!!value)
-                      }
-                    >
-                      {column.id}
-                    </DropdownMenuCheckboxItem>
-                  );
-                })}
-            </DropdownMenuContent>
-          </DropdownMenu>
-        </div>
+        )}
 
         <Table>
           <TableHeader className="bg-[#BBD979]">

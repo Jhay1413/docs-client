@@ -6,6 +6,9 @@ import { cswColumn } from "../table-columns/csw-column";
 import { CompleStaffWorkDialog } from "../../forms/csw-form-2";
 import { useQueryClient } from "@tanstack/react-query";
 import { useCurrentUserRole } from "@/hooks/hooks/use-user-hook";
+import { Button } from "@/components/ui/button";
+import { useRef } from "react";
+import { useReactToPrint } from "react-to-print";
 
 type Props = {
   transactionId: string;
@@ -14,15 +17,32 @@ type Props = {
 
 export const CswComponent = ({ transactionId, data }: Props) => {
   const role = useCurrentUserRole();
-
+  const componentRef = useRef<HTMLDivElement | null>(null);
+  const handlePrint = useReactToPrint({
+    content: () => componentRef.current!,
+  });
   return (
-    <div className="flex flex-col gap-4">
+    <div className="flex flex-col gap-2">
       {role === "CH" && (
         <div className="">
           <CompleStaffWorkDialog transactionId={transactionId} />
         </div>
       )}
-      <DataTable columns={cswColumn} data={data} />
+      <div className="flex w-full justify-end py-4 ">
+        <Button
+          variant="default"
+          className="px-4 py text-white"
+          onClick={handlePrint}
+        >
+          Print
+        </Button>
+      </div>
+      <div className="flex flex-col w-full h-full gap-2" ref={componentRef}>
+        <div className="justify-between w-full flex items-center bg-[#BBD979] h-16 px-4  ">
+          <h1 className="text-2xl text-[#414140]">Complete Staff Work</h1>
+        </div>
+        <DataTable columns={cswColumn} data={data} />
+      </div>
     </div>
   );
 };

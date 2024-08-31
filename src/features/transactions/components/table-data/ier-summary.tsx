@@ -19,7 +19,15 @@ export const IerPage = ({ data }: Props) => {
   return (
     <div className="flex flex-col">
      
-
+     <div className="flex w-full justify-end py-4 ">
+          <Button
+            variant="default"
+            className="px-4 py text-white"
+            onClick={handlePrint}
+          >
+            Print
+          </Button>
+        </div>
       <div className="flex items-center justify-center" ref={componentRef}>
         <DocumentTable data={data} />
       </div>

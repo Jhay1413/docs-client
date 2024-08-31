@@ -29,18 +29,9 @@ export const DocumentTable = ({ data }: Props) => {
     content: () => componentRef.current!,
   });
   return (
-    <div className="flex flex-col ">
-      <div className="justify-between w-full flex items-center bg-[#BBD979] h-16 px-4 ">
+    <div className="flex flex-col  " ref={componentRef}>
+      <div className="justify-between w-full flex items-center bg-[#BBD979] h-16 px-4  ">
         <h1 className="text-2xl text-[#414140]">Initial Evaluation Report</h1>
-        <div className="flex ">
-          <Button
-            variant="default"
-            className="px-4 py text-white"
-            onClick={handlePrint}
-          >
-            Print
-          </Button>
-        </div>
       </div>
 
       <Table>
@@ -58,7 +49,9 @@ export const DocumentTable = ({ data }: Props) => {
             </TableHead>
             <TableHead className="text-center text-[#414140]">Final</TableHead>
 
-            <TableHead className="text-center text-[#414140]">Action</TableHead>
+            <TableHead className="text-center text-[#414140] print-hide">
+              Action
+            </TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -79,13 +72,17 @@ export const DocumentTable = ({ data }: Props) => {
               </TableCell>
               <TableCell className="font-medium w-[500px] text-center">
                 {item.fileStatus == "FINAL_ATTACHMENT" ? (
-                  <Check className="text-green-500" />
+                  <div className="flex items-center justify-center">
+                    <Check className="text-green-500 align-end" />
+                  </div>
                 ) : (
-                  <X className="text-red-500" />
+                  <div className="flex items-center justify-center">
+                    <X className="text-red-500 items-end  " />
+                  </div>
                 )}
               </TableCell>
 
-              <TableCell className="h-full w-32 flex items-center justify-center ">
+              <TableCell className="h-full w-32 flex items-center justify-center print-hide ">
                 <Button
                   type="button"
                   onClick={() => viewFile(item.fileUrl!)}

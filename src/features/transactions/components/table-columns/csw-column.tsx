@@ -47,13 +47,13 @@ export const cswColumn: ColumnDef<Csw>[] = [
     },
   },
   {
-    header: "Actions",
+    header: () => <div className="print-hide">My Column</div>,
     accessorKey: "actions",
     id: "actions",
     cell: ({ row }) => {
       const cswInfo = row.original;
       const viewFile = async (key: string) => {
-        console.log(key)
+        console.log(key);
         const signedUrl = await getSignUrlForView(key);
         console.log(signedUrl);
         if (signedUrl) {
@@ -61,23 +61,28 @@ export const cswColumn: ColumnDef<Csw>[] = [
         }
       };
 
-
       return (
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className="h-8 w-8 p-0">
-              <span className="sr-only">Open menu</span>
-              <MoreHorizontal className="h-4 w-4" />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuLabel>Actions</DropdownMenuLabel>
+        <div className="print-hide">
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="ghost" className="h-8 w-8 p-0">
+                <span className="sr-only">Open menu</span>
+                <MoreHorizontal className="h-4 w-4" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <DropdownMenuLabel>Actions</DropdownMenuLabel>
 
-            <DropdownMenuItem onClick={()=>viewFile(cswInfo.attachmentUrl!)}>View File</DropdownMenuItem>
+              <DropdownMenuItem
+                onClick={() => viewFile(cswInfo.attachmentUrl!)}
+              >
+                View File
+              </DropdownMenuItem>
 
-            <DropdownMenuSeparator />
-          </DropdownMenuContent>
-        </DropdownMenu>
+              <DropdownMenuSeparator />
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
       );
     },
   },
