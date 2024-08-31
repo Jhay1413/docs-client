@@ -84,7 +84,7 @@ export const archivedColumn: ColumnDef<TArchieved>[] = [
 
       return (
         <div>
-          <h1>{new Date(data.updatedAt!).toDateString()}</h1>
+          <h1>{new Date(data.createdAt!).toDateString()}</h1>
         </div>
       );
     },

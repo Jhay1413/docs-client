@@ -29,6 +29,16 @@ export function useCurrentUserRole() {
   }
   return null;
 }
+
+export function getCurrentUserInfoId(){
+  const userinfo = localStorage.getItem("userinfo");
+
+  if (userinfo) {
+    const data = JSON.parse(userinfo);
+    return data.userId;
+  }
+  return null;
+}
 export function getCurrentUserId() {
   const userinfo = localStorage.getItem("userinfo");
 

@@ -8,7 +8,7 @@ import {
   LogOut,
   UserRoundPlus,
   UserSearch,
-  Users
+  Users,
 } from "lucide-react";
 import { NavLink, useNavigate } from "react-router-dom";
 
@@ -41,7 +41,7 @@ export const SideNav = () => {
 
   return (
     <div className="flex flex-col gap-4 w-full min-h-full pb-8 ">
-       <div className="flex items-center justify-center h-32 ">
+      <div className="flex items-center justify-center h-32 ">
         <img src="/Logov6.png" className="h-[32px] w-[151px] " />
       </div>
       <div className="flex flex-col w-full min-h-full items-center gap-6">
@@ -77,7 +77,7 @@ export const SideNav = () => {
             </NavLink>
           </li>
         </ul>
-        
+
         <Label className="text-[#DCFF8E] px-4 font-medium flex w-full text-sm">
           USERS & ACCOUNTS
         </Label>
@@ -168,6 +168,12 @@ export const SideNav = () => {
               </div>
             </NavLink>
           </li>
+          
+        </ul>
+        <Label className="text-[#DCFF8E] px-4 font-medium flex w-full text-sm">
+          ARCHIVE
+        </Label>
+        <ul className="flex flex-col  space-y-4 w-full   mx-2 ">
           <li className="relative inline-block text-left px-4 ">
             <NavLink
               to={`/dashboard/transactions/archived`}

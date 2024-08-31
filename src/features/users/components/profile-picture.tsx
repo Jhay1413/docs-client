@@ -86,7 +86,7 @@ export const ProfilePicture = ({ signedUrl, id }: Props) => {
           </button>
         )}
       </div>
-      <Avatar className="w-[300px] h-[300px]">
+      <Avatar className="w-[150px] h-[150px]">
         <AvatarImage src={previewImg || signedUrl} alt="@shadcn" />
         <AvatarFallback>CN</AvatarFallback>
       </Avatar>
