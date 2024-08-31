@@ -33,16 +33,17 @@ const chartConfig = {
 } satisfies ChartConfig
 export function PriorityBarChart() {
   return (
-    <Card className=" absolute inset-0 flex flex-col">
+    <Card className=" absolute inset-0 flex flex-col ">
       <CardHeader>
         <CardTitle>Application</CardTitle>
        
       </CardHeader>
-      <CardContent className="flex-grow w-full relative h-full">
-        <ChartContainer config={chartConfig} className="absolute h-full w-full  ">
+      <CardContent className="flex-grow w-full relative h-full ">
+        <ChartContainer config={chartConfig} className="relative h-full w-full ">
           <BarChart accessibilityLayer data={chartData} margin={{
-              right: 40, // Increase the right margin to accommodate labels
-            }}>
+               // Increase the right margin to accommodate labels
+            }}
+            className="absolute w-full h-full">
             <CartesianGrid vertical={false} />
             <XAxis
               dataKey="application"
@@ -50,6 +51,7 @@ export function PriorityBarChart() {
               tickMargin={10}
               axisLine={false}
               tickFormatter={(value) => value.slice(0, 3)}
+            
             />
             <ChartTooltip content={<ChartTooltipContent hideLabel />} />
             <ChartLegend content={<ChartLegendContent />} />
