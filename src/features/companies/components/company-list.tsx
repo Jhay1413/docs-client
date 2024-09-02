@@ -35,7 +35,7 @@ export const CompanyList = () => {
         </div>
       
     </div>
-      <DataTable columns={companyInfoColumns} data={entities.data} />
+      <DataTable columns={companyInfoColumns} data={entities.data} hasSearch={true} />
     </div>
   );
 };

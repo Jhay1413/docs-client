@@ -41,7 +41,7 @@ export const UserList = () => {
           </div>
         
       </div>
-      <DataTable columns={userInfoColumns} data={entities.data}></DataTable>
+      <DataTable columns={userInfoColumns} data={entities.data} hasSearch={true}></DataTable>
     </div>
   );
 };

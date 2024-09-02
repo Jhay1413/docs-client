@@ -46,11 +46,14 @@ export const TransactionList = () => {
           </div>
         </PermissionsGate>
       </div>
-     
+   
+
         <DataTable
           columns={transactionColumns}
           data={validatedData.data}
+          hasSearch={true}
         ></DataTable>
+     
         
     
     </div>
