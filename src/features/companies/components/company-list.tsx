@@ -19,7 +19,7 @@ export const CompanyList = () => {
         List of Companies
       </h1>
       <p className="text-muted-foreground text-[12px]">
-        Lorem ipsum dolor sit amet, consectetur adipiscing.
+      Explore and manage company profiles. Access detailed information and perform necessary actions for each company.
       </p>
     </div>
     <div className="flex  bg-black w-full relative">

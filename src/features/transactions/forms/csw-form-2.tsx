@@ -39,6 +39,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { getSignedUrl } from "../services/getSignedUrl";
 import { useState } from "react";
 import { uploadFile } from "../services/uploadFile";
+import { Textarea } from "@/components/ui/textarea";
 type Props = {
   data?: z.infer<typeof completeStaffWork>[];
   transactionId: string;
@@ -92,7 +93,7 @@ export function CompleStaffWorkDialog({ transactionId }: Props) {
       <DialogTrigger asChild>
         <Button variant="outline">Add CSW</Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[425px]">
+      <DialogContent className="sm:max-w-[425px] ">
         <DialogHeader>
           <DialogTitle>Complete Staff Work</DialogTitle>
           <DialogDescription>
@@ -143,12 +144,25 @@ export function CompleStaffWorkDialog({ transactionId }: Props) {
               )}
             />
 
-            <FormTextArea
+            {/* <FormTextArea
               name="remarks"
               label="Remarks"
               disable={update.isPending}
+            /> */}
+            <FormField
+              control={form.control}
+              name="remarks"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Remarks</FormLabel>
+                  <FormControl>
+                    <Textarea placeholder="remarks" {...field} disabled={update.isPending}/>
+                  </FormControl>
+                  <FormDescription></FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
             />
-
             <div className="w-full">
               <FormField
                 control={form.control}

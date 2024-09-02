@@ -15,15 +15,14 @@ export const InboxComponent = () => {
   if (entities.isFetching) return "loading....";
   const validateData = z.array(transactionData).safeParse(entities.data);
 
-  if (!validateData.success || !validateData.data) return "Something went wrong ! ";
+  if (!validateData.success || !validateData.data)
+    return "Something went wrong ! ";
   return (
     <div className="flex flex-col gap-y-6">
       <div className="flex justify-start w-full flex-col ">
-        <h1 className="text-[#404041] font-medium text-[28px]">
-          Inbox
-        </h1>
+        <h1 className="text-[#404041] font-medium text-[28px]">Inbox</h1>
         <p className="text-muted-foreground text-[12px]">
-          Lorem ipsum dolor sit amet, consectetur adipiscing.
+          Stay updated with the latest messages and notifications here.
         </p>
       </div>
       <DataTable columns={inboxColumn} data={validateData.data} />

@@ -12,7 +12,6 @@ import { useNotificationStore } from "@/global-states/notification-store";
 import { useEffect } from "react";
 import { useReadAllNotifications } from "@/hooks/use-custom-query";
 
-
 export const IncomingComponent = () => {
   const { id } = useParams();
   const { setAllNotification } = useNotificationStore();
@@ -20,15 +19,15 @@ export const IncomingComponent = () => {
     "incoming-transaction",
     `/v2/${id}/transactions?option=INCOMING`
   );
-  const {mutate,isSuccess,data} = useReadAllNotifications();
+  const { mutate, isSuccess, data } = useReadAllNotifications();
 
-  useEffect(()=>{
+  useEffect(() => {
     if (isSuccess && data) {
       setAllNotification(data);
     } else {
       mutate();
     }
-  },[isSuccess])
+  }, [isSuccess]);
   if (entities.isLoading) {
     return <h1>Loading..</h1>;
   }
@@ -41,11 +40,10 @@ export const IncomingComponent = () => {
   return (
     <div className="flex flex-col gap-y-4 ">
       <div className="flex justify-start w-full flex-col ">
-        <h1 className="text-[#404041] font-medium text-[28px]">
-          Incoming
-        </h1>
+        <h1 className="text-[#404041] font-medium text-[28px]">Incoming</h1>
         <p className="text-muted-foreground text-[12px]">
-          Lorem ipsum dolor sit amet, consectetur adipiscing.
+          All your new messages and notifications will appear here. Stay
+          informed and don't miss any updates.
         </p>
       </div>
       <DataTable columns={incomingColumns} data={validatedData.data} />
