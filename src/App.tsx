@@ -9,7 +9,13 @@ import { DashboardLayout } from "./routes/Layout";
 import { Profile } from "./pages/Profile";
 import { UserAccountList, UserForm, UserList } from "./features/users";
 import { Users } from "./pages/user-index";
-import {ArchivedList, HistoryComponent, InsertComponent, TransactionList, TransactionUpdateComponent } from "./features/transactions";
+import {
+  ArchivedList,
+  HistoryComponent,
+  InsertComponent,
+  TransactionList,
+  TransactionUpdateComponent,
+} from "./features/transactions";
 import { CompanyList } from "./features/companies";
 import { NotFound } from "./pages/404";
 import { Login } from "./pages/Login";
@@ -24,8 +30,7 @@ import { InboxComponent } from "./features/transactions/components/table-data/in
 import { ViewHistory } from "./features/transactions/components/view-history";
 import { RouteGuard } from "./components/routeGuard/route-guard";
 import { DashboardNewLayout } from "./routes/new-layout";
-
-
+import ProtectedRoute from "./components/routeGuard/protected-route";
 
 const queryClient = new QueryClient();
 function App() {
@@ -55,27 +60,41 @@ function App() {
                 </RouteGuard>
               }
             >
-              <Route path ="overview"element={<Dashboard/>}/>
+              <Route path="overview" element={<Dashboard />} />
               <Route path="users" element={<Users />}>
-                <Route path="users-list" element={<UserList />} />
-                <Route path="form" element={<UserForm />} />
                 <Route path={`profile/:id`} element={<Profile />} />
-                <Route path={`userAccount`} element={<UserAccountList />} />
+                <Route
+                  element={<ProtectedRoute allowedRoles={["SUPERADMIN"]} />}
+                >
+                  <Route path="users-list" element={<UserList />} />
+                  <Route path="form" element={<UserForm />} />
+                  <Route path={`userAccount`} element={<UserAccountList />} />
+                </Route>
               </Route>
               <Route path="companies" element={<CompanyIndex />}>
                 <Route index element={<CompanyList />} />
-                <Route path="add-form" element={<AddComponent />} />
-                <Route path = {`:id`} element={<EditComponent/>}/>
+                <Route
+                  element={<ProtectedRoute allowedRoles={["SUPERADMIN"]} exemptions={['Operations Department']} />}
+                >
+                  <Route path="add-form" element={<AddComponent />} />
+                  <Route path={`:id`} element={<EditComponent />} />
+                </Route>
               </Route>
               <Route path="transactions" element={<TransactionIndex />}>
-                <Route path="list" element={<TransactionList/>}/>
-                <Route path="transaction-form" element={<InsertComponent/>} />
-                <Route path="history/:id" element={<HistoryComponent/>} />
-                <Route path="incoming-transaction/:id" element={<IncomingComponent/>} />
-                <Route path="inbox/:id" element={<InboxComponent/>} />
-                <Route path ="update/:id" element={<TransactionUpdateComponent/>}/>
-                <Route path ="log/:id" element={<ViewHistory/>}/>
-                <Route path = "archived" element={<ArchivedList/>}/>
+                <Route path="list" element={<TransactionList />} />
+                <Route path="transaction-form" element={<InsertComponent />} />
+                <Route path="history/:id" element={<HistoryComponent />} />
+                <Route
+                  path="incoming-transaction/:id"
+                  element={<IncomingComponent />}
+                />
+                <Route path="inbox/:id" element={<InboxComponent />} />
+                <Route
+                  path="update/:id"
+                  element={<TransactionUpdateComponent />}
+                />
+                <Route path="log/:id" element={<ViewHistory />} />
+                <Route path="archived" element={<ArchivedList />} />
               </Route>
             </Route>
             <Route path="/" element={<PublicRoutes />}>

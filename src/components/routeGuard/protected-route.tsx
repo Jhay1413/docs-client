@@ -1,14 +1,19 @@
-import { useCurrentUserRole } from '@/hooks/hooks/use-user-hook';
-import React from 'react';
-import { Navigate, Outlet } from 'react-router-dom';
+import { useCurrentUserRole } from "@/hooks/hooks/use-user-hook";
+import { useCurrentDivision } from "@/hooks/use-user-hook";
+import { Navigate, Outlet } from "react-router-dom";
 
 type Props = {
-    allowedRoles : string[]
-}
-const ProtectedRoute = ({ allowedRoles}:Props) => {
+  allowedRoles: string[];
+  exemptions?: string[];
+};
+const ProtectedRoute = ({ allowedRoles, exemptions }: Props) => {
+  const userRole = useCurrentUserRole();
+  const currentDivision = useCurrentDivision();
+  if (allowedRoles.includes(userRole)) return <Outlet />;
 
-const userRole = useCurrentUserRole();
-  return allowedRoles.includes(userRole) ? <Outlet /> : <Navigate to="/" />;
+  if (exemptions?.includes(currentDivision)) return <Outlet />;
+
+  return <Navigate to="/dashboard/overview" />;
 };
 
 export default ProtectedRoute;

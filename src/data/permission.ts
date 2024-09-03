@@ -18,13 +18,12 @@ const configuration = [
     {
       name: "MANAGER",
       permission: {
-        sidebarMenu: {
+        module: {
           userList: {
             read:true,
             write:false,
             update:false,
             delete:false,
-
           },
           settings: false,
         },

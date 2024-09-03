@@ -6,6 +6,14 @@ export function useCurrentDivision(){
     }
     return null;
 }
+export function useCurrentSection(){
+    const userinfo = localStorage.getItem("userinfo");
+    if(userinfo){
+        const data = JSON.parse(userinfo);
+        return data.assignedSection;
+    }
+    return null;
+}
 export function useCurrentUserRole(){
     const userinfo = localStorage.getItem("userinfo");
   

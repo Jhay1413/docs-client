@@ -5,14 +5,26 @@ import { Plus } from "lucide-react";
 import { useTransactions } from "../../hooks/query-gate";
 import { z } from "zod";
 import { transactionData } from "../../schema/TransactionSchema";
-import PermissionsGate from "@/components/permissionGate/permission-gate";
-import { SCOPES } from "@/components/permissionGate/permission-map";
-import { ScrollArea } from "@radix-ui/react-scroll-area";
-import { ScrollBar } from "@/components/ui/scroll-area";
+import withRole from "@/components/HOC/component-permission";
+
+const addTransactionBtn = () => (
+  <div className="flex  bg-black w-full relative">
+    <div className="absolute bottom-0 top-4">
+      <Link
+        to="/dashboard/transactions/transaction-form"
+        className="bg-[#414140] px-4 py-2 text-lg flex  items-center justify-center space-x rounded-lg text-white"
+      >
+        <Plus size={24} />
+        <h1>Add Transaction</h1>
+      </Link>
+    </div>
+  </div>
+);
+
+const AddTransactionBtnWithRole = withRole(addTransactionBtn);
 
 export const TransactionList = () => {
   const { entities } = useTransactions("transactions", "/v2");
-
   if (entities.isLoading) return <div>Loading...</div>;
   console.log(entities.data);
   if (!entities.data) return <div>No data</div>;
@@ -33,29 +45,13 @@ export const TransactionList = () => {
           Review the details below to track and manage recent activities.
         </p>
       </div>
-      <div className="flex  bg-black w-full relative">
-        <PermissionsGate scopes={[SCOPES.canCreate]}>
-          <div className="absolute bottom-0 top-4">
-            <Link
-              to="/dashboard/transactions/transaction-form"
-              className="bg-[#414140] px-4 py-2 text-lg flex  items-center justify-center space-x rounded-lg text-white"
-            >
-              <Plus size={24} />
-              <h1>Add Transaction</h1>
-            </Link>
-          </div>
-        </PermissionsGate>
-      </div>
-   
+      <AddTransactionBtnWithRole roles={["SUPERADMIN", "RECORDS"]} />
 
-        <DataTable
-          columns={transactionColumns}
-          data={validatedData.data}
-          hasSearch={true}
-        ></DataTable>
-     
-        
-    
+      <DataTable
+        columns={transactionColumns}
+        data={validatedData.data}
+        hasSearch={true}
+      ></DataTable>
     </div>
   );
 };
