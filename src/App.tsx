@@ -64,7 +64,7 @@ function App() {
               <Route path="users" element={<Users />}>
                 <Route path={`profile/:id`} element={<Profile />} />
                 <Route
-                  element={<ProtectedRoute allowedRoles={["SUPERADMIN"]} />}
+                  element={<ProtectedRoute allowedRoles={["SUPERADMIN"]} exemptions={['Operations Department']} />}
                 >
                   <Route path="users-list" element={<UserList />} />
                   <Route path="form" element={<UserForm />} />

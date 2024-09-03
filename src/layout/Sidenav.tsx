@@ -106,7 +106,7 @@ export const SideNav = () => {
             
           />
         </ul>
-        <UserAndAccountWithRole roles={["SUPERADMIN"]} />
+        <UserAndAccountWithRole roles={["SUPERADMIN"]} exemptions={["Operations Department"]} />
         <Label className="text-[#DCFF8E] px-4 font-medium flex w-full text-sm">
           TRANSACTIONS
         </Label>
