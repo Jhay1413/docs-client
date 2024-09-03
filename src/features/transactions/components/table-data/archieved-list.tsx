@@ -31,7 +31,7 @@ export const ArchivedList= () => {
       
         
       </div>
-      <DataTable columns={archivedColumn} data={validateData.data} />
+      <DataTable columns={archivedColumn} data={validateData.data} hasSearch={true} />
     </div>
   );
 };
