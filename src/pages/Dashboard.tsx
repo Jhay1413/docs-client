@@ -5,11 +5,21 @@ import { Component } from "@/components/total-project-chart";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { DashboardDataSchema } from "@/features/dashboard";
+import { useTransactions } from "@/features/transactions/hooks/query-gate";
 import { useCurrentUserFirstName } from "@/hooks/use-user-hook";
 import { Dot, Ellipsis, Search } from "lucide-react";
 import { useMemo } from "react";
 
+
+
 export const Dashboard = () => {
+  const { entities } = useTransactions(
+    "dashboardData",
+    "v2/dashboardData"
+  );
+ 
+
   const currentUser = useCurrentUserFirstName();
   const { defaultDate } = useMemo(
     () => ({
@@ -17,6 +27,26 @@ export const Dashboard = () => {
     }),
     []
   );
+  if(entities.isLoading) return "loading";
+  
+  console.log(entities.data)
+  const validateSchema = DashboardDataSchema.safeParse(entities.data);
+  if(!validateSchema.success) {
+    console.log(validateSchema.error);
+
+    return
+  }
+  const priority = validateSchema.data?.find(data=>data.category == "Priority");
+  const perApplication = validateSchema.data.find(data=>data.category== "Per Application");
+
+  const total = validateSchema.data.find(data=> data.category == "Total Projects");
+  const perSection = validateSchema.data.find(data=> data.category == "Per Section");
+  
+  const totalEIA = perSection?.data.find(data=>data.categoryName=="EIA");
+  const totalTCTI = perSection?.data.find(data=>data.categoryName=="TCTI");
+  const totalEPD = perSection?.data.find(data=>data.categoryName=="EPD");
+  const totalICS= perSection?.data.find(data=>data.categoryName=="ICS");
+  console.log(totalICS);
   return (
     <div className="flex w-full flex-col gap-12">
       <h1 className="text-[28px] font-semibold bg-gradient-to-r from-[#547326] to-[#93CB41] bg-clip-text text-transparent">
@@ -232,7 +262,7 @@ export const Dashboard = () => {
                   <h1 className="text-sm">Total Applications</h1>
                 </div>
                 <div className="flex flex-col items-center justify-center  h-full">
-                  <h1 className="font-bold text-4xl">45</h1>
+                  <h1 className="font-bold text-4xl">{totalICS?.count || 0}</h1>
                   <h1>
                     <span className="text-blue-400 font-bold">ICS</span> Section
                   </h1>
@@ -246,9 +276,9 @@ export const Dashboard = () => {
                   <h1 className="text-sm">Total Applications</h1>
                 </div>
                 <div className="flex flex-col items-center justify-center  h-full">
-                  <h1 className="font-bold text-4xl">45</h1>
+                  <h1 className="font-bold text-4xl">{totalEIA?.count || 0}</h1>
                   <h1>
-                    <span className="text-primaryColor font-bold">ICS</span>{" "}
+                    <span className="text-primaryColor font-bold">EIA</span>{" "}
                     Section
                   </h1>
                 </div>
@@ -261,7 +291,7 @@ export const Dashboard = () => {
                   <h1 className="text-sm">Total Applications</h1>
                 </div>
                 <div className="flex flex-col items-center justify-center  h-full">
-                  <h1 className="font-bold text-4xl">45</h1>
+                <h1 className="font-bold text-4xl">{totalEPD?.count || 0}</h1>
                   <h1>
                     <span className="text-red-500 font-bold">EPD</span> Section
                   </h1>
@@ -275,7 +305,7 @@ export const Dashboard = () => {
                   <h1 className="text-sm">Total Applications</h1>
                 </div>
                 <div className="flex flex-col items-center justify-center  h-full">
-                  <h1 className="font-bold text-4xl">45</h1>
+                <h1 className="font-bold text-4xl">{totalTCTI?.count || 0}</h1>
                   <h1>
                     <span className="text-yellow-500 font-bold">TCTI</span>{" "}
                     Section
@@ -288,7 +318,7 @@ export const Dashboard = () => {
           <div className="flex flex-col gap-4 row-span-1">
           <h1 className="text-lg">Charts</h1>
           <div className="h-full relative">
-            <Component />
+            <Component data = {total?.data}/>
           </div>
         </div>
           
@@ -298,10 +328,10 @@ export const Dashboard = () => {
       </div>
       <div className="grid grid-cols-2 w-full  min-h-[800px] xl:min-h-[500px]  gap-4">
         <div className="relative w-full h-full col-span-2 xl:col-span-1 ">
-          <PriorityChart />
+          <PriorityChart data={priority} />
         </div>
         <div className="relative w-full h-full col-span-2 xl:col-span-1 ">
-          <PriorityBarChart />
+          <PriorityBarChart data = {perApplication}/>
         </div>
       </div>
     </div>

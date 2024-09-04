@@ -46,7 +46,7 @@ export const transactionColumns: ColumnDef<TransactionInfo>[] = [
       const data = row.original;
 
       return (
-        <div className="" >
+        <div className="">
           <h1>{data.transactionId}</h1>
         
         </div>
@@ -56,6 +56,9 @@ export const transactionColumns: ColumnDef<TransactionInfo>[] = [
   {
     header: "Project Name",
     accessorKey: "projectName",
+    filterFn : (row,columnId,filterValue)=>{
+      return true
+    }
   },
   {
     header: "Document type",
@@ -125,6 +128,7 @@ export const transactionColumns: ColumnDef<TransactionInfo>[] = [
   {
     header: "Priority",
     accessorKey: "priority",
+    
   },
   {
     header: "Due date",

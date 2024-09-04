@@ -16,22 +16,30 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from "@/components/ui/chart"
-const chartData = [
-  { application: "ECC", value: 186, mobile: 80 },
-  { application: "DP", value: 305, mobile: 200 },
-  { application: "PCO", value: 237, mobile: 120 },
-  { application: "HWID", value: 73, mobile: 190 },
-  { application: "CNC", value: 209, mobile: 130 },
-  { application: "PO", value: 214, mobile: 140 },
-]
+import { z } from "zod"
+import { PerApplication } from "@/features/dashboard"
+
 const chartConfig = {
-  value: {
-    label: "Value",
-    color: "hsl(var(--chart-1))",
+  count: {
+    label: "Projects",
+    color: "#8CBF3F",
   },
  
 } satisfies ChartConfig
-export function PriorityBarChart() {
+const extractAbbreviation = (text: string): string | null => {
+  // Match the text inside the first set of parentheses
+  const match = text.match(/\(([^)]+)\)/);
+  return match ? match[1] : null;
+};
+export function PriorityBarChart({ data }: { data: z.infer<typeof PerApplication>| undefined }) {
+
+
+  const transformedArray = data?.data.map(item => ({
+    ...item,
+    categoryName: extractAbbreviation(item.categoryName) || item.categoryName, // Replace with abbreviation or keep original
+  }));
+  console.log(transformedArray)
+  
   return (
     <Card className=" absolute inset-0 flex flex-col ">
       <CardHeader>
@@ -39,26 +47,27 @@ export function PriorityBarChart() {
        
       </CardHeader>
       <CardContent className="flex-grow w-full relative h-full ">
-        <ChartContainer config={chartConfig} className="relative h-full w-full ">
-          <BarChart accessibilityLayer data={chartData} margin={{
-               // Increase the right margin to accommodate labels
+        <ChartContainer config={chartConfig} className="absolute h-full w-full ">
+          <BarChart accessibilityLayer data={transformedArray}  margin={{
+              right: 50,
+             // Increase the right margin to accommodate labels
             }}
             className="absolute w-full h-full">
             <CartesianGrid vertical={false} />
             <XAxis
-              dataKey="application"
+              dataKey="categoryName"
               tickLine={false}
               tickMargin={10}
               axisLine={false}
-              tickFormatter={(value) => value.slice(0, 3)}
-            
+              tickFormatter={(value) => value.slice(0,4)}
+              
             />
             <ChartTooltip content={<ChartTooltipContent hideLabel />} />
             <ChartLegend content={<ChartLegendContent />} />
             <Bar
-              dataKey="value"
+              dataKey="count"
               stackId="a"
-              fill="var(--color-value)"
+              fill="var(--color-count)"
               radius={[0, 0, 4, 4]}
             />
             

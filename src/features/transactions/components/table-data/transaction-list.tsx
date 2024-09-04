@@ -26,7 +26,6 @@ const AddTransactionBtnWithRole = withRole(addTransactionBtn);
 export const TransactionList = () => {
   const { entities } = useTransactions("transactions", "/v2");
   if (entities.isLoading) return <div>Loading...</div>;
-  console.log(entities.data);
   if (!entities.data) return <div>No data</div>;
 
   const validatedData = z.array(transactionData).safeParse(entities.data);
@@ -40,6 +39,7 @@ export const TransactionList = () => {
       <div className="flex justify-start w-full flex-col ">
         <h1 className="text-[#404041] font-medium text-[28px]">
           List of Transactions
+          
         </h1>
         <p className="text-muted-foreground text-[12px]">
           Review the details below to track and manage recent activities.
