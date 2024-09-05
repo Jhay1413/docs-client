@@ -5,11 +5,13 @@ import { Component } from "@/components/total-project-chart";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { DashboardDataSchema } from "@/features/dashboard";
+import { DashboardDataSchema, PerSection } from "@/features/dashboard";
+import { PerApplication, PrioritySchema, TotalProject } from "@/features/dashboard/schema/dashboardSchema";
 import { useTransactions } from "@/features/transactions/hooks/query-gate";
 import { useCurrentUserFirstName } from "@/hooks/use-user-hook";
 import { Dot, Ellipsis, Search } from "lucide-react";
 import { useMemo } from "react";
+import { z } from "zod";
 
 
 
@@ -31,22 +33,22 @@ export const Dashboard = () => {
   
   console.log(entities.data)
   const validateSchema = DashboardDataSchema.safeParse(entities.data);
-  if(!validateSchema.success) {
+  if(!validateSchema.success || !validateSchema.data) {
     console.log(validateSchema.error);
 
     return
   }
-  const priority = validateSchema.data?.find(data=>data.category == "Priority");
-  const perApplication = validateSchema.data.find(data=>data.category== "Per Application");
 
-  const total = validateSchema.data.find(data=> data.category == "Total Projects");
-  const perSection = validateSchema.data.find(data=> data.category == "Per Section");
-  
-  const totalEIA = perSection?.data.find(data=>data.categoryName=="EIA");
-  const totalTCTI = perSection?.data.find(data=>data.categoryName=="TCTI");
-  const totalEPD = perSection?.data.find(data=>data.categoryName=="EPD");
-  const totalICS= perSection?.data.find(data=>data.categoryName=="ICS");
-  console.log(totalICS);
+  //Need to review this code
+  const priority = validateSchema.data?.find(data=>data.category == "Priority") as z.infer<typeof PrioritySchema>;;
+  const perApplication = validateSchema.data.find(data=>data.category== "Per Application") as z.infer<typeof PerApplication>;;
+
+  const total = validateSchema.data.find(data=> data.category == "Total Projects") as z.infer<typeof TotalProject>;;
+  const perSection = validateSchema.data.find(data=> data.category == "Per Section") as z.infer<typeof PerSection>;
+  const totalEIA = perSection.data.find(data => data.categoryName === "EIA");
+  const totalTCTI = perSection.data.find(data => data.categoryName === "TCTI");
+  const totalEPD = perSection.data.find(data => data.categoryName === "EPD");
+  const totalICS = perSection.data.find(data => data.categoryName === "ICS");
   return (
     <div className="flex w-full flex-col gap-12">
       <h1 className="text-[28px] font-semibold bg-gradient-to-r from-[#547326] to-[#93CB41] bg-clip-text text-transparent">
