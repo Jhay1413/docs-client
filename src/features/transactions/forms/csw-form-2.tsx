@@ -106,7 +106,7 @@ export function CompleStaffWorkDialog({ transactionId }: Props) {
               control={form.control}
               name="date"
               render={({ field }) => (
-                <FormItem className="flex flex-col gap-2 ">
+                <FormItem className="flex flex-col gap-2  ">
                   <FormLabel>Date</FormLabel>
                   <FormControl>
                     <Popover>
@@ -156,7 +156,7 @@ export function CompleStaffWorkDialog({ transactionId }: Props) {
                 <FormItem>
                   <FormLabel>Remarks</FormLabel>
                   <FormControl>
-                    <Textarea placeholder="remarks" {...field} disabled={update.isPending}/>
+                    <Textarea placeholder="remarks" {...field} disabled={update.isPending} className="z-10"/>
                   </FormControl>
                   <FormDescription></FormDescription>
                   <FormMessage />
@@ -174,7 +174,7 @@ export function CompleStaffWorkDialog({ transactionId }: Props) {
                       <Input
                         disabled={update.isPending}
                         type="file"
-                        accept="application/pdf"
+                 
                         {...field}
                         onChange={(event) => onChange(event.target.files![0])}
                       />
