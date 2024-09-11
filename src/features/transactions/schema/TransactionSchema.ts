@@ -1,10 +1,10 @@
 export const MAX_FILE_SIZE_50MB = 50;
 export const MAX_FILE_SIZE_10MB = 10;
-const ACCEPTED_FILE_TYPES = [
-  "application/pdf",
-  "application/msword",
-  "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-];
+// const ACCEPTED_FILE_TYPES = [
+//   "application/pdf",
+//   "application/msword",
+//   "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+// ];
 
 import { CompanyInfo, companyProject } from "@/features/companies";
 import { AccountSchema } from "@/features/users";
@@ -34,11 +34,11 @@ export const filesSchema = z.object({
         (file) => sizeInMB(file.size) <= MAX_FILE_SIZE_50MB
       );
     }, `The maximum image size is ${MAX_FILE_SIZE_50MB}MB`)
-    .refine((files) => {
-      return Array.from(files ?? []).every((file) =>
-        ACCEPTED_FILE_TYPES.includes(file.type)
-      );
-    }, "File type is not supported")
+    // .refine((files) => {
+    //   return Array.from(files ?? []).every((file) =>
+    //     ACCEPTED_FILE_TYPES.includes(file.type)
+    //   );
+    // }, "File type is not supported")
     .optional(),
 });
 export const transactionFormData = z.object({
@@ -101,9 +101,9 @@ export const completeStaffWork = z.object({
     .refine((file) => {
       return sizeInMB(file.size) <= MAX_FILE_SIZE_10MB;
     }, `The maximum file size is ${MAX_FILE_SIZE_10MB}MB`)
-    .refine((file) => {
-      return ACCEPTED_FILE_TYPES.includes(file.type);
-    }, "File type is not supported")
+    // .refine((file) => {
+    //   return ACCEPTED_FILE_TYPES.includes(file.type);
+    // }, "File type is not supported")
     .optional(),
   attachmentUrl: z.string().optional(),
 });
