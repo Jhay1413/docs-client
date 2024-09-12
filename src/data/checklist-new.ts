@@ -743,8 +743,8 @@ export const checkList = [
         ]
       },
       {
-        name:"Special Use Agreement in Protected Area (SAPA)",
-        value: "Special Use Agreement in Protected Area (SAPA)",
+        name:"Special Use Agreement in Protected Areas (SAPA)",
+        value: "Special Use Agreement in Protected Areas (SAPA)",
         checkList:[
           'Letter of Intent with Request for Area Inspection',
           'Duly Accomplished Application Form',
