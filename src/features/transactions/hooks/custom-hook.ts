@@ -15,7 +15,7 @@ const useForwardedToUser = (data: z.infer<typeof departmentEntities>[] | undefin
           MANAGER: (data) => data.filter(d =>
             (d.division === selectedDivision && d.section === team && d.role === "TL") ||
              d.role === "RECORDS"),
-            TL : (data) => data.filter(d=> (d.division === selectedDivision && d.role == "MANAGER") ||d.role ==="CH"),
+            TL : (data) => data.filter(d=> (d.division === selectedDivision && d.role == "MANAGER") ||(d.role ==="CH" && d.section === team)),
             CH : (data) => data.filter(d=>d.division === selectedDivision && d.section === team && d.role === "TL")
         }
         const filterFunction = filters[role];
