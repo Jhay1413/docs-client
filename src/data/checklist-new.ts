@@ -631,8 +631,8 @@ export const checkList = [
     name: "TCTI",
     application: [
       {
-        name: "Foreshore Leave Application (FLA)",
-        value: "Foreshore Leave Application (FLA)",
+        name: "Foreshore Lease Agreement (FLA)",
+        value: "Foreshore Lease Agreement (FLA)",
         checkList: [
           'Duly filled-out and notarized Application Form',
           'Official receipt of the payment of application fee',
@@ -647,8 +647,8 @@ export const checkList = [
         ]
       },
       {
-        name: "Miscellaneous Lease Application (MLA)",
-        value: "Miscellaneous Lease Application (MLA)",
+        name: "Miscellaneous Lease Agreement (MLA)",
+        value: "Miscellaneous Lease Agreement (MLA)",
         checkList: [
           'Duly filled-out and notarized Application Form',
           'Official receipt of the payment of application fee',
