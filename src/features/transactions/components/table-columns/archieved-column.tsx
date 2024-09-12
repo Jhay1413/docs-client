@@ -10,7 +10,7 @@ import {
 import { z } from "zod";
 import { Link } from "react-router-dom";
 import { ColumnDef } from "@tanstack/react-table";
-import { MoreHorizontal } from "lucide-react";
+import { ArrowUpDown, MoreHorizontal } from "lucide-react";
 import { archivedTransaction } from "../../schema/TransactionSchema";
 import {
   getCurrentUserId,
@@ -77,13 +77,24 @@ export const archivedColumn: ColumnDef<TArchieved>[] = [
     },
   },
   {
-    header: "Date Created",
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+          className="text-center w-full"
+        >
+          Date created
+          <ArrowUpDown className="ml-2 h-4 w-4" />
+        </Button>
+      );
+    },
     accessorKey: "createdAt",
     cell: ({ row }) => {
       const data = row.original;
 
       return (
-        <div>
+        <div className="text-center">
           <h1>{new Date(data.createdAt!).toDateString()}</h1>
         </div>
       );

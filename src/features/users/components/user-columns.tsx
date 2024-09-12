@@ -86,6 +86,13 @@ export const userInfoColumns: ColumnDef<TUsers>[] = [
         </Button>
       );
     },
+    cell:({row})=>{
+      const userInfo = row.original;
+
+      return (
+        <h1 className="">{new Date(userInfo.birthDate).toDateString()}</h1>
+      )
+    }
   },
   {
     accessorKey: "dateStarted",
@@ -100,6 +107,13 @@ export const userInfoColumns: ColumnDef<TUsers>[] = [
         </Button>
       );
     },
+    cell:({row})=>{
+      const userInfo = row.original;
+
+      return (
+        <h1>{new Date(userInfo.dateStarted).toDateString()}</h1>
+      )
+    }
   },
 
   {

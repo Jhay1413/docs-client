@@ -25,7 +25,7 @@ export const ArchivedList= () => {
           List of Archive Transactions
         </h1>
         <p className="text-muted-foreground text-[12px]">
-          Lorem ipsum dolor sit amet, consectetur adipiscing.
+        View and manage all past transactions stored in the archive.
         </p>
       </div>
       

@@ -39,11 +39,25 @@ const DashboardDataSchema = z.array(
     TotalProject
   ])
 );
+const ConferenceFormSchema = z.object({
+  description : z.string(),
+  startDate : z.date(),
+  endDate : z.date(),
+  startTime : z.string(),
+  endTime:z.string(),
+})
 
+const conferenceCalendarData = z.object({
+  description : z.string(),
+  startDate : z.date(),
+  endDate: z.date(),
+})
 export {
     DashboardDataSchema,
     TotalProject,
     PerApplication,
     PerSection,
-    PrioritySchema
+    PrioritySchema,
+    conferenceCalendarData,
+    ConferenceFormSchema
 }

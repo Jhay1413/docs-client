@@ -11,44 +11,32 @@ import { z } from "zod";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Link } from "react-router-dom";
 import { ColumnDef } from "@tanstack/react-table";
-import { MoreHorizontal } from "lucide-react";
+import { ArrowUpDown, MoreHorizontal } from "lucide-react";
 import { transactionData } from "../../schema/TransactionSchema";
 
 type TransactionInfo = z.infer<typeof transactionData>;
 
 export const transactionColumns: ColumnDef<TransactionInfo>[] = [
+    
   {
-    id: "select",
-    header: ({ table }) => (
-      <Checkbox
-        checked={
-          table.getIsAllPageRowsSelected() ||
-          (table.getIsSomePageRowsSelected() && "indeterminate")
-        }
-        onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-        aria-label="Select all"
-      />
-    ),
-    cell: ({ row }) => (
-      <Checkbox
-        checked={row.getIsSelected()}
-        onCheckedChange={(value) => row.toggleSelected(!!value)}
-        aria-label="Select row"
-      />
-    ),
-    enableSorting: false,
-    enableHiding: false,
-  },
-  {
-    header: "ID",
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Transaction ID
+          <ArrowUpDown className="ml-2 h-4 w-4" />
+        </Button>
+      );
+    },
     accessorKey: "transactionId",
     cell: ({ row }) => {
       const data = row.original;
 
       return (
-        <div className="">
+        <div className="text-center">
           <h1>{data.transactionId}</h1>
-        
         </div>
       );
     },
@@ -56,9 +44,9 @@ export const transactionColumns: ColumnDef<TransactionInfo>[] = [
   {
     header: "Project Name",
     accessorKey: "projectName",
-    filterFn : (row,columnId,filterValue)=>{
-      return true
-    }
+    filterFn: (row, columnId, filterValue) => {
+      return true;
+    },
   },
   {
     header: "Document type",
@@ -67,9 +55,8 @@ export const transactionColumns: ColumnDef<TransactionInfo>[] = [
       const data = row.original;
 
       return (
-        <div >
+        <div>
           <h1>{data.documentType}</h1>
-        
         </div>
       );
     },
@@ -89,7 +76,7 @@ export const transactionColumns: ColumnDef<TransactionInfo>[] = [
       const data = row.original;
 
       return (
-        <div  className="">
+        <div className="">
           <h1>{data.forwarder?.accountRole}</h1>
           <h1>{data.originDepartment}</h1>
         </div>
@@ -128,10 +115,19 @@ export const transactionColumns: ColumnDef<TransactionInfo>[] = [
   {
     header: "Priority",
     accessorKey: "priority",
-    
   },
   {
-    header: "Due date",
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Due Date
+          <ArrowUpDown className="ml-2 h-4 w-4" />
+        </Button>
+      );
+    },
     accessorKey: "dueDate",
     cell: ({ row }) => {
       const transactionInfo = row.original;
@@ -162,7 +158,7 @@ export const transactionColumns: ColumnDef<TransactionInfo>[] = [
     id: "actions",
     cell: ({ row }) => {
       const userInfo = row.original;
-      console.log(userInfo.percentage)
+      console.log(userInfo.percentage);
       return (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
@@ -175,7 +171,10 @@ export const transactionColumns: ColumnDef<TransactionInfo>[] = [
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
             <DropdownMenuSeparator />
             <DropdownMenuItem>
-              <Link to={`/dashboard/transactions/history/${userInfo.id}`} state={{ percentage: userInfo.percentage }} >
+              <Link
+                to={`/dashboard/transactions/history/${userInfo.id}`}
+                state={{ percentage: userInfo.percentage }}
+              >
                 View Details
               </Link>
             </DropdownMenuItem>

@@ -1,11 +1,16 @@
-import { FieldArrayWithId, UseFieldArrayAppend, UseFieldArrayRemove, useFormContext } from "react-hook-form";
+import {
+  FieldArrayWithId,
+  UseFieldArrayAppend,
+  UseFieldArrayRemove,
+  useFormContext,
+} from "react-hook-form";
 
 import {
   FormControl,
   FormField,
   FormItem,
   FormLabel,
-  FormMessage
+  FormMessage,
 } from "@/components/ui/form";
 import FormInput from "@/components/formInput";
 import { Separator } from "@/components/ui/separator";
@@ -53,11 +58,7 @@ export const CompanyForm = ({ fields, append, remove }: Props) => {
           placeholder="Company Address"
           label="Company Address"
         />
-         <FormInput
-          name="email"
-          placeholder="Email"
-          label="Email"
-        />
+        <FormInput name="email" placeholder="Email" label="Email" />
         <FormInput
           name="contactPersons.name"
           placeholder="Contact Person Name"
@@ -73,9 +74,8 @@ export const CompanyForm = ({ fields, append, remove }: Props) => {
           placeholder="Contact Person Number"
           label="Contact Person Number"
         />
-        
       </div>
-      <div className="w-full flex flex-col">
+      <div className="w-full flex gap-4 flex-col">
         <div className="col-span-3">
           <h1 className="font-semibold text-2xl">Company Projects</h1>
         </div>
@@ -105,8 +105,8 @@ export const CompanyForm = ({ fields, append, remove }: Props) => {
                 label="Project Address"
                 placeholder="Project Address"
               />
-               <FormInput
-               name={`companyProjects.${index}.email`}
+              <FormInput
+                name={`companyProjects.${index}.email`}
                 label="Project email"
                 placeholder="Project email"
               />
@@ -150,7 +150,7 @@ export const CompanyForm = ({ fields, append, remove }: Props) => {
                 label="Contact Number"
                 placeholder="Contact Number"
               />
-               <FormInput
+              <FormInput
                 name={`companyProjects.${index}.contactPersons.email`}
                 label="Contact Email"
                 placeholder="Contact Email"
@@ -165,26 +165,6 @@ export const CompanyForm = ({ fields, append, remove }: Props) => {
             </div>
             {index === fields.length - 1 && (
               <div key={`child_${index}`} className="absolute  right-0  ">
-                <Button
-                  variant="ghost"
-                  onClick={() =>
-                    append({
-                      projectId: "",
-                      projectName: "",
-                      projectAddress: "",
-                      retainer: false,
-                      date_expiry: null,
-                      email:"",
-                      contactPersons: {
-                        name: "",
-                        contactNumber: "",
-                        email:null
-                      },
-                    })
-                  }
-                >
-                  <CirclePlus />
-                </Button>
                 <Button variant="ghost" onClick={() => remove(index)}>
                   <CircleX />
                 </Button>
@@ -192,6 +172,28 @@ export const CompanyForm = ({ fields, append, remove }: Props) => {
             )}
           </div>
         ))}
+        <div className="flex ">
+          <Button
+            type="button"
+            onClick={() =>
+              append({
+                projectId: "",
+                projectName: "",
+                projectAddress: "",
+                retainer: false,
+                date_expiry: null,
+                email: "",
+                contactPersons: {
+                  name: "",
+                  contactNumber: "",
+                  email: null,
+                },
+              })
+            }
+          >
+            ADD
+          </Button>
+        </div>
       </div>
     </div>
   );

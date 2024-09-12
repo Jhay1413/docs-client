@@ -5,9 +5,11 @@ import { Component } from "@/components/total-project-chart";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { DashboardDataSchema, PerSection } from "@/features/dashboard";
+import { CalendarFormDialog, DashboardDataSchema, PerSection } from "@/features/dashboard";
+import ConferenceCalendar from "@/features/dashboard/components/conference-calender";
 import { PerApplication, PrioritySchema, TotalProject } from "@/features/dashboard/schema/dashboardSchema";
 import { useTransactions } from "@/features/transactions/hooks/query-gate";
+import { useCurrentUserRole } from "@/hooks/hooks/use-user-hook";
 import { useCurrentUserFirstName } from "@/hooks/use-user-hook";
 import { Dot, Ellipsis, Search } from "lucide-react";
 import { useMemo } from "react";
@@ -23,6 +25,7 @@ export const Dashboard = () => {
  
 
   const currentUser = useCurrentUserFirstName();
+  
   const { defaultDate } = useMemo(
     () => ({
       defaultDate: new Date(2015, 3, 13),
@@ -57,7 +60,7 @@ export const Dashboard = () => {
 
       <div className="grid grid-cols-5 grid-rows-2 w-full  gap-4">
         <div className="col-span-5 xl:col-span-3 xl:row-span-2 rounded-md  relative ">
-          <MyCalendar />
+          <ConferenceCalendar />
         </div>
 
         <div className="col-span-5 lg:xl:col-span-2 w-full  row-span-2 grid grid-cols-2 gap-4">
@@ -336,6 +339,7 @@ export const Dashboard = () => {
           <PriorityBarChart data = {perApplication}/>
         </div>
       </div>
+      <CalendarFormDialog/>
     </div>
   );
 };
