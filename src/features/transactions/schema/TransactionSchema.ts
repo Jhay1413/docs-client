@@ -58,8 +58,8 @@ export const transactionFormData = z.object({
   forwarderId: z.nullable(z.string()).optional(),
   dateForwarded: z.nullable(z.string().datetime()),
   dateReceived: z.nullable(z.string().datetime()).optional(),
-  originDepartment: z.string(),
-  targetDepartment: z.string(),
+  originDepartment: z.string().optional(),
+  targetDepartment: z.string().optional(),
   attachments: z.array(filesSchema).optional(),
 });
 export const transactionLogsData = z.object({
@@ -117,22 +117,22 @@ export const transactionData = transactionFormData
     transactionLogs: z.array(transactionLogsData).optional(),
     completeStaffWork: z.array(completeStaffWork).optional(),
     percentage: z.string().optional(),
-    projectName:z.string().optional()
+    projectName: z.string().optional(),
+    receiverName: z.string().optional(),
+    forwarderName: z.string().optional(),
   })
   .omit({});
 
-
 export const archivedTransaction = z.object({
-  id:z.string(),
-  transactionId:z.string(),
-  company:CompanyInfo,
-  project:companyProject,
-  documentSubType:z.string(),
-  remarks:z.string(),
+  id: z.string(),
+  transactionId: z.string(),
+  company: CompanyInfo,
+  project: companyProject,
+  documentSubType: z.string(),
+  remarks: z.string(),
   createdAt: z.string().datetime().optional(),
-  updatedAt:z.string().datetime().optional()
-
-})
+  updatedAt: z.string().datetime().optional(),
+});
 export const signedUrlData = z.object({
   company: z.string(),
   fileName: z.string(),
@@ -154,13 +154,13 @@ export const departmentEntities = z.object({
 });
 
 export const notification = z.object({
-  id:z.string().optional(),
+  id: z.string().optional(),
   createdAt: z.string().datetime(),
-  message:z.string(),
-  transactionId:z.string(),
-  forwarderId:z.string(),
-  receiverId:z.string(),
-  isRead: z.boolean()
-})
+  message: z.string(),
+  transactionId: z.string(),
+  forwarderId: z.string(),
+  receiverId: z.string(),
+  isRead: z.boolean(),
+});
 export const signedUrlDataArray = z.array(signedUrlData);
 //Transaction Types

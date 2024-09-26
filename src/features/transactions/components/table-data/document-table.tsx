@@ -14,8 +14,9 @@ import { filesSchema } from "../../schema/TransactionSchema";
 import { getSignUrlForView } from "../../services/getSignedUrl";
 import { useReactToPrint } from "react-to-print";
 import { useRef } from "react";
+import { filesQuerySchema } from "shared-contract";
 type Props = {
-  data: z.infer<typeof filesSchema>[];
+  data: z.infer<typeof filesQuerySchema>[];
   percentage?:string 
 };
 export const DocumentTable = ({ data,percentage }: Props) => {

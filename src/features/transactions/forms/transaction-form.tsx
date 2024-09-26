@@ -31,7 +31,6 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Textarea } from "@/components/ui/textarea";
 
 import { cn } from "@/lib/utils";
 
@@ -50,10 +49,7 @@ import {
 import { docRoute } from "@/data/doc-route";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import {
-  departmentEntities,
-  transactionFormData,
-} from "../schema/TransactionSchema";
+import { departmentEntities } from "../schema/TransactionSchema";
 import { useCurrentDivision } from "@/hooks/use-user-hook";
 import FormTextArea from "@/components/formTextArea";
 import { Label } from "@/components/ui/label";
@@ -75,16 +71,22 @@ import { useTransactions } from "../hooks/query-gate";
 import { useForwardedToUser } from "../hooks/custom-hook";
 import { toast } from "react-toastify";
 import { Separator } from "@/components/ui/separator";
+import {
+  companyQuerySchema,
+  transactionMutationSchema,
+  transactionQueryData,
+} from "shared-contract";
 
 type props = {
-  company: z.infer<typeof CompanyInfo>[] | undefined;
+  company: z.infer<typeof companyQuerySchema>[] | null;
   method?: string;
-  defaultValue?: z.infer<typeof transactionFormData>;
+  defaultValue?: z.infer<typeof transactionQueryData> | null;
   mutateFn: (
-    data: z.infer<typeof transactionFormData>,
+    data: z.infer<typeof transactionMutationSchema>,
     isSubmitting: (value: boolean) => void
   ) => void;
 };
+
 export const TransactionForm = ({
   company,
   method,
@@ -94,7 +96,6 @@ export const TransactionForm = ({
   const role = useCurrentUserRole();
   const currentDivision = useCurrentDivision();
   const userId = getCurrentUserId();
-  const route = docRoute.find((data) => data.name === role);
   const { entities } = useTransactions(
     "transactionEntities",
     "v2/departmentEntities"
@@ -121,8 +122,7 @@ export const TransactionForm = ({
   );
   const filteredCompany = company?.find((data) => data.id === selectedCompany);
   const project = filteredCompany?.companyProjects;
-  console.log(selectedDivision, "division");
-  console.log(team, "team");
+
   const filterdForwardedTo = useForwardedToUser(
     validateEntities.data,
     role,
@@ -130,14 +130,16 @@ export const TransactionForm = ({
     team
   );
   console.log(filterdForwardedTo);
-  const form = useForm<z.infer<typeof transactionFormData>>({
-    resolver: zodResolver(transactionFormData),
+  const form = useForm<z.infer<typeof transactionMutationSchema>>({
+    resolver: zodResolver(transactionMutationSchema),
     mode: "onSubmit",
     defaultValues: defaultValue
       ? {
           documentType: defaultValue?.documentType,
           subject: defaultValue?.subject,
-          dueDate: defaultValue?.dueDate,
+          dueDate: defaultValue
+            ? new Date(defaultValue.dueDate).toISOString()
+            : new Date().toISOString(),
           team: defaultValue?.team,
           status: defaultValue?.status,
           priority: defaultValue?.priority,
@@ -145,7 +147,7 @@ export const TransactionForm = ({
           targetDepartment: defaultValue?.targetDepartment,
           transactionId: defaultValue?.transactionId,
           companyId: defaultValue?.companyId || "",
-          projectId: defaultValue?.projectId,
+          projectId: defaultValue?.projectId || "",
           receiverId: defaultValue?.receiverId,
           remarks: defaultValue?.remarks,
           forwarderId: userId,
@@ -193,9 +195,9 @@ export const TransactionForm = ({
     name: "attachments",
   });
 
-  const onSubmit: SubmitHandler<z.infer<typeof transactionFormData>> = async (
-    data
-  ) => {
+  const onSubmit: SubmitHandler<
+    z.infer<typeof transactionMutationSchema>
+  > = async (data) => {
     setIsSubmitting(true);
     mutateFn(data, setIsSubmitting);
   };
@@ -212,10 +214,10 @@ export const TransactionForm = ({
     }
   };
   const onError = () => {
-    if (form.formState.errors)
-      toast.error("Please check all required fields . ", {
-        position: "bottom-right",
-      });
+    if (form.formState.errors) console.log(form.formState.errors);
+    toast.error("Please check all required fields . ", {
+      position: "bottom-right",
+    });
   };
   return (
     <div className="w-full h-full bg-white p-4 rounded-lg">
@@ -268,7 +270,7 @@ export const TransactionForm = ({
                                         currentValue.trim().toLowerCase()
                                     );
 
-                                    form.setValue("companyId", selected?.id);
+                                    form.setValue("companyId", selected?.id!);
                                     setSelectedCompany(selected?.id || "");
                                   }}
                                 >
@@ -327,7 +329,7 @@ export const TransactionForm = ({
                 )}
               />
             </div>
-            <Separator className="col-span-3"/>
+            <Separator className="col-span-3" />
             <div className="col-span-3 grid grid-cols-3 gap-4 grid-rows-2">
               <FormField
                 control={form.control}
@@ -466,7 +468,7 @@ export const TransactionForm = ({
                 )}
               />
             </div>
-            <Separator className="col-span-3 mt-4"/>
+            <Separator className="col-span-3 mt-4" />
             <div className="col-span-3 grid grid-cols-3 gap-4 grid-rows-2">
               <FormField
                 control={form.control}
@@ -476,6 +478,7 @@ export const TransactionForm = ({
                     <FormLabel>Forwarded To</FormLabel>
                     <FormControl>
                       <Select
+                        value={field.value!}
                         onValueChange={(value) => {
                           field.onChange(value);
                         }}
@@ -531,7 +534,7 @@ export const TransactionForm = ({
                           <Calendar
                             mode="single"
                             onSelect={(value) => {
-                              console.log(new Date(value!).toISOString());
+                              console.log(new Date(value!));
                               field.onChange(new Date(value!).toISOString());
                             }}
                             initialFocus
@@ -558,6 +561,7 @@ export const TransactionForm = ({
                     <FormLabel>Priority</FormLabel>
                     <FormControl>
                       <Select
+                      value={field.value}
                         onValueChange={(value) => {
                           field.onChange(value);
                         }}
@@ -589,6 +593,7 @@ export const TransactionForm = ({
                     <FormLabel>Status</FormLabel>
                     <FormControl>
                       <Select
+                      value={field.value}
                         onValueChange={(value) => {
                           field.onChange(value);
                         }}
@@ -616,9 +621,9 @@ export const TransactionForm = ({
                 )}
               />
             </div>
-            <Separator className="col-span-3 mt-4"/>
+            <Separator className="col-span-3 mt-4" />
           </div>
-             
+
           <div className="flex flex-col space-y-4 mt-12 ">
             <h1 className="text-2xl">List of Attachments Required</h1>
             <ScrollArea className="w-full whitespace-nowrap rounded-md border">

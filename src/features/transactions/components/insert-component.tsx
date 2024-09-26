@@ -14,23 +14,65 @@ import { getSignedUrl } from "../services/getSignedUrl";
 import { redirect, useNavigate } from "react-router-dom";
 import { useEffect } from "react";
 
+import { transactionMutationSchema } from "shared-contract";
+import { toast } from "react-toastify";
+import { tsr } from "@/services/tsr";
+
 export const InsertComponent = () => {
-  const { add } = useTransaction({key:"inbox",url:"/v2"});
-  const { entities } = useCompanies("companies", "");
+  const tsrQueryClient = tsr.useQueryClient();
+  // const { add } = useTransaction({key:"inbox",url:"/v2"});
+  const { mutateAsync, isSuccess, isPending } =
+    tsr.transaction.insertTransacitons.useMutation({
+      onMutate: (data) => {
+        const lastGoodKnown =
+          tsrQueryClient.transaction.fetchTransactions.getQueryData([
+            "transactions",
+          ]);
+
+        tsrQueryClient.transaction.fetchTransactions.setQueryData(
+          ["transactions"],
+          (old) => {
+            if (!old) return old;
+            return {
+              ...old,
+              body: [...old.body, data.body],
+            };
+          }
+        );
+
+        return { lastGoodKnown };
+      },
+      onSuccess: () => {
+        toast.success("Data submitted successfully ! ");
+      },
+      onError: (error, newPost, context) => {
+        tsrQueryClient.transaction.fetchTransactions.setQueryData(
+          ["transactions"],
+          context?.lastGoodKnown
+        );
+        toast.error("Something went wrong, Please retry ! ");
+      },
+      onSettled: () => {
+        tsrQueryClient.invalidateQueries({ queryKey: ["transactions"] });
+      },
+    });
+  const { data: companies, isLoading: companiesIsLoading } =
+    tsr.company.fetchCompanies.useQuery({ queryKey: ["companies"] });
 
   const navigate = useNavigate();
   const onSubmit = async (
-    transactionData: z.infer<typeof transactionFormData>,
-    setIsSubmitting : (value:boolean)=>void
+    transactionData: z.infer<typeof transactionMutationSchema>,
+    setIsSubmitting: (value: boolean) => void
   ) => {
+    console.log(transactionData);
     const attachments = transactionData.attachments?.filter(
       (data) => data.file?.length! > 0
     );
 
     if (!attachments || attachments.length === 0)
-      return add.mutate(transactionData);
+      return mutateAsync({ body: transactionData });
 
-    const selectedCompany = entities?.data?.find(
+    const selectedCompany = companies?.body?.find(
       (company) => transactionData.companyId === company.id
     );
 
@@ -51,24 +93,27 @@ export const InsertComponent = () => {
 
       const payload = prepare_transaction_payload(transactionData, res);
 
-      await add.mutateAsync(payload);
+      await mutateAsync({ body: payload });
 
-      if(!add.isPending){
-        setIsSubmitting(false)
+      if (isPending) {
+        setIsSubmitting(true);
       }
     }
   };
-  
+
   useEffect(() => {
-    if (add.isSuccess) {
+    if (isSuccess) {
       navigate("/dashboard/transactions/list");
     }
-  }, [add.isSuccess]);
+  }, [isSuccess]);
 
-  if(entities.isLoading) return "loading"
+  if (companiesIsLoading) return "loading";
   return (
     <div className="w-full h-full bg-white p-4 rounded-lg">
-      <TransactionForm company={entities.data} mutateFn={onSubmit} />
+      <TransactionForm
+        company={companies ? companies.body : null}
+        mutateFn={onSubmit}
+      />
     </div>
   );
 };

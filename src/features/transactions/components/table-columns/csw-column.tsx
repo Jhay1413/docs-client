@@ -16,8 +16,9 @@ import {
   transactionLogsData,
 } from "../../schema/TransactionSchema";
 import { getSignUrlForView } from "../../services/getSignedUrl";
+import { completeStaffWorkQuerySchema } from "shared-contract/dist/schema/transactions/query-schema";
 
-type Csw = z.infer<typeof completeStaffWork>;
+type Csw = z.infer<typeof completeStaffWorkQuerySchema>;
 
 export const cswColumn: ColumnDef<Csw>[] = [
   {

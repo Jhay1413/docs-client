@@ -16,30 +16,76 @@ import {
 import { getSignedUrl } from "../services/getSignedUrl";
 import { getCurrentUserId } from "@/hooks/hooks/use-user-hook";
 import { useNotificationStore } from "@/global-states/notification-store";
+import { tsr } from "@/services/tsr";
+import {
+  transactionMutationSchema,
+  transactionQueryData,
+} from "shared-contract";
+import { toast } from "react-toastify";
 
 export const TransactionUpdateComponent = () => {
+  const tsrQueryClient = tsr.useQueryClient();
   const notification = useNotificationStore((state) => state.notification);
   const setNotification = useNotificationStore(
     (state) => state.setNotification
   );
   const { id } = useParams();
   const userId = getCurrentUserId();
-  const { entities } = useCompanies("companies", "");
-  const { entity, update } = useTransaction({
-    key: "inbox",
-    url: `v2/${id}`,
-    id,
-    method: "UPDATEREMOVE",
+
+  const { data, isLoading } = tsr.transaction.fetchTransactionById.useQuery({
+    queryKey: ["transactions", id],
+    queryData: { params: { id: id! } },
   });
+  const { data: companies, isPending } = tsr.company.fetchCompanies.useQuery({
+    queryKey: ["companies"],
+  });
+
+  const { mutate, mutateAsync ,isSuccess} = tsr.transaction.updateTransaction.useMutation(
+    {
+      onMutate: (data) => {
+        const lastGoodKnown =
+          tsrQueryClient.transaction.fetchTransactions.getQueryData([
+            "transactions",
+          ]);
+
+        tsrQueryClient.transaction.fetchTransactions.setQueryData(
+          ["transactions"],
+          (old) => {
+            if (!old) return old;
+            return {
+              ...old,
+              body: [...old.body, data.body],
+            };
+          }
+        );
+
+        return { lastGoodKnown };
+      },
+      onSuccess: () => {
+        toast.success("Data submitted successfully ! ");
+      },
+      onError: (error, newPost, context) => {
+        tsrQueryClient.transaction.fetchTransactions.setQueryData(
+          ["transactions", id],
+          context?.lastGoodKnown
+        );
+        toast.error("Something went wrong, Please retry ! ");
+      },
+      onSettled: () => {
+        tsrQueryClient.invalidateQueries({ queryKey: ["transactions"] });
+      },
+    }
+  );
+  // const { entity, update } = useTransaction({
+  //   key: "inbox",
+  //   url: `v2/${id}`,
+  //   id,
+  //   method: "UPDATEREMOVE",
+  // });
   const navigate = useNavigate();
 
-  console.log(entity.data);
-  const validatedData = transactionData.safeParse(entity.data);
-  if (!validatedData.data || validatedData.error)
-    console.log(validatedData.error.errors);
-  //For review !! temporarily separated the update and add component  with the same logic
   const mutateFn = async (
-    transactionData: z.infer<typeof transactionFormData>,
+    transactionData: z.infer<typeof transactionMutationSchema>,
     setIsSubmitting: (value: boolean) => void
   ) => {
     const attachments = transactionData.attachments?.filter(
@@ -47,9 +93,12 @@ export const TransactionUpdateComponent = () => {
     );
 
     if (!attachments || attachments.length === 0)
-      return update.mutate(transactionData);
+      return mutate({
+        params: { id: id! },
+        body: transactionData,
+      });
 
-    const selectedCompany = entities?.data?.find(
+    const selectedCompany = companies?.body?.find(
       (company) => transactionData.companyId === company.id
     );
 
@@ -72,33 +121,40 @@ export const TransactionUpdateComponent = () => {
       if (payload.status === "ARCHIVED") {
         payload = { ...payload, receiverId: null };
       }
-      await update.mutateAsync(payload);
+      await mutateAsync({
+        params: { id: id! },
+        body: transactionData,
+      });
 
-      if (!update.isPending) {
+      if (isPending) {
         setIsSubmitting(false);
       }
     }
   };
 
   useEffect(() => {
-    async function isSuccess() {
-      if (update.isSuccess) {
-        setNotification({incoming : notification?.incoming !== 0 ? notification?.incoming! : 0,inbox : notification?.inbox! - 1})
+    async function isSubmitted() {
+      if (isSuccess) {
+        setNotification({
+          incoming: notification?.incoming !== 0 ? notification?.incoming! : 0,
+          inbox: notification?.inbox! - 1,
+        });
         navigate(`/dashboard/transactions/inbox/${userId}`);
       }
     }
-    isSuccess();
-  }, [update.isSuccess]);
-  if (entity.isLoading || entities.isLoading) return <div>Loading...</div>;
+    isSubmitted();
+  }, [isSuccess]);
+  if (isLoading) return <div>Loading...</div>;
 
   return (
     <div className="w-full h-full bg-white p-4 rounded-lg">
       <TransactionForm
-        company={entities.data}
+        company={companies ? companies.body : null}
         method="UPDATE"
         mutateFn={mutateFn}
-        defaultValue={validatedData.data}
+        defaultValue={data?.body}
       />
+     
     </div>
   );
 };

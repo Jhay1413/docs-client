@@ -13,8 +13,9 @@ import { Link } from "react-router-dom";
 import { ColumnDef } from "@tanstack/react-table";
 import { ArrowUpDown, MoreHorizontal } from "lucide-react";
 import { transactionData } from "../../schema/TransactionSchema";
+import { transactionQueryData } from "shared-contract";
 
-type TransactionInfo = z.infer<typeof transactionData>;
+type TransactionInfo = z.infer<typeof transactionQueryData>;
 
 export const transactionColumns: ColumnDef<TransactionInfo>[] = [
     
@@ -49,7 +50,7 @@ export const transactionColumns: ColumnDef<TransactionInfo>[] = [
     },
   },
   {
-    header: "Document type",
+    header: "Type",
     accessorKey: "documentType",
     cell: ({ row }) => {
       const data = row.original;
@@ -62,7 +63,7 @@ export const transactionColumns: ColumnDef<TransactionInfo>[] = [
     },
   },
   {
-    header: "Document sub type",
+    header: "Subtype",
     accessorKey: "documentSubType",
   },
   {
@@ -70,29 +71,28 @@ export const transactionColumns: ColumnDef<TransactionInfo>[] = [
     accessorKey: "subject",
   },
   {
-    header: "Forwarded By",
+    header: "Forwarder",
     accessorKey: "forwarder",
     cell: ({ row }) => {
       const data = row.original;
 
       return (
         <div className="">
-          <h1>{data.forwarder?.accountRole}</h1>
-          <h1>{data.originDepartment}</h1>
+          <h1>{data.forwarderName}</h1>
+        
         </div>
       );
     },
   },
   {
-    header: "Forwarded To:",
+    header: "Reciever",
     accessorKey: "forwardedTo",
     cell: ({ row }) => {
       const data = row.original;
 
       return (
         <div>
-          <h1>{data.receiver?.accountRole}</h1>
-          <h1>{data.targetDepartment}</h1>
+             <h1>{data.receiverName}</h1>
         </div>
       );
     },

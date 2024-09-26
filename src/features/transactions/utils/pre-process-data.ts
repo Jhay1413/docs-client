@@ -7,6 +7,7 @@ import {
 } from "../schema/TransactionSchema";
 import { uploadFile } from "../services/uploadFile";
 import { CompanyInfo } from "@/features/companies";
+import { filesMutationSchema, filesQuerySchema, transactionMutationSchema, transactionQueryData } from "shared-contract";
 
 export const findContainFile = (
   transactionData: z.infer<typeof transactionFormData>,
@@ -31,7 +32,7 @@ export const findContainFile = (
   return signedUrlPayload;
 };
 export const prepare_file_payload = async (
-  attachments: z.infer<typeof filesSchema>[],
+  attachments: z.infer<typeof filesMutationSchema>[],
   data: z.infer<typeof signedUrlDataArray>
 ) => {
   const res = await Promise.all(
@@ -60,7 +61,7 @@ export const prepare_file_payload = async (
 };
 
 export const prepare_transaction_payload = (
-  transactionData: z.infer<typeof transactionFormData>,
+  transactionData: z.infer<typeof transactionMutationSchema>,
   res: z.infer<typeof signedUrlData>[]
 ) => {
   const modified_fileData = transactionData.attachments?.map((attachment) => {

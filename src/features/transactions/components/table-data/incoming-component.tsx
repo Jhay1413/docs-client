@@ -34,6 +34,7 @@ export const IncomingComponent = () => {
   const validatedData = z.array(transactionData).safeParse(entities.data);
 
   if (!validatedData.success) {
+    console.log(validatedData.error.errors)
     return "Invalid Data!";
   }
 

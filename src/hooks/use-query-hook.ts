@@ -13,6 +13,7 @@ export const useEntities = <T extends { id?: string }>(
       console.log(data)
       return data;
     },
+    staleTime:Infinity
   });
   return { entities };
 };

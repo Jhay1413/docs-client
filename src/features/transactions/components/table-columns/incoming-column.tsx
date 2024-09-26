@@ -85,7 +85,7 @@ export const incomingColumns: ColumnDef<IncomingColumn>[] = [
       return (
         <div className="flex flex-col gap-4">
           <h1>{transactionHistory?.originDepartment}</h1>
-          <h1>{transactionHistory?.forwarder?.email}</h1>
+          <h1>{transactionHistory.forwarder?.userInfo?.firstName}</h1>
         </div>
       );
     },

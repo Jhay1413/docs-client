@@ -10,6 +10,7 @@ import { useState } from "react";
 import { IerPage } from "./table-data/ier-summary";
 import { CompleteStaffWorkForm } from "../forms/csw-form";
 import { CswComponent } from "./table-data/csw-list";
+import { tsr } from "@/services/tsr";
 
 enum View {
   IER,
@@ -19,27 +20,35 @@ enum View {
 export const HistoryComponent = () => {
   const { id } = useParams();
   const [view, setView] = useState<View>(View.DETAILS);
-
-  const { entity, update } = useTransaction({
-    key: `transactions`,
-    url: `v2/${id}`,
-    id,
+  const { data, isPending } = tsr.transaction.fetchTransactionById.useQuery({
+    queryKey: ["transaction", id],
+    queryData: {
+      params: { id: id! },
+    },
   });
+  // const { entity, update } = useTransaction({
+  //   key: `transactions`,
+  //   url: `v2/${id}`,
+  //   id,
+  // });
 
-  const validatedData = transactionData.safeParse(entity.data);
-  console.log(validatedData.data);
-  if (entity.isLoading) return "loading";
+  // const validatedData = transactionData.safeParse(entity.data);
+  // console.log(data?.body);
+  // if (entity.isLoading) return "loading";
 
-  if (!validatedData.success || !validatedData.data) {
-    console.log(entity.data);
-    console.log(validatedData.error.errors);
-    return "something went wrong !";
+  // if (!succ?.bodyess || !data?.body) {
+  //   console.log(entity.data);
+  //   console.log(erro?.bodyr.errors);
+  //   return "something went wrong !";
+  // }
+
+  if (isPending || !data?.body) {
+    return "loading";
   }
   const attachmentForIer =
-    validatedData.data.attachments?.filter(
+    data.body.attachments?.filter(
       (attachment) => attachment.fileType === "INITIAL_DOC"
     ) || [];
-
   return (
     <div className="flex flex-col w-full  p-4 rounded-lg">
       <div className=" space-y-8">
@@ -61,9 +70,9 @@ export const HistoryComponent = () => {
 
           <div className="flex w-16  shadow-xl ">
             <button
-                 className={`w-full text-sm bg-transparent border-0 shadow-none focus:outline-none flex items-center justify-center  p-2   ${
+              className={`w-full text-sm bg-transparent border-0 shadow-none focus:outline-none flex items-center justify-center  p-2   ${
                 view === View.CSW
-                   ? "border-b-2 border-b-green-500 text-sm"
+                  ? "border-b-2 border-b-green-500 text-sm"
                   : "text-sm"
               }`}
               onClick={() => setView(View.CSW)}
@@ -73,10 +82,10 @@ export const HistoryComponent = () => {
           </div>
 
           <div className="flex w-16  shadow-xl ">
-          <button
-                 className={`w-full text-sm bg-transparent border-0 shadow-none focus:outline-none flex items-center justify-center  p-2   ${
+            <button
+              className={`w-full text-sm bg-transparent border-0 shadow-none focus:outline-none flex items-center justify-center  p-2   ${
                 view === View.IER
-                    ? "border-b-2 border-b-green-500 text-sm"
+                  ? "border-b-2 border-b-green-500 text-sm"
                   : "text-sm"
               }`}
               onClick={() => setView(View.IER)}
@@ -86,24 +95,24 @@ export const HistoryComponent = () => {
           </div>
         </div>
         <Separator className="h" />
-            <div className="">
-              <h1 className="text-xl font-normal">{validatedData.data.transactionId}</h1>
-            </div>
+        <div className="">
+          <h1 className="text-xl font-normal">{data?.body.transactionId}</h1>
+        </div>
         {view === View.IER ? (
           <IerPage data={attachmentForIer} />
         ) : view === View.CSW ? (
           <CswComponent
-            transactionId={validatedData.data.id || ""}
-            data={validatedData.data.completeStaffWork || []}
+            transactionId={data?.body.id || ""}
+            data={data?.body.completeStaffWork || []}
           />
         ) : (
           <>
-            <TransactionDetails data={validatedData.data} />
+            <TransactionDetails data={data?.body} />
             <div className="flex flex-col">
               <h1 className="text-muted-foreground text-lg">History</h1>
               <DataTable
                 columns={historyColumn}
-                data={validatedData.data?.transactionLogs!}
+                data={data?.body?.transactionLogs!}
               />
             </div>
           </>

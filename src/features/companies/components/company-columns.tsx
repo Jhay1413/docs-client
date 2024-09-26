@@ -14,8 +14,9 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Link } from "react-router-dom";
 import { CompanyInfo} from "../schema/companySchema";
 import { z } from "zod";
+import { companyQuerySchema } from "shared-contract";
 
-export const companyInfoColumns: ColumnDef<z.infer<typeof CompanyInfo>>[] = [
+export const companyInfoColumns: ColumnDef<z.infer<typeof companyQuerySchema>>[] = [
 
   {
     header: ({ column }) => {
