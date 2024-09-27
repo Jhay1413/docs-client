@@ -16,8 +16,9 @@ import {
   getCurrentUserId,
   useCurrentUserRole,
 } from "@/hooks/hooks/use-user-hook";
+import { transactionQueryData } from "shared-contract";
 
-type TArchieved = z.infer<typeof archivedTransaction>;
+type TArchieved = z.infer<typeof transactionQueryData>;
 
 export const archivedColumn: ColumnDef<TArchieved>[] = [
   {
@@ -32,7 +33,7 @@ export const archivedColumn: ColumnDef<TArchieved>[] = [
 
       return (
         <div>
-          <h1>{data.company.companyId}</h1>
+          <h1>{data.company?.companyId}</h1>
         </div>
       );
     },
@@ -45,7 +46,7 @@ export const archivedColumn: ColumnDef<TArchieved>[] = [
 
       return (
         <div>
-          <h1>{data.project.projectId}</h1>
+          <h1>{data.project?.projectId}</h1>
         </div>
       );
     },
@@ -71,31 +72,7 @@ export const archivedColumn: ColumnDef<TArchieved>[] = [
 
       return (
         <div>
-          <h1>{data.project.projectAddress}</h1>
-        </div>
-      );
-    },
-  },
-  {
-    header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-          className="text-center w-full"
-        >
-          Date created
-          <ArrowUpDown className="ml-2 h-4 w-4" />
-        </Button>
-      );
-    },
-    accessorKey: "createdAt",
-    cell: ({ row }) => {
-      const data = row.original;
-
-      return (
-        <div className="text-center">
-          <h1>{new Date(data.createdAt!).toDateString()}</h1>
+          <h1>{data.project?.projectAddress}</h1>
         </div>
       );
     },

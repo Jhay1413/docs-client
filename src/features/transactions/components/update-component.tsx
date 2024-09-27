@@ -44,11 +44,11 @@ export const TransactionUpdateComponent = () => {
     {
       onMutate: (data) => {
         const lastGoodKnown =
-          tsrQueryClient.transaction.fetchTransactions.getQueryData([
+          tsrQueryClient.transaction.searchTransactions.getQueryData([
             "transactions",
           ]);
 
-        tsrQueryClient.transaction.fetchTransactions.setQueryData(
+        tsrQueryClient.transaction.searchTransactions.setQueryData(
           ["transactions"],
           (old) => {
             if (!old) return old;
@@ -65,7 +65,7 @@ export const TransactionUpdateComponent = () => {
         toast.success("Data submitted successfully ! ");
       },
       onError: (error, newPost, context) => {
-        tsrQueryClient.transaction.fetchTransactions.setQueryData(
+        tsrQueryClient.transaction.searchTransactions.setQueryData(
           ["transactions", id],
           context?.lastGoodKnown
         );

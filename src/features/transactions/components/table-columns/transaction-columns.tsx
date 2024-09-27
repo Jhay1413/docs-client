@@ -18,7 +18,6 @@ import { transactionQueryData } from "shared-contract";
 type TransactionInfo = z.infer<typeof transactionQueryData>;
 
 export const transactionColumns: ColumnDef<TransactionInfo>[] = [
-    
   {
     header: ({ column }) => {
       return (
@@ -45,8 +44,14 @@ export const transactionColumns: ColumnDef<TransactionInfo>[] = [
   {
     header: "Project Name",
     accessorKey: "projectName",
-    filterFn: (row, columnId, filterValue) => {
-      return true;
+    cell: ({ row }) => {
+      const data = row.original;
+
+      return (
+        <div>
+          <h1>{data.project?.projectName}</h1>
+        </div>
+      );
     },
   },
   {
@@ -79,7 +84,6 @@ export const transactionColumns: ColumnDef<TransactionInfo>[] = [
       return (
         <div className="">
           <h1>{data.forwarderName}</h1>
-        
         </div>
       );
     },
@@ -92,7 +96,7 @@ export const transactionColumns: ColumnDef<TransactionInfo>[] = [
 
       return (
         <div>
-             <h1>{data.receiverName}</h1>
+          <h1>{data.receiverName}</h1>
         </div>
       );
     },

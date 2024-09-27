@@ -45,11 +45,12 @@
     "react-to-print": "^2.15.1",
     "react-toastify": "^10.0.5",
     "recharts": "^2.12.7",
-    "shared-contract": "^1.1.12",
+    "shared-contract": "^1.1.24",
     "socket.io-client": "^4.7.5",
     "sort-by": "^1.2.0",
     "tailwind-merge": "^2.3.0",
     "tailwindcss-animate": "^1.0.7",
+    "use-debounce": "^10.0.3",
     "zod": "^3.23.7",
     "zustand": "^4.5.4"
   },
