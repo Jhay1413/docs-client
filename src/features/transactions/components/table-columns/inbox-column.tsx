@@ -13,29 +13,21 @@ import { ColumnDef } from "@tanstack/react-table";
 import { MoreHorizontal } from "lucide-react";
 import { transactionData } from "../../schema/TransactionSchema";
 import { Checkbox } from "@/components/ui/checkbox";
+import { transactionQueryData } from "shared-contract";
 
-type InboxColumn = z.infer<typeof transactionData>;
+type InboxColumn = z.infer<typeof transactionQueryData>;
 
 export const inboxColumn: ColumnDef<InboxColumn>[] = [
   {
     id: "select",
     header: ({ table }) => (
       <Checkbox
-        checked={
-          table.getIsAllPageRowsSelected() ||
-          (table.getIsSomePageRowsSelected() && "indeterminate")
-        }
+        checked={table.getIsAllPageRowsSelected() || (table.getIsSomePageRowsSelected() && "indeterminate")}
         onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
         aria-label="Select all"
       />
     ),
-    cell: ({ row }) => (
-      <Checkbox
-        checked={row.getIsSelected()}
-        onCheckedChange={(value) => row.toggleSelected(!!value)}
-        aria-label="Select row"
-      />
-    ),
+    cell: ({ row }) => <Checkbox checked={row.getIsSelected()} onCheckedChange={(value) => row.toggleSelected(!!value)} aria-label="Select row" />,
     enableSorting: false,
     enableHiding: false,
   },
@@ -111,22 +103,14 @@ export const inboxColumn: ColumnDef<InboxColumn>[] = [
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
 
             <DropdownMenuItem>
-              <Link
-                to={`/dashboard/transactions/update/${transactionInfo.id}`}
-              >
-                Update Transaction
-              </Link>
+              <Link to={`/dashboard/transactions/update/${transactionInfo.id}`}>Update Transaction</Link>
             </DropdownMenuItem>
 
             <DropdownMenuSeparator />
-            
+
             <DropdownMenuSeparator />
             <DropdownMenuItem>
-              <Link
-                to={`/dashboard/transactions/history/${transactionInfo.id}`}
-              >
-                View Details
-              </Link>
+              <Link to={`/dashboard/transactions/history/${transactionInfo.id}`}>View Details</Link>
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
