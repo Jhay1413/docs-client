@@ -1,36 +1,10 @@
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
-import {
-  Form,
-  FormControl,
-  FormDescription,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
+import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import {
-  Table,
-  TableBody,
-  TableCaption,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 
 import { cn } from "@/lib/utils";
 
@@ -42,10 +16,7 @@ import { SubmitHandler, useFieldArray, useForm } from "react-hook-form";
 import FormInput from "@/components/formInput";
 import { Divisions } from "@/data/data";
 import { CompanyInfo } from "@/features/companies";
-import {
-  getCurrentUserId,
-  useCurrentUserRole,
-} from "@/hooks/hooks/use-user-hook";
+import { getCurrentUserId, useCurrentUserRole } from "@/hooks/hooks/use-user-hook";
 import { docRoute } from "@/data/doc-route";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -58,78 +29,41 @@ import { checkList } from "@/data/checklist-new";
 
 import { Check, ChevronsUpDown } from "lucide-react";
 
-import {
-  Command,
-  CommandEmpty,
-  CommandGroup,
-  CommandInput,
-  CommandItem,
-  CommandList,
-} from "@/components/ui/command";
+import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import { useTransactions } from "../hooks/query-gate";
 import { useForwardedToUser } from "../hooks/custom-hook";
 import { toast } from "react-toastify";
 import { Separator } from "@/components/ui/separator";
-import {
-  companyQuerySchema,
-  transactionMutationSchema,
-  transactionQueryData,
-} from "shared-contract";
+import { companyQuerySchema, transactionMutationSchema, transactionQueryData } from "shared-contract";
 
 type props = {
   company: z.infer<typeof companyQuerySchema>[] | null;
   method?: string;
   defaultValue?: z.infer<typeof transactionQueryData> | null;
-  mutateFn: (
-    data: z.infer<typeof transactionMutationSchema>,
-    isSubmitting: (value: boolean) => void
-  ) => void;
+  mutateFn: (data: z.infer<typeof transactionMutationSchema>, isSubmitting: (value: boolean) => void) => void;
 };
 
-export const TransactionForm = ({
-  company,
-  method,
-  defaultValue,
-  mutateFn,
-}: props) => {
+export const TransactionForm = ({ company, method, defaultValue, mutateFn }: props) => {
   const role = useCurrentUserRole();
   const currentDivision = useCurrentDivision();
   const userId = getCurrentUserId();
-  const { entities } = useTransactions(
-    "transactionEntities",
-    "v2/departmentEntities"
-  );
+  const { entities } = useTransactions("transactionEntities", "v2/departmentEntities");
 
   const validateEntities = z.array(departmentEntities).safeParse(entities.data);
-  const [selectedCompany, setSelectedCompany] = useState<string>(
-    defaultValue?.companyId || ""
-  );
+  const [selectedCompany, setSelectedCompany] = useState<string>(defaultValue?.companyId || "");
   const fileInputRef = useRef<(HTMLInputElement | null)[]>([]);
   const [team, setTeam] = useState(defaultValue?.team || "");
-  const [selectedDivision, setSelectedDivision] = useState(
-    defaultValue?.targetDepartment || ""
-  );
+  const [selectedDivision, setSelectedDivision] = useState(defaultValue?.targetDepartment || "");
   const [subType, setSubType] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const temp_section = checkList.find((check) => check.name === team);
-  const attachmentList = useMemo(
-    () => temp_section?.application.find((check) => check.name === subType),
-    [subType, temp_section]
-  );
-  const sections = Divisions.find(
-    (division) => division.name === selectedDivision
-  );
+  const attachmentList = useMemo(() => temp_section?.application.find((check) => check.name === subType), [subType, temp_section]);
+  const sections = Divisions.find((division) => division.name === selectedDivision);
   const filteredCompany = company?.find((data) => data.id === selectedCompany);
   const project = filteredCompany?.companyProjects;
 
-  const filterdForwardedTo = useForwardedToUser(
-    validateEntities.data,
-    role,
-    selectedDivision,
-    team
-  );
-  console.log(filterdForwardedTo);
+  const filterdForwardedTo = useForwardedToUser(validateEntities.data, role, selectedDivision, team);
   const form = useForm<z.infer<typeof transactionMutationSchema>>({
     resolver: zodResolver(transactionMutationSchema),
     mode: "onSubmit",
@@ -137,9 +71,7 @@ export const TransactionForm = ({
       ? {
           documentType: defaultValue?.documentType,
           subject: defaultValue?.subject,
-          dueDate: defaultValue
-            ? new Date(defaultValue.dueDate).toISOString()
-            : new Date().toISOString(),
+          dueDate: defaultValue ? new Date(defaultValue.dueDate).toISOString() : new Date().toISOString(),
           team: defaultValue?.team,
           status: defaultValue?.status,
           priority: defaultValue?.priority,
@@ -153,9 +85,7 @@ export const TransactionForm = ({
           forwarderId: userId,
           dateForwarded: new Date().toISOString(),
           documentSubType: defaultValue?.documentSubType,
-          attachments: defaultValue.attachments?.sort((a, b) =>
-            (b.fileUrl || "").localeCompare(a.fileUrl || "")
-          ),
+          attachments: defaultValue.attachments?.sort((a, b) => (b.fileUrl || "").localeCompare(a.fileUrl || "")),
         }
       : {
           dateForwarded: new Date().toISOString(),
@@ -185,7 +115,7 @@ export const TransactionForm = ({
           fileStatus: null,
           fileUrl: null,
           file: undefined,
-        })) || [] // Ensure to handle case when attachmentList or checkList might be undefined
+        })) || [], // Ensure to handle case when attachmentList or checkList might be undefined
       );
     }
   }, [attachmentList]);
@@ -195,9 +125,7 @@ export const TransactionForm = ({
     name: "attachments",
   });
 
-  const onSubmit: SubmitHandler<
-    z.infer<typeof transactionMutationSchema>
-  > = async (data) => {
+  const onSubmit: SubmitHandler<z.infer<typeof transactionMutationSchema>> = async (data) => {
     setIsSubmitting(true);
     mutateFn(data, setIsSubmitting);
   };
@@ -235,18 +163,8 @@ export const TransactionForm = ({
                     <Popover>
                       <PopoverTrigger asChild>
                         <FormControl>
-                          <Button
-                            variant="outline"
-                            role="combobox"
-                            className={cn(
-                              " justify-between",
-                              !field.value && "text-muted-foreground"
-                            )}
-                          >
-                            {field.value
-                              ? company?.find((comp) => comp.id === field.value)
-                                  ?.companyName
-                              : "Select Company"}
+                          <Button variant="outline" role="combobox" className={cn(" justify-between", !field.value && "text-muted-foreground")}>
+                            {field.value ? company?.find((comp) => comp.id === field.value)?.companyName : "Select Company"}
                             <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                           </Button>
                         </FormControl>
@@ -263,25 +181,14 @@ export const TransactionForm = ({
                                   key={comp.id}
                                   onSelect={(currentValue) => {
                                     const selected = company.find(
-                                      (comp) =>
-                                        comp.companyName
-                                          .trim()
-                                          .toLowerCase() ===
-                                        currentValue.trim().toLowerCase()
+                                      (comp) => comp.companyName.trim().toLowerCase() === currentValue.trim().toLowerCase(),
                                     );
 
                                     form.setValue("companyId", selected?.id!);
                                     setSelectedCompany(selected?.id || "");
                                   }}
                                 >
-                                  <Check
-                                    className={cn(
-                                      "mr-2 h-4 w-4",
-                                      comp.id === field.value
-                                        ? "opacity-100"
-                                        : "opacity-0"
-                                    )}
-                                  />
+                                  <Check className={cn("mr-2 h-4 w-4", comp.id === field.value ? "opacity-100" : "opacity-0")} />
                                   {comp.companyName}
                                 </CommandItem>
                               ))}
@@ -314,10 +221,7 @@ export const TransactionForm = ({
                         <SelectContent>
                           {project &&
                             project.map((project) => (
-                              <SelectItem
-                                key={project.projectName}
-                                value={project.id!}
-                              >
+                              <SelectItem key={project.projectName} value={project.id!}>
                                 {project.projectName}
                               </SelectItem>
                             ))}
@@ -351,10 +255,7 @@ export const TransactionForm = ({
                         </SelectTrigger>
                         <SelectContent>
                           {Divisions.map((division) => (
-                            <SelectItem
-                              key={division.name}
-                              value={division.name!}
-                            >
+                            <SelectItem key={division.name} value={division.name!}>
                               {division.name}
                             </SelectItem>
                           ))}
@@ -378,20 +279,14 @@ export const TransactionForm = ({
                           field.onChange(value);
                         }}
                         defaultValue={field.value}
-                        disabled={
-                          (method === "UPDATE" && role !== "RECORDS") ||
-                          !selectedDivision
-                        }
+                        disabled={(method === "UPDATE" && role !== "RECORDS") || !selectedDivision}
                       >
                         <SelectTrigger>
                           <SelectValue placeholder="Select team" />
                         </SelectTrigger>
                         <SelectContent>
                           {sections?.section?.map((section) => (
-                            <SelectItem
-                              key={section.value}
-                              value={section.value!}
-                            >
+                            <SelectItem key={section.value} value={section.value!}>
                               {section.name}
                             </SelectItem>
                           ))}
@@ -403,11 +298,7 @@ export const TransactionForm = ({
                 )}
               />
               <div className="row-span-2 ">
-                <FormTextArea
-                  placeholder="Subject"
-                  label="Subject"
-                  name="subject"
-                />
+                <FormTextArea placeholder="Subject" label="Subject" name="subject" />
               </div>
               <FormField
                 control={form.control}
@@ -427,9 +318,7 @@ export const TransactionForm = ({
                           <SelectValue placeholder="Select Document Type" />
                         </SelectTrigger>
                         <SelectContent>
-                          <SelectItem value="Application">
-                            APPLICATION
-                          </SelectItem>
+                          <SelectItem value="Application">APPLICATION</SelectItem>
                           <SelectItem value="Others">Others</SelectItem>
                         </SelectContent>
                       </Select>
@@ -512,22 +401,11 @@ export const TransactionForm = ({
                         <PopoverTrigger asChild>
                           <Button
                             variant={"outline"}
-                            className={cn(
-                              "w-full justify-start text-left font-normal",
-                              !field.value && "text-muted-foreground"
-                            )}
-                            disabled={
-                              method === "UPDATE" &&
-                              role !== "RECORDS" &&
-                              role !== "MANAGER"
-                            }
+                            className={cn("w-full justify-start text-left font-normal", !field.value && "text-muted-foreground")}
+                            disabled={method === "UPDATE" && role !== "RECORDS" && role !== "MANAGER"}
                           >
                             <CalendarIcon className="mr-2 h-4 w-4" />
-                            {field.value ? (
-                              format(field.value, "PPP")
-                            ) : (
-                              <span>Pick a date</span>
-                            )}
+                            {field.value ? format(field.value, "PPP") : <span>Pick a date</span>}
                           </Button>
                         </PopoverTrigger>
                         <PopoverContent className="w-auto p-0">
@@ -547,11 +425,7 @@ export const TransactionForm = ({
                 )}
               />
               <div className="row-span-2 h-full">
-                <FormTextArea
-                  placeholder="Remarks"
-                  label="Remarks"
-                  name="remarks"
-                />
+                <FormTextArea placeholder="Remarks" label="Remarks" name="remarks" />
               </div>
               <FormField
                 control={form.control}
@@ -561,15 +435,11 @@ export const TransactionForm = ({
                     <FormLabel>Priority</FormLabel>
                     <FormControl>
                       <Select
-                      value={field.value}
+                        value={field.value}
                         onValueChange={(value) => {
                           field.onChange(value);
                         }}
-                        disabled={
-                          method === "UPDATE" &&
-                          role !== "RECORDS" &&
-                          role !== "MANAGER"
-                        }
+                        disabled={method === "UPDATE" && role !== "RECORDS" && role !== "MANAGER"}
                       >
                         <SelectTrigger className="w-full">
                           <SelectValue placeholder="Select priority" />
@@ -593,15 +463,11 @@ export const TransactionForm = ({
                     <FormLabel>Status</FormLabel>
                     <FormControl>
                       <Select
-                      value={field.value}
+                        value={field.value}
                         onValueChange={(value) => {
                           field.onChange(value);
                         }}
-                        disabled={
-                          method === "UPDATE" &&
-                          role !== "RECORDS" &&
-                          role !== "MANAGER"
-                        }
+                        disabled={method === "UPDATE" && role !== "RECORDS" && role !== "MANAGER"}
                       >
                         <SelectTrigger className="w-full">
                           <SelectValue placeholder="Select status" />
@@ -628,9 +494,7 @@ export const TransactionForm = ({
             <h1 className="text-2xl">List of Attachments Required</h1>
             <ScrollArea className="w-full whitespace-nowrap rounded-md border">
               <Table>
-                <TableCaption>
-                  A list of your required attachments.
-                </TableCaption>
+                <TableCaption>A list of your required attachments.</TableCaption>
                 <TableHeader>
                   <TableRow>
                     <TableHead className="w-[100px]">Name</TableHead>
@@ -644,10 +508,7 @@ export const TransactionForm = ({
                   {fields.map((item, index) => (
                     <TableRow key={index}>
                       <TableCell className="font-medium w-[300px]">
-                        <FormInput
-                          name={`attachments.${index}.fileName`}
-                          label="Filename"
-                        />
+                        <FormInput name={`attachments.${index}.fileName`} label="Filename" />
                       </TableCell>
 
                       <TableCell className="font-medium w-[300px]">
@@ -668,12 +529,8 @@ export const TransactionForm = ({
                                     <SelectValue placeholder="Select type" />
                                   </SelectTrigger>
                                   <SelectContent>
-                                    <SelectItem value="INITIAL_DOC">
-                                      Initial documents
-                                    </SelectItem>
-                                    <SelectItem value="FOLLOWED_UP">
-                                      Follow-up documents
-                                    </SelectItem>
+                                    <SelectItem value="INITIAL_DOC">Initial documents</SelectItem>
+                                    <SelectItem value="FOLLOWED_UP">Follow-up documents</SelectItem>
                                   </SelectContent>
                                 </Select>
                               </FormControl>
@@ -700,12 +557,8 @@ export const TransactionForm = ({
                                     <SelectValue placeholder="Select status" />
                                   </SelectTrigger>
                                   <SelectContent>
-                                    <SelectItem value="FOR_REVIEW">
-                                      For Review
-                                    </SelectItem>
-                                    <SelectItem value="FINAL_ATTACHMENT">
-                                      Final Attachment
-                                    </SelectItem>
+                                    <SelectItem value="FOR_REVIEW">For Review</SelectItem>
+                                    <SelectItem value="FINAL_ATTACHMENT">Final Attachment</SelectItem>
                                   </SelectContent>
                                 </Select>
                               </FormControl>
@@ -715,10 +568,7 @@ export const TransactionForm = ({
                         />
                       </TableCell>
                       <TableCell className="font-medium w-[500px]">
-                        <FormTextArea
-                          name={`attachments.${index}.remarks`}
-                          label="Remarks"
-                        />
+                        <FormTextArea name={`attachments.${index}.remarks`} label="Remarks" />
                       </TableCell>
 
                       <TableCell className="h-full w-96 ">
@@ -735,12 +585,8 @@ export const TransactionForm = ({
                                       type="file"
                                       accept="application/pdf"
                                       {...field}
-                                      onChange={(event) =>
-                                        onChange(event.target.files)
-                                      }
-                                      ref={(el) =>
-                                        (fileInputRef.current![index] = el)
-                                      }
+                                      onChange={(event) => onChange(event.target.files)}
+                                      ref={(el) => (fileInputRef.current![index] = el)}
                                     />
                                   </FormControl>
                                   <FormDescription></FormDescription>
@@ -753,16 +599,10 @@ export const TransactionForm = ({
                           <div className={`${!item.fileUrl && "hidden"}`}>
                             <Label>Actions</Label>
                             <div className="flex  gap-4">
-                              <Button
-                                type="button"
-                                onClick={() => viewFile(item.fileUrl!)}
-                              >
+                              <Button type="button" onClick={() => viewFile(item.fileUrl!)}>
                                 View file
                               </Button>
-                              <Button
-                                type="button"
-                                onClick={() => reattachFile(index)}
-                              >
+                              <Button type="button" onClick={() => reattachFile(index)}>
                                 Update
                               </Button>
                               <Button
@@ -813,11 +653,7 @@ export const TransactionForm = ({
           </div>
 
           <div className="flex justify-end mt-11">
-            <Button
-              type="submit"
-              onClick={() => console.log(form.formState.errors)}
-              disabled={isSubmitting}
-            >
+            <Button type="submit" onClick={() => console.log(form.formState.errors)} disabled={isSubmitting}>
               Submit
             </Button>
           </div>

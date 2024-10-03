@@ -4,15 +4,17 @@ import { useDebounce } from "use-debounce";
 import { tsr } from "@/services/tsr";
 import { Input } from "@/components/ui/input";
 import { Search } from "lucide-react";
-import { useSearchParams } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { Button } from "@/components/ui/button";
+import { z } from "zod";
+import { transactionQueryData } from "shared-contract";
 
 export const ArchivedList = () => {
   const [searchParams, setSearchParams] = useSearchParams({
     currentPage: "1",
     search: "",
   });
-
+  const navigate = useNavigate();
   const searchQuery = searchParams.get("search") || "";
   const page = searchParams.get("currentPage") || "1";
 
@@ -49,17 +51,15 @@ export const ArchivedList = () => {
       });
     }
   };
-
+  const handleOnClickRow = (data: z.infer<typeof transactionQueryData>) => {
+    navigate(`/dashboard/transactions/history/${data.id}`);
+  };
   return (
     <div className="flex flex-col ">
       <div className="flex flex-col w-full items-center justify-center p-4 bg-white rounded-lg">
         <div className="flex justify-start w-full flex-col ">
-          <h1 className="text-[#404041] font-medium text-[28px]">
-            List of Archive Transactions
-          </h1>
-          <p className="text-muted-foreground text-[12px]">
-            View and manage all past transactions stored in the archive.
-          </p>
+          <h1 className="text-[#404041] font-medium text-[28px]">List of Archive Transactions</h1>
+          <p className="text-muted-foreground text-[12px]">View and manage all past transactions stored in the archive.</p>
         </div>
       </div>
       <div className="flex items-center py-4 justify-end w-full ">
@@ -73,7 +73,7 @@ export const ArchivedList = () => {
                 prev.set("currentPage", "1");
                 return prev;
               },
-              { replace: true }
+              { replace: true },
             )
           }
           className="w-[289px] rounded-none  rounded-l-md"
@@ -82,20 +82,12 @@ export const ArchivedList = () => {
           <Search />
         </button>
       </div>
-      <DataTable
-        columns={archivedColumn}
-        data={searchData ? searchData.body! : []}
-      />
+      <DataTable columns={archivedColumn} data={searchData ? searchData.body! : []} callbackFn={handleOnClickRow} />
       <div className="flex items-center w-full  justify-center space-x-2 py-4">
         <Button variant="outline" size="sm">
           {"<<"}
         </Button>
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={handlePreviousPage}
-          disabled={intPage == 1}
-        >
+        <Button variant="outline" size="sm" onClick={handlePreviousPage} disabled={intPage == 1}>
           Previous
         </Button>
         <Button

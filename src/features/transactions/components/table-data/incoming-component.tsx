@@ -17,6 +17,17 @@ export const IncomingComponent = () => {
   const { id } = useParams();
   const notification = useNotificationStore((state) => state.notification);
   const setNotification = useNotificationStore((state) => state.setNotification);
+
+  const { data, isLoading } = tsr.transaction.getTransactionByParams.useQuery({
+    queryKey: ["incoming-transactions"],
+    queryData: {
+      query: {
+        status: "INCOMING",
+        accountId: id!,
+      },
+    },
+  });
+
   const { mutateAsync } = tsr.transaction.receivedTransaction.useMutation({
     onSuccess: (data) => {
       setNotification({
@@ -25,10 +36,7 @@ export const IncomingComponent = () => {
         inbox: notification?.inbox! + 1,
       });
       tsrQueryClient.transaction.getTransactionByParams.setQueryData(["incoming-transactions"], (old) => {
-        if (!old || !old.body) return old; // Ensure old data exists
-
-        // Define the ID of the transaction you want to remove
-
+        if (!old || !old.body) return old;
         return {
           ...old,
           body: old.body.filter((transaction) => transaction.id !== data.body.id), // Filter out the transaction
@@ -41,16 +49,6 @@ export const IncomingComponent = () => {
     },
   });
   const incomingColumns = useColumns(mutateAsync);
-
-  const { data, isLoading } = tsr.transaction.getTransactionByParams.useQuery({
-    queryKey: ["incoming-transactions"],
-    queryData: {
-      query: {
-        status: "INCOMING",
-        accountId: id!,
-      },
-    },
-  });
 
   // const { mutate, isSuccess, data } = useReadAllNotifications();
 

@@ -1,6 +1,6 @@
 import { DataTable } from "@/components/data-table";
 import { transactionColumns } from "../table-columns/transaction-columns";
-import { Link, useSearchParams } from "react-router-dom";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { Plus, Search } from "lucide-react";
 import withRole from "@/components/HOC/component-permission";
 import { tsr } from "@/services/tsr";
@@ -9,6 +9,8 @@ import { Input } from "@/components/ui/input";
 import { useDebounce } from "use-debounce";
 import { Button } from "@/components/ui/button";
 import { keepPreviousData } from "@tanstack/react-query";
+import { z } from "zod";
+import { transactionQueryData } from "shared-contract";
 const addTransactionBtn = () => (
   <div className="flex  bg-black w-full relative">
     <div className="absolute bottom-0 top-4">
@@ -26,6 +28,7 @@ const addTransactionBtn = () => (
 const AddTransactionBtnWithRole = withRole(addTransactionBtn);
 
 export const TransactionList = () => {
+  const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams({
     currentPage: "1",
     search: "",
@@ -50,7 +53,6 @@ export const TransactionList = () => {
     placeholderData: keepPreviousData,
   });
 
-
   const handleNextPage = () => {
     setSearchParams((prev) => {
       const nextPage = (intPage + 1).toString();
@@ -68,15 +70,14 @@ export const TransactionList = () => {
       });
     }
   };
+  const handleOnClickRow = (data: z.infer<typeof transactionQueryData>) => {
+    navigate(`/dashboard/transactions/history/${data.id}`);
+  };
   return (
     <div className="flex flex-col w-full items-center justify-center p-4 bg-white rounded-lg">
       <div className="flex justify-start w-full flex-col ">
-        <h1 className="text-[#404041] font-medium text-[28px]">
-          List of Transactions
-        </h1>
-        <p className="text-muted-foreground text-[12px]">
-          Review the details below to track and manage recent activities.
-        </p>
+        <h1 className="text-[#404041] font-medium text-[28px]">List of Transactions</h1>
+        <p className="text-muted-foreground text-[12px]">Review the details below to track and manage recent activities.</p>
       </div>
       <AddTransactionBtnWithRole roles={["SUPERADMIN", "RECORDS"]} />
       <div className="flex items-center py-4 justify-end w-full ">
@@ -90,7 +91,7 @@ export const TransactionList = () => {
                 prev.set("currentPage", "1");
                 return prev;
               },
-              { replace: true }
+              { replace: true },
             )
           }
           className="w-[289px] rounded-none  rounded-l-md"
@@ -99,20 +100,12 @@ export const TransactionList = () => {
           <Search />
         </button>
       </div>
-      <DataTable
-        columns={transactionColumns}
-        data={searchData ? searchData.body! : []}
-      ></DataTable>
+      <DataTable columns={transactionColumns} data={searchData ? searchData.body! : []} callbackFn={handleOnClickRow}></DataTable>
       <div className="flex items-center justify-end space-x-2 py-4">
         <Button variant="outline" size="sm">
           {"<<"}
         </Button>
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={handlePreviousPage}
-          disabled={intPage == 1}
-        >
+        <Button variant="outline" size="sm" onClick={handlePreviousPage} disabled={intPage == 1}>
           Previous
         </Button>
         <Button

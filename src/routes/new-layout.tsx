@@ -1,9 +1,6 @@
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import { notification } from "@/features/transactions/schema/TransactionSchema";
-import {
-  NotificationType,
-  useNotificationStore,
-} from "@/global-states/notification-store";
+import { NotificationType, useNotificationStore } from "@/global-states/notification-store";
 import useRealtimeStore from "@/global-states/real-time-notification";
 import useSidebarState from "@/global-states/sidebar-function-store";
 import { getCurrentUserId } from "@/hooks/hooks/use-user-hook";
@@ -17,33 +14,22 @@ const toastId = "notification-toast";
 export const DashboardNewLayout = () => {
   const { socket } = useRealtimeStore();
   const currentUserId = getCurrentUserId();
-  const {open} = useSidebarState()
+  const { open } = useSidebarState();
 
-  const setNotification = useNotificationStore(
-    (state) => state.setNotification
-  );
-  const setAllNotification = useNotificationStore(
-    (state) => state.setAllNotification
-  );
+  const setNotification = useNotificationStore((state) => state.setNotification);
+  const setAllNotification = useNotificationStore((state) => state.setAllNotification);
   useEffect(() => {
-    socket.on(
-      "notification",
-      (
-        message: string,
-        notifications: z.infer<typeof notification>[],
-        quantityTracker: NotificationType
-      ) => {
-        console.log(notifications);
-        setNotification(quantityTracker);
-        setAllNotification(notifications);
-        if (message) {
-          toast(message, {
-            position: "bottom-right",
-            toastId: toastId,
-          });
-        }
+    socket.on("notification", (message: string, notifications: z.infer<typeof notification>[], quantityTracker: NotificationType) => {
+      console.log(quantityTracker);
+      setNotification(quantityTracker);
+      setAllNotification(notifications);
+      if (message) {
+        toast(message, {
+          position: "bottom-right",
+          toastId: toastId,
+        });
       }
-    );
+    });
 
     socket.emit("register", currentUserId);
 

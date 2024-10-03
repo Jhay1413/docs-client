@@ -15,9 +15,10 @@ import { tsr } from "@/services/tsr";
 export const InsertComponent = () => {
   const tsrQueryClient = tsr.useQueryClient();
   // const { add } = useTransaction({key:"inbox",url:"/v2"});
-  const { mutateAsync, isSuccess, isPending } = tsr.transaction.insertTransacitons.useMutation({
+  const { mutateAsync, isPending } = tsr.transaction.insertTransacitons.useMutation({
     onSuccess: () => {
       toast.success("Data submitted successfully ! ");
+      navigate("/dashboard/transactions/list");
     },
     onError: () => {
       toast.error("Something went wrong, Please retry ! ");
@@ -65,12 +66,6 @@ export const InsertComponent = () => {
       }
     }
   };
-
-  useEffect(() => {
-    if (isSuccess) {
-      navigate("/dashboard/transactions/list");
-    }
-  }, [isSuccess]);
 
   if (companiesIsLoading) return "loading";
   return (

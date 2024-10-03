@@ -1,27 +1,15 @@
 import { z } from "zod";
-import {
-  filesSchema,
-  signedUrlData,
-  signedUrlDataArray,
-  transactionFormData,
-} from "../schema/TransactionSchema";
+import { filesSchema, signedUrlData, signedUrlDataArray, transactionFormData } from "../schema/TransactionSchema";
 import { uploadFile } from "../services/uploadFile";
 import { CompanyInfo } from "@/features/companies";
 import { filesMutationSchema, filesQuerySchema, transactionMutationSchema, transactionQueryData } from "shared-contract";
 
-export const findContainFile = (
-  transactionData: z.infer<typeof transactionFormData>,
-  companies: z.infer<typeof CompanyInfo>[]
-) => {
-  const attachments = transactionData.attachments?.filter(
-    (data) => data.file?.length! > 0
-  );
+export const findContainFile = (transactionData: z.infer<typeof transactionFormData>, companies: z.infer<typeof CompanyInfo>[]) => {
+  const attachments = transactionData.attachments?.filter((data) => data.file?.length! > 0);
 
   if (!attachments || attachments.length === 0) return null;
 
-  const selectedCompany = companies?.find(
-    (company) => transactionData.companyId === company.id
-  );
+  const selectedCompany = companies?.find((company) => transactionData.companyId === company.id);
 
   const signedUrlPayload = attachments?.map((attachment) => {
     return {
@@ -31,43 +19,30 @@ export const findContainFile = (
   });
   return signedUrlPayload;
 };
-export const prepare_file_payload = async (
-  attachments: z.infer<typeof filesMutationSchema>[],
-  data: z.infer<typeof signedUrlDataArray>
-) => {
+export const prepare_file_payload = async (attachments: z.infer<typeof filesMutationSchema>[], data: z.infer<typeof signedUrlDataArray>) => {
   const res = await Promise.all(
     data.map(async (data) => {
-      const attachmentToUpload = attachments?.find(
-        (attachment) => attachment.fileName === data.fileName
-      );
+      const attachmentToUpload = attachments?.find((attachment) => attachment.fileName === data.fileName);
 
       if (!data.signedStatus || !data.signedUrl) return data;
 
-      const response = await uploadFile(
-        data.signedUrl,
-        attachmentToUpload?.file![0]!
-      );
+      const response = await uploadFile(data.signedUrl, attachmentToUpload?.file![0]!);
 
       if (!response?.ok) return { ...data, uploadStatus: false };
-      
+
       return {
         ...data,
         uploadStatus: true,
         fileOrignalName: attachmentToUpload?.file![0]!.name,
       };
-    })
+    }),
   );
   return res;
 };
 
-export const prepare_transaction_payload = (
-  transactionData: z.infer<typeof transactionMutationSchema>,
-  res: z.infer<typeof signedUrlData>[]
-) => {
+export const prepare_transaction_payload = (transactionData: z.infer<typeof transactionMutationSchema>, res: z.infer<typeof signedUrlData>[]) => {
   const modified_fileData = transactionData.attachments?.map((attachment) => {
-    const matchedFile = res.find(
-      (file) => file.uploadStatus && file.fileName === attachment.fileName
-    );
+    const matchedFile = res.find((file) => file.uploadStatus && file.fileName === attachment.fileName);
 
     const { file, ...new_fileData } = attachment;
 

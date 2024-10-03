@@ -11,10 +11,7 @@ import { z } from "zod";
 import { Link } from "react-router-dom";
 import { ColumnDef } from "@tanstack/react-table";
 import { MoreHorizontal } from "lucide-react";
-import {
-  completeStaffWork,
-  transactionLogsData,
-} from "../../schema/TransactionSchema";
+import { completeStaffWork, transactionLogsData } from "../../schema/TransactionSchema";
 import { getSignUrlForView } from "../../services/getSignedUrl";
 import { completeStaffWorkQuerySchema } from "shared-contract/dist/schema/transactions/query-schema";
 
@@ -48,7 +45,7 @@ export const cswColumn: ColumnDef<Csw>[] = [
     },
   },
   {
-    header: () => <div className="print-hide">My Column</div>,
+    header: () => <div className="print-hide">Action</div>,
     accessorKey: "actions",
     id: "actions",
     cell: ({ row }) => {
@@ -74,11 +71,7 @@ export const cswColumn: ColumnDef<Csw>[] = [
             <DropdownMenuContent align="end">
               <DropdownMenuLabel>Actions</DropdownMenuLabel>
 
-              <DropdownMenuItem
-                onClick={() => viewFile(cswInfo.attachmentUrl!)}
-              >
-                View File
-              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => viewFile(cswInfo.attachmentUrl!)}>View File</DropdownMenuItem>
 
               <DropdownMenuSeparator />
             </DropdownMenuContent>

@@ -18,19 +18,19 @@ import { transactionQueryData } from "shared-contract";
 type InboxColumn = z.infer<typeof transactionQueryData>;
 
 export const inboxColumn: ColumnDef<InboxColumn>[] = [
-  {
-    id: "select",
-    header: ({ table }) => (
-      <Checkbox
-        checked={table.getIsAllPageRowsSelected() || (table.getIsSomePageRowsSelected() && "indeterminate")}
-        onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-        aria-label="Select all"
-      />
-    ),
-    cell: ({ row }) => <Checkbox checked={row.getIsSelected()} onCheckedChange={(value) => row.toggleSelected(!!value)} aria-label="Select row" />,
-    enableSorting: false,
-    enableHiding: false,
-  },
+  // {
+  //   id: "select",
+  //   header: ({ table }) => (
+  //     <Checkbox
+  //       checked={table.getIsAllPageRowsSelected() || (table.getIsSomePageRowsSelected() && "indeterminate")}
+  //       onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
+  //       aria-label="Select all"
+  //     />
+  //   ),
+  //   cell: ({ row }) => <Checkbox checked={row.getIsSelected()} onCheckedChange={(value) => row.toggleSelected(!!value)} aria-label="Select row" />,
+  //   enableSorting: false,
+  //   enableHiding: false,
+  // },
   {
     header: "ID",
     accessorKey: "transactionId",
@@ -75,8 +75,9 @@ export const inboxColumn: ColumnDef<InboxColumn>[] = [
       console.log(transactionHistory);
       return (
         <div className="flex flex-col gap-4">
-          <h1>{transactionHistory?.originDepartment}</h1>
-          <h1>{transactionHistory?.forwarder?.accountRole}</h1>
+          <h1>
+            {transactionHistory?.forwarder?.userInfo?.firstName} {transactionHistory.forwarder?.userInfo?.lastName}
+          </h1>
         </div>
       );
     },
@@ -84,37 +85,40 @@ export const inboxColumn: ColumnDef<InboxColumn>[] = [
   {
     header: "Due date",
     accessorKey: "dueDate",
-  },
-  {
-    header: "Actions",
-    accessorKey: "actions",
-    id: "actions",
     cell: ({ row }) => {
       const transactionInfo = row.original;
+
       return (
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className="h-8 w-8 p-0">
-              <span className="sr-only">Open menu</span>
-              <MoreHorizontal className="h-4 w-4" />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuLabel>Actions</DropdownMenuLabel>
-
-            <DropdownMenuItem>
-              <Link to={`/dashboard/transactions/update/${transactionInfo.id}`}>Update Transaction</Link>
-            </DropdownMenuItem>
-
-            <DropdownMenuSeparator />
-
-            <DropdownMenuSeparator />
-            <DropdownMenuItem>
-              <Link to={`/dashboard/transactions/history/${transactionInfo.id}`}>View Details</Link>
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
+        <div className="">
+          <h1>{new Date(transactionInfo.dueDate).toDateString()}</h1>
+        </div>
       );
     },
   },
+  // {
+  //   header: "Actions",
+  //   accessorKey: "actions",
+  //   id: "actions",
+  //   cell: ({ row }) => {
+  //     const transactionInfo = row.original;
+  //     return (
+  //       <DropdownMenu>
+  //         <DropdownMenuTrigger asChild>
+  //           <Button variant="ghost" className="h-8 w-8 p-0">
+  //             <span className="sr-only">Open menu</span>
+  //             <MoreHorizontal className="h-4 w-4" />
+  //           </Button>
+  //         </DropdownMenuTrigger>
+  //         <DropdownMenuContent align="end">
+  //           <DropdownMenuLabel>Actions</DropdownMenuLabel>
+
+  //           <DropdownMenuSeparator />
+  //           <DropdownMenuItem>
+  //             <Link to={`/dashboard/transactions/history/${transactionInfo.id}`}>View Details</Link>
+  //           </DropdownMenuItem>
+  //         </DropdownMenuContent>
+  //       </DropdownMenu>
+  //     );
+  //   },
+  // },
 ];
