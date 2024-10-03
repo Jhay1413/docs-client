@@ -5,5 +5,5 @@ import { companyContract, contracts, transactionContract } from "shared-contract
 // const prod = import.meta.env.VITE_PROD_API;
 // const local = import.meta.env.VITE_LOCAL_API;
 export const tsr = initTsrReactQuery(contracts, {
-  baseUrl: "https://docs-api-wrvs.onrender.com",
+  baseUrl: "https://dts-dev.onrender.com",
 });
