@@ -70,6 +70,7 @@ export const TransactionList = () => {
       });
     }
   };
+  console.log(searchData?.body);
   const handleOnClickRow = (data: z.infer<typeof transactionQueryData>) => {
     navigate(`/dashboard/transactions/history/${data.id}`);
   };
