@@ -4,6 +4,8 @@ import { DataTable } from "@/components/data-table";
 import { useCompanies } from "../hooks/query-gate";
 import { Link } from "react-router-dom";
 import withRole from "@/components/HOC/component-permission";
+import { tsr } from "@/services/tsr";
+
 
 const AddCompanyBtn = () => (
   <div className="absolute bottom-0 top-4">
@@ -19,13 +21,12 @@ const AddCompanyBtn = () => (
 
 const AddCompanyBtnWithRole = withRole(AddCompanyBtn)
 export const CompanyList = () => {
-  const { entities } = useCompanies("companies", "/");
 
-  console.log(entities.data);
-  if (!entities.data) {
-    return "No Data !";
+  const {data,isPending} = tsr.company.fetchCompanies.useQuery({queryKey:['companies']});
+  // const { entities } = useCompanies("companies", "/");
+  if (isPending) {
+    return <div>Loading...</div>;
   }
-
   return (
     <div className="flex flex-col w-full items-center justify-center p-4 bg-white rounded-lg">
       <div className="flex justify-start w-full flex-col ">
@@ -42,7 +43,7 @@ export const CompanyList = () => {
       </div>
       <DataTable
         columns={companyInfoColumns}
-        data={entities.data}
+        data={data?.body!}
         hasSearch={true}
       />
     </div>

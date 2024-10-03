@@ -1,29 +1,10 @@
 import { Button } from "@/components/ui/button";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Form } from "@/components/ui/form";
 import { Calendar } from "@/components/ui/calendar";
-import {
-  FormControl,
-  FormDescription,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
+import { FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 
 import { cn } from "@/lib/utils";
 
@@ -40,19 +21,51 @@ import { getSignedUrl } from "../services/getSignedUrl";
 import { useState } from "react";
 import { uploadFile } from "../services/uploadFile";
 import { Textarea } from "@/components/ui/textarea";
+import { tsr } from "@/services/tsr";
 type Props = {
   data?: z.infer<typeof completeStaffWork>[];
   transactionId: string;
 };
 export function CompleStaffWorkDialog({ transactionId }: Props) {
-  const { update } = useTransaction({
-    key: "transactions",
-    url: `v2/${transactionId}`,
-    id: transactionId,
-    updateUrl: `v2/${transactionId}/csw`,
-  });
+  const tsrQueryClient = tsr.useQueryClient();
+
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
+  const { mutate, isPending } = tsr.transaction.addCompleteStaffWork.useMutation({
+    onMutate: (data) => {
+      const lastGoodKnown = tsrQueryClient.transaction.fetchTransactionById.getQueryData(["transaction", transactionId]);
+
+      tsrQueryClient.transaction.fetchTransactionById.setQueryData(["transaction", transactionId], (old) => {
+        console.log(old);
+        if (!old) return old;
+        return {
+          ...old,
+          body: {
+            ...old.body!,
+
+            completeStaffWork: [
+              ...(old?.body?.completeStaffWork || []),
+              {
+                date: new Date(data.body.date!).toDateString(),
+                remarks: data.body.remarks,
+                attachmentUrl: data.body.attachmentUrl,
+              },
+            ],
+          },
+        };
+      });
+      return { lastGoodKnown };
+    },
+
+    onError: (error, newPost, context) => {
+      tsrQueryClient.transaction.fetchTransactionById.setQueryData(["transaction", transactionId], context?.lastGoodKnown);
+    },
+    onSettled: () => {
+      setIsSubmitting(false);
+      setIsOpen(false);
+      tsrQueryClient.invalidateQueries({ queryKey: ["transaction", transactionId] });
+    },
+  });
   const form = useForm<z.infer<typeof completeStaffWork>>({
     resolver: zodResolver(completeStaffWork),
     mode: "onSubmit",
@@ -65,27 +78,25 @@ export function CompleStaffWorkDialog({ transactionId }: Props) {
 
   const submit = async (data: z.infer<typeof completeStaffWork>) => {
     setIsSubmitting(true);
-    try {
-      const signedUrlPayload = [
-        {
-          company: "Envicomm/csw",
-          fileName: data.attachmentFile?.name || "",
-        },
-      ];
-      const signedUrl = await getSignedUrl<z.infer<typeof signedUrlData>>(
-        signedUrlPayload
-      );
+    const signedUrlPayload = [
+      {
+        company: "Envicomm/csw",
+        fileName: data.attachmentFile?.name || "",
+      },
+    ];
+    const signedUrl = await getSignedUrl<z.infer<typeof signedUrlData>>(signedUrlPayload);
 
-      await uploadFile(signedUrl[0].signedUrl!, data.attachmentFile!);
-      const payload = { ...data, attachmentUrl: signedUrl[0].key };
+    await uploadFile(signedUrl[0].signedUrl!, data.attachmentFile!);
+    const payload = { ...data, attachmentUrl: signedUrl[0].key! };
 
-      await update.mutateAsync(payload);
-      setIsSubmitting(false);
-      setIsOpen(false);
-    } catch (error) {
-      console.log(error);
-      setIsSubmitting(false);
-    }
+    const { attachmentFile, ...final_payload } = payload;
+
+    return mutate({
+      params: {
+        id: transactionId,
+      },
+      body: final_payload,
+    });
   };
 
   return (
@@ -96,9 +107,7 @@ export function CompleStaffWorkDialog({ transactionId }: Props) {
       <DialogContent className="sm:max-w-[425px] ">
         <DialogHeader>
           <DialogTitle>Complete Staff Work</DialogTitle>
-          <DialogDescription>
-            Make changes to your profile here. Click save when you're done.
-          </DialogDescription>
+          <DialogDescription>Make changes to your profile here. Click save when you're done.</DialogDescription>
         </DialogHeader>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(submit)}>
@@ -113,17 +122,10 @@ export function CompleStaffWorkDialog({ transactionId }: Props) {
                       <PopoverTrigger asChild>
                         <Button
                           variant={"outline"}
-                          className={cn(
-                            "w-full justify-start text-left font-normal",
-                            !field.value && "text-muted-foreground"
-                          )}
+                          className={cn("w-full justify-start text-left font-normal", !field.value && "text-muted-foreground")}
                         >
                           <CalendarIcon className="mr-2 h-4 w-4" />
-                          {field.value ? (
-                            format(field.value, "PPP")
-                          ) : (
-                            <span>Pick a date</span>
-                          )}
+                          {field.value ? format(field.value, "PPP") : <span>Pick a date</span>}
                         </Button>
                       </PopoverTrigger>
                       <PopoverContent className="w-auto p-0">
@@ -134,7 +136,7 @@ export function CompleStaffWorkDialog({ transactionId }: Props) {
                             field.onChange(new Date(value!).toISOString());
                           }}
                           initialFocus
-                          disabled={update.isPending}
+                          disabled={isPending}
                         />
                       </PopoverContent>
                     </Popover>
@@ -147,7 +149,7 @@ export function CompleStaffWorkDialog({ transactionId }: Props) {
             {/* <FormTextArea
               name="remarks"
               label="Remarks"
-              disable={update.isPending}
+              disable={isPending}
             /> */}
             <FormField
               control={form.control}
@@ -156,7 +158,7 @@ export function CompleStaffWorkDialog({ transactionId }: Props) {
                 <FormItem>
                   <FormLabel>Remarks</FormLabel>
                   <FormControl>
-                    <Textarea placeholder="remarks" {...field} disabled={update.isPending} className="z-10"/>
+                    <Textarea placeholder="remarks" {...field} disabled={isPending} className="z-10" />
                   </FormControl>
                   <FormDescription></FormDescription>
                   <FormMessage />
@@ -171,13 +173,7 @@ export function CompleStaffWorkDialog({ transactionId }: Props) {
                   <FormItem>
                     <FormLabel>File</FormLabel>
                     <FormControl>
-                      <Input
-                        disabled={update.isPending}
-                        type="file"
-                 
-                        {...field}
-                        onChange={(event) => onChange(event.target.files![0])}
-                      />
+                      <Input disabled={isPending} type="file" {...field} onChange={(event) => onChange(event.target.files![0])} />
                     </FormControl>
                     <FormDescription></FormDescription>
                     <FormMessage />

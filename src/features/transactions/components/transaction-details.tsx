@@ -1,10 +1,11 @@
 import { z } from "zod";
 import { transactionData } from "../schema/TransactionSchema";
 import { Separator } from "@/components/ui/separator";
+import { transactionQueryData } from "shared-contract";
 
 
 type Props = {
-  data: z.infer<typeof transactionData>;
+  data: z.infer<typeof transactionQueryData>;
 };
 export const TransactionDetails = ({ data }: Props) => {
   return (

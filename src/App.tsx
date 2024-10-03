@@ -31,8 +31,8 @@ import { ViewHistory } from "./features/transactions/components/view-history";
 import { RouteGuard } from "./components/routeGuard/route-guard";
 import { DashboardNewLayout } from "./routes/new-layout";
 import ProtectedRoute from "./components/routeGuard/protected-route";
+import { ReactQueryProvider } from "./utils/react-query-provider";
 
-const queryClient = new QueryClient();
 function App() {
   return (
     <div className="font-roboto">
@@ -50,7 +50,7 @@ function App() {
       />
       {/* Same as */}
       <BrowserRouter>
-        <QueryClientProvider client={queryClient}>
+        <ReactQueryProvider>
           <Routes>
             <Route
               path="dashboard/"
@@ -64,7 +64,12 @@ function App() {
               <Route path="users" element={<Users />}>
                 <Route path={`profile/:id`} element={<Profile />} />
                 <Route
-                  element={<ProtectedRoute allowedRoles={["SUPERADMIN"]} exemptions={['Operations Department']} />}
+                  element={
+                    <ProtectedRoute
+                      allowedRoles={["SUPERADMIN"]}
+                      exemptions={["Operations Department"]}
+                    />
+                  }
                 >
                   <Route path="users-list" element={<UserList />} />
                   <Route path="form" element={<UserForm />} />
@@ -74,7 +79,12 @@ function App() {
               <Route path="companies" element={<CompanyIndex />}>
                 <Route index element={<CompanyList />} />
                 <Route
-                  element={<ProtectedRoute allowedRoles={["SUPERADMIN"]} exemptions={['Operations Department']} />}
+                  element={
+                    <ProtectedRoute
+                      allowedRoles={["SUPERADMIN"]}
+                      exemptions={["Operations Department"]}
+                    />
+                  }
                 >
                   <Route path="add-form" element={<AddComponent />} />
                   <Route path={`:id`} element={<EditComponent />} />
@@ -103,7 +113,7 @@ function App() {
             </Route>
             <Route path="*" element={<NotFound />} />
           </Routes>
-        </QueryClientProvider>
+        </ReactQueryProvider>
       </BrowserRouter>
     </div>
   );
