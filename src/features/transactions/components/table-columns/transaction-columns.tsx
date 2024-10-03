@@ -1,30 +1,16 @@
 import { Button } from "@/components/ui/button";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 import { z } from "zod";
-import { Checkbox } from "@/components/ui/checkbox";
-import { Link } from "react-router-dom";
 import { ColumnDef } from "@tanstack/react-table";
-import { ArrowUpDown, MoreHorizontal } from "lucide-react";
-import { transactionData } from "../../schema/TransactionSchema";
+import { ArrowUpDown } from "lucide-react";
+import { transactionQueryData } from "shared-contract";
 
-type TransactionInfo = z.infer<typeof transactionData>;
+type TransactionInfo = z.infer<typeof transactionQueryData>;
 
 export const transactionColumns: ColumnDef<TransactionInfo>[] = [
-    
   {
     header: ({ column }) => {
       return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
+        <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>
           Transaction ID
           <ArrowUpDown className="ml-2 h-4 w-4" />
         </Button>
@@ -44,12 +30,18 @@ export const transactionColumns: ColumnDef<TransactionInfo>[] = [
   {
     header: "Project Name",
     accessorKey: "projectName",
-    filterFn: (row, columnId, filterValue) => {
-      return true;
+    cell: ({ row }) => {
+      const data = row.original;
+
+      return (
+        <div>
+          <h1>{data.project?.projectName}</h1>
+        </div>
+      );
     },
   },
   {
-    header: "Document type",
+    header: "Type",
     accessorKey: "documentType",
     cell: ({ row }) => {
       const data = row.original;
@@ -62,7 +54,7 @@ export const transactionColumns: ColumnDef<TransactionInfo>[] = [
     },
   },
   {
-    header: "Document sub type",
+    header: "Subtype",
     accessorKey: "documentSubType",
   },
   {
@@ -70,29 +62,27 @@ export const transactionColumns: ColumnDef<TransactionInfo>[] = [
     accessorKey: "subject",
   },
   {
-    header: "Forwarded By",
+    header: "Forwarder",
     accessorKey: "forwarder",
     cell: ({ row }) => {
       const data = row.original;
 
       return (
         <div className="">
-          <h1>{data.forwarder?.accountRole}</h1>
-          <h1>{data.originDepartment}</h1>
+          <h1>{data.forwarderName}</h1>
         </div>
       );
     },
   },
   {
-    header: "Forwarded To:",
+    header: "Reciever",
     accessorKey: "forwardedTo",
     cell: ({ row }) => {
       const data = row.original;
 
       return (
         <div>
-          <h1>{data.receiver?.accountRole}</h1>
-          <h1>{data.targetDepartment}</h1>
+          <h1>{data.receiverName}</h1>
         </div>
       );
     },
@@ -119,10 +109,7 @@ export const transactionColumns: ColumnDef<TransactionInfo>[] = [
   {
     header: ({ column }) => {
       return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
+        <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>
           Due Date
           <ArrowUpDown className="ml-2 h-4 w-4" />
         </Button>
@@ -152,35 +139,31 @@ export const transactionColumns: ColumnDef<TransactionInfo>[] = [
       );
     },
   },
-  {
-    header: "Actions",
-    accessorKey: "actions",
-    id: "actions",
-    cell: ({ row }) => {
-      const userInfo = row.original;
-      console.log(userInfo.percentage);
-      return (
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className="h-8 w-8 p-0">
-              <span className="sr-only">Open menu</span>
-              <MoreHorizontal className="h-4 w-4" />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuLabel>Actions</DropdownMenuLabel>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem>
-              <Link
-                to={`/dashboard/transactions/history/${userInfo.id}`}
-                state={{ percentage: userInfo.percentage }}
-              >
-                View Details
-              </Link>
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
-      );
-    },
-  },
+  // {
+  //   header: "Actions",
+  //   accessorKey: "actions",
+  //   id: "actions",
+  //   cell: ({ row }) => {
+  //     const userInfo = row.original;
+  //     return (
+  //       <DropdownMenu>
+  //         <DropdownMenuTrigger asChild>
+  //           <Button variant="ghost" className="h-8 w-8 p-0">
+  //             <span className="sr-only">Open menu</span>
+  //             <MoreHorizontal className="h-4 w-4" />
+  //           </Button>
+  //         </DropdownMenuTrigger>
+  //         <DropdownMenuContent align="end">
+  //           <DropdownMenuLabel>Actions</DropdownMenuLabel>
+  //           <DropdownMenuSeparator />
+  //           <DropdownMenuItem>
+  //             <Link to={`/dashboard/transactions/history/${userInfo.id}`} state={{ percentage: userInfo.percentage }}>
+  //               View Details
+  //             </Link>
+  //           </DropdownMenuItem>
+  //         </DropdownMenuContent>
+  //       </DropdownMenu>
+  //     );
+  //   },
+  // },
 ];

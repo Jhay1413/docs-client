@@ -124,6 +124,7 @@ export const TransactionForm = ({
   const project = filteredCompany?.companyProjects;
   console.log(selectedDivision, "division");
   console.log(team, "team");
+  console.log(validateEntities.data)
   const filterdForwardedTo = useForwardedToUser(
     validateEntities.data,
     role,

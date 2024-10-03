@@ -13,6 +13,7 @@ export const loginUser = async (data: TLogin) => {
 
     return response;
   } catch (error) {
+    console.log(error)
     if (axios.isAxiosError(error)) {
       throw new Error(
         error.response?.data || "Something went wrong while logging in !"

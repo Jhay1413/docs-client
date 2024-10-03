@@ -8,7 +8,7 @@ import { toast } from "react-toastify";
 import { useUserMutation } from "../hooks/mutation";
 
 type Props = {
-  signedUrl: string;
+  signedUrl?: string;
   id: string;
 };
 export const ProfilePicture = ({ signedUrl, id }: Props) => {
@@ -46,19 +46,14 @@ export const ProfilePicture = ({ signedUrl, id }: Props) => {
         {
           onError: (data) => onError(data),
           onSuccess: () => onSuccess(),
-        }
+        },
       );
     }
   };
   return (
     <div className="w-full flex justify-center">
       <div className="right-2 absolute top-2">
-        <Input
-          type="file"
-          ref={fileInputRef}
-          className="hidden"
-          onChange={(e) => fileChange(e)}
-        />
+        <Input type="file" ref={fileInputRef} className="hidden" onChange={(e) => fileChange(e)} />
         {img ? (
           <div className="flex justify-start gap-2">
             <Button variant="default" onClick={() => submit()}>
@@ -75,10 +70,7 @@ export const ProfilePicture = ({ signedUrl, id }: Props) => {
             </Button>
           </div>
         ) : (
-          <button
-            onClick={handleFileUpload}
-            className="bg-green-500 p-2 rounded-lg text-sm hover:bg-green-200"
-          >
+          <button onClick={handleFileUpload} className="bg-green-500 p-2 rounded-lg text-sm hover:bg-green-200">
             <div className="flex text-white items-center justify-center gap-2">
               <Upload />
               <h1>Upload</h1>

@@ -23,5 +23,5 @@ export const CompanyInfo = z.object({
   companyAddress: z.string(),
   contactPersons: z.nullable(contactPerson).optional(),
   email: z.nullable(z.string()),
-  companyProjects: z.array(companyProject).optional(),
+  companyProjects: z.nullable(z.array(companyProject)).optional(),
 });

@@ -665,6 +665,7 @@ export const checkList = [
       {
         name: " Forest Landuse Agreement (FLAg)",
         value: " Forest Landuse Agreement (FLAg)",
+        
         checkList: [
           'Letter of Intent addressed to RED',
           'Duly Accomplished Application Form',

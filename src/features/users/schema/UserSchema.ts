@@ -1,3 +1,4 @@
+import { userInfo } from "os";
 import { z } from "zod";
 
 const ACCEPTED_IMAGE_TYPES = [
@@ -99,10 +100,10 @@ export const UsersInfo = z.object({
   assignedDivision: z.string(),
   assignedSection: z.nullable(z.string()),
   assignedPosition: z.string(),
-  dateStarted: z.date(),
+  dateStarted: z.string().datetime(),
   jobStatus: z.string(),
-  birthDate: z.date(),
-  signedUrl: z.string(),
+  birthDate: z.string().datetime(),
+  signedUrl: z.string().optional(),
   email:z.string(),
   contactNumber:z.string()
 
@@ -113,6 +114,7 @@ export const AccountSchema = z.object({
   email: z.string(),
   accountRole: z.string(),
   password: z.string(),
+  userInfo:z.nullable(UsersInfo).optional()
 })
 export const UserInfoWithAccount = UsersInfo.extend({
   email: z.string(),

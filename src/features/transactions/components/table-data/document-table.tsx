@@ -1,25 +1,17 @@
 import { Button } from "@/components/ui/button";
-import {
-  Table,
-  TableBody,
-  TableCaption,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
+import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Check, X } from "lucide-react";
 import { z } from "zod";
 import { filesSchema } from "../../schema/TransactionSchema";
 import { getSignUrlForView } from "../../services/getSignedUrl";
 import { useReactToPrint } from "react-to-print";
 import { useRef } from "react";
+import { filesMutationSchema, filesQuerySchema } from "shared-contract";
 type Props = {
-  data: z.infer<typeof filesSchema>[];
-  percentage?:string 
+  data: z.infer<typeof filesQuerySchema>[];
+  percentage?: string;
 };
-export const DocumentTable = ({ data,percentage }: Props) => {
-  
+export const DocumentTable = ({ data, percentage }: Props) => {
   const componentRef = useRef<HTMLDivElement | null>(null);
   const viewFile = async (key: string) => {
     const signedUrl = await getSignUrlForView(key);
@@ -44,17 +36,11 @@ export const DocumentTable = ({ data,percentage }: Props) => {
             <TableHead className=" text-[#414140]">Name</TableHead>
 
             <TableHead className="text-center text-[#414140]">Status</TableHead>
-            <TableHead className="text-center text-[#414140]">
-              Remarks
-            </TableHead>
-            <TableHead className="text-center text-[#414140]">
-              Created at
-            </TableHead>
+            <TableHead className="text-center text-[#414140]">Remarks</TableHead>
+            <TableHead className="text-center text-[#414140]">Created at</TableHead>
             <TableHead className="text-center text-[#414140]">Final</TableHead>
 
-            <TableHead className="text-center text-[#414140] print-hide">
-              Action
-            </TableHead>
+            <TableHead className="text-center text-[#414140] print-hide">Action</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -86,12 +72,7 @@ export const DocumentTable = ({ data,percentage }: Props) => {
               </TableCell>
 
               <TableCell className="h-full w-32 flex items-center justify-center print-hide ">
-                <Button
-                  type="button"
-                  onClick={() => viewFile(item.fileUrl!)}
-                  disabled={item.fileUrl ? false : true}
-                  className="hide-on-print"
-                >
+                <Button type="button" onClick={() => viewFile(item.fileUrl!)} disabled={item.fileUrl ? false : true} className="hide-on-print">
                   View file
                 </Button>
               </TableCell>

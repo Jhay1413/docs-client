@@ -6,9 +6,11 @@ import { useRef } from "react";
 import { useReactToPrint } from "react-to-print";
 import { Button } from "@/components/ui/button";
 import { useCurrentUserFirstName } from "@/hooks/use-user-hook";
+import { filesMutationSchema } from "shared-contract/dist/schema/transactions/mutation-schema";
+import { filesQuerySchema } from "shared-contract";
 
 type Props = {
-  data: z.infer<typeof filesSchema>[];
+  data: z.infer<typeof filesQuerySchema>[];
 };
 export const IerPage = ({ data }: Props) => {
   let { state } = useLocation();

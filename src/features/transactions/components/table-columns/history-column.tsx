@@ -11,7 +11,8 @@ import { z } from "zod";
 import { Link } from "react-router-dom";
 import { ColumnDef } from "@tanstack/react-table";
 import { MoreHorizontal } from "lucide-react";
-import {transactionLogsData } from "../../schema/TransactionSchema";
+import { transactionLogsData } from "shared-contract";
+
 
 type History = z.infer<typeof transactionLogsData>;
 
@@ -21,7 +22,7 @@ export const historyColumn: ColumnDef<History>[] = [
     accessorKey: "subject",
   },
   {
-    header: "From",
+    header: "Origin Department",
     accessorKey: "fromDepartment",
     cell: ({ row }) => {
       const historyData = row.original;
@@ -29,13 +30,13 @@ export const historyColumn: ColumnDef<History>[] = [
       return (
         <div className="flex flex-col gap-2">
           <h1>{historyData.originDepartment}</h1>
-          <h1>{historyData.forwarder}</h1>
+      
         </div>
       );
     },
   },
   {
-    header: "To",
+    header: "Target Department",
     accessorKey: "toDepartment",
     cell: ({ row }) => {
       const historyData = row.original;
@@ -43,7 +44,7 @@ export const historyColumn: ColumnDef<History>[] = [
       return (
         <div className="flex flex-col gap-2">
           <h1>{historyData.targetDepartment}</h1>
-          <h1>{historyData.receiver}</h1>
+      
         </div>
       );
     },
@@ -62,7 +63,7 @@ export const historyColumn: ColumnDef<History>[] = [
     },
   },
   {
-    header: "Received By",
+    header: "Receiver",
     accessorKey: "receiver",
     id: "receiver",
     cell: ({ row }) => {
