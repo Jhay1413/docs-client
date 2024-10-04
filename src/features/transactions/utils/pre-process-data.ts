@@ -20,6 +20,7 @@ export const findContainFile = (transactionData: z.infer<typeof transactionFormD
   return signedUrlPayload;
 };
 export const prepare_file_payload = async (attachments: z.infer<typeof filesMutationSchema>[], data: z.infer<typeof signedUrlDataArray>) => {
+  console.log("inside");
   const res = await Promise.all(
     data.map(async (data) => {
       const attachmentToUpload = attachments?.find((attachment) => attachment.fileName === data.fileName);

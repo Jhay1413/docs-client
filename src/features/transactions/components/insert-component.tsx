@@ -35,7 +35,6 @@ export const InsertComponent = () => {
   const navigate = useNavigate();
 
   const onSubmit = async (transactionData: z.infer<typeof transactionMutationSchema>, setIsSubmitting: (value: boolean) => void) => {
-    console.log(transactionData);
     const attachments = transactionData.attachments?.filter((data) => data.file?.length! > 0);
 
     if (!attachments || attachments.length === 0) return mutateAsync({ body: transactionData });
@@ -49,22 +48,16 @@ export const InsertComponent = () => {
       };
     });
 
-    if (signedUrlPayload && signedUrlPayload?.length > 0) {
-      const getSignedUrlForUpload = await getSignedUrl(signedUrlPayload);
-      const validatedData = signedUrlDataArray.safeParse(getSignedUrlForUpload);
+    const getSignedUrlForUpload = await getSignedUrl(signedUrlPayload);
+    const validatedData = signedUrlDataArray.safeParse(getSignedUrlForUpload);
 
-      if (!validatedData.success) return null;
+    if (!validatedData.success) return null;
 
-      const res = await prepare_file_payload(attachments, validatedData.data);
+    const res = await prepare_file_payload(attachments, validatedData.data);
 
-      const payload = prepare_transaction_payload(transactionData, res);
+    const payload = prepare_transaction_payload(transactionData, res);
 
-      await mutateAsync({ body: payload });
-
-      if (isPending) {
-        setIsSubmitting(true);
-      }
-    }
+    await mutateAsync({ body: payload });
   };
 
   if (companiesIsLoading) return "loading";

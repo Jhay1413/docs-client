@@ -13,11 +13,8 @@ import { CalendarIcon, X } from "lucide-react";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { SubmitHandler, useFieldArray, useForm } from "react-hook-form";
 
-import FormInput from "@/components/formInput";
 import { Divisions } from "@/data/data";
-import { CompanyInfo } from "@/features/companies";
 import { getCurrentUserId, useCurrentUserRole } from "@/hooks/hooks/use-user-hook";
-import { docRoute } from "@/data/doc-route";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { departmentEntities } from "../schema/TransactionSchema";
@@ -497,9 +494,9 @@ export const TransactionForm = ({ company, method, defaultValue, mutateFn }: pro
                 <TableCaption>A list of your required attachments.</TableCaption>
                 <TableHeader>
                   <TableRow>
-                    <TableHead className="w-[100px]">Name</TableHead>
                     <TableHead className="w-[100px]">Type</TableHead>
-                    <TableHead className="w-[100px]">Status</TableHead>
+                    <TableHead className="w-[200px]">Status</TableHead>
+                    <TableHead className="w-[200px]">Filename</TableHead>
                     <TableHead className="w-[100px]">Remarks</TableHead>
                     <TableHead className="text-center">Action</TableHead>
                   </TableRow>
@@ -508,16 +505,11 @@ export const TransactionForm = ({ company, method, defaultValue, mutateFn }: pro
                   {fields.map((item, index) => (
                     <TableRow key={index}>
                       <TableCell className="font-medium w-[300px]">
-                        <FormInput name={`attachments.${index}.fileName`} label="Filename" />
-                      </TableCell>
-
-                      <TableCell className="font-medium w-[300px]">
                         <FormField
                           control={form.control}
                           name={`attachments.${index}.fileType`}
                           render={({ field }) => (
                             <FormItem>
-                              <FormLabel>File type</FormLabel>
                               <FormControl>
                                 <Select
                                   value={field.value || ""}
@@ -545,7 +537,6 @@ export const TransactionForm = ({ company, method, defaultValue, mutateFn }: pro
                           name={`attachments.${index}.fileStatus`}
                           render={({ field }) => (
                             <FormItem>
-                              <FormLabel>File status</FormLabel>
                               <FormControl>
                                 <Select
                                   value={field.value || ""}
@@ -567,8 +558,11 @@ export const TransactionForm = ({ company, method, defaultValue, mutateFn }: pro
                           )}
                         />
                       </TableCell>
+                      <TableCell className="font-medium w-[300px]">
+                        <FormTextArea name={`attachments.${index}.fileName`} />
+                      </TableCell>
                       <TableCell className="font-medium w-[500px]">
-                        <FormTextArea name={`attachments.${index}.remarks`} label="Remarks" />
+                        <FormTextArea name={`attachments.${index}.remarks`} />
                       </TableCell>
 
                       <TableCell className="h-full w-96 ">
@@ -579,7 +573,6 @@ export const TransactionForm = ({ company, method, defaultValue, mutateFn }: pro
                               name={`attachments.${index}.file`}
                               render={({ field: { onChange }, ...field }) => (
                                 <FormItem>
-                                  <FormLabel>File</FormLabel>
                                   <FormControl>
                                     <Input
                                       type="file"
