@@ -17,7 +17,6 @@ import { Divisions } from "@/data/data";
 import { getCurrentUserId, useCurrentUserRole } from "@/hooks/hooks/use-user-hook";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { departmentEntities } from "../schema/TransactionSchema";
 import { useCurrentDivision } from "@/hooks/use-user-hook";
 import FormTextArea from "@/components/formTextArea";
 import { Label } from "@/components/ui/label";
@@ -28,11 +27,10 @@ import { Check, ChevronsUpDown } from "lucide-react";
 
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
-import { useTransactions } from "../hooks/query-gate";
-import { useForwardedToUser } from "../hooks/custom-hook";
 import { toast } from "react-toastify";
 import { Separator } from "@/components/ui/separator";
 import { companyQuerySchema, transactionMutationSchema, transactionQueryData } from "shared-contract";
+import { tsr } from "@/services/tsr";
 
 type props = {
   company: z.infer<typeof companyQuerySchema>[] | null;
@@ -43,24 +41,40 @@ type props = {
 
 export const TransactionForm = ({ company, method, defaultValue, mutateFn }: props) => {
   const role = useCurrentUserRole();
+
   const currentDivision = useCurrentDivision();
   const userId = getCurrentUserId();
-  const { entities } = useTransactions("transactionEntities", "v2/departmentEntities");
+  // const { entities } = useTransactions("transactionEntities", "v2/departmentEntities");
 
-  const validateEntities = z.array(departmentEntities).safeParse(entities.data);
-  const [selectedCompany, setSelectedCompany] = useState<string>(defaultValue?.companyId || "");
+  // const validateEntities = z.array(departmentEntities).safeParse(entities.data);
+
+  // console.log(validateEntities.data);
   const fileInputRef = useRef<(HTMLInputElement | null)[]>([]);
-  const [team, setTeam] = useState(defaultValue?.team || "");
+
+  const [selectedCompany, setSelectedCompany] = useState<string>(defaultValue?.companyId || "");
+  const [team, setTeam] = useState(defaultValue?.team || null);
   const [selectedDivision, setSelectedDivision] = useState(defaultValue?.targetDepartment || "");
   const [subType, setSubType] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
+
   const temp_section = checkList.find((check) => check.name === team);
   const attachmentList = useMemo(() => temp_section?.application.find((check) => check.name === subType), [subType, temp_section]);
   const sections = Divisions.find((division) => division.name === selectedDivision);
   const filteredCompany = company?.find((data) => data.id === selectedCompany);
   const project = filteredCompany?.companyProjects;
 
-  const filterdForwardedTo = useForwardedToUser(validateEntities.data, role, selectedDivision, team);
+  // const filterdForwardedTo = useForwardedToUser(validateEntities.data, role, selectedDivision, team);
+  const { data: filterdForwardedTo } = tsr.userAccounts.getUserByRoleAccess.useQuery({
+    queryKey: ["users-for-forward"],
+    queryData: {
+      query: {
+        id: userId,
+        targetDivision: selectedDivision,
+        team: team,
+      },
+    },
+    staleTime: Infinity,
+  });
   const form = useForm<z.infer<typeof transactionMutationSchema>>({
     resolver: zodResolver(transactionMutationSchema),
     mode: "onSubmit",
@@ -69,7 +83,7 @@ export const TransactionForm = ({ company, method, defaultValue, mutateFn }: pro
           documentType: defaultValue?.documentType,
           subject: defaultValue?.subject,
           dueDate: defaultValue ? new Date(defaultValue.dueDate).toISOString() : new Date().toISOString(),
-          team: defaultValue?.team,
+          team: defaultValue.team || null,
           status: defaultValue?.status,
           priority: defaultValue?.priority,
           originDepartment: currentDivision,
@@ -89,6 +103,7 @@ export const TransactionForm = ({ company, method, defaultValue, mutateFn }: pro
           forwarderId: userId,
           originDepartment: currentDivision,
           transactionId: "",
+          team: null,
           attachments: attachmentList?.checkList?.map((item) => ({
             fileName: item,
             fileOriginalName: undefined,
@@ -245,7 +260,7 @@ export const TransactionForm = ({ company, method, defaultValue, mutateFn }: pro
                           setSelectedDivision(value);
                           field.onChange(value);
                         }}
-                        disabled={method === "UPDATE" && role !== "RECORDS"}
+                        disabled={role !== "RECORDS" && role !== "DMS" && role !== "MANAGER" && method == "UPDATE"}
                       >
                         <SelectTrigger className="w-full">
                           <SelectValue placeholder="Select Department" />
@@ -275,8 +290,8 @@ export const TransactionForm = ({ company, method, defaultValue, mutateFn }: pro
                           setTeam(value);
                           field.onChange(value);
                         }}
-                        defaultValue={field.value}
-                        disabled={(method === "UPDATE" && role !== "RECORDS") || !selectedDivision}
+                        defaultValue={field.value || undefined}
+                        disabled={(role !== "RECORDS" && role !== "DMS" && role !== "MANAGER" && method == "UPDATE") || !selectedDivision}
                       >
                         <SelectTrigger>
                           <SelectValue placeholder="Select team" />
@@ -374,9 +389,9 @@ export const TransactionForm = ({ company, method, defaultValue, mutateFn }: pro
                           <SelectValue placeholder="Forward to " />
                         </SelectTrigger>
                         <SelectContent>
-                          {filterdForwardedTo.map((route, index) => (
-                            <SelectItem key={index} value={route.id}>
-                              {route.fullname}
+                          {filterdForwardedTo?.body.map((route, index) => (
+                            <SelectItem key={index} value={route.accountId}>
+                              {route.firstName} {route.lastName} - <span className="font-bold">{route.account.accountRole}</span>
                             </SelectItem>
                           ))}
                         </SelectContent>

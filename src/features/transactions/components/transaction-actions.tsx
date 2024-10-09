@@ -62,7 +62,7 @@ export const TransactionActions = ({ transactionId }: { transactionId: string })
         callbackFn={() => setIsOpen(!open)}
       />
       <RoleButton
-        roles={["RECORDS", "QA", "CH", "TL", "MANAGER"]}
+        roles={["RECORDS", "QA", "CH", "TL", "MANAGER", "DMS"]}
         Icon={FilePenLine}
         className="flex justify-start items-center w-full gap-2 px-4 py-2 bg-green-500 hover:bg-green-700 text-white rounded-md"
         label="Forward"
