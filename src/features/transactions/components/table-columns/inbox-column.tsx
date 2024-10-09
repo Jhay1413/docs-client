@@ -40,7 +40,7 @@ export const inboxColumn: ColumnDef<InboxColumn>[] = [
     accessorKey: "documentType",
   },
   {
-    header: "Document sub type",
+    header: "Document Sub Type",
     accessorKey: "documentSubType",
   },
   {
