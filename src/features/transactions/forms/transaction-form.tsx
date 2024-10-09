@@ -17,7 +17,6 @@ import { Divisions } from "@/data/data";
 import { getCurrentUserId, useCurrentUserRole } from "@/hooks/hooks/use-user-hook";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { departmentEntities } from "../schema/TransactionSchema";
 import { useCurrentDivision } from "@/hooks/use-user-hook";
 import FormTextArea from "@/components/formTextArea";
 import { Label } from "@/components/ui/label";
@@ -28,8 +27,6 @@ import { Check, ChevronsUpDown } from "lucide-react";
 
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
-import { useTransactions } from "../hooks/query-gate";
-import { useForwardedToUser } from "../hooks/custom-hook";
 import { toast } from "react-toastify";
 import { Separator } from "@/components/ui/separator";
 import { companyQuerySchema, transactionMutationSchema, transactionQueryData } from "shared-contract";
@@ -78,7 +75,6 @@ export const TransactionForm = ({ company, method, defaultValue, mutateFn }: pro
     },
     staleTime: Infinity,
   });
-  console.log(filterdForwardedTo);
   const form = useForm<z.infer<typeof transactionMutationSchema>>({
     resolver: zodResolver(transactionMutationSchema),
     mode: "onSubmit",
@@ -395,7 +391,7 @@ export const TransactionForm = ({ company, method, defaultValue, mutateFn }: pro
                         <SelectContent>
                           {filterdForwardedTo?.body.map((route, index) => (
                             <SelectItem key={index} value={route.accountId}>
-                              {route.firstName} - {route.lastName}
+                              {route.firstName} {route.lastName} - <span className="font-bold">{route.account.accountRole}</span>
                             </SelectItem>
                           ))}
                         </SelectContent>
