@@ -79,7 +79,7 @@ export const TransactionForm = ({ company, method, defaultValue, mutateFn }: pro
           documentType: defaultValue?.documentType,
           subject: defaultValue?.subject,
           dueDate: defaultValue ? new Date(defaultValue.dueDate).toISOString() : new Date().toISOString(),
-          team: defaultValue.team || null,
+          team: defaultValue.team,
           status: defaultValue?.status,
           priority: defaultValue?.priority,
           originDepartment: currentDivision,
@@ -99,7 +99,6 @@ export const TransactionForm = ({ company, method, defaultValue, mutateFn }: pro
           forwarderId: userId,
           originDepartment: currentDivision,
           transactionId: "",
-          team: null,
           attachments: attachmentList?.checkList?.map((item) => ({
             fileName: item,
             fileOriginalName: undefined,
@@ -420,7 +419,6 @@ export const TransactionForm = ({ company, method, defaultValue, mutateFn }: pro
                           <Calendar
                             mode="single"
                             onSelect={(value) => {
-                              
                               field.onChange(new Date(value!).toISOString());
                             }}
                             initialFocus
