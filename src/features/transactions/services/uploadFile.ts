@@ -7,7 +7,7 @@ export const uploadFile = async (signedUrl: string, file: File) => {
       },
       body: file,
     });
-    console.log(response.body);
+    
     if (!response.ok) {
       throw new Error(`Upload failed with status ${response.status}`);
     }

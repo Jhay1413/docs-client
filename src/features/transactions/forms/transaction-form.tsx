@@ -44,11 +44,7 @@ export const TransactionForm = ({ company, method, defaultValue, mutateFn }: pro
 
   const currentDivision = useCurrentDivision();
   const userId = getCurrentUserId();
-  // const { entities } = useTransactions("transactionEntities", "v2/departmentEntities");
 
-  // const validateEntities = z.array(departmentEntities).safeParse(entities.data);
-
-  // console.log(validateEntities.data);
   const fileInputRef = useRef<(HTMLInputElement | null)[]>([]);
 
   const [selectedCompany, setSelectedCompany] = useState<string>(defaultValue?.companyId || "");
@@ -424,7 +420,7 @@ export const TransactionForm = ({ company, method, defaultValue, mutateFn }: pro
                           <Calendar
                             mode="single"
                             onSelect={(value) => {
-                              console.log(new Date(value!));
+                              
                               field.onChange(new Date(value!).toISOString());
                             }}
                             initialFocus

@@ -50,25 +50,6 @@ export const IncomingComponent = () => {
   });
   const incomingColumns = useColumns(mutateAsync);
 
-  // const { mutate, isSuccess, data } = useReadAllNotifications();
-
-  // useEffect(() => {
-  //   if (isSuccess && data) {
-  //     setAllNotification(data);
-  //   } else {
-  //     mutate();
-  //   }
-  // }, [isSuccess]);
-  // if (entities.isLoading) {
-  //   return <h1>Loading..</h1>;
-  // }
-  // const validatedData = z.array(transactionData).safeParse(entities.data);
-
-  // if (!validatedData.success) {
-  //   console.log(validatedData.error.errors);
-  //   return "Invalid Data!";
-  // }
-
   return (
     <div className="flex flex-col gap-y-4 ">
       <div className="flex justify-start w-full flex-col ">

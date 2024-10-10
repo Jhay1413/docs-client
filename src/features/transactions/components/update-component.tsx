@@ -81,7 +81,7 @@ export const TransactionUpdateComponent = () => {
       if (!validatedData.success) return null;
 
       const res = await prepare_file_payload(attachments, validatedData.data);
-      console.log(res);
+
       let payload = prepare_transaction_payload(transactionData, res);
       if (payload.status === "ARCHIVED") {
         payload = { ...payload, receiverId: null };

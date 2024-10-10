@@ -10,6 +10,7 @@ export const ViewHistory = () => {
   if (!validatedData.success) console.log(validatedData.error.errors);
   if (!validatedData.data) return "Something went wrong !";
 
+
   return (
     <div className="flex flex-col w-full  p-4 rounded-lg">
       <div className="flex flex-col space-y-12">

@@ -30,21 +30,6 @@ export const HistoryComponent = () => {
       params: { id: id! },
     },
   });
-  // const { entity, update } = useTransaction({
-  //   key: `transactions`,
-  //   url: `v2/${id}`,
-  //   id,
-  // });
-
-  // const validatedData = transactionData.safeParse(entity.data);
-  // console.log(data?.body);
-  // if (entity.isLoading) return "loading";
-
-  // if (!succ?.bodyess || !data?.body) {
-  //   console.log(entity.data);
-  //   console.log(erro?.bodyr.errors);
-  //   return "something went wrong !";
-  // }
 
   if (isPending || !data?.body) {
     return "loading";

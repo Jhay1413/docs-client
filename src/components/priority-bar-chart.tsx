@@ -38,7 +38,6 @@ export function PriorityBarChart({ data }: { data: z.infer<typeof PerApplication
     ...item,
     categoryName: extractAbbreviation(item.categoryName) || item.categoryName, // Replace with abbreviation or keep original
   }));
-  console.log(transformedArray)
   
   return (
     <Card className=" absolute inset-0 flex flex-col ">

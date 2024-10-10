@@ -20,7 +20,6 @@ export const findContainFile = (transactionData: z.infer<typeof transactionFormD
   return signedUrlPayload;
 };
 export const prepare_file_payload = async (attachments: z.infer<typeof filesMutationSchema>[], data: z.infer<typeof signedUrlDataArray>) => {
-  console.log("inside");
   const res = await Promise.all(
     data.map(async (data) => {
       const attachmentToUpload = attachments?.find((attachment) => attachment.fileName === data.fileName);
@@ -48,7 +47,6 @@ export const prepare_transaction_payload = (transactionData: z.infer<typeof tran
     const { file, ...new_fileData } = attachment;
 
     if (matchedFile) {
-      console.log(matchedFile);
       return {
         ...new_fileData,
         fileUrl: matchedFile.key,
@@ -58,6 +56,6 @@ export const prepare_transaction_payload = (transactionData: z.infer<typeof tran
     return new_fileData;
   });
   const payload = { ...transactionData, attachments: modified_fileData };
-  console.log;
+
   return payload;
 };

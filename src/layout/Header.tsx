@@ -99,19 +99,23 @@ export const Header = () => {
           <div className="w-[400px] h-[77px] relative ">
             <div className="flex w-full h-full">
               <div className="flex w-full justify-end items-center">
-                <button
-                  className="flex justify-center items-center relative rounded-full bg-white  w-[44px] h-[44px] "
-                  onClick={openNotification}
-                >
-                  <Bell className=" w-[20px] h-[20px]" />
-                  <span className="absolute top-0 right-0 text-red-500">
-                    {numOfUnreadNotif ? (
-                      <Dot absoluteStrokeWidth size={25} />
-                    ) : (
-                      ""
-                    )}
-                  </span>
-                </button>
+
+              {/* Added hover in notification icon */}
+              <button
+                className="flex justify-center items-center relative rounded-full bg-white w-[44px] h-[44px] hover:bg-gray-200"
+                onClick={openNotification}
+              >
+                <Bell className="w-[20px] h-[20px]" />
+                <span className="absolute top-0 right-0 text-red-500">
+                  {numOfUnreadNotif ? (
+                    <Dot absoluteStrokeWidth size={25} />
+                  ) : (
+                    ""
+                  )}
+                </span>
+              </button>
+
+
               </div>
               {openNotif && (
                 <div className="absolute h-[500px] w-full  top-full rounded-lg z-10">

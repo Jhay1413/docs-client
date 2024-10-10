@@ -75,7 +75,7 @@ export const transactionColumns: ColumnDef<TransactionInfo>[] = [
     },
   },
   {
-    header: "Reciever",
+    header: "Receiver",
     accessorKey: "forwardedTo",
     cell: ({ row }) => {
       const data = row.original;
