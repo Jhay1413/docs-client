@@ -20,7 +20,6 @@ export const DashboardNewLayout = () => {
   const setAllNotification = useNotificationStore((state) => state.setAllNotification);
   useEffect(() => {
     socket.on("notification", (message: string, notifications: z.infer<typeof notification>[], quantityTracker: NotificationType) => {
-      console.log(quantityTracker);
       setNotification(quantityTracker);
       setAllNotification(notifications);
       if (message) {

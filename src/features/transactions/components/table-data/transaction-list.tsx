@@ -40,7 +40,7 @@ export const TransactionList = () => {
   const intPage = parseInt(page, 10);
   const [debouncedSearchQuery] = useDebounce(searchQuery, 500); // Adjust the delay as needed
 
-  const { data: searchData } = tsr.transaction.searchTransactions.useQuery({
+  const { data: searchData } = tsr.transaction.fetchTransactions.useQuery({
     queryKey: ["transactions", page, debouncedSearchQuery],
     queryData: {
       query: {
@@ -52,6 +52,7 @@ export const TransactionList = () => {
     },
     placeholderData: keepPreviousData,
   });
+  console.log(searchData);
 
   const handleNextPage = () => {
     setSearchParams((prev) => {
@@ -70,7 +71,6 @@ export const TransactionList = () => {
       });
     }
   };
-  console.log(searchData?.body);
   const handleOnClickRow = (data: z.infer<typeof transactionQueryData>) => {
     navigate(`/dashboard/transactions/history/${data.id}`);
   };
@@ -101,25 +101,30 @@ export const TransactionList = () => {
           <Search />
         </button>
       </div>
-      <DataTable columns={transactionColumns} data={searchData ? searchData.body! : []} callbackFn={handleOnClickRow}></DataTable>
-      <div className="flex items-center justify-end space-x-2 py-4">
-        <Button variant="outline" size="sm">
-          {"<<"}
-        </Button>
-        <Button variant="outline" size="sm" onClick={handlePreviousPage} disabled={intPage == 1}>
-          Previous
-        </Button>
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={handleNextPage}
-          // Disable if on the first page
-        >
-          Next
-        </Button>
-        <Button variant="outline" size="sm">
-          {">>"}
-        </Button>
+      <DataTable columns={transactionColumns} data={searchData ? searchData.body.data! : []} callbackFn={handleOnClickRow}></DataTable>
+      <div className="w-full flex justify-between items-center">
+        <div className="text-muted-foreground">
+          <h1>Number of Transactions: {searchData?.body.numOfTransactions}</h1>
+        </div>
+        <div className="flex items-center space-x-2 py-4">
+          <Button variant="outline" size="sm" disabled={parseInt(page) == 1}>
+            {"<<"}
+          </Button>
+          <Button variant="outline" size="sm" onClick={handlePreviousPage} disabled={intPage == 1}>
+            Previous
+          </Button>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={handleNextPage}
+            disabled={searchData?.body.totalPages === 0 || searchData?.body.totalPages === parseInt(page)}
+          >
+            Next
+          </Button>
+          <Button variant="outline" size="sm" disabled={searchData?.body.totalPages === 0 || searchData?.body.totalPages === parseInt(page)}>
+            {">>"}
+          </Button>
+        </div>
       </div>
     </div>
   );

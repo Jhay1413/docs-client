@@ -6,9 +6,11 @@ import { transactionLogsData } from "shared-contract";
 
 export const ViewHistory = () => {
   const { state } = useLocation();
+  console.log(state);
   const validatedData = transactionLogsData.safeParse(state.transactionInfo);
   if (!validatedData.success) console.log(validatedData.error.errors);
   if (!validatedData.data) return "Something went wrong !";
+
 
   return (
     <div className="flex flex-col w-full  p-4 rounded-lg">

@@ -66,7 +66,6 @@ export const useEntity = <T extends { id?: string }>(
       return data;
     },
     onSuccess: (deletedId) => {
-      console.log(deletedId);
       queryClient.setQueryData([key, id], null);
       queryClient.setQueryData([key], (cachedEntities: T[] | undefined) =>
         cachedEntities?.filter((cachedEntity) => cachedEntity.id !== deletedId)
@@ -76,12 +75,10 @@ export const useEntity = <T extends { id?: string }>(
   });
   const update = useMutation<T | string, Error, T | T[], any>({
     mutationFn: async (entity: T | T[]): Promise<T | string> => {
-      console.log(url);
       const { data } = await put(updateUrl || url, entity);
       return data;
     },
     onSuccess: (updatedEntity) => {
-      console.log(updatedEntity);
       if (method == "UPDATEREMOVE") {
         queryClient.setQueryData([key, updatedEntity], null);
         queryClient.setQueryData([key], (cachedEntities: T[] | undefined) =>
@@ -101,7 +98,6 @@ export const useEntity = <T extends { id?: string }>(
         }
       }
       toast.success("Data updated successfully");
-      console.log(queryClient.getQueryData([key,id]));
       invalidateActive();
     },
     onError: (data) => {

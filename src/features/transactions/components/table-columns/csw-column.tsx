@@ -51,9 +51,8 @@ export const cswColumn: ColumnDef<Csw>[] = [
     cell: ({ row }) => {
       const cswInfo = row.original;
       const viewFile = async (key: string) => {
-        console.log(key);
         const signedUrl = await getSignUrlForView(key);
-        console.log(signedUrl);
+
         if (signedUrl) {
           window.open(signedUrl);
         }

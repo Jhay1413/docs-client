@@ -21,34 +21,7 @@ export const historyColumn: ColumnDef<History>[] = [
     header: "Subject",
     accessorKey: "subject",
   },
-  {
-    header: "Origin Department",
-    accessorKey: "fromDepartment",
-    cell: ({ row }) => {
-      const historyData = row.original;
 
-      return (
-        <div className="flex flex-col gap-2">
-          <h1>{historyData.originDepartment}</h1>
-      
-        </div>
-      );
-    },
-  },
-  {
-    header: "Target Department",
-    accessorKey: "toDepartment",
-    cell: ({ row }) => {
-      const historyData = row.original;
-
-      return (
-        <div className="flex flex-col gap-2">
-          <h1>{historyData.targetDepartment}</h1>
-      
-        </div>
-      );
-    },
-  },
   {
     header: "Forwarder",
     accessorKey: "forwarder",
@@ -82,7 +55,7 @@ export const historyColumn: ColumnDef<History>[] = [
     accessorKey: "remarks",
   },
   {
-    header:"status",
+    header:"Status",
     accessorKey:"status"
   },
   {

@@ -13,9 +13,8 @@ import { z } from "zod";
 
 export const EditComponent = () => {
   const { id } = useParams();
-  console.log(id);
   const { entity, update } = useCompany(`${id}`, "companies", id);
-  console.log(entity.data);
+
   //   useEffect(() => {
   //     if (add.isSuccess) {
   //       form.reset();

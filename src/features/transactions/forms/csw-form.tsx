@@ -169,9 +169,6 @@ export const CompleteStaffWorkForm = ({ data, transactionId }: Props) => {
                                   <Calendar
                                     mode="single"
                                     onSelect={(value) => {
-                                      console.log(
-                                        new Date(value!).toISOString()
-                                      );
                                       field.onChange(
                                         new Date(value!).toISOString()
                                       );

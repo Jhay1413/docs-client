@@ -22,14 +22,12 @@ export const getAccountInfoApi = async () => {
 export const getUserInfo = async (id: string) => {
   try {
     const response = await axios.get(`${userApi}/${id}`);
-    console.log(response)
     return response.data;
   } catch (error) {}
 };
 export const getUsersInfo = async () => {
   try {
     const response = await axios.get(`${userApi}/`);
-    console.log(response.data);
     return response.data;
   } catch (error) {
     if (axios.isAxiosError(error) && error.response) {

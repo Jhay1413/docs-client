@@ -36,7 +36,7 @@ export function CompleStaffWorkDialog({ transactionId }: Props) {
       const lastGoodKnown = tsrQueryClient.transaction.fetchTransactionById.getQueryData(["transaction", transactionId]);
 
       tsrQueryClient.transaction.fetchTransactionById.setQueryData(["transaction", transactionId], (old) => {
-        console.log(old);
+        
         if (!old) return old;
         return {
           ...old,
@@ -132,7 +132,6 @@ export function CompleStaffWorkDialog({ transactionId }: Props) {
                         <Calendar
                           mode="single"
                           onSelect={(value) => {
-                            console.log(new Date(value!).toISOString());
                             field.onChange(new Date(value!).toISOString());
                           }}
                           initialFocus
