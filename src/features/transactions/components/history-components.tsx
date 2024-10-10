@@ -89,7 +89,7 @@ export const HistoryComponent = () => {
             <TransactionDetails data={data?.body} />
             <div className="flex flex-col">
               <h1 className="text-muted-foreground text-lg">History</h1>
-              <DataTable columns={historyColumn} data={data.body.transactionLogs || []} />
+              <DataTable columns={historyColumn} data={data.body.transactionLogs || []} hasPaginate={true} />
             </div>
           </>
         )}
