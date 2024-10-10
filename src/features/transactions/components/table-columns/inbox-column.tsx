@@ -72,7 +72,7 @@ export const inboxColumn: ColumnDef<InboxColumn>[] = [
     accessorKey: "forwardedBy",
     cell: ({ row }) => {
       const transactionHistory = row.original;
-      console.log(transactionHistory);
+
       return (
         <div className="flex flex-col gap-4">
           <h1>

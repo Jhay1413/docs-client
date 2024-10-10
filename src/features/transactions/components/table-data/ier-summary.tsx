@@ -15,9 +15,7 @@ type Props = {
 export const IerPage = ({ data }: Props) => {
   let { state } = useLocation();
   const name = useCurrentUserFirstName();
-  console.log(state)
   const { id } = useParams();
-  console.log(id);
   const componentRef = useRef<HTMLDivElement | null>(null);
   const handlePrint = useReactToPrint({
     content: () => componentRef.current!,

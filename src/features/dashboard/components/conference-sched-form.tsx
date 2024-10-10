@@ -73,8 +73,6 @@ export const ConferenceSchedForm = () => {
     const new_start_date = new Date(`${temp_Date}T${data.startTime}`).toISOString();
     const new_end_Date = new Date(`${data.endDate}T${data.endTime}`);
 
-    console.log();
-    console.log(new_end_Date);
   };
 
   return (
@@ -124,7 +122,6 @@ export const ConferenceSchedForm = () => {
                       <Calendar
                         mode="single"
                         onSelect={(value) => {
-                          console.log(new Date(value!).toISOString());
                           field.onChange(new Date(value!));
                         }}
                         initialFocus

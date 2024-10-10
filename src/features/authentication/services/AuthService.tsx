@@ -37,7 +37,6 @@ export const checkAuth = async () => {
 export const logoutUser = async () => {
   try {
     const response = await axios.get(`${authApi}/logout`);
-    console.log(response);
     return response.data;
   } catch (error) {
     throw new Error("Something went wrong while logging out !");

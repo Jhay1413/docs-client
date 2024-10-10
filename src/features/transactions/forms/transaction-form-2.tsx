@@ -122,16 +122,12 @@ export const TransactionForm = ({
   );
   const filteredCompany = company?.find((data) => data.id === selectedCompany);
   const project = filteredCompany?.companyProjects;
-  console.log(selectedDivision, "division");
-  console.log(team, "team");
-  console.log(validateEntities.data)
   const filterdForwardedTo = useForwardedToUser(
     validateEntities.data,
     role,
     selectedDivision,
     team
   );
-  console.log(filterdForwardedTo);
   const form = useForm<z.infer<typeof transactionFormData>>({
     resolver: zodResolver(transactionFormData),
     mode: "onSubmit",
@@ -533,7 +529,6 @@ export const TransactionForm = ({
                           <Calendar
                             mode="single"
                             onSelect={(value) => {
-                              console.log(new Date(value!).toISOString());
                               field.onChange(new Date(value!).toISOString());
                             }}
                             initialFocus

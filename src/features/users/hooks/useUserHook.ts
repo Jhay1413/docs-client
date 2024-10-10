@@ -53,7 +53,6 @@ export const useUser = <T extends { id: string }>(
 
   const updateProfile = useMutation<T, Error, File, any>({
     mutationFn: async (img: File): Promise<T> => {
-      console.log(img + "asdasda");
       const { data } = await axios.put<T>(userApi + url + id, img);
 
       return data;

@@ -33,8 +33,7 @@ export const Dashboard = () => {
     []
   );
   if(entities.isLoading) return "loading";
-  
-  console.log(entities.data)
+
   const validateSchema = DashboardDataSchema.safeParse(entities.data);
   if(!validateSchema.success || !validateSchema.data) {
     console.log(validateSchema.error);
