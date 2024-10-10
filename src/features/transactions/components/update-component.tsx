@@ -28,7 +28,7 @@ export const TransactionUpdateComponent = () => {
 
   const { mutate, mutateAsync } = tsr.transaction.updateTransaction.useMutation({
     onMutate: (data) => {
-      const lastGoodKnown = tsrQueryClient.transaction.searchTransactions.getQueryData(["transactions"]);
+      const lastGoodKnown = tsrQueryClient.transaction.fetchTransactions.getQueryData(["transactions"]);
 
       return { lastGoodKnown };
     },
@@ -41,7 +41,7 @@ export const TransactionUpdateComponent = () => {
       navigate(`/dashboard/transactions/inbox/${userId}`);
     },
     onError: (error, newPost, context) => {
-      tsrQueryClient.transaction.searchTransactions.setQueryData(["transactions", id], context?.lastGoodKnown);
+      tsrQueryClient.transaction.fetchTransactions.setQueryData(["transactions", id], context?.lastGoodKnown);
       toast.error("Something went wrong, Please retry ! ");
     },
     onSettled: () => {

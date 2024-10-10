@@ -20,7 +20,7 @@ export const ArchivedList = () => {
 
   const intPage = parseInt(page, 10);
   const [debouncedSearchQuery] = useDebounce(searchQuery, 500);
-  const { data: searchData } = tsr.transaction.searchTransactions.useQuery({
+  const { data: searchData } = tsr.transaction.fetchTransactions.useQuery({
     queryKey: ["archived-transaction", page, debouncedSearchQuery],
     queryData: {
       query: {
@@ -82,7 +82,7 @@ export const ArchivedList = () => {
           <Search />
         </button>
       </div>
-      <DataTable columns={archivedColumn} data={searchData ? searchData.body! : []} callbackFn={handleOnClickRow} />
+      <DataTable columns={archivedColumn} data={searchData ? searchData.body.data! : []} callbackFn={handleOnClickRow} />
       <div className="flex items-center w-full  justify-center space-x-2 py-4">
         <Button variant="outline" size="sm">
           {"<<"}
