@@ -1,16 +1,15 @@
 import { DataTable } from "@/components/data-table";
-import { transactionColumns } from "../table-columns/transaction-columns";
+import { transColumns } from "../table-columns/transaction-columns";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { Plus, Search } from "lucide-react";
 import withRole from "@/components/HOC/component-permission";
 import { tsr } from "@/services/tsr";
-import { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { useDebounce } from "use-debounce";
 import { Button } from "@/components/ui/button";
 import { keepPreviousData } from "@tanstack/react-query";
 import { z } from "zod";
-import { transactionQueryData } from "shared-contract";
+import { transactionTable } from "shared-contract";
 const addTransactionBtn = () => (
   <div className="flex  bg-black w-full relative">
     <div className="absolute bottom-0 top-4">
@@ -40,7 +39,7 @@ export const TransactionList = () => {
   const intPage = parseInt(page, 10);
   const [debouncedSearchQuery] = useDebounce(searchQuery, 500); // Adjust the delay as needed
 
-  const { data: searchData } = tsr.transaction.fetchTransactions.useQuery({
+  const { data } = tsr.transaction.fetchTransactionsV2.useQuery({
     queryKey: ["transactions", page, debouncedSearchQuery],
     queryData: {
       query: {
@@ -52,7 +51,6 @@ export const TransactionList = () => {
     },
     placeholderData: keepPreviousData,
   });
-  console.log(searchData);
 
   const handleNextPage = () => {
     setSearchParams((prev) => {
@@ -71,7 +69,8 @@ export const TransactionList = () => {
       });
     }
   };
-  const handleOnClickRow = (data: z.infer<typeof transactionQueryData>) => {
+
+  const handleOnClickRow = (data: z.infer<typeof transactionTable>) => {
     navigate(`/dashboard/transactions/history/${data.id}`);
   };
   return (
@@ -101,10 +100,10 @@ export const TransactionList = () => {
           <Search />
         </button>
       </div>
-      <DataTable columns={transactionColumns} data={searchData ? searchData.body.data! : []} callbackFn={handleOnClickRow}></DataTable>
+      <DataTable columns={transColumns} data={data ? data.body.data : []} callbackFn={handleOnClickRow} />
       <div className="w-full flex justify-between items-center">
         <div className="text-muted-foreground">
-          <h1>Number of Transactions: {searchData?.body.numOfTransactions}</h1>
+          <h1>Number of Transactions: {data?.body.numOfTransactions}</h1>
         </div>
         <div className="flex items-center space-x-2 py-4">
           <Button variant="outline" size="sm" disabled={parseInt(page) == 1}>
@@ -117,11 +116,11 @@ export const TransactionList = () => {
             variant="outline"
             size="sm"
             onClick={handleNextPage}
-            disabled={searchData?.body.totalPages === 0 || searchData?.body.totalPages === parseInt(page)}
+            disabled={data?.body.totalPages === 0 || data?.body.totalPages === parseInt(page)}
           >
             Next
           </Button>
-          <Button variant="outline" size="sm" disabled={searchData?.body.totalPages === 0 || searchData?.body.totalPages === parseInt(page)}>
+          <Button variant="outline" size="sm" disabled={data?.body.totalPages === 0 || data?.body.totalPages === parseInt(page)}>
             {">>"}
           </Button>
         </div>

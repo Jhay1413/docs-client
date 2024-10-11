@@ -1,54 +1,73 @@
-import { useParams } from "react-router-dom";
-import { useTransactions } from "../../hooks/query-gate";
+import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 import { DataTable } from "@/components/data-table";
-import { transactionData, transactionFormData } from "../../schema/TransactionSchema";
-import { z } from "zod";
 
 import { useNotificationStore } from "@/global-states/notification-store";
 
-import { useEffect } from "react";
-import { useReadAllNotifications } from "@/hooks/use-custom-query";
 import { tsr } from "@/services/tsr";
 import { useColumns } from "../table-columns/incoming-column";
 import { toast } from "react-toastify";
+import { useDebounce } from "use-debounce";
 
 export const IncomingComponent = () => {
   const tsrQueryClient = tsr.useQueryClient();
   const { id } = useParams();
+  const navigate = useNavigate();
+  const [searchParams, setSearchParams] = useSearchParams({
+    currentPage: "1",
+    search: "",
+  });
+
+  const searchQuery = searchParams.get("search") || "";
+  const page = searchParams.get("currentPage") || "1";
+
+  const intPage = parseInt(page, 10);
+  const [debouncedSearchQuery] = useDebounce(searchQuery, 500);
   const notification = useNotificationStore((state) => state.notification);
   const setNotification = useNotificationStore((state) => state.setNotification);
 
-  const { data, isLoading } = tsr.transaction.getTransactionByParams.useQuery({
-    queryKey: ["incoming-transactions"],
+  const { data, isLoading } = tsr.transaction.fetchTransactionsV2.useQuery({
+    queryKey: ["incoming-transactions", page, debouncedSearchQuery],
     queryData: {
       query: {
+        query: debouncedSearchQuery,
         status: "INCOMING",
-        accountId: id!,
+        page: page,
+        pageSize: "10",
+        userId: id,
       },
     },
   });
 
-  const { mutateAsync } = tsr.transaction.receivedTransaction.useMutation({
-    onSuccess: (data) => {
+  const { mutate } = tsr.transaction.receivedTransaction.useMutation({
+    onMutate: (data) => {
+      tsrQueryClient.transaction.fetchTransactionsV2.setQueryData(["incoming-transactions", page, debouncedSearchQuery], (old) => {
+        if (!old || !old.body) return old;
+        return {
+          ...old,
+          body: {
+            ...old.body,
+            data: old.body.data.filter((transaction) => transaction.id !== data.params.id), // Filter out the transaction being mutated
+          },
+        };
+      });
+    },
+    onSuccess: () => {
       setNotification({
         ...notification,
         incoming: notification?.incoming === 0 ? 0 : notification?.incoming! - 1,
         inbox: notification?.inbox! + 1,
       });
-      tsrQueryClient.transaction.getTransactionByParams.setQueryData(["incoming-transactions"], (old) => {
-        if (!old || !old.body) return old;
-        return {
-          ...old,
-          body: old.body.filter((transaction) => transaction.id !== data.body.id), // Filter out the transaction
-        };
-      });
+
       toast.success("Transaction Received !");
     },
     onError: (error) => {
       console.log(error);
     },
+    onSettled: () => {
+      tsrQueryClient.invalidateQueries({ queryKey: ["incoming-transactions", page, debouncedSearchQuery] });
+    },
   });
-  const incomingColumns = useColumns(mutateAsync);
+  const incomingColumns = useColumns(mutate);
 
   return (
     <div className="flex flex-col gap-y-4 ">
@@ -58,7 +77,7 @@ export const IncomingComponent = () => {
           All your new messages and notifications will appear here. Stay informed and don't miss any updates.
         </p>
       </div>
-      <DataTable columns={incomingColumns} data={data ? data.body : []} />
+      <DataTable columns={incomingColumns} data={data ? data.body.data : []} />
     </div>
   );
 };

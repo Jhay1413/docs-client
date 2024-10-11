@@ -1,8 +1,7 @@
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 import { signedUrlDataArray } from "../schema/TransactionSchema";
 import { z } from "zod";
 import { TransactionForm } from "../forms/transaction-form";
-import { useEffect } from "react";
 import { prepare_file_payload, prepare_transaction_payload } from "../utils/pre-process-data";
 import { getSignedUrl } from "../services/getSignedUrl";
 import { getCurrentUserId } from "@/hooks/hooks/use-user-hook";
@@ -13,6 +12,16 @@ import { toast } from "react-toastify";
 
 export const TransactionUpdateComponent = () => {
   const tsrQueryClient = tsr.useQueryClient();
+
+  const navigate = useNavigate();
+  const [searchParams, setSearchParams] = useSearchParams({
+    currentPage: "1",
+    search: "",
+  });
+
+  const searchQuery = searchParams.get("search") || "";
+  const page = searchParams.get("currentPage") || "1";
+
   const notification = useNotificationStore((state) => state.notification);
   const setNotification = useNotificationStore((state) => state.setNotification);
   const { id } = useParams();
@@ -29,7 +38,13 @@ export const TransactionUpdateComponent = () => {
   const { mutate, mutateAsync } = tsr.transaction.updateTransaction.useMutation({
     onMutate: (data) => {
       const lastGoodKnown = tsrQueryClient.transaction.fetchTransactions.getQueryData(["transactions"]);
-
+      tsrQueryClient.transaction.getTransactionByParams.setQueryData(["inbox-transactions"], (old) => {
+        if (!old || !old.body) return old;
+        return {
+          ...old,
+          body: old.body.filter((transaction) => transaction.id !== data.body.id), // Filter out the transaction
+        };
+      });
       return { lastGoodKnown };
     },
     onSuccess: () => {
@@ -38,7 +53,7 @@ export const TransactionUpdateComponent = () => {
         incoming: notification?.incoming !== 0 ? notification?.incoming! : 0,
         inbox: notification?.inbox !== 0 ? notification?.inbox! - 1 : 0,
       });
-      navigate(`/dashboard/transactions/inbox/${userId}`);
+      navigate(`/dashboard/transactions/inbox/${userId}?currentPage=${page}&search=${searchQuery}`);
     },
     onError: (error, newPost, context) => {
       tsrQueryClient.transaction.fetchTransactions.setQueryData(["transactions", id], context?.lastGoodKnown);
@@ -48,13 +63,6 @@ export const TransactionUpdateComponent = () => {
       tsrQueryClient.invalidateQueries({ queryKey: ["transactions"] });
     },
   });
-  // const { entity, update } = useTransaction({
-  //   key: "inbox",
-  //   url: `v2/${id}`,
-  //   id,
-  //   method: "UPDATEREMOVE",
-  // });
-  const navigate = useNavigate();
 
   const mutateFn = async (transactionData: z.infer<typeof transactionMutationSchema>, setIsSubmitting: (value: boolean) => void) => {
     const attachments = transactionData.attachments?.filter((data) => data.file?.length! > 0);

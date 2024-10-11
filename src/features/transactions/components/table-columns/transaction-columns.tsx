@@ -2,11 +2,11 @@ import { Button } from "@/components/ui/button";
 import { z } from "zod";
 import { ColumnDef } from "@tanstack/react-table";
 import { ArrowUpDown } from "lucide-react";
-import { transactionQueryData } from "shared-contract";
+import { transactionTable } from "shared-contract";
 
-type TransactionInfo = z.infer<typeof transactionQueryData>;
+type TransactionInfo = z.infer<typeof transactionTable>;
 
-export const transactionColumns: ColumnDef<TransactionInfo>[] = [
+export const transColumns: ColumnDef<TransactionInfo>[] = [
   {
     header: ({ column }) => {
       return (
@@ -28,30 +28,30 @@ export const transactionColumns: ColumnDef<TransactionInfo>[] = [
     },
   },
   {
-    header: "Project Name",
-    accessorKey: "projectName",
+    header: "Company Name",
+    accessorKey: "companyName",
     cell: ({ row }) => {
       const data = row.original;
 
       return (
         <div>
-          <h1>{data.project?.projectName}</h1>
+          <h1>{data.company.companyName}</h1>
         </div>
       );
     },
   },
   {
-    header: "Type",
-    accessorKey: "documentType",
+    header: "Project Name",
+    accessorKey: "projectName",
     cell: ({ row }) => {
       const data = row.original;
 
-      return (
-        <div>
-          <h1>{data.documentType}</h1>
-        </div>
-      );
+      return <h1>{data.project?.projectName}</h1>;
     },
+  },
+  {
+    header: "Type",
+    accessorKey: "documentType",
   },
   {
     header: "Subtype",
@@ -64,43 +64,14 @@ export const transactionColumns: ColumnDef<TransactionInfo>[] = [
   {
     header: "Forwarder",
     accessorKey: "forwarder",
-    cell: ({ row }) => {
-      const data = row.original;
-
-      return (
-        <div className="">
-          <h1>{data.forwarderName}</h1>
-        </div>
-      );
-    },
   },
   {
     header: "Receiver",
-    accessorKey: "forwardedTo",
-    cell: ({ row }) => {
-      const data = row.original;
-
-      return (
-        <div>
-          <h1>{data.receiverName}</h1>
-        </div>
-      );
-    },
+    accessorKey: "receiver",
   },
   {
     header: "Status",
     accessorKey: "status",
-    // cell: ({ row }) => {
-    //   const rowData = row.original;
-
-    //   return (
-    //     <div className="flex items-center ">
-    //       <span className ={`${rowData.status === }`}>
-    //         <h1 className="text-green-500 text-md font-semibold">{rowData.status}</h1>
-    //       </span>
-    //     </div>
-    //   );
-    // },
   },
   {
     header: "Priority",
@@ -119,11 +90,7 @@ export const transactionColumns: ColumnDef<TransactionInfo>[] = [
     cell: ({ row }) => {
       const transactionInfo = row.original;
 
-      return (
-        <div className="">
-          <span>{new Date(transactionInfo.dueDate!).toDateString()}</span>
-        </div>
-      );
+      return <span>{new Date(transactionInfo.dueDate).toDateString()}</span>;
     },
   },
   {
@@ -132,38 +99,7 @@ export const transactionColumns: ColumnDef<TransactionInfo>[] = [
     cell: ({ row }) => {
       const transactionInfo = row.original;
 
-      return (
-        <div className="">
-          <span>{transactionInfo.percentage}%</span>
-        </div>
-      );
+      return <div>{transactionInfo.percentage}</div>;
     },
   },
-  // {
-  //   header: "Actions",
-  //   accessorKey: "actions",
-  //   id: "actions",
-  //   cell: ({ row }) => {
-  //     const userInfo = row.original;
-  //     return (
-  //       <DropdownMenu>
-  //         <DropdownMenuTrigger asChild>
-  //           <Button variant="ghost" className="h-8 w-8 p-0">
-  //             <span className="sr-only">Open menu</span>
-  //             <MoreHorizontal className="h-4 w-4" />
-  //           </Button>
-  //         </DropdownMenuTrigger>
-  //         <DropdownMenuContent align="end">
-  //           <DropdownMenuLabel>Actions</DropdownMenuLabel>
-  //           <DropdownMenuSeparator />
-  //           <DropdownMenuItem>
-  //             <Link to={`/dashboard/transactions/history/${userInfo.id}`} state={{ percentage: userInfo.percentage }}>
-  //               View Details
-  //             </Link>
-  //           </DropdownMenuItem>
-  //         </DropdownMenuContent>
-  //       </DropdownMenu>
-  //     );
-  //   },
-  // },
 ];
