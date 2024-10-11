@@ -1,0 +1,12 @@
+/* styles.css */
+
+.lowercasetoCapitalize {
+    text-transform: lowercase;
+  }
+
+.lowercasetoCapitalize::first-line{
+    text-transform: capitalize;
+}
+
+ 
+  

@@ -40,7 +40,7 @@ export const TransactionList = () => {
   const [debouncedSearchQuery] = useDebounce(searchQuery, 500); // Adjust the delay as needed
 
   const { data } = tsr.transaction.fetchTransactionsV2.useQuery({
-    queryKey: ["transactions", page, debouncedSearchQuery],
+    // queryKey: ["transactions", page, debouncedSearchQuery],
     queryData: {
       query: {
         query: debouncedSearchQuery,
