@@ -5,7 +5,7 @@ import { useTransactions } from "../../hooks/query-gate";
 import { transactionData } from "../../schema/TransactionSchema";
 import { z } from "zod";
 import { tsr } from "@/services/tsr";
-import { transactionQueryData } from "shared-contract";
+import { transactionQueryData, transactionTable } from "shared-contract";
 import { Input } from "@/components/ui/input";
 import { Search } from "lucide-react";
 import { useDebounce } from "use-debounce";
@@ -27,8 +27,8 @@ export const InboxComponent = () => {
 
   const { id } = useParams();
   console.log(id);
-  const { data } = tsr.transaction.fetchTransactions.useQuery({
-    queryKey: ["transactions", page, debouncedSearchQuery],
+  const { data } = tsr.transaction.fetchTransactionsV2.useQuery({
+    queryKey: ["inbox-transactions", page, debouncedSearchQuery],
     queryData: {
       query: {
         query: debouncedSearchQuery,
@@ -58,7 +58,7 @@ export const InboxComponent = () => {
       });
     }
   };
-  const handleOnClickRow = (data: z.infer<typeof transactionQueryData>) => {
+  const handleOnClickRow = (data: z.infer<typeof transactionTable>) => {
     navigate(`/dashboard/transactions/history/${data.id}`);
   };
   return (
