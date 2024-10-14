@@ -25,6 +25,7 @@ import { AddComponent } from "./features/companies/components/add-component";
 import { EditComponent } from "./features/companies/components/edit-component";
 import { Dashboard } from "./pages/Dashboard";
 import { TransactionIndex } from "./pages/transaction-index";
+import { TicketsIndex } from "./pages/tickets-index";
 import { IncomingComponent } from "./features/transactions/components/table-data/incoming-component";
 import { InboxComponent } from "./features/transactions/components/table-data/inbox-component";
 import { ViewHistory } from "./features/transactions/components/view-history";
@@ -32,6 +33,8 @@ import { RouteGuard } from "./components/routeGuard/route-guard";
 import { DashboardNewLayout } from "./routes/new-layout";
 import ProtectedRoute from "./components/routeGuard/protected-route";
 import { ReactQueryProvider } from "./utils/react-query-provider";
+import TicketAdd from "./features/tickets/components/add-ticket";
+import { TicketList } from "./features/tickets";
 
 function App() {
   return (
@@ -105,6 +108,13 @@ function App() {
                 />
                 <Route path="log/:id" element={<ViewHistory />} />
                 <Route path="archived" element={<ArchivedList />} />
+              </Route>
+              {/* <Route path="tickets" element={<TicketsIndex />}>
+                <Route path="tickets" element={<  TicketList />} />
+              </Route> */}
+              <Route path="tickets" element={<TicketsIndex />}>
+                <Route path="ticketsPage" element={<TicketList />} />
+                <Route path="add" element={<TicketAdd />} />
               </Route>
             </Route>
             <Route path="/" element={<PublicRoutes />}>
