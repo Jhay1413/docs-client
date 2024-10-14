@@ -28,7 +28,7 @@ export const InboxComponent = () => {
   const { id } = useParams();
   console.log(id);
   const { data } = tsr.transaction.fetchTransactionsV2.useQuery({
-    queryKey: ["transactions", page, debouncedSearchQuery],
+    queryKey: ["inbox-transactions", page, debouncedSearchQuery],
     queryData: {
       query: {
         query: debouncedSearchQuery,
