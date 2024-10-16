@@ -44,7 +44,7 @@ export const TransactionList = () => {
     queryData: {
       query: {
         query: debouncedSearchQuery,
-        status: "ON-PROCESS",
+
         page: page,
         pageSize: "10",
       },
