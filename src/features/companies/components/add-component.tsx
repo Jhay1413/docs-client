@@ -25,20 +25,15 @@ export const AddComponent = () => {
           projectAddress: "",
           retainer: false,
           date_expiry: null,
-          email:null,
+          email: null,
           contactPersons: {
             name: "",
             contactNumber: "",
-            email:null
+            email: null,
           },
         },
       ],
-      contactPersons:
-        {
-          name: "",
-          contactNumber: "",
-          email: null
-        } || null,
+      contactPersons: null,
     },
   });
 
@@ -64,18 +59,10 @@ export const AddComponent = () => {
       <h1 className="text-4xl ">Company Form</h1>
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)}>
-          <CompanyForm
-            fields={projectFields}
-            append={appendProject}
-            remove={remove}
-          />
+          <CompanyForm fields={projectFields} append={appendProject} remove={remove} />
           <Separator className="mt-4" />
           <div className="mt-4 flex w-full justify-end">
-            <Button
-              type="submit"
-              onClick={() => console.log(form.formState.errors)}
-              disabled={add.isPending}
-            >
+            <Button type="submit" onClick={() => console.log(form.formState.errors)} disabled={add.isPending}>
               {add.isPending ? "Submitting..." : "Submit"}
             </Button>
           </div>

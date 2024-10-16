@@ -35,29 +35,37 @@ export const InsertComponent = () => {
   const navigate = useNavigate();
 
   const onSubmit = async (transactionData: z.infer<typeof transactionMutationSchema>, setIsSubmitting: (value: boolean) => void) => {
-    const attachments = transactionData.attachments?.filter((data) => data.file?.length! > 0);
+    console.log(transactionData);
 
-    if (!attachments || attachments.length === 0) return mutateAsync({ body: transactionData });
-
-    const selectedCompany = companies?.body?.find((company) => transactionData.companyId === company.id);
-
-    const signedUrlPayload = attachments?.map((attachment) => {
-      return {
-        company: selectedCompany!.companyName!,
-        fileName: attachment.fileName!,
-      };
-    });
-
-    const getSignedUrlForUpload = await getSignedUrl(signedUrlPayload);
-    const validatedData = signedUrlDataArray.safeParse(getSignedUrlForUpload);
-
-    if (!validatedData.success) return null;
-
-    const res = await prepare_file_payload(attachments, validatedData.data);
-
-    const payload = prepare_transaction_payload(transactionData, res);
-
+    const attachments = transactionData.attachments.map(({ file, ...newData }) => newData);
+    const payload = {
+      ...transactionData,
+      attachments: attachments,
+    };
     await mutateAsync({ body: payload });
+    // const attachments = transactionData.attachments?.filter((data) => data.file?.length! > 0);
+
+    // if (!attachments || attachments.length === 0) return mutateAsync({ body: transactionData });
+
+    // const selectedCompany = companies?.body?.find((company) => transactionData.companyId === company.id);
+
+    // // const signedUrlPayload = attachments?.map((attachment) => {
+    // //   return {
+    // //     company: selectedCompany!.companyName!,
+    // //     fileName: attachment.fileName!,
+    // //   };
+    // // });
+
+    // // const getSignedUrlForUpload = await getSignedUrl(signedUrlPayload);
+    // // const validatedData = signedUrlDataArray.safeParse(getSignedUrlForUpload);
+
+    // // if (!validatedData.success) return null;
+
+    // const res = await prepare_file_payload(attachments, validatedData.data);
+
+    //
+
+    // await mutateAsync({ body: payload });
   };
 
   if (companiesIsLoading) return "loading";

@@ -65,46 +65,24 @@ export const TransactionUpdateComponent = () => {
   });
 
   const mutateFn = async (transactionData: z.infer<typeof transactionMutationSchema>, setIsSubmitting: (value: boolean) => void) => {
-    const attachments = transactionData.attachments?.filter((data) => data.file?.length! > 0);
+    const attachments = transactionData.attachments.map(({ file, ...newData }) => newData);
+    var payload = {
+      ...transactionData,
+      attachments: attachments,
+    };
 
-    if (!attachments || attachments.length === 0)
-      return mutate({
-        params: { id: id! },
-        body: transactionData,
-      });
-
-    const selectedCompany = companies?.body?.find((company) => transactionData.companyId === company.id);
-
-    const signedUrlPayload = attachments?.map((attachment) => {
-      return {
-        company: selectedCompany!.companyName!,
-        fileName: attachment.fileName!,
-      };
+    if (payload.status === "ARCHIVED") {
+      payload = { ...payload, receiverId: null };
+    }
+    await mutateAsync({
+      params: { id: id! },
+      body: payload,
     });
 
-    if (signedUrlPayload && signedUrlPayload?.length > 0) {
-      const getSignedUrlForUpload = await getSignedUrl(signedUrlPayload);
-      const validatedData = signedUrlDataArray.safeParse(getSignedUrlForUpload);
-
-      if (!validatedData.success) return null;
-
-      const res = await prepare_file_payload(attachments, validatedData.data);
-
-      let payload = prepare_transaction_payload(transactionData, res);
-      if (payload.status === "ARCHIVED") {
-        payload = { ...payload, receiverId: null };
-      }
-      await mutateAsync({
-        params: { id: id! },
-        body: payload,
-      });
-
-      if (isPending) {
-        setIsSubmitting(false);
-      }
+    if (isPending) {
+      setIsSubmitting(false);
     }
   };
-  if (isLoading) return <div>Loading...</div>;
 
   return (
     <div className="w-full h-full bg-white p-4 rounded-lg">
