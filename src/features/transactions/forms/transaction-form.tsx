@@ -9,8 +9,8 @@ import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, Tabl
 import { cn } from "@/lib/utils";
 
 import { format } from "date-fns";
-import { CalendarIcon, X } from "lucide-react";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { CalendarIcon, SquarePen, X } from "lucide-react";
+import { ChangeEvent, useEffect, useMemo, useRef, useState } from "react";
 import { SubmitHandler, useFieldArray, useForm } from "react-hook-form";
 
 import { Divisions } from "@/data/data";
@@ -20,7 +20,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useCurrentDivision } from "@/hooks/use-user-hook";
 import FormTextArea from "@/components/formTextArea";
 import { Label } from "@/components/ui/label";
-import { getSignUrlForView } from "../services/getSignedUrl";
+import { getSignedUrl, getSignedUrlV2, getSignUrlForView } from "../services/getSignedUrl";
 import { checkList } from "@/data/checklist-new";
 
 import { Check, ChevronsUpDown } from "lucide-react";
@@ -29,8 +29,18 @@ import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, Command
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import { toast } from "react-toastify";
 import { Separator } from "@/components/ui/separator";
-import { companyQuerySchema, transactionMutationSchema, transactionQueryData } from "shared-contract";
+import { companyQuerySchema, filesMutationSchema, transactionMutationSchema, transactionQueryData } from "shared-contract";
 import { tsr } from "@/services/tsr";
+import axios, { AxiosProgressEvent } from "axios";
+import { useMutation } from "@tanstack/react-query";
+import { Progress } from "@/components/ui/progress";
+interface UploadStatus {
+  isLoading: boolean;
+  isSuccess: boolean;
+  isFailed: boolean;
+  progress: number;
+  fileName?: string;
+}
 
 type props = {
   company: z.infer<typeof companyQuerySchema>[] | null;
@@ -38,10 +48,9 @@ type props = {
   defaultValue?: z.infer<typeof transactionQueryData> | null;
   mutateFn: (data: z.infer<typeof transactionMutationSchema>, isSubmitting: (value: boolean) => void) => void;
 };
-
+const baseUrlV2 = import.meta.env.VITE_ENDPOINT;
 export const TransactionForm = ({ company, method, defaultValue, mutateFn }: props) => {
   const role = useCurrentUserRole();
-
   const currentDivision = useCurrentDivision();
   const userId = getCurrentUserId();
 
@@ -52,14 +61,15 @@ export const TransactionForm = ({ company, method, defaultValue, mutateFn }: pro
   const [selectedDivision, setSelectedDivision] = useState(defaultValue?.targetDepartment || "");
   const [subType, setSubType] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
-
+  const [category, setCategory] = useState("");
   const temp_section = checkList.find((check) => check.name === team);
   const attachmentList = useMemo(() => temp_section?.application.find((check) => check.name === subType), [subType, temp_section]);
   const sections = Divisions.find((division) => division.name === selectedDivision);
   const filteredCompany = company?.find((data) => data.id === selectedCompany);
   const project = filteredCompany?.companyProjects;
+  const companyName = company?.find((data) => selectedCompany === data.id);
+  console.log(companyName);
 
-  // const filterdForwardedTo = useForwardedToUser(validateEntities.data, role, selectedDivision, team);
   const { data: filterdForwardedTo } = tsr.userAccounts.getUserByRoleAccess.useQuery({
     queryKey: ["users-for-forward"],
     queryData: {
@@ -71,6 +81,53 @@ export const TransactionForm = ({ company, method, defaultValue, mutateFn }: pro
     },
     staleTime: Infinity,
   });
+  const mutation = useMutation({
+    mutationFn: async ({ data, index, fileName }: { data: FormData; index: number; fileName: string }) => {
+      setUploadStatus((prev) => {
+        const newStatus = [...prev];
+        newStatus[index] = { isLoading: true, isSuccess: false, isFailed: false, progress: 0, fileName: fileName }; // Mark as success
+        return newStatus;
+      });
+      const result = await axios.post(`${baseUrlV2}/posts`, data, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+        onUploadProgress: (e: AxiosProgressEvent) => {
+          const total = e.total || 1;
+          var percentCompleted = Math.round((e.loaded * 100) / total);
+          console.log(percentCompleted);
+          setUploadStatus((prev) => {
+            const newStatus = [...prev];
+            newStatus[index].progress = percentCompleted; // Update progress
+            return newStatus;
+          });
+        },
+      });
+      return { result, index, fileName };
+    },
+    onSuccess: (data, context) => {
+      setUploadStatus((prev) => {
+        const newStatus = [...prev];
+        newStatus[context.index] = { isLoading: false, isSuccess: true, isFailed: false, progress: 100, fileName: context.fileName }; // Mark as success
+        return newStatus;
+      });
+      form.setValue(`attachments.${context.index}.fileOriginalName`, data.fileName);
+      form.setValue(`attachments.${context.index}.fileUrl`, data?.result.data.key);
+      return context;
+    },
+    onError: (error, context) => {
+      setUploadStatus((prev) => {
+        const newStatus = [...prev];
+        newStatus[context.index] = { isLoading: false, isSuccess: false, isFailed: true, progress: 0, fileName: context.fileName }; // Mark as failed
+        return newStatus;
+      });
+      return context;
+    },
+    onSettled: (context) => {
+      console.log(form.getValues(`attachments.${context?.index!}.fileUrl`));
+    },
+  });
+
   const form = useForm<z.infer<typeof transactionMutationSchema>>({
     resolver: zodResolver(transactionMutationSchema),
     mode: "onSubmit",
@@ -80,6 +137,7 @@ export const TransactionForm = ({ company, method, defaultValue, mutateFn }: pro
           subject: defaultValue?.subject,
           dueDate: defaultValue ? new Date(defaultValue.dueDate).toISOString() : new Date().toISOString(),
           team: defaultValue.team,
+          category: defaultValue.category,
           status: defaultValue?.status,
           priority: defaultValue?.priority,
           originDepartment: currentDivision,
@@ -110,6 +168,17 @@ export const TransactionForm = ({ company, method, defaultValue, mutateFn }: pro
           })),
         },
   });
+  const { fields, append, remove } = useFieldArray({
+    control: form.control,
+    name: "attachments",
+  });
+  const [uploadStatus, setUploadStatus] = useState<UploadStatus[]>([]);
+
+  // Effect to initialize or update uploadStatus based on fields
+  useEffect(() => {
+    setUploadStatus(Array(fields.length).fill({ isLoading: false, isSuccess: false, isFailed: false, progress: 0 }));
+  }, [defaultValue]);
+
   useEffect(() => {
     if (!defaultValue) {
       form.setValue(
@@ -124,14 +193,28 @@ export const TransactionForm = ({ company, method, defaultValue, mutateFn }: pro
           file: undefined,
         })) || [], // Ensure to handle case when attachmentList or checkList might be undefined
       );
+      setUploadStatus(Array(fields.length).fill({ isLoading: false, isSuccess: false, isFailed: false, progress: 0 }));
     }
   }, [attachmentList]);
 
-  const { fields, append, remove } = useFieldArray({
-    control: form.control,
-    name: "attachments",
-  });
+  const fileOnChangeSubmit = async (data: z.infer<typeof filesMutationSchema>, event: ChangeEvent<HTMLInputElement>, index: number) => {
+    const files = event.target.files;
+    const formData = new FormData();
 
+    const currentFileName = form.getValues(`attachments.${index}.fileName`);
+    console.log(currentFileName);
+    if (!files || files.length === 0) {
+      throw new Error("No file attached !");
+    }
+    const fileName = files[0].name;
+
+    console.log(fileName);
+    formData.append("thumbnail", files[0]);
+    formData.append("company", companyName?.companyName || "");
+    formData.append("fileName", currentFileName);
+
+    mutation.mutateAsync({ data: formData, index, fileName });
+  };
   const onSubmit: SubmitHandler<z.infer<typeof transactionMutationSchema>> = async (data) => {
     setIsSubmitting(true);
     mutateFn(data, setIsSubmitting);
@@ -144,6 +227,7 @@ export const TransactionForm = ({ company, method, defaultValue, mutateFn }: pro
     }
   };
   const reattachFile = (index: number) => {
+    console.log(fileInputRef.current![index]);
     if (fileInputRef && fileInputRef.current![index]) {
       fileInputRef!.current![index]!.click();
     }
@@ -154,6 +238,7 @@ export const TransactionForm = ({ company, method, defaultValue, mutateFn }: pro
       position: "bottom-right",
     });
   };
+
   return (
     <div className="w-full h-full bg-white p-4 rounded-lg">
       <Form {...form}>
@@ -344,6 +429,7 @@ export const TransactionForm = ({ company, method, defaultValue, mutateFn }: pro
                         value={field.value}
                         onValueChange={(value) => {
                           field.onChange(value);
+                          form.setValue("category", attachmentList?.category || "");
                           setSubType(value);
                         }}
                         disabled={method === "UPDATE" && role !== "RECORDS"}
@@ -507,10 +593,11 @@ export const TransactionForm = ({ company, method, defaultValue, mutateFn }: pro
                     <TableHead className="w-[200px]">Status</TableHead>
                     <TableHead className="w-[200px]">Filename</TableHead>
                     <TableHead className="w-[100px]">Remarks</TableHead>
+                    <TableHead className="">File</TableHead>
                     <TableHead className="text-center">Action</TableHead>
                   </TableRow>
                 </TableHeader>
-                <TableBody>
+                <TableBody className="">
                   {fields.map((item, index) => (
                     <TableRow key={index}>
                       <TableCell className="font-medium w-[300px]">
@@ -573,21 +660,23 @@ export const TransactionForm = ({ company, method, defaultValue, mutateFn }: pro
                       <TableCell className="font-medium w-[500px]">
                         <FormTextArea name={`attachments.${index}.remarks`} />
                       </TableCell>
-
-                      <TableCell className="h-full w-96 ">
-                        <div className="w-full">
-                          <div className={`${item.fileUrl && "hidden"}`}>
+                      <TableCell className="">
+                        <div className="flex justify-center flex-col gap-2">
+                          <div className="flex w-full gap-4 justify-center items-center ">
                             <FormField
                               control={form.control}
                               name={`attachments.${index}.file`}
                               render={({ field: { onChange }, ...field }) => (
-                                <FormItem>
+                                <FormItem className="hidden">
                                   <FormControl>
                                     <Input
                                       type="file"
                                       accept="application/pdf"
                                       {...field}
-                                      onChange={(event) => onChange(event.target.files)}
+                                      onChange={(e) => {
+                                        fileOnChangeSubmit(item, e, index);
+                                      }}
+                                      disabled={form.getValues(`attachments.${index!}.fileName`) === " "}
                                       ref={(el) => (fileInputRef.current![index] = el)}
                                     />
                                   </FormControl>
@@ -596,33 +685,41 @@ export const TransactionForm = ({ company, method, defaultValue, mutateFn }: pro
                                 </FormItem>
                               )}
                             />
+                            {uploadStatus[index]?.isLoading || uploadStatus[index]?.isSuccess || uploadStatus[index]?.isFailed ? (
+                              <div className="flex flex-col w-full">
+                                <h1 className="text-wrap">{uploadStatus[index].fileName}</h1>
+                                <h1 className="text-muted-foreground text-sm">{uploadStatus[index].progress} / 100%</h1>
+                                <Progress value={uploadStatus[index].progress} className="w-full h-2" />
+                              </div>
+                            ) : (
+                              <div className="flex flex-col w-full">
+                                <h1 className="text-wrap">{form.getValues(`attachments.${index}.fileOriginalName`)}</h1>
+                              </div>
+                            )}
                           </div>
-
-                          <div className={`${!item.fileUrl && "hidden"}`}>
-                            <Label>Actions</Label>
-                            <div className="flex  gap-4">
-                              <Button type="button" onClick={() => viewFile(item.fileUrl!)}>
-                                View file
-                              </Button>
-                              <Button type="button" onClick={() => reattachFile(index)}>
-                                Update
-                              </Button>
-                              <Button
-                                onClick={() => {
-                                  remove(index);
-                                }}
-                                type="button"
-                                disabled={item.fileName ? true : false}
-                              >
-                                Remove
-                              </Button>
-                            </div>
-                          </div>
+                          {uploadStatus[index]?.isLoading && <div className="success-message">Uploading !</div>}
+                          {uploadStatus[index]?.isSuccess && <div className="success-message">Upload successful!</div>}
+                          {uploadStatus[index]?.isFailed && <div className="error-message">Upload failed!</div>}
                         </div>
                       </TableCell>
-                      <TableCell className="w-32 ">
-                        <div className="flex w-full items-center justify-center">
-                          <button type="button" onClick={() => remove(index)}>
+
+                      <TableCell className="w-32">
+                        <div className="flex w-full items-center gap-4 justify-center">
+                          <button type="button" onClick={() => reattachFile(index)}>
+                            <SquarePen className="text-green-800" />
+                          </button>
+
+                          <button
+                            type="button"
+                            onClick={() => {
+                              remove(index);
+                              setUploadStatus((prev) => {
+                                const newStatus = [...prev];
+                                newStatus.splice(index, 1);
+                                return newStatus;
+                              });
+                            }}
+                          >
                             <X className="text-red-800" />
                           </button>
                         </div>
@@ -642,6 +739,10 @@ export const TransactionForm = ({ company, method, defaultValue, mutateFn }: pro
                           fileUrl: null,
                           file: undefined,
                         });
+                        setUploadStatus((prev) => [
+                          ...prev,
+                          { isLoading: false, isSuccess: false, isFailed: false, progress: 0 }, // New status for the appended field
+                        ]);
                       }}
                       type="button"
                     >

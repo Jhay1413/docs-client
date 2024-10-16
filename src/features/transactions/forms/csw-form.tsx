@@ -6,29 +6,10 @@ import { Form } from "@/components/ui/form";
 import { useTransaction } from "../hooks/query-gate";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
-import {
-  FormControl,
-  FormDescription,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
+import { FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
-import {
-  Table,
-  TableBody,
-  TableCaption,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 
 import { cn } from "@/lib/utils";
 
@@ -71,7 +52,7 @@ export const CompleteStaffWorkForm = ({ data, transactionId }: Props) => {
           date: csw.date,
           remarks: csw.remarks,
           attachmentUrl: csw.attachmentUrl,
-        }))
+        })),
       );
     }
   }, [data, form]);
@@ -82,8 +63,7 @@ export const CompleteStaffWorkForm = ({ data, transactionId }: Props) => {
   });
   const submit = async (data: FormValues) => {
     const dataToUpdate = data.csw.filter((data) => data.attachmentFile);
-    if (!dataToUpdate || dataToUpdate.length < 0)
-      return update.mutate(data.csw);
+    if (!dataToUpdate || dataToUpdate.length < 0) return update.mutate(data.csw);
 
     const signedUrlPayload = data.csw.map((data, index) => {
       return {
@@ -92,22 +72,14 @@ export const CompleteStaffWorkForm = ({ data, transactionId }: Props) => {
         index: index,
       };
     });
-    const signedUrl = await getSignedUrl<z.infer<typeof signedUrlData>>(
-      signedUrlPayload
-    );
+    const signedUrl = await getSignedUrl<z.infer<typeof signedUrlData>>(signedUrlPayload);
 
     const uploadedFile = await Promise.all(
       dataToUpdate.map(async (csw, index) => {
-        const attachmentToUpload = signedUrl.find(
-          (signed) => signed.index === index
-        );
+        const attachmentToUpload = signedUrl.find((signed) => signed.index === index);
 
-        if (!attachmentToUpload?.signedStatus || !attachmentToUpload.signedUrl)
-          return csw;
-        const response = await uploadFile(
-          attachmentToUpload.signedUrl,
-          csw.attachmentFile!
-        );
+        if (!attachmentToUpload?.signedStatus || !attachmentToUpload.signedUrl) return csw;
+        const response = await uploadFile(attachmentToUpload.signedUrl, csw.attachmentFile!);
 
         if (!response?.ok) return csw;
 
@@ -115,7 +87,7 @@ export const CompleteStaffWorkForm = ({ data, transactionId }: Props) => {
           ...csw,
           attachmentUrl: attachmentToUpload.key,
         };
-      })
+      }),
     );
     const payload = uploadedFile.map((uploadedFile) => {
       const { attachmentFile, ...newData } = uploadedFile;
@@ -152,26 +124,17 @@ export const CompleteStaffWorkForm = ({ data, transactionId }: Props) => {
                                 <PopoverTrigger asChild>
                                   <Button
                                     variant={"outline"}
-                                    className={cn(
-                                      "w-full justify-start text-left font-normal",
-                                      !field.value && "text-muted-foreground"
-                                    )}
+                                    className={cn("w-full justify-start text-left font-normal", !field.value && "text-muted-foreground")}
                                   >
                                     <CalendarIcon className="mr-2 h-4 w-4" />
-                                    {field.value ? (
-                                      format(field.value, "PPP")
-                                    ) : (
-                                      <span>Pick a date</span>
-                                    )}
+                                    {field.value ? format(field.value, "PPP") : <span>Pick a date</span>}
                                   </Button>
                                 </PopoverTrigger>
                                 <PopoverContent className="w-auto p-0">
                                   <Calendar
                                     mode="single"
                                     onSelect={(value) => {
-                                      field.onChange(
-                                        new Date(value!).toISOString()
-                                      );
+                                      field.onChange(new Date(value!).toISOString());
                                     }}
                                     initialFocus
                                   />
@@ -184,10 +147,7 @@ export const CompleteStaffWorkForm = ({ data, transactionId }: Props) => {
                       />
                     </TableCell>
                     <TableCell className="font-medium w-[300px]">
-                      <FormTextArea
-                        name={`csw.${index}.remarks`}
-                        label="Remarks"
-                      />
+                      <FormTextArea name={`csw.${index}.remarks`} label="Remarks" />
                     </TableCell>
 
                     <TableCell className="h-full w-96 ">
@@ -199,14 +159,7 @@ export const CompleteStaffWorkForm = ({ data, transactionId }: Props) => {
                             <FormItem>
                               <FormLabel>File</FormLabel>
                               <FormControl>
-                                <Input
-                                  type="file"
-                                  accept="application/pdf"
-                                  {...field}
-                                  onChange={(event) =>
-                                    onChange(event.target.files)
-                                  }
-                                />
+                                <Input type="file" accept="application/pdf" {...field} onChange={(event) => onChange(event.target.files)} />
                               </FormControl>
                               <FormDescription></FormDescription>
                               <FormMessage />

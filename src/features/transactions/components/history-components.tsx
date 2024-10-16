@@ -35,7 +35,7 @@ export const HistoryComponent = () => {
     return "loading";
   }
   const attachmentForIer = data.body.attachments?.filter((attachment) => attachment.fileType === "INITIAL_DOC") || [];
-
+  console.log(data);
   return (
     <div className="flex flex-col w-full  p-4 rounded-lg">
       <div className=" space-y-8">
