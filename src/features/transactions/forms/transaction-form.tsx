@@ -238,7 +238,7 @@ export const TransactionForm = ({ company, method, defaultValue, mutateFn }: pro
       position: "bottom-right",
     });
   };
-
+  console.log(defaultValue?.attachments);
   return (
     <div className="w-full h-full bg-white p-4 rounded-lg">
       <Form {...form}>
@@ -693,7 +693,9 @@ export const TransactionForm = ({ company, method, defaultValue, mutateFn }: pro
                               </div>
                             ) : (
                               <div className="flex flex-col w-full">
-                                <h1 className="text-wrap">{form.getValues(`attachments.${index}.fileOriginalName`)}</h1>
+                                <button type="button" onClick={() => viewFile(item.fileUrl!)}>
+                                  <h1 className="text-wrap text-blue-500/85">{form.getValues(`attachments.${index}.fileOriginalName`)}</h1>
+                                </button>
                               </div>
                             )}
                           </div>

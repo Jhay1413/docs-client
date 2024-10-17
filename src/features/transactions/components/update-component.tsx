@@ -83,7 +83,7 @@ export const TransactionUpdateComponent = () => {
       setIsSubmitting(false);
     }
   };
-
+  if (isLoading) return "loading";
   return (
     <div className="w-full h-full bg-white p-4 rounded-lg">
       <TransactionForm company={companies ? companies.body : null} method="UPDATE" mutateFn={mutateFn} defaultValue={data?.body} />

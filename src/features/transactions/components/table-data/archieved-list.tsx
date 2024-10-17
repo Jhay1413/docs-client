@@ -83,24 +83,29 @@ export const ArchivedList = () => {
         </button>
       </div>
       <DataTable columns={archivedColumn} data={searchData ? searchData.body.data! : []} callbackFn={handleOnClickRow} />
-      <div className="flex items-center w-full  justify-center space-x-2 py-4">
-        <Button variant="outline" size="sm">
-          {"<<"}
-        </Button>
-        <Button variant="outline" size="sm" onClick={handlePreviousPage} disabled={intPage == 1}>
-          Previous
-        </Button>
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={handleNextPage}
-          // Disable if on the first page
-        >
-          Next
-        </Button>
-        <Button variant="outline" size="sm">
-          {">>"}
-        </Button>
+      <div className="flex items-center justify-between w-full  space-x-2 py-4">
+        <div className="text-muted-foreground">
+          <h1>Number of Transactions: {searchData?.body.numOfTransactions}</h1>
+        </div>
+        <div className="flex gap-2">
+          <Button variant="outline" size="sm">
+            {"<<"}
+          </Button>
+          <Button variant="outline" size="sm" onClick={handlePreviousPage} disabled={intPage == 1}>
+            Previous
+          </Button>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={handleNextPage}
+            // Disable if on the first page
+          >
+            Next
+          </Button>
+          <Button variant="outline" size="sm">
+            {">>"}
+          </Button>
+        </div>
       </div>
     </div>
   );
