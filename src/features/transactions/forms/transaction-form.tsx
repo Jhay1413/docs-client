@@ -133,6 +133,7 @@ export const TransactionForm = ({ company, method, defaultValue, mutateFn }: pro
     mode: "onSubmit",
     defaultValues: defaultValue
       ? {
+          id: defaultValue.id,
           documentType: defaultValue?.documentType,
           subject: defaultValue?.subject,
           dueDate: defaultValue ? new Date(defaultValue.dueDate).toISOString() : new Date().toISOString(),

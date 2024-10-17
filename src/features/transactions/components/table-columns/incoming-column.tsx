@@ -106,9 +106,9 @@ export function useColumns(mutateAsync: MutateAsyncFunction): ColumnDef<Incoming
               <DropdownMenuLabel>Actions</DropdownMenuLabel>
 
               <DropdownMenuItem>
-                <Button variant="link" onClick={updateHistory}>
+                <button className="w-full" onClick={updateHistory}>
                   Recieve
-                </Button>
+                </button>
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
