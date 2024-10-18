@@ -4,6 +4,12 @@ import FormInput from "@/components/formInput";
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@/components/ui/select";
 import FormTextArea from "@/components/formTextArea";
 import { useRef } from "react";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { Button } from "@/components/ui/button";
+import { CalendarIcon } from "lucide-react";
+import { Calendar } from "@/components/ui/calendar";
+import { cn } from "@/lib/utils";
+import { format } from "date-fns";
 
 const TicketForm = () => {
   const { control } = useFormContext(); // Ensure you're using it inside a FormProvider
@@ -19,6 +25,7 @@ const TicketForm = () => {
       fileInputRef.current.click();
     }
   };
+  
 
   return (
     <div className="grid grid-cols-3 gap-6 p-4 bg-gray-50 rounded-md shadow-lg mb-4">
@@ -134,14 +141,17 @@ const TicketForm = () => {
           <FormItem className="col-span-1">
             <FormLabel>Priority</FormLabel>
             <FormControl>
-              <Select onValueChange={field.onChange} defaultValue={field.value}>
+              <Select 
+                onValueChange={field.onChange} 
+                value={field.value || "" } // Ensure it handles an empty state properly
+              >
                 <SelectTrigger className="w-full">
                   <SelectValue placeholder="Select priority" />
                 </SelectTrigger>
                 <SelectContent>
+                  <SelectItem value="Urgent">Urgent</SelectItem>
+                  <SelectItem value="Important">Important</SelectItem>
                   <SelectItem value="Low">Low</SelectItem>
-                  <SelectItem value="Medium">Medium</SelectItem>
-                  <SelectItem value="High">High</SelectItem>
                 </SelectContent>
               </Select>
             </FormControl>
@@ -149,6 +159,8 @@ const TicketForm = () => {
           </FormItem>
         )}
       />
+
+
 
       {/* Due Date (Input Date Picker) */}
       <FormField
@@ -158,11 +170,31 @@ const TicketForm = () => {
           <FormItem className="col-span-1">
             <FormLabel>Due Date</FormLabel>
             <FormControl>
-              <input
+              {/* <input
                 type="date"
                 className="w-full h-10 px-4 text-sm border border-gray-300 rounded-md"
                 {...field}
-              />
+              /> */}
+                      <Popover>
+                        <PopoverTrigger asChild>
+                          <Button
+                            variant={"outline"}
+                            className={cn("w-full justify-start text-left font-normal", !field.value && "text-muted-foreground")}
+                          >
+                            <CalendarIcon className="mr-2 h-4 w-4" />
+                            {field.value ? format(field.value, "PPP") : <span>Pick a date</span>}
+                          </Button>
+                        </PopoverTrigger>
+                        <PopoverContent className="w-auto p-0">
+                          <Calendar
+                            mode="single"
+                            onSelect={(value) => {
+                              field.onChange(new Date(value!).toISOString());
+                            }}
+                            initialFocus
+                          />
+                        </PopoverContent>
+                      </Popover>
             </FormControl>
             <FormMessage />
           </FormItem>
@@ -172,7 +204,7 @@ const TicketForm = () => {
       {/* Project (Dropdown Select) */}
       <FormField
         control={control}
-        name="project"
+        name="projectId"
         render={({ field }) => (
           <FormItem className="col-span-1">
             <FormLabel>Project</FormLabel>

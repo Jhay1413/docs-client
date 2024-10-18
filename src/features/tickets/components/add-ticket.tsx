@@ -7,47 +7,49 @@ import { z } from "zod";
 import TicketForm from "./ticket-form";
 
 export const AddTicketComponent = () => {
-  // We're not using mutation here, so no mutation hook
-
   const form = useForm<z.infer<typeof ticketingFormData>>({
     resolver: zodResolver(ticketingFormData),
     defaultValues: {
       ticketId: "",
+      requestType: "",
       subject: "",
       section: "",
       division: "",
       status: "",
       requestDetails: "",
-      priority: "low",
+      priority: "",
       dueDate: "", // Make sure to match the format here as well
       senderId: "",
       receiverId: "",
       requesteeId: "",
       remarks: null,
-      projectId: null, // Replace null with undefined
-      transactionId: null, // Replace null with undefined
-      attachments: null, // Replace null with undefined
+      projectId: null, // Use undefined instead of null
+      transactionId: null,
+      attachments: undefined,
     },
   });
 
-  // We'll skip submission for now by commenting out the submit handler
-  // const onSubmit: SubmitHandler<z.infer<typeof ticketingFormData>> = (data) => {
-  //   // No mutation logic for now
-  //   console.log("Form data:", data);
-  // };
+  // The submit handler
+  const onSubmit: SubmitHandler<z.infer<typeof ticketingFormData>> = (data) => {
+    console.log("Form data submitted:", data);
+  };
 
   return (
     <div className="flex flex-col gap-4 p-4 w-full h-full bg-white">
       <h1 className="text-4xl">Add Ticket</h1>
+
+      {/* The form */}
       <Form {...form}>
-        <form>
-          {/* Add your form fields here */}
-          <TicketForm></TicketForm>
-          <Button type="submit" >
-            Submit
-          </Button>
+        <form onSubmit={form.handleSubmit(onSubmit)}>
+          {/* Ticket Form Fields */}
+          <TicketForm />
+
+          {/* Submit Button */}
+          <Button type="submit" onClick={()=>console.log(form.formState.errors)}>Submit</Button>
         </form>
       </Form>
     </div>
   );
 };
+
+export default AddTicketComponent;

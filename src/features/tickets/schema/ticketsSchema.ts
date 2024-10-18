@@ -1,5 +1,11 @@
 import { z } from "zod";
 
+export const MAX_FILE_SIZE_50MB = 50;
+export const MAX_FILE_SIZE_10MB = 10;
+export const sizeInMB = (sizeInBytes: number, decimalsNum = 2) => {
+  const result = sizeInBytes / (1024 * 1024);
+  return +result.toFixed(decimalsNum);
+};
 //ticketform - to submit to database
 export const ticketingFormData = z.object({
   // id: z.string().optional(), //remove
@@ -15,10 +21,24 @@ export const ticketingFormData = z.object({
   senderId: z.string(),
   receiverId: z.string(),
   requesteeId: z.string(),
-  remarks: z.string().nullable(),
-  projectId: z.string().nullable(),
-  transactionId: z.string().nullable(),
-  attachments: z.string().nullable(),
+  remarks: z.nullable(z.string()).optional(),
+  projectId: z.nullable(z.string()).optional(),
+  transactionId: z.nullable(z.string()).optional(),
+  // attachments: z.string().nullable(),
+  attachments: z
+    .custom<FileList>()
+    .refine((files) => {
+      return Array.from(files ?? []).length !== 0;
+    }, "Image is required")
+    .refine((files) => {
+      return Array.from(files ?? []).every((file) => sizeInMB(file.size) <= MAX_FILE_SIZE_50MB);
+    }, `The maximum image size is ${MAX_FILE_SIZE_50MB}MB`)
+    // .refine((files) => {
+    //   return Array.from(files ?? []).every((file) =>
+    //     ACCEPTED_FILE_TYPES.includes(file.type)
+    //   );
+    // }, "File type is not supported")
+    .optional(),
 });
 
 
@@ -32,7 +52,7 @@ export const ticketingQueryData = z.object({
   division: z.string(),
   status: z.string(),
   requestDetails: z.string(),
-  priority: z.string(),
+  priorityId: z.string(),
   dueDate: z.string().datetime(),
   senderId: z.string(),
   receiverId: z.string(),
