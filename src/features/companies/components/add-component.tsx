@@ -6,14 +6,39 @@ import { Button } from "@/components/ui/button";
 import { useEffect } from "react";
 import { useCompany } from "../hooks/query-gate";
 import { CompanyForm } from "./company-form";
-import { CompanyInfo } from "../schema/companySchema";
 import { z } from "zod";
+import { companyFormData } from "shared-contract";
+import { tsr } from "@/services/tsr";
+import { toast } from "react-toastify";
 
 export const AddComponent = () => {
+  const tsrQueryClient = tsr.useQueryClient();
   const { add } = useCompany("/", "companies", null);
-
-  const form = useForm<z.infer<typeof CompanyInfo>>({
-    resolver: zodResolver(CompanyInfo),
+  const { mutate, isPending } = tsr.company.insertCompany.useMutation({
+    onMutate: (data) => {
+      const lastGoodKnown = tsrQueryClient.company.fetchCompanies.getQueryData(["companies"]);
+      tsrQueryClient.company.fetchCompanies.setQueryData(["companies"], (old) => {
+        if (!old || !old.body) return old;
+        return {
+          ...old,
+          body: {
+            ...old.body,
+            data,
+          },
+        };
+      });
+      return { lastGoodKnown };
+    },
+    onSuccess: () => {
+      toast.success("New company added ! ");
+    },
+    onError: (error) => {
+      console.log(error);
+      toast.error("Something went wrong ! ");
+    },
+  });
+  const form = useForm<z.infer<typeof companyFormData>>({
+    resolver: zodResolver(companyFormData),
     defaultValues: {
       companyId: "",
       companyAddress: "",
@@ -51,8 +76,8 @@ export const AddComponent = () => {
     name: "companyProjects",
   });
 
-  const onSubmit: SubmitHandler<z.infer<typeof CompanyInfo>> = async (data) => {
-    add.mutate(data);
+  const onSubmit: SubmitHandler<z.infer<typeof companyFormData>> = async (data) => {
+    mutate({ body: data });
   };
   return (
     <div className="flex flex-col gap-4 p-4 w-full h-full bg-white ">

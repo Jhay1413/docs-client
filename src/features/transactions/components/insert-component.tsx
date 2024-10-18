@@ -20,7 +20,8 @@ export const InsertComponent = () => {
       toast.success("Data submitted successfully ! ");
       navigate("/dashboard/transactions/list");
     },
-    onError: () => {
+    onError: (error) => {
+      console.log(error);
       toast.error("Something went wrong, Please retry ! ");
     },
     onSettled: () => {
@@ -34,44 +35,29 @@ export const InsertComponent = () => {
 
   const navigate = useNavigate();
 
-  const onSubmit = async (transactionData: z.infer<typeof transactionMutationSchema>, setIsSubmitting: (value: boolean) => void) => {
-    console.log(transactionData);
+  const onSubmit = async (transactionData: z.infer<typeof transactionMutationSchema>) => {
+    try {
+      if (transactionData.status !== "ARCHIVED" && !transactionData.receiverId) {
+        throw new Error("Receiver not found !");
+      }
 
-    const attachments = transactionData.attachments.map(({ file, ...newData }) => newData);
-    const payload = {
-      ...transactionData,
-      attachments: attachments,
-    };
-    await mutateAsync({ body: payload });
-    // const attachments = transactionData.attachments?.filter((data) => data.file?.length! > 0);
-
-    // if (!attachments || attachments.length === 0) return mutateAsync({ body: transactionData });
-
-    // const selectedCompany = companies?.body?.find((company) => transactionData.companyId === company.id);
-
-    // // const signedUrlPayload = attachments?.map((attachment) => {
-    // //   return {
-    // //     company: selectedCompany!.companyName!,
-    // //     fileName: attachment.fileName!,
-    // //   };
-    // // });
-
-    // // const getSignedUrlForUpload = await getSignedUrl(signedUrlPayload);
-    // // const validatedData = signedUrlDataArray.safeParse(getSignedUrlForUpload);
-
-    // // if (!validatedData.success) return null;
-
-    // const res = await prepare_file_payload(attachments, validatedData.data);
-
-    //
-
-    // await mutateAsync({ body: payload });
+      const attachments = transactionData.attachments.map(({ file, ...newData }) => newData);
+      const payload = {
+        ...transactionData,
+        attachments: attachments,
+      };
+      await mutateAsync({ body: payload });
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : "An unexpected error occurred.";
+      toast.error(errorMessage);
+      console.log(error);
+    }
   };
 
   if (companiesIsLoading) return "loading";
   return (
     <div className="w-full h-full bg-white p-4 rounded-lg">
-      <TransactionForm company={companies ? companies.body : null} mutateFn={onSubmit} />
+      <TransactionForm company={companies ? companies.body : null} mutateFn={onSubmit} isPending={isPending} />
     </div>
   );
 };

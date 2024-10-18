@@ -46,10 +46,11 @@ type props = {
   company: z.infer<typeof companyQuerySchema>[] | null;
   method?: string;
   defaultValue?: z.infer<typeof transactionQueryData> | null;
-  mutateFn: (data: z.infer<typeof transactionMutationSchema>, isSubmitting: (value: boolean) => void) => void;
+  mutateFn: (data: z.infer<typeof transactionMutationSchema>) => void;
+  isPending: boolean;
 };
 const baseUrlV2 = import.meta.env.VITE_ENDPOINT;
-export const TransactionForm = ({ company, method, defaultValue, mutateFn }: props) => {
+export const TransactionForm = ({ company, method, defaultValue, mutateFn, isPending }: props) => {
   const role = useCurrentUserRole();
   const currentDivision = useCurrentDivision();
   const userId = getCurrentUserId();
@@ -60,15 +61,12 @@ export const TransactionForm = ({ company, method, defaultValue, mutateFn }: pro
   const [team, setTeam] = useState(defaultValue?.team || null);
   const [selectedDivision, setSelectedDivision] = useState(defaultValue?.targetDepartment || "");
   const [subType, setSubType] = useState("");
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [category, setCategory] = useState("");
   const temp_section = checkList.find((check) => check.name === team);
   const attachmentList = useMemo(() => temp_section?.application.find((check) => check.name === subType), [subType, temp_section]);
   const sections = Divisions.find((division) => division.name === selectedDivision);
   const filteredCompany = company?.find((data) => data.id === selectedCompany);
   const project = filteredCompany?.companyProjects;
   const companyName = company?.find((data) => selectedCompany === data.id);
-  console.log(companyName);
 
   const { data: filterdForwardedTo } = tsr.userAccounts.getUserByRoleAccess.useQuery({
     queryKey: ["users-for-forward"],
@@ -122,9 +120,6 @@ export const TransactionForm = ({ company, method, defaultValue, mutateFn }: pro
         return newStatus;
       });
       return context;
-    },
-    onSettled: (context) => {
-      console.log(form.getValues(`attachments.${context?.index!}.fileUrl`));
     },
   });
 
@@ -203,7 +198,6 @@ export const TransactionForm = ({ company, method, defaultValue, mutateFn }: pro
     const formData = new FormData();
 
     const currentFileName = form.getValues(`attachments.${index}.fileName`);
-    console.log(currentFileName);
     if (!files || files.length === 0) {
       throw new Error("No file attached !");
     }
@@ -217,8 +211,7 @@ export const TransactionForm = ({ company, method, defaultValue, mutateFn }: pro
     mutation.mutateAsync({ data: formData, index, fileName });
   };
   const onSubmit: SubmitHandler<z.infer<typeof transactionMutationSchema>> = async (data) => {
-    setIsSubmitting(true);
-    mutateFn(data, setIsSubmitting);
+    mutateFn(data);
   };
 
   const viewFile = async (key: string) => {
@@ -228,7 +221,6 @@ export const TransactionForm = ({ company, method, defaultValue, mutateFn }: pro
     }
   };
   const reattachFile = (index: number) => {
-    console.log(fileInputRef.current![index]);
     if (fileInputRef && fileInputRef.current![index]) {
       fileInputRef!.current![index]!.click();
     }
@@ -239,7 +231,6 @@ export const TransactionForm = ({ company, method, defaultValue, mutateFn }: pro
       position: "bottom-right",
     });
   };
-  console.log(defaultValue?.attachments);
   return (
     <div className="w-full h-full bg-white p-4 rounded-lg">
       <Form {...form}>
@@ -600,7 +591,7 @@ export const TransactionForm = ({ company, method, defaultValue, mutateFn }: pro
                 </TableHeader>
                 <TableBody className="">
                   {fields.map((item, index) => (
-                    <TableRow key={index}>
+                    <TableRow key={item.id}>
                       <TableCell className="font-medium w-[300px]">
                         <FormField
                           control={form.control}
@@ -715,6 +706,7 @@ export const TransactionForm = ({ company, method, defaultValue, mutateFn }: pro
                           <button
                             type="button"
                             onClick={() => {
+                              console.log(index);
                               remove(index);
                               setUploadStatus((prev) => {
                                 const newStatus = [...prev];
@@ -759,7 +751,7 @@ export const TransactionForm = ({ company, method, defaultValue, mutateFn }: pro
           </div>
 
           <div className="flex justify-end mt-11">
-            <Button type="submit" onClick={() => console.log(form.formState.errors)} disabled={isSubmitting}>
+            <Button type="submit" onClick={() => console.log(form.formState.errors)} disabled={isPending}>
               Submit
             </Button>
           </div>

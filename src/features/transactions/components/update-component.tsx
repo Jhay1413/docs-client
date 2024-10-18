@@ -64,7 +64,7 @@ export const TransactionUpdateComponent = () => {
     },
   });
 
-  const mutateFn = async (transactionData: z.infer<typeof transactionMutationSchema>, setIsSubmitting: (value: boolean) => void) => {
+  const mutateFn = async (transactionData: z.infer<typeof transactionMutationSchema>) => {
     const attachments = transactionData.attachments.map(({ file, ...newData }) => newData);
     var payload = {
       ...transactionData,
@@ -78,16 +78,18 @@ export const TransactionUpdateComponent = () => {
       params: { id: id! },
       body: payload,
     });
-
-    if (isPending) {
-      setIsSubmitting(false);
-    }
   };
   if (isLoading) return "loading";
   console.log(data);
   return (
     <div className="w-full h-full bg-white p-4 rounded-lg">
-      <TransactionForm company={companies ? companies.body : null} method="UPDATE" mutateFn={mutateFn} defaultValue={data?.body} />
+      <TransactionForm
+        company={companies ? companies.body : null}
+        method="UPDATE"
+        mutateFn={mutateFn}
+        defaultValue={data?.body}
+        isPending={isPending}
+      />
     </div>
   );
 };

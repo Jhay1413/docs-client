@@ -36,7 +36,6 @@ export function CompleStaffWorkDialog({ transactionId }: Props) {
       const lastGoodKnown = tsrQueryClient.transaction.fetchTransactionById.getQueryData(["transaction", transactionId]);
 
       tsrQueryClient.transaction.fetchTransactionById.setQueryData(["transaction", transactionId], (old) => {
-        
         if (!old) return old;
         return {
           ...old,
@@ -78,6 +77,16 @@ export function CompleStaffWorkDialog({ transactionId }: Props) {
 
   const submit = async (data: z.infer<typeof completeStaffWork>) => {
     setIsSubmitting(true);
+
+    if (!data.attachmentFile) {
+      const { attachmentFile, ...final_payload } = data;
+      return mutate({
+        params: {
+          id: transactionId,
+        },
+        body: final_payload,
+      });
+    }
     const signedUrlPayload = [
       {
         company: "Envicomm/csw",
