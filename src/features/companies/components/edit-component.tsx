@@ -10,26 +10,31 @@ import { Button } from "@/components/ui/button";
 import { useEffect } from "react";
 import { CompanyInfo } from "../schema/companySchema";
 import { z } from "zod";
+import { tsr } from "@/services/tsr";
+import { companyFormData } from "shared-contract";
 
 export const EditComponent = () => {
   const { id } = useParams();
-  const { entity, update } = useCompany(`${id}`, "companies", id);
 
-  //   useEffect(() => {
-  //     if (add.isSuccess) {
-  //       form.reset();
-  //     }
-  //   }, [add.isSuccess, form.reset]);
-  const form = useForm<z.infer<typeof CompanyInfo>>({
-    resolver: zodResolver(CompanyInfo),
+  const { mutate, isPending } = tsr.company.editCompanyById.useMutation({
+    onMutate: (data) => {},
+    onSuccess: () => {},
+    onError: () => {},
+  });
+  const { data, isLoading } = tsr.company.fetchCompany.useQuery({
+    queryKey: ["company", id],
+    queryData: { params: { id: id! } },
+  });
+  const form = useForm<z.infer<typeof companyFormData>>({
+    resolver: zodResolver(companyFormData),
     defaultValues: {
-      id: entity.data?.id,
-      companyId: entity.data?.companyId,
-      email: entity.data?.email,
-      companyAddress: entity.data?.companyAddress,
-      companyName: entity.data?.companyName,
-      companyProjects: entity.data?.companyProjects,
-      contactPersons: entity.data?.contactPersons,
+      id: data?.body?.id,
+      companyId: data?.body?.companyId,
+      email: data?.body?.email,
+      companyAddress: data?.body?.companyAddress,
+      companyName: data?.body?.companyName,
+      companyProjects: data?.body?.companyProjects,
+      contactPersons: data?.body?.contactPersons,
     },
   });
   const {
@@ -41,41 +46,38 @@ export const EditComponent = () => {
     name: "companyProjects",
   });
 
-  const onSubmit: SubmitHandler<z.infer<typeof CompanyInfo>> = async (data) => {
-    update.mutate(data);
+  const onSubmit: SubmitHandler<z.infer<typeof companyFormData>> = async (formData) => {
+    mutate({
+      params: { id: id! },
+
+      body: formData,
+    });
   };
   useEffect(() => {
-    if (entity.data) {
+    if (data?.body) {
       form.reset({
-        id: entity.data.id,
-        companyId: entity.data.companyId,
-        email: entity.data.email,
-        companyAddress: entity.data.companyAddress,
-        companyName: entity.data.companyName,
-        companyProjects: entity.data.companyProjects,
-        contactPersons: entity.data.contactPersons,
+        id: data.body.id,
+        companyId: data.body.companyId,
+        email: data.body.email,
+        companyAddress: data.body.companyAddress,
+        companyName: data.body.companyName,
+        companyProjects: data.body.companyProjects,
+        contactPersons: data.body.contactPersons,
       });
     }
-  }, [entity.data, form]);
+  }, [data?.body, form]);
 
+  if (isLoading) return "Loading!!";
   return (
     <div className="flex flex-col gap-4 p-4 w-full h-full bg-white ">
       <h1 className="text-4xl ">Company Form</h1>
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)}>
-          <CompanyForm
-            fields={projectFields}
-            append={appendProject}
-            remove={remove}
-          />
+          <CompanyForm fields={projectFields} append={appendProject} remove={remove} />
           <Separator className="mt-4" />
           <div className="mt-4 flex w-full justify-end">
-            <Button
-              type="submit"
-              onClick={() => console.log(form.formState.errors)}
-              disabled={update.isPending}
-            >
-              {update.isPending ? "Submitting..." : "Submit"}
+            <Button type="submit" onClick={() => console.log(form.formState.errors)} disabled={isPending}>
+              {isPending ? "Submitting..." : "Submit"}
             </Button>
           </div>
         </form>

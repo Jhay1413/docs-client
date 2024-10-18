@@ -1,12 +1,5 @@
-
 import { Button } from "@/components/ui/button";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-} from "@/components/ui/form";
+import { Form, FormControl, FormField, FormItem, FormLabel } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
@@ -19,7 +12,6 @@ import { loginUser } from "../services/AuthService";
 import { toast } from "react-toastify";
 
 export const LoginForm = () => {
-
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
   const form = useForm<TLogin>({
@@ -36,14 +28,14 @@ export const LoginForm = () => {
     onMutate: () => setIsLoading(true),
     onSuccess: async (data) => {
       setIsLoading(false);
-    
+
       localStorage.setItem("userinfo", JSON.stringify(data?.data));
       navigate("/dashboard/overview");
     },
     onError: async (error) => {
-      console.log(error.message)
+      console.log(error.message);
       toast.error(error.message);
-      setIsLoading(false)
+      setIsLoading(false);
     },
   });
   const onSubmit: SubmitHandler<TLogin> = (data) => {
@@ -51,12 +43,8 @@ export const LoginForm = () => {
   };
   return (
     <div className="flex flex-col w-full ">
-      
       <Form {...form}>
-        <form
-          onSubmit={form.handleSubmit(onSubmit)}
-          className="flex flex-col gap-4"
-        >
+        <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col gap-4">
           <FormField
             control={form.control}
             name="email"
@@ -81,7 +69,9 @@ export const LoginForm = () => {
               </FormItem>
             )}
           />
-          <Button className="bg-primaryColor text-sm  " type="submit" disabled = {isLoading}>{isLoading ? "Loading" : "Login"}</Button>
+          <Button className="bg-primaryColor text-sm  " type="submit" disabled={isLoading}>
+            {isLoading ? "Loading" : "Login"}
+          </Button>
         </form>
       </Form>
     </div>
