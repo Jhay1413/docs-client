@@ -231,7 +231,6 @@ export const TransactionForm = ({ company, method, defaultValue, mutateFn, isPen
       position: "bottom-right",
     });
   };
-  console.log(defaultValue?.attachments);
   return (
     <div className="w-full h-full bg-white p-4 rounded-lg">
       <Form {...form}>
@@ -592,7 +591,7 @@ export const TransactionForm = ({ company, method, defaultValue, mutateFn, isPen
                 </TableHeader>
                 <TableBody className="">
                   {fields.map((item, index) => (
-                    <TableRow key={index}>
+                    <TableRow key={item.id}>
                       <TableCell className="font-medium w-[300px]">
                         <FormField
                           control={form.control}
@@ -707,6 +706,7 @@ export const TransactionForm = ({ company, method, defaultValue, mutateFn, isPen
                           <button
                             type="button"
                             onClick={() => {
+                              console.log(index);
                               remove(index);
                               setUploadStatus((prev) => {
                                 const newStatus = [...prev];
