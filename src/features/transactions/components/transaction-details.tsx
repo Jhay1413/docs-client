@@ -3,7 +3,6 @@ import { transactionData } from "../schema/TransactionSchema";
 import { Separator } from "@/components/ui/separator";
 import { transactionQueryData } from "shared-contract";
 
-
 type Props = {
   data: z.infer<typeof transactionQueryData>;
 };
@@ -14,89 +13,61 @@ export const TransactionDetails = ({ data }: Props) => {
       <div className="grid grid-cols-3 gap-y-10 w-full shadow-md px-16 py-8 rounded-lg">
         <div className="flex flex-col">
           <h1 className="text-muted-foreground text-sm">Company ID:</h1>
-          <h1 className="text-base font-semibold">
-            {data?.company?.companyId}
-          </h1>
+          <h1 className="text-base font-semibold">{data?.company?.companyId}</h1>
         </div>
         <div className="flex flex-col">
           <h1 className="text-muted-foreground text-sm">Company name:</h1>
-          <h1 className="text-base font-semibold">
-            {data?.company?.companyName}
-          </h1>
+          <h1 className="text-base font-semibold">{data?.company?.companyName}</h1>
         </div>
         <div className="flex flex-col">
           <h1 className="text-muted-foreground text-sm">Company address:</h1>
-          <h1 className="text-base font-semibold">
-            {data?.company?.companyAddress}
-          </h1>
+          <h1 className="text-base font-semibold">{data?.company?.companyAddress}</h1>
         </div>
         <div className="flex flex-col">
-          <h1 className="text-muted-foreground text-sm">Company address:</h1>
+          <h1 className="text-muted-foreground text-sm">Company email:</h1>
           <h1 className="text-base font-semibold">{data?.company?.email}</h1>
         </div>
         <div className="flex flex-col">
-          <h1 className="text-muted-foreground text-sm">
-            Company contact person:
-          </h1>
-          <h1 className="text-base font-semibold">
-            {data?.company?.contactPersons?.name}
-          </h1>
+          <h1 className="text-muted-foreground text-sm">Company contact person:</h1>
+          <h1 className="text-base font-semibold">{data?.company?.contactPersons?.name}</h1>
         </div>
         <div className="flex flex-col ">
-          <h1 className="text-muted-foreground text-sm">
-            Company contact number:
-          </h1>
-          <h1 className="text-base font-semibold">
-            {data?.company?.contactPersons?.contactNumber}
-          </h1>
+          <h1 className="text-muted-foreground text-sm">Company contact number:</h1>
+          <h1 className="text-base font-semibold">{data?.company?.contactPersons?.contactNumber}</h1>
         </div>
         <div className="col-span-3">
-        <Separator/>
+          <Separator />
         </div>
         <div className="flex flex-col">
           <h1 className="text-muted-foreground text-sm">Project ID:</h1>
-          <h1 className="text-base font-semibold">
-            {data?.project?.projectId}
-          </h1>
+          <h1 className="text-base font-semibold">{data?.project?.projectId}</h1>
         </div>
         <div className="flex flex-col">
           <h1 className="text-muted-foreground text-sm">Project name:</h1>
-          <h1 className="text-base font-semibold">
-            {data?.project?.projectName}
-          </h1>
+          <h1 className="text-base font-semibold">{data?.project?.projectName}</h1>
         </div>
         <div className="flex flex-col">
           <h1 className="text-muted-foreground text-sm">Project address:</h1>
-          <h1 className="text-base font-semibold">
-            {data?.project?.projectAddress}
-          </h1>
+          <h1 className="text-base font-semibold">{data?.project?.projectAddress}</h1>
         </div>
         <div className="flex flex-col">
           <h1 className="text-muted-foreground text-sm">Contact Person:</h1>
-          <h1 className="text-base font-semibold">
-            {data?.project?.contactPersons?.name}
-          </h1>
+          <h1 className="text-base font-semibold">{data?.project?.contactPersons?.name}</h1>
         </div>
         <div className="flex flex-col">
           <h1 className="text-muted-foreground text-sm">Contact email:</h1>
-          <h1 className="text-base font-semibold">
-            {data?.project?.contactPersons?.email}
-          </h1>
+          <h1 className="text-base font-semibold">{data?.project?.contactPersons?.email}</h1>
         </div>
         <div className="flex flex-col">
           <h1 className="text-muted-foreground text-sm">Contact number:</h1>
-          <h1 className="text-base font-semibold">
-            {data?.project?.contactPersons?.contactNumber}
-          </h1>
+          <h1 className="text-base font-semibold">{data?.project?.contactPersons?.contactNumber}</h1>
         </div>
       </div>
       <div className="flex gap-y-10 gap-x-12 w-full shadow-md p-4 rounded-lg">
         <div className="grid grid-cols-3 gap-10 p-4 w-full">
           <div className="flex flex-col">
             <h1 className="text-muted-foreground text-sm">Department:</h1>
-            <h1 className="text-base font-semibold">
-              {data?.originDepartment}
-            </h1>
+            <h1 className="text-base font-semibold">{data?.originDepartment}</h1>
           </div>
           <div className="flex flex-col">
             <h1 className="text-muted-foreground text-sm">Section:</h1>
@@ -107,9 +78,7 @@ export const TransactionDetails = ({ data }: Props) => {
             <h1 className="text-base font-semibold">{data?.documentType}</h1>
           </div>
           <div className="flex flex-col">
-            <h1 className="text-muted-foreground text-sm">
-              Document Sub type:
-            </h1>
+            <h1 className="text-muted-foreground text-sm">Document Sub type:</h1>
             <h1 className="text-base font-semibold">{data?.documentSubType}</h1>
           </div>
           <div className="flex flex-col">
@@ -121,15 +90,11 @@ export const TransactionDetails = ({ data }: Props) => {
         <div className="grid grid-cols-3 gap-10 p-4 w-full">
           <div className="flex flex-col">
             <h1 className="text-muted-foreground text-sm">Forwarded To:</h1>
-            <h1 className="text-base font-semibold">
-              {data?.targetDepartment}
-            </h1>
+            <h1 className="text-base font-semibold">{data?.targetDepartment}</h1>
           </div>
           <div className="flex flex-col">
             <h1 className="text-muted-foreground text-sm">Due Date:</h1>
-            <h1 className="text-base font-semibold">
-              {new Date(data.dueDate!).toDateString()}
-            </h1>
+            <h1 className="text-base font-semibold">{new Date(data.dueDate!).toDateString()}</h1>
           </div>
           <div className="flex flex-col">
             <h1 className="text-muted-foreground text-sm">Priority:</h1>
@@ -145,9 +110,7 @@ export const TransactionDetails = ({ data }: Props) => {
           </div>
           <div className="flex flex-col">
             <h1 className="text-muted-foreground text-sm">Date Forwarded:</h1>
-            <h1 className="text-base font-semibold">
-              {new Date(data.dueDate!).toDateString()}
-            </h1>
+            <h1 className="text-base font-semibold">{new Date(data.dueDate!).toDateString()}</h1>
           </div>
         </div>
       </div>

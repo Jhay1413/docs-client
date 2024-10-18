@@ -11,46 +11,36 @@ import { PerApplication, PrioritySchema, TotalProject } from "@/features/dashboa
 import { useTransactions } from "@/features/transactions/hooks/query-gate";
 import { useCurrentUserRole } from "@/hooks/hooks/use-user-hook";
 import { useCurrentUserFirstName } from "@/hooks/use-user-hook";
+import { tsr } from "@/services/tsr";
 import { Dot, Ellipsis, Search } from "lucide-react";
 import { useMemo } from "react";
 import { z } from "zod";
 
-
-
 export const Dashboard = () => {
-  const { entities } = useTransactions(
-    "dashboardData",
-    "v2/dashboardData"
-  );
- 
+  const { data, isLoading } = tsr.dashboardContract.getDashboardData.useQuery({
+    queryKey: ["dashboard-data"],
+  });
 
   const currentUser = useCurrentUserFirstName();
-  
+
   const { defaultDate } = useMemo(
     () => ({
       defaultDate: new Date(2015, 3, 13),
     }),
-    []
+    [],
   );
-  if(entities.isLoading) return "loading";
-
-  const validateSchema = DashboardDataSchema.safeParse(entities.data);
-  if(!validateSchema.success || !validateSchema.data) {
-    console.log(validateSchema.error);
-
-    return
-  }
+  if (isLoading) return "loading";
 
   //Need to review this code
-  const priority = validateSchema.data?.find(data=>data.category == "Priority") as z.infer<typeof PrioritySchema>;;
-  const perApplication = validateSchema.data.find(data=>data.category== "Per Application") as z.infer<typeof PerApplication>;;
+  const priority = data?.body.priority;
+  const perApplication = data?.body.perApplication;
 
-  const total = validateSchema.data.find(data=> data.category == "Total Projects") as z.infer<typeof TotalProject>;;
-  const perSection = validateSchema.data.find(data=> data.category == "Per Section") as z.infer<typeof PerSection>;
-  const totalEIA = perSection.data.find(data => data.categoryName === "EIA");
-  const totalTCTI = perSection.data.find(data => data.categoryName === "TCTI");
-  const totalEPD = perSection.data.find(data => data.categoryName === "EPD");
-  const totalICS = perSection.data.find(data => data.categoryName === "ICS");
+  const total = data?.body.totalProject;
+  const perSection = data?.body.perSection;
+  const totalEIA = perSection?.find((data) => data.section === "EIA");
+  const totalTCTI = perSection?.find((data) => data.section === "TCTI");
+  const totalEPD = perSection?.find((data) => data.section === "EPD");
+  const totalICS = perSection?.find((data) => data.section === "ICS");
   return (
     <div className="flex w-full flex-col gap-12">
       <h1 className="text-[28px] font-semibold bg-gradient-to-r from-[#547326] to-[#93CB41] bg-clip-text text-transparent">
@@ -73,81 +63,61 @@ export const Dashboard = () => {
                 <div className="flex flex-col px-2 gap-8 justify-center h-full text-xs">
                   <div className="flex gap-2 items-center ">
                     <Avatar>
-                      <AvatarImage
-                        src="https://github.com/shadcn.png"
-                        className="w-[45px] h-[45px] rounded-full"
-                      />
+                      <AvatarImage src="https://github.com/shadcn.png" className="w-[45px] h-[45px] rounded-full" />
                       <AvatarFallback>CN</AvatarFallback>
                     </Avatar>
                     <div className="flex flex-col">
                       <h1 className="text-muted-foreground">5 hours ago</h1>
                       <h1 className="text-muted-foreground">
-                        <span className="font-bold">Jhon Christian</span>{" "}
-                        Forwarded a transaction
+                        <span className="font-bold">Jhon Christian</span> Forwarded a transaction
                       </h1>
                     </div>
                   </div>
                   <div className="flex gap-2 items-center ">
                     <Avatar>
-                      <AvatarImage
-                        src="https://github.com/shadcn.png"
-                        className="w-[45px] h-[45px] rounded-full"
-                      />
+                      <AvatarImage src="https://github.com/shadcn.png" className="w-[45px] h-[45px] rounded-full" />
                       <AvatarFallback>CN</AvatarFallback>
                     </Avatar>
                     <div className="flex flex-col">
                       <h1 className="text-muted-foreground">5 hours ago</h1>
                       <h1 className="text-muted-foreground">
-                        <span className="font-bold">Jhon Christian</span>{" "}
-                        Forwarded a transaction
+                        <span className="font-bold">Jhon Christian</span> Forwarded a transaction
                       </h1>
                     </div>
                   </div>
                   <div className="flex gap-2 items-center ">
                     <Avatar>
-                      <AvatarImage
-                        src="https://github.com/shadcn.png"
-                        className="w-[45px] h-[45px] rounded-full"
-                      />
+                      <AvatarImage src="https://github.com/shadcn.png" className="w-[45px] h-[45px] rounded-full" />
                       <AvatarFallback>CN</AvatarFallback>
                     </Avatar>
                     <div className="flex flex-col">
                       <h1 className="text-muted-foreground">5 hours ago</h1>
                       <h1 className="text-muted-foreground">
-                        <span className="font-bold">Jhon Christian</span>{" "}
-                        Forwarded a transaction
+                        <span className="font-bold">Jhon Christian</span> Forwarded a transaction
                       </h1>
                     </div>
                   </div>
                   <div className="flex gap-2 items-center ">
                     <Avatar>
-                      <AvatarImage
-                        src="https://github.com/shadcn.png"
-                        className="w-[45px] h-[45px] rounded-full"
-                      />
+                      <AvatarImage src="https://github.com/shadcn.png" className="w-[45px] h-[45px] rounded-full" />
                       <AvatarFallback>CN</AvatarFallback>
                     </Avatar>
                     <div className="flex flex-col">
                       <h1 className="text-muted-foreground">5 hours ago</h1>
                       <h1 className="text-muted-foreground">
-                        <span className="font-bold">Jhon Christian</span>{" "}
-                        Forwarded a transaction
+                        <span className="font-bold">Jhon Christian</span> Forwarded a transaction
                       </h1>
                     </div>
                   </div>
                   <div className="flex gap-2 items-center ">
                     <Avatar>
-                      <AvatarImage
-                        src="https://github.com/shadcn.png"
-                        className="w-[45px] h-[45px] rounded-full"
-                      />
+                      <AvatarImage src="https://github.com/shadcn.png" className="w-[45px] h-[45px] rounded-full" />
                       <AvatarFallback>CN</AvatarFallback>
                     </Avatar>
                     <div className="flex flex-col">
                       <h1 className="text-muted-foreground">5 hours ago</h1>
                       <h1 className="text-muted-foreground">
-                        <span className="font-bold">Jhon Christian</span>{" "}
-                        Forwarded a transaction
+                        <span className="font-bold">Jhon Christian</span> Forwarded a transaction
                       </h1>
                     </div>
                   </div>
@@ -165,14 +135,11 @@ export const Dashboard = () => {
                 </div>
               </div>
               <ScrollArea className=" h-full overflow-auto">
-              <div className="flex flex-col gap-4 justify-center h-full text-xs">
+                <div className="flex flex-col gap-4 justify-center h-full text-xs">
                   <div className="flex gap-2 items-center ">
                     <Dot size={40} className="text-primaryColor " />
                     <Avatar>
-                      <AvatarImage
-                        src="https://github.com/shadcn.png"
-                        className="w-[45px] h-[45px] rounded-full"
-                      />
+                      <AvatarImage src="https://github.com/shadcn.png" className="w-[45px] h-[45px] rounded-full" />
                       <AvatarFallback>CN</AvatarFallback>
                     </Avatar>
                     <div className="flex flex-col">
@@ -184,10 +151,7 @@ export const Dashboard = () => {
                   <div className="flex gap-2 items-center ">
                     <Dot size={40} className="text-primaryColor " />
                     <Avatar>
-                      <AvatarImage
-                        src="https://github.com/shadcn.png"
-                        className="w-[45px] h-[45px] rounded-full"
-                      />
+                      <AvatarImage src="https://github.com/shadcn.png" className="w-[45px] h-[45px] rounded-full" />
                       <AvatarFallback>CN</AvatarFallback>
                     </Avatar>
                     <div className="flex flex-col">
@@ -198,10 +162,7 @@ export const Dashboard = () => {
                   <div className="flex gap-2 items-center ">
                     <Dot size={40} className="text-primaryColor " />
                     <Avatar>
-                      <AvatarImage
-                        src="https://github.com/shadcn.png"
-                        className="w-[45px] h-[45px] rounded-full"
-                      />
+                      <AvatarImage src="https://github.com/shadcn.png" className="w-[45px] h-[45px] rounded-full" />
                       <AvatarFallback>CN</AvatarFallback>
                     </Avatar>
                     <div className="flex flex-col">
@@ -212,10 +173,7 @@ export const Dashboard = () => {
                   <div className="flex gap-2 items-center ">
                     <Dot size={40} className="text-primaryColor " />
                     <Avatar>
-                      <AvatarImage
-                        src="https://github.com/shadcn.png"
-                        className="w-[45px] h-[45px] rounded-full"
-                      />
+                      <AvatarImage src="https://github.com/shadcn.png" className="w-[45px] h-[45px] rounded-full" />
                       <AvatarFallback>CN</AvatarFallback>
                     </Avatar>
                     <div className="flex flex-col">
@@ -226,10 +184,7 @@ export const Dashboard = () => {
                   <div className="flex gap-2 items-center ">
                     <Dot size={40} className="text-primaryColor " />
                     <Avatar>
-                      <AvatarImage
-                        src="https://github.com/shadcn.png"
-                        className="w-[45px] h-[45px] rounded-full"
-                      />
+                      <AvatarImage src="https://github.com/shadcn.png" className="w-[45px] h-[45px] rounded-full" />
                       <AvatarFallback>CN</AvatarFallback>
                     </Avatar>
                     <div className="flex flex-col">
@@ -240,10 +195,7 @@ export const Dashboard = () => {
                   <div className="flex gap-2 items-center ">
                     <Dot size={40} className="text-primaryColor " />
                     <Avatar>
-                      <AvatarImage
-                        src="https://github.com/shadcn.png"
-                        className="w-[45px] h-[45px] rounded-full"
-                      />
+                      <AvatarImage src="https://github.com/shadcn.png" className="w-[45px] h-[45px] rounded-full" />
                       <AvatarFallback>CN</AvatarFallback>
                     </Avatar>
                     <div className="flex flex-col">
@@ -275,15 +227,14 @@ export const Dashboard = () => {
               <div className="flex flex-col bg-white w-full row-span-1 col-span-1 rounded-md ">
                 <div className="flex justify-start items-center gap-2 p-1">
                   <div className="bg-primaryColor p-2 rounded-md text-white">
-                  <Search size={20} />
+                    <Search size={20} />
                   </div>
                   <h1 className="text-sm">Total Applications</h1>
                 </div>
                 <div className="flex flex-col items-center justify-center  h-full">
                   <h1 className="font-bold text-4xl">{totalEIA?.count || 0}</h1>
                   <h1>
-                    <span className="text-primaryColor font-bold">EIA</span>{" "}
-                    Section
+                    <span className="text-primaryColor font-bold">EIA</span> Section
                   </h1>
                 </div>
               </div>
@@ -295,7 +246,7 @@ export const Dashboard = () => {
                   <h1 className="text-sm">Total Applications</h1>
                 </div>
                 <div className="flex flex-col items-center justify-center  h-full">
-                <h1 className="font-bold text-4xl">{totalEPD?.count || 0}</h1>
+                  <h1 className="font-bold text-4xl">{totalEPD?.count || 0}</h1>
                   <h1>
                     <span className="text-red-500 font-bold">EPD</span> Section
                   </h1>
@@ -309,23 +260,20 @@ export const Dashboard = () => {
                   <h1 className="text-sm">Total Applications</h1>
                 </div>
                 <div className="flex flex-col items-center justify-center  h-full">
-                <h1 className="font-bold text-4xl">{totalTCTI?.count || 0}</h1>
+                  <h1 className="font-bold text-4xl">{totalTCTI?.count || 0}</h1>
                   <h1>
-                    <span className="text-yellow-500 font-bold">TCTI</span>{" "}
-                    Section
+                    <span className="text-yellow-500 font-bold">TCTI</span> Section
                   </h1>
                 </div>
               </div>
             </div>
-            
           </div>
           <div className="flex flex-col gap-4 row-span-1">
-          <h1 className="text-lg">Charts</h1>
-          <div className="h-full relative">
-            <Component data = {total?.data}/>
+            <h1 className="text-lg">Charts</h1>
+            <div className="h-full relative">
+              <Component data={total} />
+            </div>
           </div>
-        </div>
-          
         </div>
 
         {/* </div> */}
@@ -335,10 +283,10 @@ export const Dashboard = () => {
           <PriorityChart data={priority} />
         </div>
         <div className="relative w-full h-full col-span-2 xl:col-span-1 ">
-          <PriorityBarChart data = {perApplication}/>
+          <PriorityBarChart data={perApplication} />
         </div>
       </div>
-      <CalendarFormDialog/>
+      <CalendarFormDialog />
     </div>
   );
 };
