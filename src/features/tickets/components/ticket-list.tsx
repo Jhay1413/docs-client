@@ -2,20 +2,35 @@ import { DataTable } from "@/components/data-table";
 import { useDebounce } from "use-debounce";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Search } from "lucide-react";
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { Plus, Search } from "lucide-react";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { ticketsColumn } from "./tickets-column";
 
+// Add the button component here
+const AddTicketBtn = () => (
+  <div>
+    <Link
+      to="/dashboard/tickets/add-form"
+      className="bg-[#414140] px-4 py-2 text-lg flex items-center justify-center space-x rounded-lg text-white"
+    >
+      <Plus size={24} />
+      <h1>Add Ticket</h1>
+    </Link>
+  </div>
+);
 
 const dummyData = [
   {
-    ticketId: "",
-    subject: "",
-    section: "",
-    status: "",
-    remarks: "",
-    createdAt: "",
-    updatedAt: "",
+    ticketId: "asdf",
+    subject: "asdf",
+    section: "asdf",
+    division: "asdf",
+    status: "asdf",
+    requestDetails: "asdf",
+    remarks: "asdf",
+    priority: "Aasdf",
+    createdAt: "asdf",
+    dueDate: "asdf",
   },
   // Add more dummy data as needed
 ];
@@ -67,26 +82,32 @@ export const TicketList = () => {
           </p>
         </div>
       </div>
-      <div className="flex items-center py-4 justify-end w-full">
-        <Input
-          placeholder="Search ...."
-          defaultValue={debouncedSearchQuery}
-          onChange={(e) =>
-            setSearchParams(
-              (prev) => {
-                prev.set("search", e.target.value);
-                prev.set("currentPage", "1");
-                return prev;
-              },
-              { replace: true }
-            )
-          }
-          className="w-[289px] rounded-none rounded-l-md"
-        />
-        <button className="p-2 bg-primaryColor text-white rounded-r-md">
-          <Search />
-        </button>
+      <div className="flex items-center py-4 justify-between w-full">
+        <div className="flex w-full relative">
+          <AddTicketBtn />
+        </div>
+        <div className="flex items-center">
+          <Input
+            placeholder="Search ...."
+            defaultValue={debouncedSearchQuery}
+            onChange={(e) =>
+              setSearchParams(
+                (prev) => {
+                  prev.set("search", e.target.value);
+                  prev.set("currentPage", "1");
+                  return prev;
+                },
+                { replace: true }
+              )
+            }
+            className="w-[289px] rounded-none rounded-l-md"
+          />
+          <button className="p-2 bg-primaryColor text-white rounded-r-md">
+            <Search />
+          </button>
+        </div>
       </div>
+
       <DataTable
         columns={ticketsColumn}
         data={dummyData} // Replace with fetched ticket data
@@ -106,6 +127,9 @@ export const TicketList = () => {
           {">>"}
         </Button>
       </div>
+      {/* Add the button here */}
+
+      
     </div>
   );
-}; 
+};
