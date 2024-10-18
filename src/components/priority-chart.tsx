@@ -1,26 +1,7 @@
 import { DatabaseBackup, TrendingUp } from "lucide-react";
-import {
-  Bar,
-  BarChart,
-  CartesianGrid,
-  LabelList,
-  XAxis,
-  YAxis,
-} from "recharts";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import {
-  ChartConfig,
-  ChartContainer,
-  ChartTooltip,
-  ChartTooltipContent,
-} from "@/components/ui/chart";
+import { Bar, BarChart, CartesianGrid, LabelList, XAxis, YAxis } from "recharts";
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import { ChartConfig, ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart";
 import { z } from "zod";
 import { PrioritySchema } from "@/features/dashboard/schema/dashboardSchema";
 
@@ -38,15 +19,8 @@ const chartConfig = {
   },
 } satisfies ChartConfig;
 
-export function PriorityChart({
-  data,
-}: {
-  data: z.infer<typeof PrioritySchema> | undefined;
-}) {
-  const convertedData = data?.data.map((item) => ({
-    ...item,
-    percentage: parseInt(item.percentage, 10), // Convert to integer
-  }));
+export function PriorityChart({ data }: { data: z.infer<typeof PrioritySchema> | undefined }) {
+  const convertedData = data;
 
   if (convertedData?.length === 0) {
     return (
@@ -88,23 +62,9 @@ export function PriorityChart({
               hide
             />
             <XAxis dataKey="percentage" type="number" hide />
-            <ChartTooltip
-              cursor={false}
-              content={<ChartTooltipContent indicator="line" />}
-            />
-            <Bar
-              dataKey="percentage"
-              layout="vertical"
-              fill="var(--color-transactionId)"
-              radius={4}
-            >
-              <LabelList
-                dataKey="transactionId"
-                position="insideLeft"
-                offset={8}
-                className="fill-[--color-label]"
-                fontSize={12}
-              />
+            <ChartTooltip cursor={false} content={<ChartTooltipContent indicator="line" />} />
+            <Bar dataKey="percentage" layout="vertical" fill="var(--color-transactionId)" radius={4}>
+              <LabelList dataKey="transactionId" position="insideLeft" offset={8} className="fill-[--color-label]" fontSize={12} />
               <LabelList
                 dataKey="percentage"
                 position="right"
@@ -117,9 +77,7 @@ export function PriorityChart({
         </ChartContainer>
       </CardContent>
       <CardFooter className="flex-col items-start gap-2 text-sm">
-        <div className="leading-none text-muted-foreground mt-4 font-semibold">
-          Showing transaction priority
-        </div>
+        <div className="leading-none text-muted-foreground mt-4 font-semibold">Showing transaction priority</div>
       </CardFooter>
     </Card>
   );
