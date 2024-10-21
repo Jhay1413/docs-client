@@ -20,13 +20,7 @@ export const ProfilePage = (userInfo: TUserWithAccount) => {
             <ProfilePicture {...profileProps} />
 
             <div className="flex flex-col gap-2 items-center w-full justify-center mt-16">
-              <h1 className="text-xl">
-                {userInfo.firstName +
-                  " " +
-                  userInfo.middleName +
-                  " " +
-                  userInfo.lastName}
-              </h1>
+              <h1 className="text-xl">{userInfo.firstName + " " + userInfo.middleName + " " + userInfo.lastName}</h1>
               <h1 className="text-sm">{userInfo.assignedPosition}</h1>
               <h1 className="text-sm">{userInfo.assignedDivision}</h1>
             </div>
@@ -36,8 +30,8 @@ export const ProfilePage = (userInfo: TUserWithAccount) => {
           </div>
         </div>
         <div className="flex-none h-full w-full border relative">
-          <div className="flex flex-col gap-4 items-center justify-center absolute    w-full h-full z-10">
-            <Ban size={48} className="text-red-500"/>
+          <div className="flex flex-col gap-4 items-center justify-center absolute    w-full h-full z-5">
+            <Ban size={48} className="text-red-500" />
             <h1>You are not authorized</h1>
             <h1 className="text-muted-foreground">It seems like you don't have permission to view this section . </h1>
             <h1 className="text-muted-foreground">Please sign-in an admin account. </h1>
@@ -47,9 +41,7 @@ export const ProfilePage = (userInfo: TUserWithAccount) => {
               <h1 className="text-xl font-bold">Account settings</h1>
             </div>
             <div className="relative">
-              <Button className="absolute right-4 bottom-1 ">
-                Change Password
-              </Button>
+              <Button className="absolute right-4 bottom-1 ">Change Password</Button>
             </div>
             <div className="flex grow w-full ">
               <div className="p-4 grid grid-rows-3 grid-cols-3  w-full m-4 gap-4">
@@ -60,19 +52,11 @@ export const ProfilePage = (userInfo: TUserWithAccount) => {
 
                 <div className="col-span-2 flex flex-col  w-full gap-2 ">
                   <Label>Password</Label>
-                  <Input
-                    type="password"
-                    value={userInfo.account.password}
-                    readOnly
-                  />
+                  <Input type="password" value={userInfo.account.password} readOnly />
                 </div>
                 <div className="col-span-2 flex flex-col  w-full gap-2">
                   <Label>Account Role</Label>
-                  <Input
-                    type="text"
-                    value={userInfo.account.accountRole}
-                    readOnly
-                  />
+                  <Input type="text" value={userInfo.account.accountRole} readOnly />
                 </div>
               </div>
             </div>
@@ -114,15 +98,11 @@ export const ProfilePage = (userInfo: TUserWithAccount) => {
             </div>
             <div className="flex flex-col gap-2 ">
               <h1 className="text-xs text-muted-foreground">Birthdate:</h1>
-              <h1 className="text-sm">
-                {new Date(userInfo.birthDate).toDateString()}
-              </h1>
+              <h1 className="text-sm">{new Date(userInfo.birthDate).toDateString()}</h1>
             </div>
             <div className="flex flex-col gap-2 ">
               <h1 className="text-xs text-muted-foreground">Date started:</h1>
-              <h1 className="text-sm">
-                {new Date(userInfo.dateStarted).toDateString()}
-              </h1>
+              <h1 className="text-sm">{new Date(userInfo.dateStarted).toDateString()}</h1>
             </div>
             <div className="flex flex-col gap-2 ">
               <h1 className="text-xs text-muted-foreground">Company email:</h1>
