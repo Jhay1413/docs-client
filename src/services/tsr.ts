@@ -14,4 +14,16 @@ export const client = initClient(contracts, {
 export const tsr = initTsrReactQuery(contracts, {
   // baseUrl: "https://dts-dev.onrender.com",
   baseUrl: endpoint,
+  credentials: "include",
+  queryClientConfig: {
+    defaultOptions: {
+      queries: {
+        onError: (error: any) => {
+          if (error.status === 403) {
+            console.log("roles");
+          }
+        }, // Set your global error handler for queries
+      },
+    },
+  },
 });

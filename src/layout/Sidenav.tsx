@@ -1,13 +1,4 @@
-import {
-  ClipboardList,
-  Factory,
-  FileCode,
-  FileText,
-  LayoutDashboard,
-  LibraryBig,
-  UserSearch,
-  Users,
-} from "lucide-react";
+import { ClipboardList, Factory, FileCode, FileText, LayoutDashboard, LibraryBig, UserSearch, Users } from "lucide-react";
 import { NavLink } from "react-router-dom";
 
 import { getCurrentUserId, useCurrentUserRole } from "@/hooks/use-user-hook";
@@ -20,9 +11,7 @@ const CompaniesMenu = () => (
     <NavLink
       to="/dashboard/companies"
       className={({ isActive }) => {
-        return `justify-start items-center flex w-full p-2 space-x-4 text-lg  rounded-md ${
-          isActive ? "bg-green-100/30 text-white" : ""
-        }`;
+        return `justify-start items-center flex w-full p-2 space-x-4 text-lg  rounded-md ${isActive ? "bg-green-100/30 text-white" : ""}`;
       }}
     >
       <Factory />
@@ -34,17 +23,13 @@ const CompaniesMenu = () => (
 
 const UserAndAccountsMenu = () => (
   <>
-    <Label className="text-[#DCFF8E] px-4 font-medium flex w-full text-sm">
-      USERS & ACCOUNTS
-    </Label>
+    <Label className="text-[#DCFF8E] px-4 font-medium flex w-full text-sm">USERS & ACCOUNTS</Label>
     <ul className="flex flex-col  space-y-4 w-full   mx-2">
       <li className="relative inline-block text-left px-4 ">
         <NavLink
           to="/dashboard/users/users-list"
           className={({ isActive }) => {
-            return `justify-start items-center flex w-full p-2 space-x-4 text-lg  rounded-md ${
-              isActive ? "bg-green-100/30 text-white" : ""
-            }`;
+            return `justify-start items-center flex w-full p-2 space-x-4 text-lg  rounded-md ${isActive ? "bg-green-100/30 text-white" : ""}`;
           }}
         >
           <Users />
@@ -55,9 +40,7 @@ const UserAndAccountsMenu = () => (
         <NavLink
           to="/dashboard/users/userAccount"
           className={({ isActive }) => {
-            return `justify-start items-center flex w-full p-2 space-x-4 text-lg  rounded-md ${
-              isActive ? "bg-green-100/30 text-white" : ""
-            }`;
+            return `justify-start items-center flex w-full p-2 space-x-4 text-lg  rounded-md ${isActive ? "bg-green-100/30 text-white" : ""}`;
           }}
         >
           <UserSearch />
@@ -76,48 +59,36 @@ export const SideNav = () => {
   const notification = useNotificationStore((state) => state.notification);
   const currentRole = useCurrentUserRole();
   const id = getCurrentUserId();
-
+  console.log(id);
   return (
     <div className="flex flex-col gap-4 w-full min-h-full pb-8 ">
       <div className="flex items-center justify-center h-32 ">
         <img src="/Logov6.png" className="h-[32px] w-[151px] " />
       </div>
       <div className="flex flex-col w-full min-h-full items-center gap-6">
-        <Label className="text-[#DCFF8E] px-4 font-medium flex w-full text-sm">
-          MENU
-        </Label>
+        <Label className="text-[#DCFF8E] px-4 font-medium flex w-full text-sm">MENU</Label>
         <ul className="flex flex-col  space-y-4 w-full   mx-2 ">
           <li className="relative inline-block text-left px-4 ">
             <NavLink
               to={`/dashboard/overview`}
               className={({ isActive }) => {
-                return `justify-start items-center flex w-full p-2 space-x-4 text-lg  rounded-md ${
-                  isActive ? "bg-green-100/30 text-white" : ""
-                }`;
+                return `justify-start items-center flex w-full p-2 space-x-4 text-lg  rounded-md ${isActive ? "bg-green-100/30 text-white" : ""}`;
               }}
             >
               <LayoutDashboard size={28} className="" />
               <h1 className="text-base">Dashboard</h1>
             </NavLink>
           </li>
-          <CompaniesItemWithRole
-            roles={["SUPERADMIN", "MANAGER"]}
-            exemptions={["Operations Department"]}
-            
-          />
+          <CompaniesItemWithRole roles={["SUPERADMIN", "MANAGER"]} exemptions={["Operations Department"]} />
         </ul>
         <UserAndAccountWithRole roles={["SUPERADMIN"]} exemptions={["Operations Department"]} />
-        <Label className="text-[#DCFF8E] px-4 font-medium flex w-full text-sm">
-          TRANSACTIONS
-        </Label>
+        <Label className="text-[#DCFF8E] px-4 font-medium flex w-full text-sm">TRANSACTIONS</Label>
         <ul className="flex flex-col  space-y-4 w-full   mx-2">
           <li className="relative inline-block text-left px-4 ">
             <NavLink
               to="/dashboard/transactions/list"
               className={({ isActive }) => {
-                return `justify-start items-center flex w-full p-2 space-x-4 text-lg  rounded-md ${
-                  isActive ? "bg-green-100/30 text-white" : ""
-                }`;
+                return `justify-start items-center flex w-full p-2 space-x-4 text-lg  rounded-md ${isActive ? "bg-green-100/30 text-white" : ""}`;
               }}
             >
               <FileText />
@@ -129,19 +100,13 @@ export const SideNav = () => {
             <NavLink
               to={`/dashboard/transactions/inbox/${id}`}
               className={({ isActive }) => {
-                return `justify-start items-center flex w-full p-2 space-x-4 text-lg  rounded-md ${
-                  isActive ? "bg-green-100/30 text-white" : ""
-                }`;
+                return `justify-start items-center flex w-full p-2 space-x-4 text-lg  rounded-md ${isActive ? "bg-green-100/30 text-white" : ""}`;
               }}
             >
               <LibraryBig />
               <div className="flex gap-2">
                 <h1 className="text-base">Inbox</h1>
-                {notification?.inbox !== 0 && (
-                  <span className="text-red-700 text-sm font-extrabold">
-                    {notification?.inbox}
-                  </span>
-                )}
+                {notification?.inbox !== 0 && <span className="text-red-700 text-sm font-extrabold">{notification?.inbox}</span>}
               </div>
             </NavLink>
           </li>
@@ -149,34 +114,24 @@ export const SideNav = () => {
             <NavLink
               to={`/dashboard/transactions/incoming-transaction/${id}`}
               className={({ isActive }) => {
-                return `justify-start items-center flex w-full p-2 space-x-4 text-lg  rounded-md ${
-                  isActive ? "bg-green-100/30 text-white" : ""
-                }`;
+                return `justify-start items-center flex w-full p-2 space-x-4 text-lg  rounded-md ${isActive ? "bg-green-100/30 text-white" : ""}`;
               }}
             >
               <ClipboardList />
               <div className="flex gap-2">
                 <h1 className="text-base">Incoming files</h1>
-                {notification?.incoming !== 0 && (
-                  <span className="text-red-700 text-sm font-extrabold">
-                    {notification?.incoming}
-                  </span>
-                )}
+                {notification?.incoming !== 0 && <span className="text-red-700 text-sm font-extrabold">{notification?.incoming}</span>}
               </div>
             </NavLink>
           </li>
         </ul>
-        <Label className="text-[#DCFF8E] px-4 font-medium flex w-full text-sm">
-          ARCHIVE
-        </Label>
+        <Label className="text-[#DCFF8E] px-4 font-medium flex w-full text-sm">ARCHIVE</Label>
         <ul className="flex flex-col  space-y-4 w-full   mx-2 ">
           <li className="relative inline-block text-left px-4 ">
             <NavLink
               to={`/dashboard/transactions/archived`}
               className={({ isActive }) => {
-                return `justify-start items-center flex w-full p-2 space-x-4 text-lg  rounded-md ${
-                  isActive ? "bg-green-100/30 text-white" : ""
-                }`;
+                return `justify-start items-center flex w-full p-2 space-x-4 text-lg  rounded-md ${isActive ? "bg-green-100/30 text-white" : ""}`;
               }}
             >
               <FileCode />

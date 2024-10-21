@@ -15,6 +15,7 @@ export const loginUser = async (data: TLogin) => {
   } catch (error) {
     console.log(error);
     if (axios.isAxiosError(error)) {
+      console.log(error.response?.data.message);
       throw new Error(error.response?.data.message || "Something went wrong while logging in !");
     } else {
       throw new Error("Something went wrong while logging in !");
@@ -29,7 +30,11 @@ export const checkAuth = async () => {
     return response;
   } catch (error) {
     console.log(error);
-    throw new Error("Unauthorized User");
+    if (axios.isAxiosError(error)) {
+      throw new Error(error.response?.data.message || "Something went wrong while logging in !");
+    } else {
+      throw new Error("Something went wrong while logging in !");
+    }
   }
 };
 export const logoutUser = async () => {
