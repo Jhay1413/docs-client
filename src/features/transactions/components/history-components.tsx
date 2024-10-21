@@ -81,7 +81,7 @@ export const HistoryComponent = () => {
           {data.body.receiverId === userId && <TransactionActions transactionId={id!} />}
         </div>
         {view === View.IER ? (
-          <IerPage data={attachmentForIer} />
+          <IerPage data={attachmentForIer} percentage={data.body.percentage} />
         ) : view === View.CSW ? (
           <CswComponent transactionId={data?.body.id || ""} data={data?.body.completeStaffWork || []} />
         ) : (
