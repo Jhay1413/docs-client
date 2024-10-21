@@ -118,8 +118,9 @@ export const Header = () => {
 
               </div>
               {openNotif && (
-                <div className="absolute h-[500px] w-full  top-full rounded-lg z-10">
-                  <ScrollArea className="flex w-full h-full flex-col gap-4 bg-white">
+                <div className="absolute h-[500px] w-full top-full rounded-lg z-10 bg-white">
+                  <div className="p-4">Notifications</div>
+                  <ScrollArea className="flex w-full h-full flex-col gap-4 bg-white rounded-lg pb-2 pr-2 pl-2">
                     {allNotification && allNotification.length > 0 ? (
                       allNotification.map((data) => (
                         <div
@@ -128,29 +129,35 @@ export const Header = () => {
                             !data.isRead && "bg-gray-100"
                           }`}
                         >
-                          <div className="flex items-center gap-2 w-full">
-                            <Avatar>
-                              <AvatarImage
-                                src="https://github.com/shadcn.png"
-                                className="w-[45px] h-[45px] rounded-full"
-                              />
-                              <AvatarFallback>CN</AvatarFallback>
-                            </Avatar>
-                            <Link
-                              to={`/dashboard/transactions/incoming-transaction/${id}`}
-                              className="flex flex-col gap-2"
-                            >
-                              <h1 className="text-sm">{data.message}</h1>
-                              <h1 className="text-muted-foreground text-sm">
-                                {new Date(data.createdAt).toDateString()}
-                              </h1>
-                            </Link>
-                            {!data.isRead && (
-                              <div className="flex items-center justify-end  ">
-                                <Dot className="text-green-500" size={32} />
-                              </div>
-                            )}
+                        <div className="flex items-center gap-2 w-full">
+                          <div className="flex items-center gap-2 flex-shrink-0 ml-1">
+                              <Avatar>
+                                <AvatarImage
+                                  src="https://github.com/shadcn.png"
+                                  className="w-[45px] h-[45px] rounded-full object-cover"
+                                />
+                                <AvatarFallback>CN</AvatarFallback>
+                              </Avatar>
+                            </div>
+                            <div className="ml-1 w-full overflow-hidden">
+                              <Link
+                                to={`/dashboard/transactions/incoming-transaction/${id}`}
+                                className="flex flex-col gap-2"
+                              >
+                                
+                                <h1 className="text-sm truncate overflow-hidden text-ellipsis whitespace-nowrap">{data.message}</h1>
+                                <h1 className="text-muted-foreground text-sm">
+                                  {new Date(data.createdAt).toDateString()}
+                                </h1>
+                              </Link>
+                            </div>
+
                           </div>
+                          {!data.isRead && (
+                            <div className="flex items-center justify-end mr-2">
+                              <Dot className="text-green-500" size={32} />
+                            </div>
+                          )}
                         </div>
                       ))
                     ) : (
@@ -206,5 +213,8 @@ export const Header = () => {
         </div>
       </div>
     </div>
+    
   );
 };
+
+
