@@ -32,14 +32,13 @@ export const TransactionList = () => {
     currentPage: "1",
     search: "",
   });
-
   const searchQuery = searchParams.get("search") || "";
   const page = searchParams.get("currentPage") || "1";
 
   const intPage = parseInt(page, 10);
   const [debouncedSearchQuery] = useDebounce(searchQuery, 500); // Adjust the delay as needed
 
-  const { data } = tsr.transaction.fetchTransactionsV2.useQuery({
+  const { data, isError, error } = tsr.transaction.fetchTransactionsV2.useQuery({
     queryKey: ["transactions", page, debouncedSearchQuery],
     queryData: {
       query: {
@@ -49,6 +48,7 @@ export const TransactionList = () => {
         pageSize: "10",
       },
     },
+
     placeholderData: keepPreviousData,
   });
 
@@ -73,6 +73,7 @@ export const TransactionList = () => {
   const handleOnClickRow = (data: z.infer<typeof transactionTable>) => {
     navigate(`/dashboard/transactions/history/${data.id}`);
   };
+
   return (
     <div className="flex flex-col w-full items-center justify-center p-4 bg-white rounded-lg">
       <div className="flex justify-start w-full flex-col ">
