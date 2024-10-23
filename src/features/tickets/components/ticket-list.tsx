@@ -5,6 +5,8 @@ import { Button } from "@/components/ui/button";
 import { Plus, Search } from "lucide-react";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { ticketsColumn } from "./tickets-column";
+import { tsr } from "@/services/tsr";
+import { keepPreviousData } from "@tanstack/react-query";
 
 // Add the button component here
 const AddTicketBtn = () => (
@@ -19,21 +21,21 @@ const AddTicketBtn = () => (
   </div>
 );
 
-const dummyData = [
-  {
-    ticketId: "asdf",
-    subject: "asdf",
-    section: "asdf",
-    division: "asdf",
-    status: "asdf",
-    requestDetails: "asdf",
-    remarks: "asdf",
-    priority: "Aasdf",
-    createdAt: "asdf",
-    dueDate: "asdf",
-  },
-  // Add more dummy data as needed
-];
+// const dummyData = [
+//   {
+//     ticketId: "asdf",
+//     subject: "asdf",
+//     section: "asdf",
+//     division: "asdf",
+//     status: "asdf",
+//     requestDetails: "asdf",
+//     remarks: "asdf",
+//     priority: "Aasdf",
+//     createdAt: "asdf",
+//     dueDate: "asdf",
+//   },
+//   // Add more dummy data as needed
+// ];
 
 export const TicketList = () => {
   const [searchParams, setSearchParams] = useSearchParams({
@@ -46,6 +48,29 @@ export const TicketList = () => {
   const intPage = parseInt(page, 10);
 
   const [debouncedSearchQuery] = useDebounce(searchQuery, 500);
+
+  const { data, isError, error } = tsr.ticketing.getTickets.useQuery({
+    queryKey: ["tickets", page, debouncedSearchQuery],
+    queryData: {
+      query: {
+        query: debouncedSearchQuery,
+
+        page: page,
+        pageSize: "10",
+      },
+    },
+    placeholderData: keepPreviousData,
+  });
+
+  console.log("data from tsr: ", data);
+  console.log("data.body from tsr: ", data?.body);
+  console.log("error: ", error);
+  console.log("queryData: ", {
+    query: debouncedSearchQuery,
+    page: page,
+    pageSize: "10",
+  });
+
 
   const handleNextPage = () => {
     setSearchParams((prev) => {
@@ -110,7 +135,7 @@ export const TicketList = () => {
 
       <DataTable
         columns={ticketsColumn}
-        data={dummyData} // Replace with fetched ticket data
+        data={data ? data.body : []}
         callbackFn={handleOnClickRow}
       />
       <div className="flex items-center w-full justify-center space-x-2 py-4">

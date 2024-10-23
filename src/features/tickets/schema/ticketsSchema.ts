@@ -42,23 +42,32 @@ export const ticketingFormData = z.object({
 });
 
 
-//ticketlist - to display in the table list
-export const ticketingQueryData = z.object({
+// Schema for the tickets table
+export const ticketingTableSchema = z.object({
   id: z.string(),
   ticketId: z.string(),
-  requestType: z.string(),
   subject: z.string(),
   section: z.string(),
   division: z.string(),
   status: z.string(),
+  priority: z.string(),
   requestDetails: z.string(),
-  priorityId: z.string(),
-  dueDate: z.string().datetime(),
-  senderId: z.string(),
-  receiverId: z.string(),
-  requesteeId: z.string(),
-  remarks: z.string().nullable(),
-  projectId: z.string().nullable(),
+  dueDate: z.string(),
+  createdAt: z.string().optional(),
+  updatedAt: z.string().optional(),
+  dateForwarded: z.string().datetime(),
+  dateReceived: z.nullable(z.string().datetime()),
+  receiver: z.object({
+    firstName: z.string(),
+    lastName: z.string(),
+  }),
+  sender: z.object({
+    firstName: z.string(),
+    lastName: z.string(),
+  }),
+  project: z.object({
+    projectName: z.string(),
+  }).nullable(),
   transactionId: z.string().nullable(),
-  attachments: z.string().nullable(),
+  remarks: z.string().nullable(),
 });
