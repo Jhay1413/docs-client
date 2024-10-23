@@ -1,17 +1,12 @@
-import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
-import { useParams } from "react-router-dom";
-import { useTransaction } from "../hooks/query-gate";
-import { transactionData } from "../schema/TransactionSchema";
+import { useParams, useSearchParams } from "react-router-dom";
 import { historyColumn } from "./table-columns/history-column";
 import { DataTable } from "@/components/data-table";
 import { TransactionDetails } from "./transaction-details";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { IerPage } from "./table-data/ier-summary";
-import { CompleteStaffWorkForm } from "../forms/csw-form";
 import { CswComponent } from "./table-data/csw-list";
 import { tsr } from "@/services/tsr";
-import { Archive, FilePenLine, MessageSquareShare } from "lucide-react";
 import { TransactionActions } from "./transaction-actions";
 import { getCurrentUserId } from "@/hooks/use-user-hook";
 
@@ -21,6 +16,7 @@ enum View {
   DETAILS,
 }
 export const HistoryComponent = () => {
+  const tsrQueryClient = tsr.useQueryClient();
   const userId = getCurrentUserId();
   const { id } = useParams();
   const [view, setView] = useState<View>(View.DETAILS);
@@ -30,12 +26,52 @@ export const HistoryComponent = () => {
       params: { id: id! },
     },
   });
+  const { mutate } = tsr.notificationContract.readNotif.useMutation({
+    onMutate: (data) => {
+      const lastGoodKnown = tsrQueryClient.notificationContract.getNotificationsByUserId.getQueryData(["notifications", userId]);
+      tsrQueryClient.notificationContract.getNotificationsByUserId.setQueryData(["notifications", userId], (old) => {
+        if (!old || !old.body) return old;
+        return {
+          ...old,
+          body: old.body.map((transaction) => {
+            // Find the transaction by ID and modify its fields
+            if (transaction.id === data.params.id) {
+              return {
+                ...transaction,
+                dateRead: data.body.dateRead,
+                isRead: true,
+                // Update specific fields here, e.g., status: 'updated'
+              };
+            }
+            return transaction; // Return unchanged transactions
+          }),
+        };
+      });
+      return { lastGoodKnown };
+    },
+    onError: (error, newPost, context) => {
+      tsrQueryClient.notificationContract.getNotificationsByUserId.setQueryData(["notifications", userId], context?.lastGoodKnown);
+    },
+    onSettled: () => {
+      tsrQueryClient.invalidateQueries({ queryKey: ["notifications", userId] });
+    },
+  });
+  const [searchParams] = useSearchParams();
+  const notifId = searchParams.get("notifId") || null;
 
+  useEffect(() => {
+    if (notifId) {
+      mutate({
+        params: { id: notifId },
+        body: { dateRead: new Date().toISOString() },
+      });
+      return;
+    }
+  }, [mutate, notifId]);
   if (isPending || !data?.body) {
     return "loading";
   }
   const attachmentForIer = data.body.attachments?.filter((attachment) => attachment.fileType === "INITIAL_DOC") || [];
-  console.log(data);
   return (
     <div className="flex flex-col w-full  p-4 rounded-lg">
       <div className=" space-y-8">
@@ -78,7 +114,7 @@ export const HistoryComponent = () => {
         <Separator className="h" />
         <div className="flex justify-between">
           <h1 className="text-xl font-normal">{data?.body.transactionId}</h1>
-          {data.body.receiverId === userId && <TransactionActions transactionId={id!} />}
+          {data.body.receiverId === userId && data.body.dateReceived && <TransactionActions transactionId={id!} />}
         </div>
         {view === View.IER ? (
           <IerPage data={attachmentForIer} percentage={data.body.percentage} />
