@@ -31,11 +31,11 @@ export const TransactionUpdateComponent = () => {
     queryKey: ["transactions", id],
     queryData: { params: { id: id! } },
   });
-  const { data: companies, isPending } = tsr.company.fetchCompanies.useQuery({
+  const { data: companies } = tsr.company.fetchCompanies.useQuery({
     queryKey: ["companies"],
   });
 
-  const { mutate, mutateAsync } = tsr.transaction.updateTransaction.useMutation({
+  const { mutate, mutateAsync, isPending } = tsr.transaction.updateTransaction.useMutation({
     onMutate: (data) => {
       const lastGoodKnown = tsrQueryClient.transaction.fetchTransactionsV2.getQueryData(["inbox-transactions"]);
       tsrQueryClient.transaction.getTransactionByParams.setQueryData(["inbox-transactions"], (old) => {
