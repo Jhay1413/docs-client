@@ -3,8 +3,23 @@ import { z } from "zod";
 import { ColumnDef } from "@tanstack/react-table";
 import { ArrowUpDown } from "lucide-react";
 import { transactionTable } from "shared-contract";
+import './styles.css';
 
 type TransactionInfo = z.infer<typeof transactionTable>;
+
+interface tolowerCapitalizeProps {
+  tolowerCapitalize: string;
+}
+
+const TolowerCapitalize: React.FC<tolowerCapitalizeProps> = ({ tolowerCapitalize }) => {
+  return (
+    <div >
+      {tolowerCapitalize.split(' ').map((word, index) => (
+        <h1 className="lowercasetoCapitalize" key={index}>{word}</h1>
+      ))}
+    </div>
+  );
+};
 
 export const transColumns: ColumnDef<TransactionInfo>[] = [
   {
@@ -35,8 +50,8 @@ export const transColumns: ColumnDef<TransactionInfo>[] = [
 
       return (
         <div>
-          <h1>{data.company.companyName}</h1>
-        </div>
+        <TolowerCapitalize tolowerCapitalize={data.company.companyName} />
+      </div>
       );
     },
   },
@@ -46,32 +61,80 @@ export const transColumns: ColumnDef<TransactionInfo>[] = [
     cell: ({ row }) => {
       const data = row.original;
 
-      return <h1>{data.project?.projectName}</h1>;
+      return  <div className="font-bold">
+        <TolowerCapitalize tolowerCapitalize={data.project?.projectName} />
+      </div>;
     },
   },
   {
     header: "Type",
     accessorKey: "documentType",
+    cell: ({ row }) => {
+      const data = row.original;
+
+      return   <div>
+        <TolowerCapitalize tolowerCapitalize={data.documentType!} />
+      </div>;
+    },
+    
   },
   {
     header: "Subtype",
     accessorKey: "documentSubType",
+    cell: ({ row }) => {
+      const data = row.original;
+
+      return   <div>
+        <TolowerCapitalize tolowerCapitalize={data.documentSubType!} />
+      </div>;
+    },
   },
   {
     header: "Subject",
     accessorKey: "subject",
+    cell: ({ row }) => {
+      const data = row.original;
+
+      return   <div>
+        <TolowerCapitalize tolowerCapitalize={data.subject!} />
+      </div>;
+    }, 
   },
   {
     header: "Forwarder",
     accessorKey: "forwarder",
+    cell: ({ row }) => {
+      const data = row.original;
+
+      return   <div>
+        <TolowerCapitalize tolowerCapitalize={data.forwarder!} />
+      </div>;
+    },
   },
   {
     header: "Receiver",
     accessorKey: "receiver",
+    cell: ({ row }) => {
+      const data = row.original;
+
+      return  <div className="font-bold">
+        <TolowerCapitalize tolowerCapitalize={data.receiver!} />
+      </div>
+      ;
+      
+    },
   },
   {
     header: "Status",
     accessorKey: "status",
+    cell: ({ row }) => {
+      const data = row.original;
+
+      return       <div>
+      <TolowerCapitalize tolowerCapitalize={data.status} />
+    </div>;
+    // <h1 className="hyphens-none">{data.status}</h1>;
+    },
   },
   {
     header: "Priority",
@@ -103,3 +166,5 @@ export const transColumns: ColumnDef<TransactionInfo>[] = [
     },
   },
 ];
+
+
