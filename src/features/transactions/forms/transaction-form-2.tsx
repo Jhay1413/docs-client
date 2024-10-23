@@ -599,7 +599,7 @@ export const TransactionForm = ({
                           <SelectValue placeholder="Select status" />
                         </SelectTrigger>
                         <SelectContent>
-                          <SelectItem value="ON-PROCESS">ON-PROCESS</SelectItem>
+                          <SelectItem value="ON PROCESS">ON-PROCESS</SelectItem>
                           <SelectItem value="APPROVE">APPROVE</SelectItem>
                           <SelectItem value="DORMANT">DORMANT</SelectItem>
                           <SelectItem value="DROP">DROP</SelectItem>

@@ -48,7 +48,7 @@ export const DashboardLayout = () => {
   }, [socket]);
 
   return (
-    <div className="flex flex-col min-h-screen min-w-screen bg-[#f4f4f4]">
+    <div className="flex flex-col min-h-screen min-w-screen bg-[#f4f4f4] ">
       <div className="flex flex-none w-full min-h-[77px] bg-white z-10">
         <Header />
       </div>
