@@ -3,33 +3,16 @@ import { FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/comp
 import FormInput from "@/components/formInput";
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@/components/ui/select";
 import FormTextArea from "@/components/formTextArea";
-import { useRef, useState } from "react";
+import { useRef } from "react";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Button } from "@/components/ui/button";
-import { CalendarIcon, Check, ChevronsUpDown, Command } from "lucide-react";
+import { CalendarIcon } from "lucide-react";
 import { Calendar } from "@/components/ui/calendar";
 import { cn } from "@/lib/utils";
 import { format } from "date-fns";
-import { tsr } from "@/services/tsr";
-import { useDebounce } from "use-debounce";
-import { keepPreviousData } from "@tanstack/react-query";
-import { CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "cmdk";
 
 const TicketForm = () => {
   const { control } = useFormContext(); // Ensure you're using it inside a FormProvider
-  const [searchQuery, setSearchQUery] = useState("");
-  const [debouncedSearchQuery] = useDebounce(searchQuery, 500);
-
-  const { data, isError, error } = tsr.company.fetchCompanyProjectsBySearch.useQuery({
-    queryKey: ["projects", debouncedSearchQuery],
-    queryData: {
-      query: {
-        projectName: debouncedSearchQuery,
-      },
-    },
-
-    placeholderData: keepPreviousData,
-  });
 
   if (!control) {
     return <div>Error: No form context found!</div>; // Optional: Handle if context is missing
@@ -224,28 +207,20 @@ const TicketForm = () => {
         name="projectId"
         render={({ field }) => (
           <FormItem className="col-span-1">
-            <Popover>
-              <PopoverTrigger asChild>
-                <Button
-                  variant="outline"
-                  role="combobox"
-                
-                  className="w-[200px] justify-between"
-                >
-                  <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-                </Button>
-              </PopoverTrigger>
-              <PopoverContent className="w-[200px] p-0">
-                <Command>
-                  <CommandInput onValueChange={(e) => console.log(e)} placeholder="Search framework..." />
-                  <CommandList>
-                    <CommandEmpty>No framework found.</CommandEmpty>
-                    <CommandGroup>
-                    </CommandGroup>
-                  </CommandList>
-                </Command>
-              </PopoverContent>
-            </Popover>
+            <FormLabel>Project</FormLabel>
+            <FormControl>
+              <Select onValueChange={field.onChange} defaultValue={field.value}>
+                <SelectTrigger className="w-full">
+                  <SelectValue placeholder="Select project" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="Project A">Project A</SelectItem>
+                  <SelectItem value="Project B">Project B</SelectItem>
+                  <SelectItem value="Project C">Project C</SelectItem>
+                </SelectContent>
+              </Select>
+            </FormControl>
+            <FormMessage />
           </FormItem>
         )}
       />
