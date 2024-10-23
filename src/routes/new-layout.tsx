@@ -34,12 +34,12 @@ export const DashboardNewLayout = () => {
           <SideNav />
         </ScrollArea>
       </div>
-      <div className="flex flex-col w-full px-2">
+      <div className="flex flex-col max-w-[calc(100%-250px)] px-2">
         <div className="flex w-full max-h-[70px]">
           <Header />
         </div>
 
-        <ScrollArea className="max-h-full max-[100%-250px] overflow-auto rounded-sm p-4 my-2">
+        <ScrollArea style={{ width: '80vw' }} className="max-h-full rounded-sm p-4 my-2">
           <Outlet />
           <ScrollBar orientation="horizontal" />
         </ScrollArea>
