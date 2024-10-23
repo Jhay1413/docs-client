@@ -1,5 +1,5 @@
 import { ClipboardList, Factory, FileCode, FileText, LayoutDashboard, LibraryBig, UserSearch, Users } from "lucide-react";
-import { NavLink } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
 
 import { getCurrentUserId, useCurrentUserRole } from "@/hooks/use-user-hook";
 import { useNotificationStore } from "@/global-states/notification-store";
@@ -63,7 +63,9 @@ export const SideNav = () => {
   return (
     <div className="flex flex-col gap-4 w-full min-h-full pb-8 ">
       <div className="flex items-center justify-center h-32 ">
-        <img src="/Logov6.png" className="h-[32px] w-[151px] " />
+        <Link to={`/dashboard/overview`}>
+          <img src="/Logov6.png" className="h-[32px] w-[151px] " />
+        </Link>
       </div>
       <div className="flex flex-col w-full min-h-full items-center gap-6">
         <Label className="text-[#DCFF8E] px-4 font-medium flex w-full text-sm">MENU</Label>
