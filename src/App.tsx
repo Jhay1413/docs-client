@@ -5,17 +5,10 @@ import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 import { PublicRoutes } from "./routes/PublicRoutes";
-import { DashboardLayout } from "./routes/Layout";
 import { Profile } from "./pages/Profile";
 import { UserAccountList, UserForm, UserList } from "./features/users";
 import { Users } from "./pages/user-index";
-import {
-  ArchivedList,
-  HistoryComponent,
-  InsertComponent,
-  TransactionList,
-  TransactionUpdateComponent,
-} from "./features/transactions";
+import { ArchivedList, HistoryComponent, InsertComponent, TransactionList, TransactionUpdateComponent } from "./features/transactions";
 import { CompanyList } from "./features/companies";
 import { NotFound } from "./pages/404";
 import { Login } from "./pages/Login";
@@ -67,14 +60,7 @@ function App() {
               <Route path="overview" element={<Dashboard />} />
               <Route path="users" element={<Users />}>
                 <Route path={`profile/:id`} element={<Profile />} />
-                <Route
-                  element={
-                    <ProtectedRoute
-                      allowedRoles={["SUPERADMIN"]}
-                      exemptions={["Operations Department"]}
-                    />
-                  }
-                >
+                <Route element={<ProtectedRoute allowedRoles={["SUPERADMIN"]} exemptions={["Operations Department"]} />}>
                   <Route path="users-list" element={<UserList />} />
                   <Route path="form" element={<UserForm />} />
                   <Route path={`userAccount`} element={<UserAccountList />} />
@@ -82,14 +68,7 @@ function App() {
               </Route>
               <Route path="companies" element={<CompanyIndex />}>
                 <Route index element={<CompanyList />} />
-                <Route
-                  element={
-                    <ProtectedRoute
-                      allowedRoles={["SUPERADMIN"]}
-                      exemptions={["Operations Department"]}
-                    />
-                  }
-                >
+                <Route element={<ProtectedRoute allowedRoles={["SUPERADMIN"]} exemptions={["Operations Department"]} />}>
                   <Route path="add-form" element={<AddComponent />} />
                   <Route path={`:id`} element={<EditComponent />} />
                 </Route>
@@ -98,15 +77,9 @@ function App() {
                 <Route path="list" element={<TransactionList />} />
                 <Route path="transaction-form" element={<InsertComponent />} />
                 <Route path="history/:id" element={<HistoryComponent />} />
-                <Route
-                  path="incoming-transaction/:id"
-                  element={<IncomingComponent />}
-                />
+                <Route path="incoming-transaction/:id" element={<IncomingComponent />} />
                 <Route path="inbox/:id" element={<InboxComponent />} />
-                <Route
-                  path="update/:id"
-                  element={<TransactionUpdateComponent />}
-                />
+                <Route path="update/:id" element={<TransactionUpdateComponent />} />
                 <Route path="log/:id" element={<ViewHistory />} />
                 <Route path="archived" element={<ArchivedList />} />
               </Route>

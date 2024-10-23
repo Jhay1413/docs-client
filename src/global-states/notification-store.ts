@@ -5,27 +5,26 @@ export type NotificationType = {
   inbox: number;
   incoming: number;
   refetch?: () => void;
-  refetchAll?:()=>void
-  
+  refetchAll?: () => void;
 };
 
 export type NotificationState = {
   notification: NotificationType | null;
-  allNotification : z.infer<typeof notification>[] | null;
-  setAllNotification: (allNotification: z.infer<typeof notification>[] | null) => void;
+  numOfUnreadNotif: number;
+  setNumOfUnreadNotif: (numOfUnreadNotif: number) => void;
   setNotification: (notification: NotificationType | null) => void;
   refetch: (() => void) | null;
-  refetchAll : (()=>void) | null;
-  setRefetchAll : (refetchFn:()=>void)=>void;
+  refetchAll: (() => void) | null;
+  setRefetchAll: (refetchFn: () => void) => void;
   setRefetch: (refetchFn: () => void) => void;
 };
 export const useNotificationStore = create<NotificationState>((set) => ({
   notification: null,
-  allNotification: null,
-  setAllNotification : (allNotification)=>set({allNotification}),
+  numOfUnreadNotif: 0,
   refetch: null,
-  refetchAll:null,
-  setRefetchAll:(refetchFn)=>set({refetchAll:refetchFn}),
+  refetchAll: null,
+  setNumOfUnreadNotif: (numOfUnreadNotif) => set({ numOfUnreadNotif }),
+  setRefetchAll: (refetchFn) => set({ refetchAll: refetchFn }),
   setNotification: (notification) => set({ notification }),
   setRefetch: (refetchFn) => set({ refetch: refetchFn }),
 }));
