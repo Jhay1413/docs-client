@@ -21,22 +21,6 @@ const AddTicketBtn = () => (
   </div>
 );
 
-// const dummyData = [
-//   {
-//     ticketId: "asdf",
-//     subject: "asdf",
-//     section: "asdf",
-//     division: "asdf",
-//     status: "asdf",
-//     requestDetails: "asdf",
-//     remarks: "asdf",
-//     priority: "Aasdf",
-//     createdAt: "asdf",
-//     dueDate: "asdf",
-//   },
-//   // Add more dummy data as needed
-// ];
-
 export const TicketList = () => {
   const [searchParams, setSearchParams] = useSearchParams({
     currentPage: "1",
