@@ -6,26 +6,28 @@ export const sizeInMB = (sizeInBytes: number, decimalsNum = 2) => {
   const result = sizeInBytes / (1024 * 1024);
   return +result.toFixed(decimalsNum);
 };
-//ticketform - to submit to database
-export const ticketingFormData = z.object({
-  // id: z.string().optional(), //remove
-  ticketId: z.string(),
-  requestType: z.string(),
-  subject: z.string(),
-  section: z.string(),
-  division: z.string(),
-  status: z.string(),
-  requestDetails: z.string(),
-  priority: z.string(),
-  dueDate: z.string().datetime(),
-  senderId: z.string(),
-  receiverId: z.string(),
-  requesteeId: z.string(),
-  remarks: z.nullable(z.string()).optional(),
-  projectId: z.nullable(z.string()).optional(),
-  transactionId: z.nullable(z.string()).optional(),
-  // attachments: z.string().nullable(),
-  attachments: z
+
+export const ticketingMutationSchema = z.object({
+    id: z.string().optional(),
+    ticketId: z.string(),
+    subject: z.string(),
+    section: z.string(),
+	division: z.string(),
+    status: z.string(),
+	requestType: z.string(),
+    requestDetails: z.string(),
+    priority: z.string(),
+    dueDate: z.string().datetime(),
+    dateForwarded: z.string().datetime(),
+    dateReceived: z.nullable(z.string().datetime()),
+    senderId: z.string(),
+    receiverId: z.string(),
+	requesteeId: z.string(),
+    remarks: z.string().nullable(),
+    projectId: z.string().nullable(),
+    transactionId: z.string().nullable(),
+    attachments: z.string().nullable(),
+    file: z
     .custom<FileList>()
     .refine((files) => {
       return Array.from(files ?? []).length !== 0;
@@ -40,7 +42,9 @@ export const ticketingFormData = z.object({
     // }, "File type is not supported")
     .optional(),
 });
-
+export const ticketEditSchema = ticketingMutationSchema.extend({
+    id:z.string()
+});
 
 // Schema for the tickets table
 export const ticketingTableSchema = z.object({

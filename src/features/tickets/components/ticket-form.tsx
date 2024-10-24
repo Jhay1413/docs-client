@@ -1,3 +1,4 @@
+// TicketForm.tsx
 import { useFormContext } from "react-hook-form";
 import { FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import FormInput from "@/components/formInput";
@@ -10,6 +11,11 @@ import { CalendarIcon, Check, ChevronsUpDown } from "lucide-react";
 import { Calendar } from "@/components/ui/calendar";
 import { cn } from "@/lib/utils";
 import { format } from "date-fns";
+import TicketFormEPD from "./ticket-form-EPD";
+import TicketFormMRKT from "./ticket-form-MRKT";
+import TicketFormIT from "./ticket-form-IT";
+import { Divisions } from "@/data/data";
+import { useCurrentUserRole } from "@/hooks/use-user-hook";
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command";
 import { tsr } from "@/services/tsr";
 import { useDebounce } from "use-debounce";
@@ -19,8 +25,15 @@ import { useSearchParams } from "react-router-dom";
 const TicketForm = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedProject, setSelectedProject] = useState("");
-
-  const { control } = useFormContext(); // Ensure you're using it inside a FormProvider
+  const { control, watch } = useFormContext(); // Ensure you're using it inside a FormProvider
+  const requestType = watch("requestType"); // Watch the requestType field
+  const [ selectedDivision, setSelectedDivision ] = useState("");
+  const [ selectedSection, setSelectedSection ] = useState("");
+  const role = useCurrentUserRole();
+  
+  const sections = Divisions.find(
+    (division) => division.name === selectedDivision
+  ); // Ensure you're using it inside a FormProvider
   const [debouncedSearchQuery] = useDebounce(searchQuery, 500); // Adjust the delay as needed
   if (!control) {
     return <div>Error: No form context found!</div>; // Optional: Handle if context is missing
@@ -63,7 +76,7 @@ const TicketForm = () => {
                   <SelectItem value="EPD">EPD</SelectItem>
                   <SelectItem value="Marketing">Marketing</SelectItem>
                   <SelectItem value="IT">IT</SelectItem>
-                </SelectContent>
+                </SelectContent >
               </Select>
             </FormControl>
             <FormMessage />
@@ -74,10 +87,46 @@ const TicketForm = () => {
       {/* Subject (Small Input) */}
       <FormInput name="subject" label="Subject" placeholder="Enter subject" />
 
+      <div className="col-span-2">
+        {/* Conditionally render the EPD form */}
+        {requestType === "EPD" && <TicketFormEPD />}
+        {requestType === "IT" && <TicketFormIT />}
+        {requestType === "Marketing" && <TicketFormMRKT />}
+      </div>
       {/* Request Details (Large TextArea) */}
       <div className="col-span-3 mb-6">
         <FormTextArea name="requestDetails" label="Request Details" placeholder="Enter details" />
       </div>
+
+{/* Division (Dropdown Select) */}
+<FormField
+        control={control}
+        name="division"
+        render={({ field }) => (
+          <FormItem className="col-span-1">
+            <FormLabel>Division</FormLabel>
+            <FormControl>
+              <Select onValueChange={(value) => {
+                          setSelectedDivision(value);
+                          field.onChange(value);
+                        }}
+                         defaultValue={field.value}>
+                <SelectTrigger className="w-full">
+                  <SelectValue placeholder="Select division" />
+                </SelectTrigger>
+                <SelectContent>
+                          {Divisions.map((division) => (
+                            <SelectItem key={division.name} value={division.name!}>
+                              {division.name}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+              </Select>
+            </FormControl>
+            <FormMessage />
+          </FormItem>
+        )}
+      />
 
       {/* Section (Dropdown Select) */}
       <FormField
@@ -87,14 +136,26 @@ const TicketForm = () => {
           <FormItem className="col-span-1">
             <FormLabel>Section</FormLabel>
             <FormControl>
-              <Select onValueChange={field.onChange} defaultValue={field.value}>
+              <Select                         onValueChange={(value) => {
+                          setSelectedSection(value);
+                          field.onChange(value);
+                        }}
+                        defaultValue={field.value}
+                        disabled={
+                          !selectedDivision
+                        }>
                 <SelectTrigger className="w-full">
                   <SelectValue placeholder="Select section" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="EPD">EPD</SelectItem>
-                  <SelectItem value="Marketing">Marketing</SelectItem>
-                  <SelectItem value="IT">IT</SelectItem>
+                          {sections?.section?.map((section) => (
+                            <SelectItem
+                              key={section.value}
+                              value={section.value!}
+                            >
+                              {section.name}
+                            </SelectItem>
+                          ))}
                 </SelectContent>
               </Select>
             </FormControl>
@@ -103,29 +164,7 @@ const TicketForm = () => {
         )}
       />
 
-      {/* Division (Dropdown Select) */}
-      <FormField
-        control={control}
-        name="division"
-        render={({ field }) => (
-          <FormItem className="col-span-1">
-            <FormLabel>Division</FormLabel>
-            <FormControl>
-              <Select onValueChange={field.onChange} defaultValue={field.value}>
-                <SelectTrigger className="w-full">
-                  <SelectValue placeholder="Select division" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="Team Leader">Team Lead</SelectItem>
-                  <SelectItem value="Manager">Manager</SelectItem>
-                  <SelectItem value="Employee">Employee</SelectItem>
-                </SelectContent>
-              </Select>
-            </FormControl>
-            <FormMessage />
-          </FormItem>
-        )}
-      />
+      
 
       {/* Status (Dropdown Select) */}
       <FormField
@@ -211,14 +250,15 @@ const TicketForm = () => {
             </FormControl>
             <FormMessage />
           </FormItem>
-        )}
+ )}
       />
 
-      {/* Project (Dropdown Select) */}
-      <FormField
+      {/* Sender (Dropdown Select) */}
+      {/* <FormField
         control={control}
-        name="projectId"
+        name="sender"
         render={({ field }) => (
+<<<<<<< HEAD
           <FormItem className="flex col-span-1 flex-col w-full justify-center">
             <FormLabel>Project</FormLabel>
             <Popover>
@@ -253,10 +293,26 @@ const TicketForm = () => {
                 </Command>
               </PopoverContent>
             </Popover>
+=======
+          <FormItem className="col-span-1">
+            <FormLabel>Sender</FormLabel>
+            <FormControl>
+              <Select onValueChange={field.onChange} defaultValue={field.value}>
+                <SelectTrigger className="w-full">
+                  <SelectValue placeholder="Select sender" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="John Doe">John Doe</SelectItem>
+                  <SelectItem value="Jane Smith">Jane Smith</SelectItem>
+                  <SelectItem value="Mark Johnson">Mark Johnson</SelectItem>
+                </SelectContent>
+              </Select>
+            </FormControl>
+>>>>>>> dev
             <FormMessage />
           </FormItem>
         )}
-      />
+      /> */}
 
       {/* Receiver (Dropdown Select) */}
       <FormField
@@ -283,7 +339,7 @@ const TicketForm = () => {
       />
 
       {/* Requestee (Dropdown Select) */}
-      <FormField
+      {/* <FormField
         control={control}
         name="requestee"
         render={({ field }) => (
@@ -304,15 +360,18 @@ const TicketForm = () => {
             <FormMessage />
           </FormItem>
         )}
-      />
+      /> */}
 
       {/* Remarks (Medium TextArea) */}
+      <div className="mb-4">
       <FormTextArea name="remarks" label="Remarks" placeholder="Enter remarks" />
+      </div>
+      
 
       {/* Attachments (File Input with Button Trigger) */}
       <FormField
         control={control}
-        name="attachments"
+        name="file"
         render={({ field }) => (
           <FormItem className="col-span-3">
             <FormLabel>Attachments</FormLabel>
@@ -334,6 +393,8 @@ const TicketForm = () => {
           </FormItem>
         )}
       />
+
+
     </div>
   );
 };
