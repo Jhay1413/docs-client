@@ -2,9 +2,10 @@ import { useForm, SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Form } from "@/components/ui/form";
 import { Button } from "@/components/ui/button";
-import { ticketingMutationSchema } from "../schema/ticketsSchema";
+
 import { z } from "zod";
 import TicketForm from "./ticket-form";
+import { ticketingMutationSchema } from "shared-contract";
 
 export const AddTicketComponent = () => {
   const form = useForm<z.infer<typeof ticketingMutationSchema>>({
