@@ -3,26 +3,15 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel,
 import { ColumnDef } from "@tanstack/react-table";
 import { ArrowUpDown, MoreHorizontal } from "lucide-react";
 import { Link } from "react-router-dom";
-import { ticketingTableSchema } from "shared-contract";
+
 import { z } from "zod";
 import { toPascalCase } from "./ticket.utils";
+import { ticketLogsSchema } from "shared-contract";
 
-export const ticketsDetailsColumn: ColumnDef<z.infer <typeof ticketingTableSchema>>[] = [
+export const ticketsDetailsColumn: ColumnDef<z.infer <typeof ticketLogsSchema>>[] = [
   {
     header: "Logs ID",
     accessorKey: "ticketId",
-  },
-  {
-    header: "Subject",
-    accessorKey: "subject",
-  },
-  {
-    header: "Section",
-    accessorKey: "section",
-  },
-  {
-    header: "Division",
-    accessorKey: "division",
   },
   {
     header: "Status",
@@ -33,38 +22,8 @@ export const ticketsDetailsColumn: ColumnDef<z.infer <typeof ticketingTableSchem
     accessorKey: "priority",
   },
   {
-    header: "Request Details",
-    accessorKey: "requestDetails",
-  },
-  {
-    header: ({ column }) => {
-      return (
-        <span>
-          Due Date
-        </span>
-      );
-    },
-    accessorKey: "dueDate",
-    cell: ({ row }) => {
-      const transactionInfo = row.original;
-
-      return <span>{new Date(transactionInfo.dueDate).toDateString()}</span>;
-    },
-  },
-  {
-    header: ({ column }) => {
-      return (
-        <span>
-          Date Created
-        </span>
-      );
-    },
-    accessorKey: "createdAt",
-    cell: ({ row }) => {
-      const transactionInfo = row.original;
-
-      return <span>{new Date(transactionInfo.dueDate).toDateString()}</span>;
-    },
+    header: "Forwarded By",
+    accessorKey: "sender",
   },
   {
     header: ({ column }) => {
@@ -76,16 +35,13 @@ export const ticketsDetailsColumn: ColumnDef<z.infer <typeof ticketingTableSchem
     },
     accessorKey: "dateForwarded",
     cell: ({ row }) => {
-      const transactionInfo = row.original;
+      const ticketInfo = row.original;
 
-      return <span>{new Date(transactionInfo.dueDate).toDateString()}</span>;
+      return <span>{ ticketInfo.dateForwarded ? 
+        new Date(ticketInfo.dateForwarded).toDateString(): "No Date Available"}</span>;
     },
   },
-  {
-    header: "Forwarded By",
-    accessorKey: "sender",
 
-  },
   {
     header: ({ column }) => {
       return (
@@ -94,16 +50,60 @@ export const ticketsDetailsColumn: ColumnDef<z.infer <typeof ticketingTableSchem
         </span>
       );
     },
+
     accessorKey: "dateReceived",
     cell: ({ row }) => {
-      const transactionInfo = row.original;
+      const ticketInfo = row.original;
 
-      return <span>{new Date(transactionInfo.dueDate).toDateString()}</span>;
+      return (
+        <span>
+          {ticketInfo.dateReceived 
+            ? new Date(ticketInfo.dateReceived).toDateString() 
+            : "No Date Available"}
+        </span>
+      );
+      
     },
   },
   {
     header: "Remarks",
     accessorKey: "remarks",
+  },
+  {
+    header: ({ column }) => {
+      return (
+        <span>
+          Date Created
+        </span>
+      );
+    },
+    accessorKey: "createdAt",
+    cell: ({ row }) => {
+      const ticketInfo = row.original;
+
+      return(
+        <span>{ ticketInfo.createdAt ? 
+          new Date(ticketInfo.createdAt).toDateString() : "No Date Available"}</span>
+      ) 
+    },
+  },
+  {
+    header: ({ column }) => {
+      return (
+        <span>
+          Date Updated
+        </span>
+      );
+    },
+    accessorKey: "updatedAt",
+    cell: ({ row }) => {
+      const ticketInfo = row.original;
+
+      return(
+        <span>{ ticketInfo.updatedAt ? 
+          new Date(ticketInfo.updatedAt).toDateString() : "No Date Available"}</span>
+      ) 
+    },
   },
   // {
   //   header: "Actions",

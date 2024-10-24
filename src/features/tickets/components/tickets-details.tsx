@@ -115,10 +115,10 @@ export const TicketDetails = () => {
           <h2 className="font-semibold">Transaction ID:</h2>
           <p>{data?.body.transactionId ? data.body.transactionId : "No transaction"}</p>
         </div>
-        {/* <div>
+        <div>
           <h2 className="font-semibold">Attachments:</h2>
-          <p>{attachments}</p>
-        </div> */}
+          <p>{data?.body.attachments ? data.body.attachments : "No Attachments"}</p>
+        </div>
       </div>
 
       <Separator className="my-4" />
