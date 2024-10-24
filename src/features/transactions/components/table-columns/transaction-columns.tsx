@@ -13,13 +13,15 @@ interface tolowerCapitalizeProps {
 
 const TolowerCapitalize: React.FC<tolowerCapitalizeProps> = ({ tolowerCapitalize }) => {
   return (
-    <div >
-      {tolowerCapitalize.split(' ').map((word, index) => (
-        <h1 className="lowercasetoCapitalize" key={index}>{word}</h1>
-      ))}
-    </div>
+    <h1 className="lowercasetoCapitalize whitespace-nowrap overflow-hidden text-ellipsis">
+      {tolowerCapitalize
+        .split(' ')
+        .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+        .join(' ')}
+    </h1>
   );
 };
+
 
 export const transColumns: ColumnDef<TransactionInfo>[] = [
   {
@@ -49,7 +51,7 @@ export const transColumns: ColumnDef<TransactionInfo>[] = [
       const data = row.original;
 
       return (
-        <div>
+        <div className="">
         <TolowerCapitalize tolowerCapitalize={data.company.companyName} />
       </div>
       );
