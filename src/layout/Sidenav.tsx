@@ -1,5 +1,5 @@
 import { ClipboardList, Factory, FileCode, FileText, LayoutDashboard, LibraryBig, UserSearch, Users } from "lucide-react";
-import { NavLink } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
 
 import { getCurrentUserId, useCurrentUserRole } from "@/hooks/use-user-hook";
 import { useNotificationStore } from "@/global-states/notification-store";
@@ -63,7 +63,9 @@ export const SideNav = () => {
   return (
     <div className="flex flex-col gap-4 w-full min-h-full pb-8 ">
       <div className="flex items-center justify-center h-32 ">
-        <img src="/Logov6.png" className="h-[32px] w-[151px] " />
+        <Link to={`/dashboard/overview`}>
+          <img src="/Logov6.png" className="h-[32px] w-[151px] " />
+        </Link>
       </div>
       <div className="flex flex-col w-full min-h-full items-center gap-6">
         <Label className="text-[#DCFF8E] px-4 font-medium flex w-full text-sm">MENU</Label>
@@ -136,11 +138,32 @@ export const SideNav = () => {
             >
               <FileCode />
               <div className="flex gap-2">
-                <h1 className="text-base">Archive</h1>
+                <h1 className="text-base">Archives</h1>
               </div>
             </NavLink>
           </li>
         </ul>
+        <Label className="text-[#DCFF8E] px-4 font-medium flex w-full text-sm">
+          TICKETS
+        </Label>
+        <ul className="flex flex-col space-y-4 w-full mx-2">
+          <li className="relative inline-block text-left px-4">
+            <NavLink
+              to={`/dashboard/tickets/list`}
+              className={({ isActive }) => {
+                return `justify-start items-center flex w-full p-2 space-x-4 text-lg rounded-md ${
+                  isActive ? "bg-green-100/30 text-white" : ""
+                }`;
+              }}
+            >
+              <FileCode />
+              <div className="flex gap-2">
+                <h1 className="text-base">Tickets</h1>
+              </div>
+            </NavLink>
+          </li>
+        </ul>
+
       </div>
     </div>
   );
