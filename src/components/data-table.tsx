@@ -53,7 +53,7 @@ export function DataTable<TData, TValue>({ columns, data, hasSearch, hasPaginate
   });
 
   return (
-    <div className="w-full h-full flex flex-col items-center justify-center space-y-12 ">
+    <div className="w-full  flex flex-col items-center  space-y-12 ">
       <div className="flex flex-col w-full items-center justify-center">
         {hasSearch && (
           <div className="flex  w-full items-center justify-center gap-2">
@@ -96,7 +96,7 @@ export function DataTable<TData, TValue>({ columns, data, hasSearch, hasPaginate
           </div>
         )}
 
-        <Table>
+        <Table >
           <TableHeader className="bg-[#BBD979]">
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id}>
