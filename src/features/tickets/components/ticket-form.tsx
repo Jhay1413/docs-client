@@ -3,17 +3,25 @@ import { FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/comp
 import FormInput from "@/components/formInput";
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@/components/ui/select";
 import FormTextArea from "@/components/formTextArea";
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Button } from "@/components/ui/button";
-import { CalendarIcon } from "lucide-react";
+import { CalendarIcon, Check, ChevronsUpDown } from "lucide-react";
 import { Calendar } from "@/components/ui/calendar";
 import { cn } from "@/lib/utils";
 import { format } from "date-fns";
+import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command";
+import { tsr } from "@/services/tsr";
+import { useDebounce } from "use-debounce";
+import { keepPreviousData } from "@tanstack/react-query";
+import { useSearchParams } from "react-router-dom";
 
 const TicketForm = () => {
-  const { control } = useFormContext(); // Ensure you're using it inside a FormProvider
+  const [searchQuery, setSearchQuery] = useState("");
+  const [selectedProject, setSelectedProject] = useState("");
 
+  const { control } = useFormContext(); // Ensure you're using it inside a FormProvider
+  const [debouncedSearchQuery] = useDebounce(searchQuery, 500); // Adjust the delay as needed
   if (!control) {
     return <div>Error: No form context found!</div>; // Optional: Handle if context is missing
   }
@@ -25,8 +33,18 @@ const TicketForm = () => {
       fileInputRef.current.click();
     }
   };
-  
 
+  const { data, isError, error } = tsr.company.fetchCompanyProjectsBySearch.useQuery({
+    queryKey: ["projects", debouncedSearchQuery],
+    queryData: {
+      query: {
+        projectName: debouncedSearchQuery,
+      },
+    },
+
+    placeholderData: keepPreviousData,
+  });
+  console.log(data);
   return (
     <div className="grid grid-cols-3 gap-6 p-4 bg-gray-50 rounded-md shadow-lg mb-4">
       {/* Request Type (Dropdown Select) */}
@@ -141,9 +159,9 @@ const TicketForm = () => {
           <FormItem className="col-span-1">
             <FormLabel>Priority</FormLabel>
             <FormControl>
-              <Select 
-                onValueChange={field.onChange} 
-                value={field.value || "" } // Ensure it handles an empty state properly
+              <Select
+                onValueChange={field.onChange}
+                value={field.value || ""} // Ensure it handles an empty state properly
               >
                 <SelectTrigger className="w-full">
                   <SelectValue placeholder="Select priority" />
@@ -160,8 +178,6 @@ const TicketForm = () => {
         )}
       />
 
-
-
       {/* Due Date (Input Date Picker) */}
       <FormField
         control={control}
@@ -175,26 +191,23 @@ const TicketForm = () => {
                 className="w-full h-10 px-4 text-sm border border-gray-300 rounded-md"
                 {...field}
               /> */}
-                      <Popover>
-                        <PopoverTrigger asChild>
-                          <Button
-                            variant={"outline"}
-                            className={cn("w-full justify-start text-left font-normal", !field.value && "text-muted-foreground")}
-                          >
-                            <CalendarIcon className="mr-2 h-4 w-4" />
-                            {field.value ? format(field.value, "PPP") : <span>Pick a date</span>}
-                          </Button>
-                        </PopoverTrigger>
-                        <PopoverContent className="w-auto p-0">
-                          <Calendar
-                            mode="single"
-                            onSelect={(value) => {
-                              field.onChange(new Date(value!).toISOString());
-                            }}
-                            initialFocus
-                          />
-                        </PopoverContent>
-                      </Popover>
+              <Popover>
+                <PopoverTrigger asChild>
+                  <Button variant={"outline"} className={cn("w-full justify-start text-left font-normal", !field.value && "text-muted-foreground")}>
+                    <CalendarIcon className="mr-2 h-4 w-4" />
+                    {field.value ? format(field.value, "PPP") : <span>Pick a date</span>}
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent className="w-auto p-0">
+                  <Calendar
+                    mode="single"
+                    onSelect={(value) => {
+                      field.onChange(new Date(value!).toISOString());
+                    }}
+                    initialFocus
+                  />
+                </PopoverContent>
+              </Popover>
             </FormControl>
             <FormMessage />
           </FormItem>
@@ -206,20 +219,40 @@ const TicketForm = () => {
         control={control}
         name="projectId"
         render={({ field }) => (
-          <FormItem className="col-span-1">
+          <FormItem className="flex col-span-1 flex-col w-full justify-center">
             <FormLabel>Project</FormLabel>
-            <FormControl>
-              <Select onValueChange={field.onChange} defaultValue={field.value}>
-                <SelectTrigger className="w-full">
-                  <SelectValue placeholder="Select project" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="Project A">Project A</SelectItem>
-                  <SelectItem value="Project B">Project B</SelectItem>
-                  <SelectItem value="Project C">Project C</SelectItem>
-                </SelectContent>
-              </Select>
-            </FormControl>
+            <Popover>
+              <PopoverTrigger asChild>
+                <FormControl>
+                  <Button variant="outline" role="combobox" className={cn(" justify-between", !field.value && "text-muted-foreground")}>
+                    {selectedProject ? selectedProject : "Select Project..."}
+                    <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                  </Button>
+                </FormControl>
+              </PopoverTrigger>
+              <PopoverContent className="w-full p-0">
+                <Command shouldFilter={false}>
+                  <CommandInput placeholder="Search Company..." onValueChange={(e) => setSearchQuery(e)} />
+                  <CommandList>
+                    <CommandEmpty>No project found.</CommandEmpty>
+                    <CommandGroup>
+                      {data?.body?.map((data) => (
+                        <CommandItem
+                          value={data.id}
+                          key={data.id}
+                          onSelect={() => {
+                            setSelectedProject(data.projectName);
+                          }}
+                        >
+                          <Check className={cn("mr-2 h-4 w-4", data.id === field.value ? "opacity-100" : "opacity-0")} />
+                          {data.projectName}
+                        </CommandItem>
+                      ))}
+                    </CommandGroup>
+                  </CommandList>
+                </Command>
+              </PopoverContent>
+            </Popover>
             <FormMessage />
           </FormItem>
         )}
@@ -294,12 +327,7 @@ const TicketForm = () => {
                 </button>
                 <span>{field.value ? field.value.name : "No file chosen"}</span>
                 {/* Hidden File Input */}
-                <input
-                  type="file"
-                  ref={fileInputRef}
-                  className="hidden"
-                  onChange={(e) => field.onChange(e.target.files?.[0])}
-                />
+                <input type="file" ref={fileInputRef} className="hidden" onChange={(e) => field.onChange(e.target.files?.[0])} />
               </div>
             </FormControl>
             <FormMessage />
