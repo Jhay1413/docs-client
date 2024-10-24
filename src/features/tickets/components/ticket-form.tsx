@@ -23,8 +23,7 @@ import { keepPreviousData } from "@tanstack/react-query";
 import { useSearchParams } from "react-router-dom";
 
 const TicketForm = () => {
-  const [searchQuery, setSearchQuery] = useState("");
-  const [selectedProject, setSelectedProject] = useState("");
+  
   const { control, watch } = useFormContext(); // Ensure you're using it inside a FormProvider
   const requestType = watch("requestType"); // Watch the requestType field
   const [ selectedDivision, setSelectedDivision ] = useState("");
@@ -34,7 +33,7 @@ const TicketForm = () => {
   const sections = Divisions.find(
     (division) => division.name === selectedDivision
   ); // Ensure you're using it inside a FormProvider
-  const [debouncedSearchQuery] = useDebounce(searchQuery, 500); // Adjust the delay as needed
+ 
   if (!control) {
     return <div>Error: No form context found!</div>; // Optional: Handle if context is missing
   }
@@ -46,18 +45,6 @@ const TicketForm = () => {
       fileInputRef.current.click();
     }
   };
-
-  const { data, isError, error } = tsr.company.fetchCompanyProjectsBySearch.useQuery({
-    queryKey: ["projects", debouncedSearchQuery],
-    queryData: {
-      query: {
-        projectName: debouncedSearchQuery,
-      },
-    },
-
-    placeholderData: keepPreviousData,
-  });
-  console.log(data);
   return (
     <div className="grid grid-cols-3 gap-6 p-4 bg-gray-50 rounded-md shadow-lg mb-4">
       {/* Request Type (Dropdown Select) */}
@@ -253,66 +240,6 @@ const TicketForm = () => {
  )}
       />
 
-      {/* Sender (Dropdown Select) */}
-      {/* <FormField
-        control={control}
-        name="sender"
-        render={({ field }) => (
-<<<<<<< HEAD
-          <FormItem className="flex col-span-1 flex-col w-full justify-center">
-            <FormLabel>Project</FormLabel>
-            <Popover>
-              <PopoverTrigger asChild>
-                <FormControl>
-                  <Button variant="outline" role="combobox" className={cn(" justify-between", !field.value && "text-muted-foreground")}>
-                    {selectedProject ? selectedProject : "Select Project..."}
-                    <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-                  </Button>
-                </FormControl>
-              </PopoverTrigger>
-              <PopoverContent className="w-full p-0">
-                <Command shouldFilter={false}>
-                  <CommandInput placeholder="Search Company..." onValueChange={(e) => setSearchQuery(e)} />
-                  <CommandList>
-                    <CommandEmpty>No project found.</CommandEmpty>
-                    <CommandGroup>
-                      {data?.body?.map((data) => (
-                        <CommandItem
-                          value={data.id}
-                          key={data.id}
-                          onSelect={() => {
-                            setSelectedProject(data.projectName);
-                          }}
-                        >
-                          <Check className={cn("mr-2 h-4 w-4", data.id === field.value ? "opacity-100" : "opacity-0")} />
-                          {data.projectName}
-                        </CommandItem>
-                      ))}
-                    </CommandGroup>
-                  </CommandList>
-                </Command>
-              </PopoverContent>
-            </Popover>
-=======
-          <FormItem className="col-span-1">
-            <FormLabel>Sender</FormLabel>
-            <FormControl>
-              <Select onValueChange={field.onChange} defaultValue={field.value}>
-                <SelectTrigger className="w-full">
-                  <SelectValue placeholder="Select sender" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="John Doe">John Doe</SelectItem>
-                  <SelectItem value="Jane Smith">Jane Smith</SelectItem>
-                  <SelectItem value="Mark Johnson">Mark Johnson</SelectItem>
-                </SelectContent>
-              </Select>
-            </FormControl>
->>>>>>> dev
-            <FormMessage />
-          </FormItem>
-        )}
-      /> */}
 
       {/* Receiver (Dropdown Select) */}
       <FormField
