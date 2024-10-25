@@ -35,6 +35,19 @@ export const ticketsColumn: ColumnDef<z.infer <typeof ticketingTableSchema>>[] =
   {
     header: "Request Details",
     accessorKey: "requestDetails",
+    cell: ({ row }) => {
+      const transactionInfo = row.original;
+      const requestDetails = transactionInfo.requestDetails || "";
+      const maxLength = 50; // Set the max length for truncation
+  
+      return (
+        <span>
+          {requestDetails.length > maxLength
+            ? `${requestDetails.substring(0, maxLength)}...`
+            : requestDetails}
+        </span>
+      );
+    },
   },
   {
     header: ({ column }) => {
@@ -62,8 +75,15 @@ export const ticketsColumn: ColumnDef<z.infer <typeof ticketingTableSchema>>[] =
     accessorKey: "createdAt",
     cell: ({ row }) => {
       const transactionInfo = row.original;
-
-      return <span>{new Date(transactionInfo.dueDate).toDateString()}</span>;
+      const createdAt = transactionInfo.createdAt;
+  
+      return (
+        <span>
+          {createdAt
+            ? new Date(createdAt).toDateString()
+            : "No creation date"} {/* Fallback value when createdAt is undefined */}
+        </span>
+      );
     },
   },
   {
@@ -78,7 +98,7 @@ export const ticketsColumn: ColumnDef<z.infer <typeof ticketingTableSchema>>[] =
     cell: ({ row }) => {
       const transactionInfo = row.original;
 
-      return <span>{new Date(transactionInfo.dueDate).toDateString()}</span>;
+      return <span>{new Date(transactionInfo.dateForwarded).toDateString()}</span>;
     },
   },
   {
@@ -106,13 +126,33 @@ export const ticketsColumn: ColumnDef<z.infer <typeof ticketingTableSchema>>[] =
     accessorKey: "dateReceived",
     cell: ({ row }) => {
       const transactionInfo = row.original;
-
-      return <span>{new Date(transactionInfo.dueDate).toDateString()}</span>;
+      const dateReceived = transactionInfo.dateReceived;
+  
+      return (
+        <span>
+          {dateReceived
+            ? new Date(dateReceived).toDateString()
+            : "Not received yet"} {/* Fallback value when dateReceived is null */}
+        </span>
+      );
     },
   },
   {
     header: "Remarks",
     accessorKey: "remarks",
+    cell: ({ row }) => {
+      const transactionInfo = row.original;
+      const remarks = transactionInfo.remarks || "";
+      const maxLength = 50; // Set the max length for truncation
+  
+      return (
+        <span>
+          {remarks.length > maxLength
+            ? `${remarks.substring(0, maxLength)}...`
+            : remarks}
+        </span>
+      );
+    },
   },
 
 ];
