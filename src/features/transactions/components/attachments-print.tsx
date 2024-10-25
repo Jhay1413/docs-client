@@ -1,5 +1,5 @@
-import { filesQuerySchema } from "shared-contract";
-import { completeStaffWorkQuerySchema } from "shared-contract/dist/schema/transactions/query-schema";
+import { completeStaffWorkQuerySchema, filesQuerySchema } from "shared-contract";
+
 import { z } from "zod";
 
 export const AttachmentOnPrint = ({ attachments }: { attachments: z.infer<typeof completeStaffWorkQuerySchema>[] }) => {
