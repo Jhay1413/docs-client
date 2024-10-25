@@ -113,6 +113,9 @@ export const TicketList = () => {
         callbackFn={handleOnClickRow}
       />
       <div className="flex items-center w-full justify-center space-x-2 py-4">
+        <div className="text-muted-foreground">
+          <h1>Number of Tickets: {}</h1>
+        </div>
         <Button variant="outline" size="sm" disabled={intPage === 1}>
           {"<<"}
         </Button>

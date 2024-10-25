@@ -3,6 +3,7 @@ import { z } from "zod";
 import { ticketingTableSchema } from "shared-contract"; // Adjust the import based on your project structure
 import { toPascalCase } from "./ticket.utils"; // Adjust the import based on your project structure
 
+const maxLength = 50;
 export const ticketsInboxColumn: ColumnDef<z.infer<typeof ticketingTableSchema>>[] = [
   {
     header: "Ticket ID",
@@ -31,6 +32,17 @@ export const ticketsInboxColumn: ColumnDef<z.infer<typeof ticketingTableSchema>>
   {
     header: "Request Details",
     accessorKey: "requestDetails",
+    cell: ({ row }) => {
+        const transactionInfo = row.original;
+        const requestDetails = transactionInfo.requestDetails || "";  
+        return (
+          <span>
+            {requestDetails.length > maxLength
+              ? `${requestDetails.substring(0, maxLength)}...`
+              : requestDetails}
+          </span>
+        );
+      },
   },
   {
     header: "Due Date",
@@ -76,5 +88,17 @@ export const ticketsInboxColumn: ColumnDef<z.infer<typeof ticketingTableSchema>>
   {
     header: "Remarks",
     accessorKey: "remarks",
+    cell: ({ row }) => {
+        const transactionInfo = row.original;
+        const remarks = transactionInfo.remarks || "";
+    
+        return (
+          <span>
+            {remarks.length > maxLength
+              ? `${remarks.substring(0, maxLength)}...`
+              : remarks}
+          </span>
+        );
+      },
   },
 ];
