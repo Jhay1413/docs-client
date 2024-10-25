@@ -85,7 +85,11 @@ const TicketForm = ({selectedDivision,setSelectedDivision, setSelectedSection, r
         )}
       />
 
-      <FormInput name="subject" label="Subject" placeholder="Enter subject" />
+      {/* Subject (Small Input) */}
+      <div className="col-span-2 mb-6">
+        <FormTextArea name="subject" label="Subject" placeholder="Enter subject" />
+      </div>
+      
 
       <div className="col-span-2">
         {requestType === "EPD" && <TicketFormEPD />}

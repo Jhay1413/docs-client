@@ -68,8 +68,8 @@ export const Divisions = [
     name: "Admin Department",
     section: [
       {
-        name: "None",
-        value: null,
+        name: "Admin",
+        value: "Admin",
       },
     ],
   },
@@ -77,8 +77,8 @@ export const Divisions = [
     name: "Finance",
     section: [
       {
-        name: "None",
-        value: null,
+        name: "Finance",
+        value: "Finance",
       },
     ],
   },
