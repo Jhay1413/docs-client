@@ -72,7 +72,10 @@ const TicketForm = () => {
       />
 
       {/* Subject (Small Input) */}
-      <FormInput name="subject" label="Subject" placeholder="Enter subject" />
+      <div className="col-span-2 mb-6">
+        <FormTextArea name="subject" label="Subject" placeholder="Enter subject" />
+      </div>
+      
 
       <div className="col-span-2">
         {/* Conditionally render the EPD form */}
@@ -247,7 +250,7 @@ const TicketForm = () => {
         name="receiver"
         render={({ field }) => (
           <FormItem className="col-span-1">
-            <FormLabel>Receiver</FormLabel>
+            <FormLabel>Forward To</FormLabel>
             <FormControl>
               <Select onValueChange={field.onChange} defaultValue={field.value}>
                 <SelectTrigger className="w-full">
