@@ -66,7 +66,7 @@ export const TicketList = () => {
 
   const handleOnClickRow = (data: any) => {
     // Navigate to ticket details page when a row is clicked
-    navigate(`/dashboard/tickets/history/${data.id}`);
+    navigate(`/dashboard/tickets/details/${data.id}`);
   };
 
   return (
