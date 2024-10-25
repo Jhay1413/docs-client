@@ -2,6 +2,9 @@
 
 .lowercasetoCapitalize {
     text-transform: lowercase;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 
 .lowercasetoCapitalize::first-line{

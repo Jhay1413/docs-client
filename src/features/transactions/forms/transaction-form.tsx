@@ -197,7 +197,7 @@ export const TransactionForm = ({ company, method, defaultValue, mutateFn, isPen
     const files = event.target.files;
     const formData = new FormData();
 
-    const currentFileName = form.getValues(`attachments.${index}.fileName`);
+    // const currentFileName = form.getValues(`attachments.${index}.fileName`);
     if (!files || files.length === 0) {
       throw new Error("No file attached !");
     }
@@ -206,7 +206,7 @@ export const TransactionForm = ({ company, method, defaultValue, mutateFn, isPen
     console.log(fileName);
     formData.append("thumbnail", files[0]);
     formData.append("company", companyName?.companyName || "");
-    formData.append("fileName", currentFileName);
+    formData.append("fileName", fileName);
 
     mutation.mutateAsync({ data: formData, index, fileName });
   };
