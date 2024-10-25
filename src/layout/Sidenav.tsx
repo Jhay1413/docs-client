@@ -1,4 +1,4 @@
-import { ClipboardList, Factory, FileCode, FileText, LayoutDashboard, LibraryBig, UserSearch, Users } from "lucide-react";
+import { ClipboardList, Factory, FileCode, FileText, LayoutDashboard, LibraryBig, Mailbox, Ticket, UserSearch, Users } from "lucide-react";
 import { Link, NavLink } from "react-router-dom";
 
 import { getCurrentUserId, useCurrentUserRole } from "@/hooks/use-user-hook";
@@ -156,9 +156,23 @@ export const SideNav = () => {
                 }`;
               }}
             >
-              <FileCode />
+              <Ticket />
               <div className="flex gap-2">
                 <h1 className="text-base">Tickets</h1>
+              </div>
+            </NavLink>
+          </li>
+          <li className="relative inline-block text-left px-4 ">
+            <NavLink
+              to={`/dashboard/tickets/inbox/${id}`}
+              className={({ isActive }) => {
+                return `justify-start items-center flex w-full p-2 space-x-4 text-lg  rounded-md ${isActive ? "bg-green-100/30 text-white" : ""}`;
+              }}
+            >
+              <Mailbox />
+              <div className="flex gap-2">
+                <h1 className="text-base">Inbox</h1>
+                {notification?.inbox !== 0 && <span className="text-red-700 text-sm font-extrabold">{notification?.inbox}</span>}
               </div>
             </NavLink>
           </li>
