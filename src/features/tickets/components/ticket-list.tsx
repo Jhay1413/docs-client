@@ -71,7 +71,7 @@ export const TicketList = () => {
   };
 
   return (
-    <div className="flex flex-col">
+    <div className="min-h-full flex flex-col w-full items-center justify-center p-4 bg-white rounded-lg">
       <div className="flex flex-col w-full items-center justify-center p-4 bg-white rounded-lg">
         <div className="flex justify-start w-full flex-col">
           <h1 className="text-[#404041] font-medium text-[28px]">
