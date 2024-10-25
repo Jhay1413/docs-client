@@ -7,6 +7,7 @@ import { ticketingTableSchema } from "shared-contract";
 import { z } from "zod";
 import { toPascalCase } from "./ticket.utils";
 
+const maxLength = 50;
 export const ticketsColumn: ColumnDef<z.infer <typeof ticketingTableSchema>>[] = [
   {
     header: "Ticket ID",
@@ -37,9 +38,7 @@ export const ticketsColumn: ColumnDef<z.infer <typeof ticketingTableSchema>>[] =
     accessorKey: "requestDetails",
     cell: ({ row }) => {
       const transactionInfo = row.original;
-      const requestDetails = transactionInfo.requestDetails || "";
-      const maxLength = 50; // Set the max length for truncation
-  
+      const requestDetails = transactionInfo.requestDetails || "";  
       return (
         <span>
           {requestDetails.length > maxLength
@@ -143,7 +142,6 @@ export const ticketsColumn: ColumnDef<z.infer <typeof ticketingTableSchema>>[] =
     cell: ({ row }) => {
       const transactionInfo = row.original;
       const remarks = transactionInfo.remarks || "";
-      const maxLength = 50; // Set the max length for truncation
   
       return (
         <span>

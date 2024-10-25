@@ -17,7 +17,13 @@ export const AddTicketComponent = () => {
   const [ selectedSection, setSelectedSection ] = useState("");
   const role = useCurrentUserRole();
   const [isSubmitting, setIsSubmitting] = useState(false);
-
+  const {mutate} = tsr.ticketing.createTickets.useMutation({
+    onMutate:()=>{},
+    onSuccess:()=>{
+      form.reset();
+      toast.success("Ticket Created !")
+    }
+  })
   const { data, isError, error } = tsr.userAccounts.getUsersForTickets.useQuery({
     queryKey: ["usersForTicket", selectedDivision, selectedSection],
     queryData: {
@@ -57,18 +63,9 @@ export const AddTicketComponent = () => {
   });
 
   const mutateFn = async (data: z.infer<typeof ticketingMutationSchema>, setSubmitting: (value: boolean) => void) => {
-    try {
-      setSubmitting(true);
-      await tsr.ticketing.createTickets.mutate({body: data});
-      toast.success("Ticket created successfully!");
-      form.reset();
-    } catch (error) {
-      toast.error("Failed to create ticket. Please try again.");
-      console.error("Error creating ticket:", error);
-    } finally {
-      setSubmitting(false);
-    }
-  };
+    mutate({body:data})
+
+  }
 
   const onSubmit: SubmitHandler<z.infer<typeof ticketingMutationSchema>> = async (data) => {
     mutateFn(data, setIsSubmitting);
