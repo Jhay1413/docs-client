@@ -66,30 +66,37 @@ export const TicketInboxComponent = () => {
 
   return (
     <div className="flex flex-col gap-y-6 items-center">
-      <div className="flex justify-start w-full flex-col ">
-        <h1 className="text-[#404041] font-medium text-[28px]">Inbox</h1>
-        <p className="text-muted-foreground text-[12px]">Stay updated with the latest tickets here.</p>
-      </div>
-      <div className="flex items-center py-4 justify-end w-full ">
-        <Input
-          placeholder="Search ...."
-          defaultValue={debouncedSearchQuery}
-          onChange={(e) =>
-            setSearchParams(
-              (prev) => {
-                prev.set("search", e.target.value);
-                prev.set("currentPage", "1");
-                return prev;
-              },
-              { replace: true },
-            )
-          }
-          className="w-[289px] rounded-none rounded-l-md"
-        />
-        <button className="p-2 bg-primaryColor text-white rounded-r-md ">
-          <Search />
-        </button>
-      </div>
+        <div className="flex flex-col w-full space-y-4">
+            <div className="flex justify-between items-center w-full">  
+                <div className="flex flex-col">
+                    <h1 className="text-[#404041] font-medium text-[28px]">Inbox</h1>
+                    <p className="text-muted-foreground text-[12px]">Stay updated with the latest tickets here.</p>
+                </div>
+
+                <div className="flex items-center">
+                <Input
+                    placeholder="Search ...."
+                    defaultValue={debouncedSearchQuery}
+                    onChange={(e) =>
+                    setSearchParams(
+                        (prev) => {
+                        prev.set("search", e.target.value);
+                        prev.set("currentPage", "1");
+                        return prev;
+                        },
+                        { replace: true }
+                    )
+                    }
+                    className="w-[289px] rounded-none rounded-l-md"
+                />
+                <button className="p-2 bg-primaryColor text-white rounded-r-md">
+                    <Search />
+                </button>
+                </div>
+            </div>
+        </div>
+
+
       <DataTable
         columns={ticketsInboxColumn}
         data={data ? data.body : []}
