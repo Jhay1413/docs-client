@@ -12,7 +12,7 @@ import { keepPreviousData } from "@tanstack/react-query";
 import { useDebounce } from "use-debounce";
 import { cn } from "@/lib/utils";
 const TicketFormEPD = () => {
-  const { control } = useFormContext(); // Ensure you're using it inside a FormProvider
+  const { control, setValue } = useFormContext(); // Ensure you're using it inside a FormProvider
   const [searchQuery, setSearchQuery] = useState("");
   const [debouncedSearchQuery] = useDebounce(searchQuery, 500);
   const [selectedProject, setSelectedProject] = useState("");
@@ -59,6 +59,7 @@ const TicketFormEPD = () => {
                           value={data.id}
                           key={data.id}
                           onSelect={() => {
+                            setValue("projectId", data.id)
                             setSelectedProject(data.projectName);
                           }}
                         >

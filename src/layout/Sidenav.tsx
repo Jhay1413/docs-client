@@ -149,7 +149,7 @@ export const SideNav = () => {
         <ul className="flex flex-col space-y-4 w-full mx-2">
           <li className="relative inline-block text-left px-4">
             <NavLink
-              to={`/dashboard/tickets`}
+              to={`/dashboard/tickets/list`}
               className={({ isActive }) => {
                 return `justify-start items-center flex w-full p-2 space-x-4 text-lg rounded-md ${
                   isActive ? "bg-green-100/30 text-white" : ""

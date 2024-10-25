@@ -62,16 +62,6 @@ export const TicketList = () => {
     placeholderData: keepPreviousData,
   });
 
-  console.log("data from tsr: ", data);
-  console.log("data.body from tsr: ", data?.body);
-  console.log("error: ", error);
-  console.log("queryData: ", {
-    query: debouncedSearchQuery,
-    page: page,
-    pageSize: "10",
-  });
-
-
   const handleNextPage = () => {
     setSearchParams((prev) => {
       const nextPage = (intPage + 1).toString();
@@ -92,7 +82,7 @@ export const TicketList = () => {
 
   const handleOnClickRow = (data: any) => {
     // Navigate to ticket details page when a row is clicked
-    navigate(`/dashboard/tickets/details/${data.id}`);
+    navigate(`/dashboard/tickets/history/${data.id}`);
   };
 
   return (

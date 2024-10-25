@@ -22,21 +22,36 @@ import { useDebounce } from "use-debounce";
 import { keepPreviousData } from "@tanstack/react-query";
 import { useSearchParams } from "react-router-dom";
 
-const TicketForm = () => {
+type Props = {
+  selectedDivision: string;
+  setSelectedDivision: React.Dispatch<React.SetStateAction<string>>;
+  setSelectedSection: React.Dispatch<React.SetStateAction<string>>;
+  receiver: {
+    id: string;
+    userInfo: {
+      firstName: string;
+      lastName: string;
+    };
+    accountRole: string;
+  }[];
+};
+
+const TicketForm = ({selectedDivision,setSelectedDivision, setSelectedSection, receiver}: Props) => {
   
-  const { control, watch } = useFormContext(); // Ensure you're using it inside a FormProvider
-  const requestType = watch("requestType"); // Watch the requestType field
-  const [ selectedDivision, setSelectedDivision ] = useState("");
-  const [ selectedSection, setSelectedSection ] = useState("");
-  const role = useCurrentUserRole();
+  const { control, watch } = useFormContext();
+  const requestType = watch("requestType");
+  
+
   
   const sections = Divisions.find(
     (division) => division.name === selectedDivision
-  ); // Ensure you're using it inside a FormProvider
+  );
  
   if (!control) {
-    return <div>Error: No form context found!</div>; // Optional: Handle if context is missing
+    return <div>Error: No form context found!</div>;
   }
+
+ 
 
   const fileInputRef = useRef<HTMLInputElement | null>(null);
 
@@ -47,7 +62,6 @@ const TicketForm = () => {
   };
   return (
     <div className="grid grid-cols-3 gap-6 p-4 bg-gray-50 rounded-md shadow-lg mb-4">
-      {/* Request Type (Dropdown Select) */}
       <FormField
         control={control}
         name="requestType"
@@ -71,21 +85,19 @@ const TicketForm = () => {
         )}
       />
 
-      {/* Subject (Small Input) */}
       <FormInput name="subject" label="Subject" placeholder="Enter subject" />
 
       <div className="col-span-2">
-        {/* Conditionally render the EPD form */}
         {requestType === "EPD" && <TicketFormEPD />}
         {requestType === "IT" && <TicketFormIT />}
         {requestType === "Marketing" && <TicketFormMRKT />}
       </div>
-      {/* Request Details (Large TextArea) */}
+
       <div className="col-span-3 mb-6">
         <FormTextArea name="requestDetails" label="Request Details" placeholder="Enter details" />
       </div>
 
-{/* Division (Dropdown Select) */}
+
 <FormField
         control={control}
         name="division"
@@ -123,14 +135,14 @@ const TicketForm = () => {
           <FormItem className="col-span-1">
             <FormLabel>Section</FormLabel>
             <FormControl>
-              <Select                         onValueChange={(value) => {
-                          setSelectedSection(value);
-                          field.onChange(value);
-                        }}
-                        defaultValue={field.value}
-                        disabled={
-                          !selectedDivision
-                        }>
+              <Select onValueChange={(value) => {
+                setSelectedSection(value);
+                field.onChange(value);
+              }}
+                defaultValue={field.value}
+                disabled={
+                  !selectedDivision
+                }>
                 <SelectTrigger className="w-full">
                   <SelectValue placeholder="Select section" />
                 </SelectTrigger>
@@ -243,27 +255,30 @@ const TicketForm = () => {
 
       {/* Receiver (Dropdown Select) */}
       <FormField
-        control={control}
-        name="receiver"
-        render={({ field }) => (
-          <FormItem className="col-span-1">
-            <FormLabel>Receiver</FormLabel>
-            <FormControl>
-              <Select onValueChange={field.onChange} defaultValue={field.value}>
-                <SelectTrigger className="w-full">
-                  <SelectValue placeholder="Select receiver" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="John Doe">John Doe</SelectItem>
-                  <SelectItem value="Jane Smith">Jane Smith</SelectItem>
-                  <SelectItem value="Mark Johnson">Mark Johnson</SelectItem>
-                </SelectContent>
-              </Select>
-            </FormControl>
-            <FormMessage />
-          </FormItem>
-        )}
-      />
+  control={control}
+  name="receiverId"
+  render={({ field }) => (
+    <FormItem className="col-span-1">
+      <FormLabel>Receiver</FormLabel>
+      <FormControl>
+        <Select onValueChange={field.onChange} defaultValue={field.value}>
+          <SelectTrigger className="w-full">
+            <SelectValue placeholder="Select receiver" />
+          </SelectTrigger>
+          <SelectContent>
+            {/* Use receiver ?? [] to provide an empty array if receiver is undefined */}
+            {(receiver ?? []).map((user) => (
+              <SelectItem key={user.id} value={user.id}>
+                {user.userInfo.firstName} {user.userInfo.lastName}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+      </FormControl>
+      <FormMessage />
+    </FormItem>
+  )}
+/>
 
       {/* Requestee (Dropdown Select) */}
       {/* <FormField

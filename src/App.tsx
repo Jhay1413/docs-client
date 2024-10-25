@@ -84,7 +84,8 @@ function App() {
                 <Route path="archived" element={<ArchivedList />} />
               </Route>
               <Route path="tickets" element={<TicketsIndex />}>
-                <Route path="" element={<TicketList />} />
+                <Route path="list" element={<TicketList />} />
+                {/* <Route path="history/:id" element={<TicketDetails />} /> */}
                 <Route path="add-form" element={<AddTicketComponent />} />
                 {/* <Route path="tickets-form" element={<TicketForm  />} /> */}
                 <Route path="tickets-form" element={<TicketFormWrapper />} />
