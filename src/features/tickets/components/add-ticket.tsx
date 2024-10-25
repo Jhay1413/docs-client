@@ -22,7 +22,11 @@ export const AddTicketComponent = () => {
     onSuccess:()=>{
       form.reset();
       toast.success("Ticket Created !")
-    }
+    },
+    onError: (error) => {
+      console.error("Error creating ticket:", error);
+      toast.error("Failed to create ticket. Please try again.");
+    },
   })
   const { data, isError, error } = tsr.userAccounts.getUsersForTickets.useQuery({
     queryKey: ["usersForTicket", selectedDivision, selectedSection],
