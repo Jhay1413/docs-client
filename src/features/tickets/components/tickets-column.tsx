@@ -10,31 +10,31 @@ import { toPascalCase } from "./ticket.utils";
 const maxLength = 50;
 export const ticketsColumn: ColumnDef<z.infer <typeof ticketingTableSchema>>[] = [
   {
-    header: "Ticket ID",
+    header: () => <span className="font-bold text-nowrap">Ticket ID</span>,
     accessorKey: "ticketId",
   },
   {
-    header: "Subject",
+    header: () => <span className="font-bold text-nowrap">Subject</span>,
     accessorKey: "subject",
   },
   {
-    header: "Section",
+    header: () => <span className="font-bold text-nowrap">Section</span>,
     accessorKey: "section",
   },
   {
-    header: "Division",
+    header: () => <span className="font-bold text-nowrap">Division</span>,
     accessorKey: "division",
   },
   {
-    header: "Status",
+    header: () => <span className="font-bold text-nowrap">Status</span>,
     accessorKey: "status",
   },
   {
-    header: "Priority",
+    header: () => <span className="font-bold text-nowrap">Priority</span>,
     accessorKey: "priority",
   },
   {
-    header: "Request Details",
+    header: () => <span className="font-bold text-nowrap">Request Details</span>,
     accessorKey: "requestDetails",
     cell: ({ row }) => {
       const transactionInfo = row.original;
@@ -49,13 +49,7 @@ export const ticketsColumn: ColumnDef<z.infer <typeof ticketingTableSchema>>[] =
     },
   },
   {
-    header: ({ column }) => {
-      return (
-        <span>
-          Due Date
-        </span>
-      );
-    },
+    header: () => <span className="font-bold text-nowrap">Due Date</span>,
     accessorKey: "dueDate",
     cell: ({ row }) => {
       const transactionInfo = row.original;
@@ -64,13 +58,7 @@ export const ticketsColumn: ColumnDef<z.infer <typeof ticketingTableSchema>>[] =
     },
   },
   {
-    header: ({ column }) => {
-      return (
-        <span>
-          Date Created
-        </span>
-      );
-    },
+    header: () => <span className="font-bold text-nowrap">Date Created</span>,
     accessorKey: "createdAt",
     cell: ({ row }) => {
       const transactionInfo = row.original;
@@ -86,13 +74,7 @@ export const ticketsColumn: ColumnDef<z.infer <typeof ticketingTableSchema>>[] =
     },
   },
   {
-    header: ({ column }) => {
-      return (
-        <span>
-          Date Forwarded
-        </span>
-      );
-    },
+    header: () => <span className="font-bold text-nowrap">Date Forwarded</span>,
     accessorKey: "dateForwarded",
     cell: ({ row }) => {
       const transactionInfo = row.original;
@@ -101,7 +83,7 @@ export const ticketsColumn: ColumnDef<z.infer <typeof ticketingTableSchema>>[] =
     },
   },
   {
-    header: "Forwarded By",
+    header: () => <span className="font-bold text-nowrap">Forwarded By</span>,
     accessorKey: "sender",
     cell: ({ row }) => {
       const transactionInfo = row.original;
@@ -115,13 +97,7 @@ export const ticketsColumn: ColumnDef<z.infer <typeof ticketingTableSchema>>[] =
     },
   },
   {
-    header: ({ column }) => {
-      return (
-        <span>
-          Date Received
-        </span>
-      );
-    },
+    header: () => <span className="font-bold text-nowrap">Date Received</span>,
     accessorKey: "dateReceived",
     cell: ({ row }) => {
       const transactionInfo = row.original;
@@ -137,7 +113,21 @@ export const ticketsColumn: ColumnDef<z.infer <typeof ticketingTableSchema>>[] =
     },
   },
   {
-    header: "Remarks",
+    header: () => <span className="font-bold text-nowrap">Forwarded To</span>,
+    accessorKey: "receiver",
+    cell: ({ row }) => {
+      const transactionInfo = row.original;
+      const name = (`${transactionInfo.receiver.firstName} ${transactionInfo.receiver.lastName}`).toLocaleLowerCase();
+      const new_name = toPascalCase(name);
+      return (
+        <span>
+          {new_name}
+        </span>
+      );
+    },
+  },
+  {
+    header: () => <span className="font-bold text-nowrap">Remarks</span>,
     accessorKey: "remarks",
     cell: ({ row }) => {
       const transactionInfo = row.original;
