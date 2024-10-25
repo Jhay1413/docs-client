@@ -2,21 +2,28 @@ import { useForm, SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Form } from "@/components/ui/form";
 import { Button } from "@/components/ui/button";
-
 import { z } from "zod";
 import TicketForm from "./ticket-form";
 import { ticketingMutationSchema } from "shared-contract";
 import { getCurrentUserId, useCurrentUserRole } from "@/hooks/use-user-hook";
 import { useState } from "react";
 import { tsr } from "@/services/tsr";
+import { toast } from "react-toastify";
+import { useMutation } from "react-query";
 
 export const AddTicketComponent = () => {
-
   const userId = getCurrentUserId();
   const [ selectedDivision, setSelectedDivision ] = useState("");
   const [ selectedSection, setSelectedSection ] = useState("");
   const role = useCurrentUserRole();
-
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const {mutate} = tsr.ticketing.createTickets.useMutation({
+    onMutate:()=>{},
+    onSuccess:()=>{
+      form.reset();
+      toast.success("Ticket Created !")
+    }
+  })
   const { data, isError, error } = tsr.userAccounts.getUsersForTickets.useQuery({
     queryKey: ["usersForTicket", selectedDivision, selectedSection],
     queryData: {
@@ -41,23 +48,27 @@ export const AddTicketComponent = () => {
       status: "",
       requestDetails: "",
       priority: "",
-      dueDate: "", // Make sure to match the format here as well
+      dueDate: "", 
       dateForwarded: new Date().toISOString(),
       dateReceived: null,
       senderId: userId,
       receiverId: "",
-      requesteeId: "",
+      requesteeId: userId,
       remarks: null,
-      projectId: null, // Use undefined instead of null
+      projectId: null,
       transactionId: null,
       attachments: null,
       file: undefined,
     },
   });
 
-  // The submit handler
-  const onSubmit: SubmitHandler<z.infer<typeof ticketingMutationSchema>> = (data) => {
-    console.log("Form data submitted:", data);
+  const mutateFn = async (data: z.infer<typeof ticketingMutationSchema>, setSubmitting: (value: boolean) => void) => {
+    mutate({body:data})
+
+  }
+
+  const onSubmit: SubmitHandler<z.infer<typeof ticketingMutationSchema>> = async (data) => {
+    mutateFn(data, setIsSubmitting);
   };
   
   return (

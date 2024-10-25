@@ -7,43 +7,49 @@ import { ticketingTableSchema } from "shared-contract";
 import { z } from "zod";
 import { toPascalCase } from "./ticket.utils";
 
+const maxLength = 50;
 export const ticketsColumn: ColumnDef<z.infer <typeof ticketingTableSchema>>[] = [
   {
-    header: "Ticket ID",
+    header: () => <span className="font-bold text-nowrap">Ticket ID</span>,
     accessorKey: "ticketId",
   },
   {
-    header: "Subject",
+    header: () => <span className="font-bold text-nowrap">Subject</span>,
     accessorKey: "subject",
   },
   {
-    header: "Section",
+    header: () => <span className="font-bold text-nowrap">Section</span>,
     accessorKey: "section",
   },
   {
-    header: "Division",
+    header: () => <span className="font-bold text-nowrap">Division</span>,
     accessorKey: "division",
   },
   {
-    header: "Status",
+    header: () => <span className="font-bold text-nowrap">Status</span>,
     accessorKey: "status",
   },
   {
-    header: "Priority",
+    header: () => <span className="font-bold text-nowrap">Priority</span>,
     accessorKey: "priority",
   },
   {
-    header: "Request Details",
+    header: () => <span className="font-bold text-nowrap">Request Details</span>,
     accessorKey: "requestDetails",
-  },
-  {
-    header: ({ column }) => {
+    cell: ({ row }) => {
+      const transactionInfo = row.original;
+      const requestDetails = transactionInfo.requestDetails || "";  
       return (
         <span>
-          Due Date
+          {requestDetails.length > maxLength
+            ? `${requestDetails.substring(0, maxLength)}...`
+            : requestDetails}
         </span>
       );
     },
+  },
+  {
+    header: () => <span className="font-bold text-nowrap">Due Date</span>,
     accessorKey: "dueDate",
     cell: ({ row }) => {
       const transactionInfo = row.original;
@@ -52,37 +58,32 @@ export const ticketsColumn: ColumnDef<z.infer <typeof ticketingTableSchema>>[] =
     },
   },
   {
-    header: ({ column }) => {
-      return (
-        <span>
-          Date Created
-        </span>
-      );
-    },
+    header: () => <span className="font-bold text-nowrap">Date Created</span>,
     accessorKey: "createdAt",
     cell: ({ row }) => {
       const transactionInfo = row.original;
-
-      return <span>{new Date(transactionInfo.dueDate).toDateString()}</span>;
-    },
-  },
-  {
-    header: ({ column }) => {
+      const createdAt = transactionInfo.createdAt;
+  
       return (
         <span>
-          Date Forwarded
+          {createdAt
+            ? new Date(createdAt).toDateString()
+            : "No creation date"} {/* Fallback value when createdAt is undefined */}
         </span>
       );
     },
+  },
+  {
+    header: () => <span className="font-bold text-nowrap">Date Forwarded</span>,
     accessorKey: "dateForwarded",
     cell: ({ row }) => {
       const transactionInfo = row.original;
 
-      return <span>{new Date(transactionInfo.dueDate).toDateString()}</span>;
+      return <span>{new Date(transactionInfo.dateForwarded).toDateString()}</span>;
     },
   },
   {
-    header: "Forwarded By",
+    header: () => <span className="font-bold text-nowrap">Forwarded By</span>,
     accessorKey: "sender",
     cell: ({ row }) => {
       const transactionInfo = row.original;
@@ -96,23 +97,50 @@ export const ticketsColumn: ColumnDef<z.infer <typeof ticketingTableSchema>>[] =
     },
   },
   {
-    header: ({ column }) => {
-      return (
-        <span>
-          Date Received
-        </span>
-      );
-    },
+    header: () => <span className="font-bold text-nowrap">Date Received</span>,
     accessorKey: "dateReceived",
     cell: ({ row }) => {
       const transactionInfo = row.original;
-
-      return <span>{new Date(transactionInfo.dueDate).toDateString()}</span>;
+      const dateReceived = transactionInfo.dateReceived;
+  
+      return (
+        <span>
+          {dateReceived
+            ? new Date(dateReceived).toDateString()
+            : "Not received yet"} {/* Fallback value when dateReceived is null */}
+        </span>
+      );
     },
   },
   {
-    header: "Remarks",
+    header: () => <span className="font-bold text-nowrap">Forwarded To</span>,
+    accessorKey: "receiver",
+    cell: ({ row }) => {
+      const transactionInfo = row.original;
+      const name = (`${transactionInfo.receiver.firstName} ${transactionInfo.receiver.lastName}`).toLocaleLowerCase();
+      const new_name = toPascalCase(name);
+      return (
+        <span>
+          {new_name}
+        </span>
+      );
+    },
+  },
+  {
+    header: () => <span className="font-bold text-nowrap">Remarks</span>,
     accessorKey: "remarks",
+    cell: ({ row }) => {
+      const transactionInfo = row.original;
+      const remarks = transactionInfo.remarks || "";
+  
+      return (
+        <span>
+          {remarks.length > maxLength
+            ? `${remarks.substring(0, maxLength)}...`
+            : remarks}
+        </span>
+      );
+    },
   },
 
 ];
