@@ -5,7 +5,7 @@ import { ArrowUpDown, MoreHorizontal } from "lucide-react";
 import { Link } from "react-router-dom";
 import { ticketingTableSchema } from "shared-contract";
 import { z } from "zod";
-import { toPascalCase } from "./ticket.utils";
+import { toPascalCase } from "../ticket.utils";
 
 const maxLength = 50;
 export const ticketsColumn: ColumnDef<z.infer <typeof ticketingTableSchema>>[] = [

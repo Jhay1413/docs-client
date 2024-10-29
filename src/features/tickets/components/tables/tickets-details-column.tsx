@@ -5,34 +5,25 @@ import { ArrowUpDown, MoreHorizontal } from "lucide-react";
 import { Link } from "react-router-dom";
 
 import { z } from "zod";
-import { toPascalCase } from "./ticket.utils";
+import { toPascalCase } from "../ticket.utils";
 import { ticketLogsSchema } from "shared-contract";
 
+const maxLength = 50;
 export const ticketsDetailsColumn: ColumnDef<z.infer <typeof ticketLogsSchema>>[] = [
   {
-    header: "Logs ID",
+    header: () => <span className="font-bold text-nowrap">Log ID</span>,
     accessorKey: "ticketId",
   },
   {
-    header: "Status",
+    header: () => <span className="font-bold text-nowrap">Status</span>,
     accessorKey: "status",
   },
   {
-    header: "Priority",
+    header: () => <span className="font-bold text-nowrap">Priority</span>,
     accessorKey: "priority",
   },
   {
-    header: "Forwarded By",
-    accessorKey: "sender",
-  },
-  {
-    header: ({ column }) => {
-      return (
-        <span>
-          Date Forwarded
-        </span>
-      );
-    },
+    header: () => <span className="font-bold text-nowrap">Date Forwarded</span>,
     accessorKey: "dateForwarded",
     cell: ({ row }) => {
       const ticketInfo = row.original;
@@ -41,20 +32,25 @@ export const ticketsDetailsColumn: ColumnDef<z.infer <typeof ticketLogsSchema>>[
         new Date(ticketInfo.dateForwarded).toDateString(): "No Date Available"}</span>;
     },
   },
-
   {
-    header: ({ column }) => {
+    header: () => <span className="font-bold text-nowrap">Forwarded By</span>,
+    accessorKey: "sender",
+    cell: ({ row }) => {
+      const transactionInfo = row.original;
+      const name = (`${transactionInfo.sender}`).toLocaleLowerCase();
+      const new_name = toPascalCase(name);
       return (
         <span>
-          Date Received
+          {new_name}
         </span>
       );
     },
-
+  },
+  {
+    header: () => <span className="font-bold text-nowrap">Date Received</span>,
     accessorKey: "dateReceived",
     cell: ({ row }) => {
       const ticketInfo = row.original;
-
       return (
         <span>
           {ticketInfo.dateReceived 
@@ -66,21 +62,39 @@ export const ticketsDetailsColumn: ColumnDef<z.infer <typeof ticketLogsSchema>>[
     },
   },
   {
-    header: "Remarks",
-    accessorKey: "remarks",
-  },
-  {
-    header: ({ column }) => {
+    header: () => <span className="font-bold text-nowrap">Forwarded To</span>,
+    accessorKey: "receiver",
+    cell: ({ row }) => {
+      const transactionInfo = row.original;
+      const name = (`${transactionInfo.sender}`).toLocaleLowerCase();
+      const new_name = toPascalCase(name);
       return (
         <span>
-          Date Created
+          {new_name}
         </span>
       );
     },
+  },
+  {
+    header: () => <span className="font-bold text-nowrap">Remarks</span>,
+    accessorKey: "remarks",
+    cell: ({ row }) => {
+      const transactionInfo = row.original;
+      const requestDetails = transactionInfo.remarks || "";  
+      return (
+        <span>
+          {requestDetails.length > maxLength
+            ? `${requestDetails.substring(0, maxLength)}...`
+            : requestDetails}
+        </span>
+      );
+    },
+  },
+  {
+    header: () => <span className="font-bold text-nowrap">Date Created</span>,
     accessorKey: "createdAt",
     cell: ({ row }) => {
       const ticketInfo = row.original;
-
       return(
         <span>{ ticketInfo.createdAt ? 
           new Date(ticketInfo.createdAt).toDateString() : "No Date Available"}</span>
@@ -88,17 +102,10 @@ export const ticketsDetailsColumn: ColumnDef<z.infer <typeof ticketLogsSchema>>[
     },
   },
   {
-    header: ({ column }) => {
-      return (
-        <span>
-          Date Updated
-        </span>
-      );
-    },
+    header: () => <span className="font-bold text-nowrap">Date Updated</span>,
     accessorKey: "updatedAt",
     cell: ({ row }) => {
       const ticketInfo = row.original;
-
       return(
         <span>{ ticketInfo.updatedAt ? 
           new Date(ticketInfo.updatedAt).toDateString() : "No Date Available"}</span>

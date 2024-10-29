@@ -4,7 +4,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Plus, Search } from "lucide-react";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
-import { ticketsColumn } from "./tickets-column";
+import { ticketsColumn } from "./tickets-column"; 
 import { tsr } from "@/services/tsr";
 import { keepPreviousData } from "@tanstack/react-query";
 
