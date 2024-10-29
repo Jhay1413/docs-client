@@ -49,11 +49,7 @@
     "react-to-print": "^2.15.1",
     "react-toastify": "^10.0.5",
     "recharts": "^2.12.7",
-<<<<<<< HEAD
     "shared-contract": "^1.2.26",
-=======
-    "shared-contract": "^1.2.23",
->>>>>>> base-dts-client
     "socket.io-client": "^4.7.5",
     "sort-by": "^1.2.0",
     "tailwind-merge": "^2.3.0",
