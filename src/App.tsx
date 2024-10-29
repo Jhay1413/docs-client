@@ -30,6 +30,7 @@ import { ReactQueryProvider } from "./utils/react-query-provider";
 import { AddTicketComponent, TicketForm, TicketInboxComponent, TicketList } from "./features/tickets";
 import TicketFormWrapper from "./features/tickets/components/ticket-formWrapper";
 import { TicketDetails } from "./features/tickets/components/tickets-details";
+import { IncomingTicketComponent } from "./features/tickets/components/ticket-incoming";
 
 function App() {
   return (
@@ -92,6 +93,7 @@ function App() {
                 <Route path="details/:id" element={<TicketDetails />} />
                 <Route path="tickets-form" element={<TicketFormWrapper />} />
                 <Route path="inbox/:id" element={<TicketInboxComponent />} />
+                <Route path="incoming/:id" element={<IncomingTicketComponent />} />
               </Route>
             </Route>
             <Route path="/" element={<PublicRoutes />}>
