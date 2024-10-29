@@ -1,5 +1,4 @@
 import { completeStaffWorkQuerySchema, filesQuerySchema } from "shared-contract";
-
 import { z } from "zod";
 
 export const AttachmentOnPrint = ({ attachments }: { attachments: z.infer<typeof completeStaffWorkQuerySchema>[] }) => {
