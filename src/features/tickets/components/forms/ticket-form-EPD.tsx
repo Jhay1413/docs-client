@@ -12,13 +12,13 @@ import { keepPreviousData } from "@tanstack/react-query";
 import { useDebounce } from "use-debounce";
 import { cn } from "@/lib/utils";
 const TicketFormEPD = () => {
-  const { control, setValue } = useFormContext(); // Ensure you're using it inside a FormProvider
+  const { control, setValue } = useFormContext();
   const [searchQuery, setSearchQuery] = useState("");
   const [debouncedSearchQuery] = useDebounce(searchQuery, 500);
   const [selectedProject, setSelectedProject] = useState("");
   const [ selectedSection, setSelectedSection ] = useState("");
   if (!control) {
-    return <div>Error: No form context found!</div>; // Optional: Handle if context is missing
+    return <div>Error: No form context found!</div>;
   }
   const { data, isError, error } = tsr.company.fetchCompanyProjectsBySearch.useQuery({
     queryKey: ["projects", debouncedSearchQuery],
