@@ -7,7 +7,7 @@ import FormTextArea from "@/components/formTextArea";
 import { useRef, useState } from "react";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Button } from "@/components/ui/button";
-import { CalendarIcon } from "lucide-react";
+import { CalendarIcon, Check, ChevronsUpDown } from "lucide-react";
 import { Calendar } from "@/components/ui/calendar";
 import { cn } from "@/lib/utils";
 import { format } from "date-fns";
@@ -16,22 +16,42 @@ import TicketFormMRKT from "./ticket-form-MRKT";
 import TicketFormIT from "./ticket-form-IT";
 import { Divisions } from "@/data/data";
 import { useCurrentUserRole } from "@/hooks/use-user-hook";
-// Import the EPD form component
+import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command";
+import { tsr } from "@/services/tsr";
+import { useDebounce } from "use-debounce";
+import { keepPreviousData } from "@tanstack/react-query";
+import { useSearchParams } from "react-router-dom";
 
-const TicketForm = () => {
-  const { control, watch } = useFormContext(); // Ensure you're using it inside a FormProvider
-  const requestType = watch("requestType"); // Watch the requestType field
-  const [ selectedDivision, setSelectedDivision ] = useState("");
-  const [ selectedSection, setSelectedSection ] = useState("");
-  const role = useCurrentUserRole();
+type Props = {
+  selectedDivision: string;
+  setSelectedDivision: React.Dispatch<React.SetStateAction<string>>;
+  setSelectedSection: React.Dispatch<React.SetStateAction<string>>;
+  receiver: {
+    id: string;
+    userInfo: {
+      firstName: string;
+      lastName: string;
+    };
+    accountRole: string;
+  }[];
+};
+
+const TicketForm = ({selectedDivision,setSelectedDivision, setSelectedSection, receiver}: Props) => {
+  
+  const { control, watch } = useFormContext();
+  const requestType = watch("requestType");
+  
+
   
   const sections = Divisions.find(
     (division) => division.name === selectedDivision
   );
-
+ 
   if (!control) {
-    return <div>Error: No form context found!</div>; // Optional: Handle if context is missing
+    return <div>Error: No form context found!</div>;
   }
+
+ 
 
   const fileInputRef = useRef<HTMLInputElement | null>(null);
 
@@ -40,10 +60,8 @@ const TicketForm = () => {
       fileInputRef.current.click();
     }
   };
-
   return (
     <div className="grid grid-cols-3 gap-6 p-4 bg-gray-50 rounded-md shadow-lg mb-4">
-      {/* Request Type (Dropdown Select) */}
       <FormField
         control={control}
         name="requestType"
@@ -68,20 +86,22 @@ const TicketForm = () => {
       />
 
       {/* Subject (Small Input) */}
-      <FormInput name="subject" label="Subject" placeholder="Enter subject" />
+      <div className="col-span-2 mb-6">
+        <FormTextArea name="subject" label="Subject" placeholder="Enter subject" />
+      </div>
+      
 
       <div className="col-span-2">
-        {/* Conditionally render the EPD form */}
         {requestType === "EPD" && <TicketFormEPD />}
         {requestType === "IT" && <TicketFormIT />}
         {requestType === "Marketing" && <TicketFormMRKT />}
       </div>
-      {/* Request Details (Large TextArea) */}
+
       <div className="col-span-3 mb-6">
         <FormTextArea name="requestDetails" label="Request Details" placeholder="Enter details" />
       </div>
 
-{/* Division (Dropdown Select) */}
+
 <FormField
         control={control}
         name="division"
@@ -119,14 +139,14 @@ const TicketForm = () => {
           <FormItem className="col-span-1">
             <FormLabel>Section</FormLabel>
             <FormControl>
-              <Select                         onValueChange={(value) => {
-                          setSelectedSection(value);
-                          field.onChange(value);
-                        }}
-                        defaultValue={field.value}
-                        disabled={
-                          !selectedDivision
-                        }>
+              <Select onValueChange={(value) => {
+                setSelectedSection(value);
+                field.onChange(value);
+              }}
+                defaultValue={field.value}
+                disabled={
+                  !selectedDivision
+                }>
                 <SelectTrigger className="w-full">
                   <SelectValue placeholder="Select section" />
                 </SelectTrigger>
@@ -164,7 +184,9 @@ const TicketForm = () => {
                 <SelectContent>
                   <SelectItem value="On process">On process</SelectItem>
                   <SelectItem value="Completed">Completed</SelectItem>
-                  <SelectItem value="Pending">Pending</SelectItem>
+                  <SelectItem value="Approved">Approved</SelectItem>
+                  <SelectItem value="Resolved">Resolved</SelectItem>
+                  <SelectItem value="For Sign and Seal">For Sign and Seal</SelectItem>
                 </SelectContent>
               </Select>
             </FormControl>
@@ -181,9 +203,9 @@ const TicketForm = () => {
           <FormItem className="col-span-1">
             <FormLabel>Priority</FormLabel>
             <FormControl>
-              <Select 
-                onValueChange={field.onChange} 
-                value={field.value || "" } // Ensure it handles an empty state properly
+              <Select
+                onValueChange={field.onChange}
+                value={field.value || ""} // Ensure it handles an empty state properly
               >
                 <SelectTrigger className="w-full">
                   <SelectValue placeholder="Select priority" />
@@ -213,79 +235,56 @@ const TicketForm = () => {
                 className="w-full h-10 px-4 text-sm border border-gray-300 rounded-md"
                 {...field}
               /> */}
-                      <Popover>
-                        <PopoverTrigger asChild>
-                          <Button
-                            variant={"outline"}
-                            className={cn("w-full justify-start text-left font-normal", !field.value && "text-muted-foreground")}
-                          >
-                            <CalendarIcon className="mr-2 h-4 w-4" />
-                            {field.value ? format(field.value, "PPP") : <span>Pick a date</span>}
-                          </Button>
-                        </PopoverTrigger>
-                        <PopoverContent className="w-auto p-0">
-                          <Calendar
-                            mode="single"
-                            onSelect={(value) => {
-                              field.onChange(new Date(value!).toISOString());
-                            }}
-                            initialFocus
-                          />
-                        </PopoverContent>
-                      </Popover>
+              <Popover>
+                <PopoverTrigger asChild>
+                  <Button variant={"outline"} className={cn("w-full justify-start text-left font-normal", !field.value && "text-muted-foreground")}>
+                    <CalendarIcon className="mr-2 h-4 w-4" />
+                    {field.value ? format(field.value, "PPP") : <span>Pick a date</span>}
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent className="w-auto p-0">
+                  <Calendar
+                    mode="single"
+                    onSelect={(value) => {
+                      field.onChange(new Date(value!).toISOString());
+                    }}
+                    initialFocus
+                  />
+                </PopoverContent>
+              </Popover>
             </FormControl>
             <FormMessage />
           </FormItem>
  )}
       />
 
-      {/* Sender (Dropdown Select) */}
-      {/* <FormField
-        control={control}
-        name="sender"
-        render={({ field }) => (
-          <FormItem className="col-span-1">
-            <FormLabel>Sender</FormLabel>
-            <FormControl>
-              <Select onValueChange={field.onChange} defaultValue={field.value}>
-                <SelectTrigger className="w-full">
-                  <SelectValue placeholder="Select sender" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="John Doe">John Doe</SelectItem>
-                  <SelectItem value="Jane Smith">Jane Smith</SelectItem>
-                  <SelectItem value="Mark Johnson">Mark Johnson</SelectItem>
-                </SelectContent>
-              </Select>
-            </FormControl>
-            <FormMessage />
-          </FormItem>
-        )}
-      /> */}
 
       {/* Receiver (Dropdown Select) */}
       <FormField
-        control={control}
-        name="receiver"
-        render={({ field }) => (
-          <FormItem className="col-span-1">
-            <FormLabel>Receiver</FormLabel>
-            <FormControl>
-              <Select onValueChange={field.onChange} defaultValue={field.value}>
-                <SelectTrigger className="w-full">
-                  <SelectValue placeholder="Select receiver" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="John Doe">John Doe</SelectItem>
-                  <SelectItem value="Jane Smith">Jane Smith</SelectItem>
-                  <SelectItem value="Mark Johnson">Mark Johnson</SelectItem>
-                </SelectContent>
-              </Select>
-            </FormControl>
-            <FormMessage />
-          </FormItem>
-        )}
-      />
+  control={control}
+  name="receiverId"
+  render={({ field }) => (
+    <FormItem className="col-span-1">
+      <FormLabel>Receiver</FormLabel>
+      <FormControl>
+        <Select onValueChange={field.onChange} defaultValue={field.value}>
+          <SelectTrigger className="w-full">
+            <SelectValue placeholder="Select receiver" />
+          </SelectTrigger>
+          <SelectContent>
+            {/* Use receiver ?? [] to provide an empty array if receiver is undefined */}
+            {(receiver ?? []).map((user) => (
+              <SelectItem key={user.id} value={user.id}>
+                {user.userInfo.firstName} {user.userInfo.lastName}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+      </FormControl>
+      <FormMessage />
+    </FormItem>
+  )}
+/>
 
       {/* Requestee (Dropdown Select) */}
       {/* <FormField
@@ -335,12 +334,7 @@ const TicketForm = () => {
                 </button>
                 <span>{field.value ? field.value.name : "No file chosen"}</span>
                 {/* Hidden File Input */}
-                <input
-                  type="file"
-                  ref={fileInputRef}
-                  className="hidden"
-                  onChange={(e) => field.onChange(e.target.files?.[0])}
-                />
+                <input type="file" ref={fileInputRef} className="hidden" onChange={(e) => field.onChange(e.target.files?.[0])} />
               </div>
             </FormControl>
             <FormMessage />
