@@ -112,7 +112,9 @@ export const ticketsIncomingColumn: ColumnDef<z.infer<typeof ticketingTableSchem
     cell: ({ row }) => {
       const ticket = row.original;
       
-t
+      // const updateDateReceived = async () => {
+      //   await mutateAsync({ params: { id: ticket.id! }, body: { dateReceived: new Date().toISOString() } });
+      // };
       return (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
@@ -125,7 +127,7 @@ t
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
 
             <DropdownMenuItem>
-              <button className="w-full" onClick={updateDateReceived}>
+              <button className="w-full">
                 Recieve
               </button>
             </DropdownMenuItem>
