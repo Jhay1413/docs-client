@@ -4,7 +4,7 @@ import { useDebounce } from "use-debounce";
 import { tsr } from "@/services/tsr";
 import { useNotificationStore } from "@/global-states/notification-store";
 import { toast } from "react-toastify";
-import { ticketsIncomingColumn } from "./tables/tickets-incoming-columns";
+import { ticketsIncomingColumn } from "./tickets-incoming-columns";
 import { keepPreviousData } from "@tanstack/react-query";
 
 export const IncomingTicketComponent = () => {
@@ -25,12 +25,13 @@ export const IncomingTicketComponent = () => {
   const notification = useNotificationStore((state) => state.notification);
   const setNotification = useNotificationStore((state) => state.setNotification);
 
-  const { data, isError, error } = tsr.ticketing.getTickets.useQuery({
+  const { data, isError, error } = tsr.ticketing.getTicketsForUserByStatus.useQuery({
     queryKey: ["tickets", page, debouncedSearchQuery],
     queryData: {
+      params: {id:id!},
       query: {
         query: debouncedSearchQuery,
-
+        status: "incoming",
         page: page,
         pageSize: "10",
       },

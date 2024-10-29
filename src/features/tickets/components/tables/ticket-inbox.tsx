@@ -27,12 +27,13 @@ export const TicketInboxComponent = () => {
   console.log(id);
 
   // Fetch tickets instead of transactions
-  const { data, isError, error } = tsr.ticketing.getTickets.useQuery({
+  const { data, isError, error } = tsr.ticketing.getTicketsForUserByStatus.useQuery({
     queryKey: ["tickets", page, debouncedSearchQuery],
     queryData: {
+      params: {id:id!},
       query: {
         query: debouncedSearchQuery,
-
+        status: "inbox",
         page: page,
         pageSize: "10",
       },

@@ -2,6 +2,9 @@ import { ColumnDef } from "@tanstack/react-table";
 import { z } from "zod";
 import { ticketingTableSchema } from "shared-contract"; // Adjust the import based on your project structure
 import { toPascalCase } from "../ticket.utils"; // Adjust the import based on your project structure
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import { MoreHorizontal } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 const maxLength = 50;
 export const ticketsIncomingColumn: ColumnDef<z.infer<typeof ticketingTableSchema>>[] = [
@@ -100,5 +103,35 @@ export const ticketsIncomingColumn: ColumnDef<z.infer<typeof ticketingTableSchem
           </span>
         );
       },
+  },
+
+  {
+    header: "Actions",
+    accessorKey: "actions",
+    id: "actions",
+    cell: ({ row }) => {
+      const ticket = row.original;
+      
+t
+      return (
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="ghost" className="h-8 w-8 p-0">
+              <span className="sr-only">Open menu</span>
+              <MoreHorizontal className="h-4 w-4" />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end">
+            <DropdownMenuLabel>Actions</DropdownMenuLabel>
+
+            <DropdownMenuItem>
+              <button className="w-full" onClick={updateDateReceived}>
+                Recieve
+              </button>
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      );
+    },
   },
 ];

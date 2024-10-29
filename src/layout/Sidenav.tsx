@@ -172,7 +172,7 @@ export const SideNav = () => {
               <Mailbox />
               <div className="flex gap-2">
                 <h1 className="text-base">Inbox</h1>
-                {notification?.ticketsInbox !== 0 && <span className="text-red-700 text-sm font-extrabold">{notification?.ticketsInbox}</span>}
+                {notification?.inbox !== 0 && <span className="text-red-700 text-sm font-extrabold">{notification?.inbox}</span>}
               </div>
             </NavLink>
           </li>

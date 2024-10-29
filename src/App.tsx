@@ -28,7 +28,7 @@ import ProtectedRoute from "./components/routeGuard/protected-route";
 import { ReactQueryProvider } from "./utils/react-query-provider";
 
 import { AddTicketComponent, TicketForm, TicketInboxComponent, TicketList } from "./features/tickets";
-import { IncomingTicketComponent } from "./features/tickets/components/ticket-incoming";
+import { IncomingTicketComponent } from "./features/tickets/components/tables/ticket-incoming";
 import { TicketDetails } from "./features/tickets/components/tables/tickets-details";
 
 function App() {
