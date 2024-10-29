@@ -10,6 +10,7 @@ import { useState } from "react";
 import { tsr } from "@/services/tsr";
 import { toast } from "react-toastify";
 import { useMutation } from "react-query";
+import { useNavigate } from "react-router-dom";
 
 export const AddTicketComponent = () => {
   const userId = getCurrentUserId();
@@ -17,12 +18,18 @@ export const AddTicketComponent = () => {
   const [ selectedSection, setSelectedSection ] = useState("");
   const role = useCurrentUserRole();
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const navigate = useNavigate();
   const {mutate} = tsr.ticketing.createTickets.useMutation({
     onMutate:()=>{},
     onSuccess:()=>{
       form.reset();
-      toast.success("Ticket Created !")
-    }
+      toast.success("Ticket Created !");
+      navigate("/dashboard/tickets/list");
+    },
+    onError: (error) => {
+      console.error("Error creating ticket:", error);
+      toast.error("Failed to create ticket. Please try again.");
+    },
   })
   const { data, isError, error } = tsr.userAccounts.getUsersForTickets.useQuery({
     queryKey: ["usersForTicket", selectedDivision, selectedSection],

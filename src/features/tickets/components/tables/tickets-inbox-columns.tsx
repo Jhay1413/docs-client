@@ -1,10 +1,10 @@
 import { ColumnDef } from "@tanstack/react-table";
 import { z } from "zod";
 import { ticketingTableSchema } from "shared-contract"; // Adjust the import based on your project structure
-import { toPascalCase } from "./ticket.utils"; // Adjust the import based on your project structure
+import { toPascalCase } from "../ticket.utils"; // Adjust the import based on your project structure
 
 const maxLength = 50;
-export const ticketsIncomingColumn: ColumnDef<z.infer<typeof ticketingTableSchema>>[] = [
+export const ticketsInboxColumn: ColumnDef<z.infer<typeof ticketingTableSchema>>[] = [
   {
     header: "Ticket ID",
     accessorKey: "ticketId",

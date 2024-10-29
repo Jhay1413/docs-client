@@ -184,7 +184,9 @@ const TicketForm = ({selectedDivision,setSelectedDivision, setSelectedSection, r
                 <SelectContent>
                   <SelectItem value="On process">On process</SelectItem>
                   <SelectItem value="Completed">Completed</SelectItem>
-                  <SelectItem value="Pending">Pending</SelectItem>
+                  <SelectItem value="Approved">Approved</SelectItem>
+                  <SelectItem value="Resolved">Resolved</SelectItem>
+                  <SelectItem value="For Sign and Seal">For Sign and Seal</SelectItem>
                 </SelectContent>
               </Select>
             </FormControl>

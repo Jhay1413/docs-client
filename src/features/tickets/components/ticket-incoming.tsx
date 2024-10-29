@@ -1,11 +1,10 @@
 import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 import { DataTable } from "@/components/data-table";
-import { ticketsInboxColumn } from "./tickets-inbox-columns";
 import { useDebounce } from "use-debounce";
 import { tsr } from "@/services/tsr";
 import { useNotificationStore } from "@/global-states/notification-store";
 import { toast } from "react-toastify";
-import { ticketsIncomingColumn } from "./tickets-incoming-columns";
+import { ticketsIncomingColumn } from "./tables/tickets-incoming-columns";
 import { keepPreviousData } from "@tanstack/react-query";
 
 export const IncomingTicketComponent = () => {

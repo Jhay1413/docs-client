@@ -1,4 +1,4 @@
-import { ClipboardList, Factory, FileCode, FileText, LayoutDashboard, LibraryBig, UserSearch, Users } from "lucide-react";
+import { ClipboardList, Factory, FileCode, FileText, LayoutDashboard, LibraryBig, Mailbox, Ticket, UserSearch, Users } from "lucide-react";
 import { Link, NavLink } from "react-router-dom";
 
 import { getCurrentUserId, useCurrentUserRole } from "@/hooks/use-user-hook";
@@ -156,7 +156,7 @@ export const SideNav = () => {
                 }`;
               }}
             >
-              <FileCode />
+              <Ticket />
               <div className="flex gap-2">
                 <h1 className="text-base">Tickets</h1>
               </div>
@@ -169,7 +169,7 @@ export const SideNav = () => {
                 return `justify-start items-center flex w-full p-2 space-x-4 text-lg  rounded-md ${isActive ? "bg-green-100/30 text-white" : ""}`;
               }}
             >
-              <LibraryBig />
+              <Mailbox />
               <div className="flex gap-2">
                 <h1 className="text-base">Inbox</h1>
                 {notification?.ticketsInbox !== 0 && <span className="text-red-700 text-sm font-extrabold">{notification?.ticketsInbox}</span>}
