@@ -62,29 +62,7 @@ const TicketForm = ({selectedDivision,setSelectedDivision, setSelectedSection, r
   };
   return (
     <div className="grid grid-cols-3 gap-6 p-4 bg-gray-50 rounded-md shadow-lg mb-4">
-      <FormField
-        control={control}
-        name="requestType"
-        render={({ field }) => (
-          <FormItem className="col-span-1">
-            <FormLabel>Request Type</FormLabel>
-            <FormControl>
-              <Select onValueChange={field.onChange} defaultValue={field.value}>
-                <SelectTrigger className="w-full">
-                  <SelectValue placeholder="Select request type" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="EPD">EPD</SelectItem>
-                  <SelectItem value="Marketing">Marketing</SelectItem>
-                  <SelectItem value="IT">IT</SelectItem>
-                </SelectContent >
-              </Select>
-            </FormControl>
-            <FormMessage />
-          </FormItem>
-        )}
-      />
-
+      
       {/* Subject (Small Input) */}
       <div className="col-span-2 mb-6">
         <FormTextArea name="subject" label="Subject" placeholder="Enter subject" />

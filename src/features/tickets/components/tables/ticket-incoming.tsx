@@ -39,37 +39,37 @@ export const IncomingTicketComponent = () => {
     placeholderData: keepPreviousData,
   });
 
-//   const { mutate } = tsr.ticketing.({
-//     onMutate: (data) => {
-//       tsrQueryClient.ticketing.getTickets.setQueryData(["incoming-tickets", page, debouncedSearchQuery], (old) => {
-//         if (!old || !old.body) return old;
-//         return {
-//           ...old,
-//           body: {
-//             ...old.body,
-//             data: old.body.data.filter((ticket) => ticket.id !== data.params.id), // Filter out the ticket being mutated
-//           },
-//         };
-//       });
-//     },
-//     onSuccess: () => {
-//       setNotification({
-//         ...notification,
-//         incoming: notification?.incoming === 0 ? 0 : notification?.incoming! - 1,
-//         inbox: notification?.inbox! + 1,
-//       });
+  const { mutate } = tsr.ticketing.receiveTickets.useMutation({
+    onMutate: (data) => {
+      tsrQueryClient.ticketing.getTicketsForUserByStatus.setQueryData(["tickets", page, debouncedSearchQuery], (old) => {
+        if (!old || !old.body) return old;
+        return {
+          ...old,
+          body: {
+            ...old.body,
+            data: old.body.filter((ticket) => ticket.id !== data.params.id), // Filter out the ticket being mutated
+          },
+        };
+      });
+    },
+    onSuccess: () => {
+      setNotification({
+        ...notification,
+        incoming: notification?.incoming === 0 ? 0 : notification?.incoming! - 1,
+        inbox: notification?.inbox! + 1,
+      });
 
-//       toast.success("Ticket Resolved !");
-//     },
-//     onError: (error) => {
-//       console.log(error);
-//     },
-//     onSettled: () => {
-//       tsrQueryClient.invalidateQueries({ queryKey: ["incoming-tickets", page, debouncedSearchQuery] });
-//     },
-//   });
+      toast.success("Ticket Resolved !");
+    },
+    onError: (error) => {
+      console.log(error);
+    },
+    onSettled: () => {
+      tsrQueryClient.invalidateQueries({ queryKey: ["incoming-tickets", page, debouncedSearchQuery] });
+    },
+  });
 
-//   const incomingColumns = ticketsInboxColumn(mutate);
+  const incomingColumns = ticketsIncomingColumn(mutate);
 
   return (
     <div className="flex flex-col gap-y-4">
@@ -79,7 +79,7 @@ export const IncomingTicketComponent = () => {
           All your new tickets will appear here. Stay informed and don't miss any updates.
         </p>
       </div>
-      <DataTable columns={ticketsIncomingColumn} data={data ? data.body : []} />
+      <DataTable columns={incomingColumns} data={data ? data.body : []}  />
 
     </div>
   );
