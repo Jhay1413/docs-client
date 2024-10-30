@@ -556,6 +556,23 @@ export const checkList = [
         ],
       },
       {
+        name: "ARCENIC",
+        value: "ARCENIC",
+        category: "CCO",
+        checkList:[
+          "Hazardous Waste Generator ID",
+          "Permit to Operate",
+          "Discharge Permit",
+          "PCO Accreditation Certificate",
+          "Environmental Compliance Certificate",
+          "Chemical Safety & Handling Certificate",
+          "Chemical Management Plan",
+          "Chemical Safety Data Sheet (SDS)",
+          "Emergency & Contingency Plan",
+          "Geotagged Photos of the Facility"
+        ],
+      },
+      {
         name: "Certificate of Non-Coverage (CNC)",
         value: "Certificate of Non-Coverage (CNC)",
         category: "CNC",
