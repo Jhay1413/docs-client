@@ -16,7 +16,7 @@ const TicketFormEPD = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [debouncedSearchQuery] = useDebounce(searchQuery, 500);
   const [selectedProject, setSelectedProject] = useState("");
-  const [ selectedSection, setSelectedSection ] = useState("");
+  const [selectedSection, setSelectedSection] = useState("");
   if (!control) {
     return <div>Error: No form context found!</div>;
   }
@@ -59,7 +59,7 @@ const TicketFormEPD = () => {
                           value={data.id}
                           key={data.id}
                           onSelect={() => {
-                            setValue("projectId", data.id)
+                            setValue("projectId", data.id);
                             setSelectedProject(data.projectName);
                           }}
                         >
