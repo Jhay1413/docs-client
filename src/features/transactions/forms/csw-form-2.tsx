@@ -107,7 +107,6 @@ export function CompleStaffWorkDialog({ transactionId }: Props) {
     const files = event.target.files![0];
     const formData = new FormData();
 
-    // const currentFileName = form.getValues(`attachments.${index}.fileName`);
     if (!files) {
       throw new Error("No file attached !");
     }
@@ -143,6 +142,7 @@ export function CompleStaffWorkDialog({ transactionId }: Props) {
       });
       setUploadedKeys((prevKeys) => [...prevKeys, result.data.key]);
     } catch (error) {
+      toast.error("Something went wrong !");
       console.log(error);
     }
   };

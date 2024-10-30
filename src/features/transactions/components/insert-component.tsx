@@ -9,7 +9,7 @@ import { tsr } from "@/services/tsr";
 export const InsertComponent = () => {
   const tsrQueryClient = tsr.useQueryClient();
   // const { add } = useTransaction({key:"inbox",url:"/v2"});
-  const { mutateAsync, isPending } = tsr.transaction.insertTransacitons.useMutation({
+  const { mutateAsync, isPending } = tsr.transaction.insertTransactions.useMutation({
     onSuccess: () => {
       toast.success("Data submitted successfully ! ");
       navigate("/dashboard/transactions/list");
