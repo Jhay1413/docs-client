@@ -7,7 +7,7 @@ import { Search } from "lucide-react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { z } from "zod";
-import { transactionQueryData } from "shared-contract";
+import { transactionQueryData, transactionTable } from "shared-contract";
 
 export const ArchivedList = () => {
   const [searchParams, setSearchParams] = useSearchParams({
@@ -51,7 +51,7 @@ export const ArchivedList = () => {
       });
     }
   };
-  const handleOnClickRow = (data: z.infer<typeof transactionQueryData>) => {
+  const handleOnClickRow = (data: z.infer<typeof transactionTable>) => {
     navigate(`/dashboard/transactions/history/${data.id}`);
   };
   return (
