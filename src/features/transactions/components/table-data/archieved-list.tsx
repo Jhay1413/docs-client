@@ -20,7 +20,7 @@ export const ArchivedList = () => {
 
   const intPage = parseInt(page, 10);
   const [debouncedSearchQuery] = useDebounce(searchQuery, 500);
-  const { data: searchData } = tsr.transaction.fetchTransactions.useQuery({
+  const { data: searchData } = tsr.transaction.fetchTransactionsV2.useQuery({
     queryKey: ["archived-transaction", page, debouncedSearchQuery],
     queryData: {
       query: {
