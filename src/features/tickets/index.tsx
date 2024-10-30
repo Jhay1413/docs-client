@@ -7,6 +7,8 @@ import { TicketList } from "./components/tables/ticket-list";
 import { ticketsColumn } from "./components/tables/tickets-column";
 import { TicketDetails } from "./components/tables/tickets-details";
 import { ticketsInboxColumn } from "./components/tables/tickets-inbox-columns";
+import { IncomingTicketComponent } from "./components/tables/ticket-incoming";
+import { ticketsIncomingColumn } from "./components/tables/tickets-incoming-columns";
 
 export {
   TicketList,
@@ -16,6 +18,8 @@ export {
   TicketDetails,
   ticketsInboxColumn,
   TicketInboxComponent,
+  IncomingTicketComponent,
+  ticketsIncomingColumn,
 
 }
 

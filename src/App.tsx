@@ -28,6 +28,7 @@ import ProtectedRoute from "./components/routeGuard/protected-route";
 import { ReactQueryProvider } from "./utils/react-query-provider";
 
 import { AddTicketComponent, TicketForm, TicketInboxComponent, TicketList } from "./features/tickets";
+import { IncomingTicketComponent } from "./features/tickets/components/tables/ticket-incoming";
 import { TicketDetails } from "./features/tickets/components/tables/tickets-details";
 
 function App() {
@@ -90,6 +91,7 @@ function App() {
                 {/* <Route path="tickets-form" element={<TicketForm  />} /> */}
                 <Route path="details/:id" element={<TicketDetails />} />
                 <Route path="inbox/:id" element={<TicketInboxComponent />} />
+                <Route path="incoming/:id" element={<IncomingTicketComponent />} />
               </Route>
             </Route>
             <Route path="/" element={<PublicRoutes />}>

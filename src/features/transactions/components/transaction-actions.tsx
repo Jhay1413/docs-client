@@ -37,7 +37,7 @@ export const TransactionActions = ({ transactionId }: { transactionId: string })
   const notification = useNotificationStore((state) => state.notification);
   const setNotification = useNotificationStore((state) => state.setNotification);
 
-  const { mutate, isPending } = tsr.transaction.archivedTransation.useMutation({
+  const { mutate, isPending } = tsr.transaction.archivedTransaction.useMutation({
     onSuccess: () => {
       toast.success("Data has been archived");
       setNotification({
