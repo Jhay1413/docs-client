@@ -64,7 +64,7 @@ export const AddTicketComponent = () => {
       remarks: null,
       projectId: null,
       transactionId: null,
-      attachments: undefined,
+      attachments: [],
     },
   });
 
