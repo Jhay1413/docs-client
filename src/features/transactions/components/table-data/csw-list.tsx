@@ -25,6 +25,14 @@ export const CswComponent = ({ transactionId, data }: Props) => {
   const handlePrint = useReactToPrint({
     content: () => componentRef.current!,
   });
+
+  const filteredAttachments = data.filter((item) => item.attachments.length > 0);
+
+  const attachmentsToView = filteredAttachments.map((item) => {
+    const attachments = [];
+    item.attachments.map;
+  });
+
   return (
     <div className="flex flex-col gap-2">
       {(role === "CH" || role == "QA") && (

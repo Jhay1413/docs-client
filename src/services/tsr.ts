@@ -1,6 +1,6 @@
 import { initTsrReactQuery } from "@ts-rest/react-query/v5";
 import { initClient } from "@ts-rest/core";
-import { companyContract, contracts, transactionContract } from "shared-contract";
+import { contracts } from "shared-contract";
 // const mode = import.meta.env.VITE_MODE;
 const endpoint = import.meta.env.VITE_ENDPOINT;
 // const prod = import.meta.env.VITE_PROD_API;
