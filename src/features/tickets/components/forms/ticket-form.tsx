@@ -71,6 +71,7 @@ const TicketForm = ({ selectedDivision, setSelectedDivision, setSelectedSection,
         )}
       />
 
+      
       {/* Subject (Small Input) */}
       <div className="col-span-2 mb-6">
         <FormTextArea name="subject" label="Subject" placeholder="Enter subject" />

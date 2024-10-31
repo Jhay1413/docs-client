@@ -19,6 +19,7 @@ export const TicketDetails = () => {
       params: { id: id! },
     },
   });
+  console.log("ticket data:", data);
 
   // Add the button component here
 const ForwardTicketBtn = () => (
@@ -125,11 +126,11 @@ const ForwardTicketBtn = () => (
           </p>
         </div>
       </div>
-      <Separator className="my-4" />
 
       {/* Conditionally render Project Details */}
       {data?.body.project && (
         <>
+        <Separator className="my-4" />
           <h1 className="text-xl font-bold text-gray-800 mb-4">Project Details</h1>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6 mb-4 shadow items-stretch">
             <div className="grid grid-cols-3 md:grid-cols-3 lg:grid-cols-3 col-span-2 gap-6 mb-4 shadow h-full">
@@ -156,12 +157,36 @@ const ForwardTicketBtn = () => (
 
       {/* Conditionally render Transaction ID */}
       {data?.body.transactionId && (
-        <div className="bg-white p-6 rounded-lg text-lg shadow">
-          <h2 className="font-semibold text-gray-700">Transaction ID:</h2>
-          <p className="text-gray-600">{data.body.transactionId}</p>
-        </div>
+        <>
+        <Separator className="my-4" />
+        <h1 className="text-xl font-bold text-gray-800 mb-4">Transaction Details</h1>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6 mb-4 shadow items-stretch">
+            <div className="grid grid-cols-3 md:grid-cols-3 lg:grid-cols-3 col-span-2 gap-6 mb-4 shadow h-full">
+              <div className="bg-white p-4 rounded-lg h-full">
+                <h2 className="font-semibold text-gray-700">Transaction ID:</h2>
+                <p className="text-gray-600">{data.body.transaction?.transactionId}</p>
+              </div>
+              <div className="bg-white p-4 rounded-lg h-full">
+                <h2 className="font-semibold text-gray-700">Document Subtype:</h2>
+                <p className="text-gray-600">{data.body.transaction?.documentSubType}</p>
+              </div>
+              <div className="bg-white p-4 rounded-lg h-full">
+                <h2 className="font-semibold text-gray-700">Status:</h2>
+                <p className="text-gray-600">{data.body.transaction?.status}</p>
+              </div>
+                <div className="bg-white p-4 rounded-lg h-full">
+                <h2 className="font-semibold text-gray-700">Priority:</h2>
+                <p className="text-gray-600">{data.body.transaction?.priority}</p>
+              </div>
+                <div className="bg-white p-4 rounded-lg h-full">
+                <h2 className="font-semibold text-gray-700">Due Date:</h2>
+                <p className="text-gray-600">{data.body.transaction?.dueDate}</p>
+              </div>
+            </div>
+          </div>
+        </>
       )}
-
+      <Separator className="my-4" />
       {/* Request Details and Remarks */}
       <div className="grid grid-cols-1 gap-6 mt-6">
         <div className="bg-white p-6 rounded-lg shadow text-lg">
