@@ -64,7 +64,7 @@ export const AddTicketComponent = () => {
       remarks: null,
       projectId: null,
       transactionId: null,
-      attachments: undefined,
+      attachments: [],
     },
   });
 
@@ -75,6 +75,7 @@ export const AddTicketComponent = () => {
 
   const onSubmit: SubmitHandler<z.infer<typeof ticketingMutationSchema>> = async (data) => {
     mutateFn(data, setIsSubmitting);
+    console.log(data);
   };
   
   return (
