@@ -46,7 +46,7 @@ const TicketFormEPD = () => {
   console.log("transactions", transactions);
 
   return (
-    <div className="grid grid-cols-2 gap-6 bg-gray-50 rounded-md mb-4">
+    <div className="grid flex-wrap grid-cols-1 gap-6 bg-gray-50 rounded-md mb-4">
       {/* Project (Dropdown Select) */}
       <FormField
         control={control}

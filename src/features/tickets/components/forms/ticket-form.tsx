@@ -63,14 +63,20 @@ const TicketForm = ({ selectedDivision, setSelectedDivision, setSelectedSection,
   return (
     <div className="grid grid-cols-3 gap-6 p-4 bg-gray-50 rounded-md shadow-lg mb-4">
 
-      <div className="grid grid-cols-3 gap-6 col-span-3 mb-6">
+      <div className="grid grid-cols-3 gap-6 col-span-3 mb-6 min-h-[100px]">
         {/* Subject Field */}
         <div className="col-span-1">
           <FormTextArea name="subject" label="Subject*" placeholder="Enter subject" />
         </div>
         {/* Request Details Field */}
-        <div className="col-span-2">
+        <div className="col-span-1">
           <FormTextArea name="requestDetails" label="Request Details*" placeholder="Enter details" />
+        </div>
+
+        <div className="col-span-1 mt-3">
+          {requestType === "EPD" && <TicketFormEPD />}
+          {requestType === "IT" && <TicketFormIT />}
+          {requestType === "Marketing" && <TicketFormMRKT />}
         </div>
       </div>
 
@@ -286,13 +292,6 @@ const TicketForm = ({ selectedDivision, setSelectedDivision, setSelectedSection,
       <div className="mb-4">
         <FormTextArea name="remarks" label="Remarks" placeholder="Enter remarks" />
       </div>
-
-      <div className="col-span-2 mt-3">
-        {requestType === "EPD" && <TicketFormEPD />}
-        {requestType === "IT" && <TicketFormIT />}
-        {requestType === "Marketing" && <TicketFormMRKT />}
-      </div>
-
 
       {/* Attachments (File Input with Button Trigger) */}
       <FormField
