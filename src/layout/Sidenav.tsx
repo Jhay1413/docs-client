@@ -82,6 +82,7 @@ export const SideNav = () => {
             </NavLink>
           </li>
           <CompaniesItemWithRole roles={["SUPERADMIN", "MANAGER"]} exemptions={["Operations Department"]} />
+
         </ul>
         <UserAndAccountWithRole roles={["SUPERADMIN"]} exemptions={["Operations Department"]} />
         <Label className="text-[#DCFF8E] px-4 font-medium flex w-full text-sm">TRANSACTIONS</Label>

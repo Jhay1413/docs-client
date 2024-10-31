@@ -79,6 +79,7 @@ export const AddTicketComponent = () => {
 
   const onSubmit: SubmitHandler<z.infer<typeof ticketingMutationSchema>> = async (data) => {
     mutateFn(data, setIsSubmitting);
+    console.log(data);
   };
 
   return (
