@@ -55,7 +55,7 @@ export const ForwardTicketComponent = () => {
       receiverId: ticketData?.body.receiver.userInfo?.firstName || "", // This should be set to the new receiver's ID
       requesteeId: ticketData?.body.requestee.userInfo?.firstName,
       remarks: ticketData?.body.remarks,
-      projectId: ticketData?.body.project?.projectId,
+      projectId: ticketData?.body.project?.id,
       transactionId: ticketData?.body.transactionId,
       attachments: ticketData?.body.attachments,
     },

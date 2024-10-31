@@ -15,15 +15,15 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 
 export const AddTicketComponent = () => {
   const userId = getCurrentUserId();
-  const [ selectedDivision, setSelectedDivision ] = useState("");
-  const [ selectedSection, setSelectedSection ] = useState("");
+  const [selectedDivision, setSelectedDivision] = useState("");
+  const [selectedSection, setSelectedSection] = useState("");
   const role = useCurrentUserRole();
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [selectectedType,setSelectedType] = useState("");
+  const [selectectedType, setSelectedType] = useState("");
   const navigate = useNavigate();
-  const {mutate} = tsr.ticketing.createTickets.useMutation({
-    onMutate:()=>{},
-    onSuccess:()=>{
+  const { mutate } = tsr.ticketing.createTickets.useMutation({
+    onMutate: () => { },
+    onSuccess: () => {
       form.reset();
       toast.success("Ticket Created !");
       navigate("/dashboard/tickets/list");
@@ -33,10 +33,10 @@ export const AddTicketComponent = () => {
       toast.error("Failed to create ticket. Please try again.");
     },
   })
-  
+
   const form = useForm<z.infer<typeof ticketingMutationSchema>>({
     resolver: zodResolver(ticketingMutationSchema),
-    mode:"onSubmit",
+    mode: "onSubmit",
     defaultValues: {
       ticketId: "",
       requestType: "",
@@ -46,7 +46,7 @@ export const AddTicketComponent = () => {
       status: "",
       requestDetails: "",
       priority: "",
-      dueDate: "", 
+      dueDate: "",
       dateForwarded: new Date().toISOString(),
       dateReceived: null,
       senderId: userId,
@@ -59,21 +59,21 @@ export const AddTicketComponent = () => {
     },
   });
   const { data, isError, error } = tsr.userAccounts.getUsersForTickets.useQuery({
-    queryKey: ["usersForTicket", selectedDivision, selectedSection,selectectedType],
+    queryKey: ["usersForTicket", selectedDivision, selectedSection, selectectedType],
     queryData: {
       query: {
         division: selectedDivision,
         section: selectedSection,
         role: role,
         mode: "insert",
-        type:selectectedType,
-        
+        type: selectectedType,
+
       },
     },
   });
-  
+
   const mutateFn = async (data: z.infer<typeof ticketingMutationSchema>, setSubmitting: (value: boolean) => void) => {
-    mutate({body:data})
+    mutate({ body: data })
 
   }
 
@@ -81,7 +81,7 @@ export const AddTicketComponent = () => {
     mutateFn(data, setIsSubmitting);
     console.log(data);
   };
-  
+
   return (
     <div className="flex flex-col gap-4 p-4 w-full h-full bs-white">
       <h1 className="text-4xl">Add Ticket</h1>
@@ -89,36 +89,49 @@ export const AddTicketComponent = () => {
       {/* The form */}
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)}>
-        <FormField
-        control={form.control}
-        name="requestType"
-        render={({ field }) => (
-          <FormItem className="col-span-1">
-            <FormLabel>Request Type</FormLabel>
-            <FormControl>
-              <Select onValueChange={(value)=>{
-                field.onChange(value)
-                setSelectedType(value)
-              }} defaultValue={field.value}>
-                <SelectTrigger className="w-full">
-                  <SelectValue placeholder="Select request type" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="EPD">EPD</SelectItem>
-                  <SelectItem value="Marketing">Marketing</SelectItem>
-                  <SelectItem value="IT">IT</SelectItem>
-                </SelectContent >
-              </Select>
-            </FormControl>
-            <FormMessage />
-          </FormItem>
-        )}
-      />
+        <div className="grid grid-cols-3 gap-6">
+          <FormField
+          control={form.control}
+          name="requestType"
+          render={({ field }) => (
+            <FormItem className="col-span-1 mb-4">
+              <FormLabel>Request Type</FormLabel>
+              <FormControl>
+                <Select
+                  onValueChange={(value) => {
+                    field.onChange(value);
+                    setSelectedType(value);
+                  }}
+                  defaultValue={field.value}
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select request type" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="EPD">EPD</SelectItem>
+                    <SelectItem value="Marketing">Marketing</SelectItem>
+                    <SelectItem value="IT">IT</SelectItem>
+                  </SelectContent>
+                </Select>
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+      </div>
+          <TicketForm selectedDivision={selectedDivision} setSelectedDivision={setSelectedDivision} setSelectedSection={setSelectedSection} receiver={data ? data.body : []} />
 
-          <TicketForm selectedDivision={selectedDivision} setSelectedDivision={setSelectedDivision} setSelectedSection={setSelectedSection} receiver={data ? data.body : []}/>
 
           {/* Submit Button */}
-          <Button type="submit" onClick={()=>console.log(form.formState.errors)}>Submit</Button>
+          <div className="flex justify-end py-4">
+            <Button
+              type="submit"
+              className="w-[256px]"
+              onClick={() => console.log(form.formState.errors)}
+            >
+              Submit
+            </Button>
+          </div>
         </form>
       </Form>
     </div>

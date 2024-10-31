@@ -48,29 +48,6 @@ const TicketForm = ({ selectedDivision, setSelectedDivision, setSelectedSection,
 
   return (
     <div className="grid grid-cols-3 gap-6 p-4 bg-gray-50 rounded-md shadow-lg mb-4">
-      <FormField
-        control={control}
-        name="requestType"
-        render={({ field }) => (
-          <FormItem className="col-span-1">
-            <FormLabel>Request Type</FormLabel>
-            <FormControl>
-              <Select onValueChange={field.onChange} defaultValue={field.value} disabled={isForwarding}>
-                <SelectTrigger className="w-full">
-                  <SelectValue placeholder="Select request type" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="EPD">EPD</SelectItem>
-                  <SelectItem value="Marketing">Marketing</SelectItem>
-                  <SelectItem value="IT">IT</SelectItem>
-                </SelectContent>
-              </Select>
-            </FormControl>
-            <FormMessage />
-          </FormItem>
-        )}
-      />
-
       
       {/* Subject (Small Input) */}
       <div className="col-span-2 mb-6">
@@ -94,7 +71,7 @@ const TicketForm = ({ selectedDivision, setSelectedDivision, setSelectedSection,
         name="division"
         render={({ field }) => (
           <FormItem className="col-span-1">
-            <FormLabel>Division</FormLabel>
+            <FormLabel>Division*</FormLabel>
             <FormControl>
               <Select onValueChange={(value) => {
                           setSelectedDivision(value);
@@ -107,12 +84,12 @@ const TicketForm = ({ selectedDivision, setSelectedDivision, setSelectedSection,
                   <SelectValue placeholder="Select division" />
                 </SelectTrigger>
                 <SelectContent>
-                          {Divisions.map((division) => (
-                            <SelectItem key={division.name} value={division.name!}>
-                              {division.name}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
+                  {Divisions.map((division) => (
+                    <SelectItem key={division.name} value={division.name!}>
+                      {division.name}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
               </Select>
             </FormControl>
             <FormMessage />
@@ -173,7 +150,7 @@ const TicketForm = ({ selectedDivision, setSelectedDivision, setSelectedSection,
         name="status"
         render={({ field }) => (
           <FormItem className="col-span-1">
-            <FormLabel>Status</FormLabel>
+            <FormLabel>Status*</FormLabel>
             <FormControl>
               <Select onValueChange={field.onChange} defaultValue={field.value} disabled={isForwarding}>
                 <SelectTrigger className="w-full">
@@ -199,7 +176,7 @@ const TicketForm = ({ selectedDivision, setSelectedDivision, setSelectedSection,
         name="priority"
         render={({ field }) => (
           <FormItem className="col-span-1">
-            <FormLabel>Priority</FormLabel>
+            <FormLabel>Priority*</FormLabel>
             <FormControl>
               <Select
                 onValueChange={field.onChange}
@@ -227,7 +204,7 @@ const TicketForm = ({ selectedDivision, setSelectedDivision, setSelectedSection,
         name="dueDate"
         render={({ field }) => (
           <FormItem className="col-span-1">
-            <FormLabel>Due Date</FormLabel>
+            <FormLabel>Due Date*</FormLabel>
             <FormControl>
               {/* <input
                 type="date"
@@ -295,7 +272,7 @@ const TicketForm = ({ selectedDivision, setSelectedDivision, setSelectedSection,
         control={control}
         name="file"
         render={({ field }) => (
-          <FormItem className="col-span-3">
+          <FormItem className="col-span-3 mt-4">
             <FormLabel>Attachments</FormLabel>
             <FormControl>
               <div className="flex items-center space-x-4">
