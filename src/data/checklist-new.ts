@@ -19,7 +19,7 @@ export const checkList = [
           "Copy of PCO Accreditation",
           "Copy of Water Bill",
           "Monthly Abstraction",
-          "Retrieving data. Wait a few seconds and try to cut or copy again.",
+          "Copy of Hazardous Waste Generator ID",
           "Copy of Effluent Test Results",
           "Sketch Plan (Signed and Sealed)",
           "Wastewater Treatment Facility Plan and Elevation (Signed and Sealed)",
@@ -559,7 +559,7 @@ export const checkList = [
         name: "ARCENIC",
         value: "ARCENIC",
         category: "CCO",
-        checkList:[
+        checkList: [
           "Hazardous Waste Generator ID",
           "Permit to Operate",
           "Discharge Permit",
@@ -569,7 +569,7 @@ export const checkList = [
           "Chemical Management Plan",
           "Chemical Safety Data Sheet (SDS)",
           "Emergency & Contingency Plan",
-          "Geotagged Photos of the Facility"
+          "Geotagged Photos of the Facility",
         ],
       },
       {
