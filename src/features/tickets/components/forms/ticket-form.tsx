@@ -36,22 +36,22 @@ type Props = {
   }[];
 };
 
-const TicketForm = ({selectedDivision,setSelectedDivision, setSelectedSection, receiver}: Props) => {
-  
+const TicketForm = ({ selectedDivision, setSelectedDivision, setSelectedSection, receiver }: Props) => {
+
   const { control, watch } = useFormContext();
   const requestType = watch("requestType");
-  
 
-  
+
+
   const sections = Divisions.find(
     (division) => division.name === selectedDivision
   );
- 
+
   if (!control) {
     return <div>Error: No form context found!</div>;
   }
 
- 
+
 
   const fileInputRef = useRef<HTMLInputElement | null>(null);
 
@@ -62,46 +62,40 @@ const TicketForm = ({selectedDivision,setSelectedDivision, setSelectedSection, r
   };
   return (
     <div className="grid grid-cols-3 gap-6 p-4 bg-gray-50 rounded-md shadow-lg mb-4">
-      
-      {/* Subject (Small Input) */}
-      <div className="col-span-2 mb-6">
-        <FormTextArea name="subject" label="Subject" placeholder="Enter subject" />
-      </div>
-      
 
-      <div className="col-span-2">
-        {requestType === "EPD" && <TicketFormEPD />}
-        {requestType === "IT" && <TicketFormIT />}
-        {requestType === "Marketing" && <TicketFormMRKT />}
-      </div>
-
-      <div className="col-span-3 mb-6">
-        <FormTextArea name="requestDetails" label="Request Details" placeholder="Enter details" />
+      <div className="grid grid-cols-3 gap-6 col-span-3 mb-6">
+        {/* Subject Field */}
+        <div className="col-span-1">
+          <FormTextArea name="subject" label="Subject*" placeholder="Enter subject" />
+        </div>
+        {/* Request Details Field */}
+        <div className="col-span-2">
+          <FormTextArea name="requestDetails" label="Request Details*" placeholder="Enter details" />
+        </div>
       </div>
 
-
-<FormField
+      <FormField
         control={control}
         name="division"
         render={({ field }) => (
           <FormItem className="col-span-1">
-            <FormLabel>Division</FormLabel>
+            <FormLabel>Division*</FormLabel>
             <FormControl>
               <Select onValueChange={(value) => {
-                          setSelectedDivision(value);
-                          field.onChange(value);
-                        }}
-                         defaultValue={field.value}>
+                setSelectedDivision(value);
+                field.onChange(value);
+              }}
+                defaultValue={field.value}>
                 <SelectTrigger className="w-full">
                   <SelectValue placeholder="Select division" />
                 </SelectTrigger>
                 <SelectContent>
-                          {Divisions.map((division) => (
-                            <SelectItem key={division.name} value={division.name!}>
-                              {division.name}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
+                  {Divisions.map((division) => (
+                    <SelectItem key={division.name} value={division.name!}>
+                      {division.name}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
               </Select>
             </FormControl>
             <FormMessage />
@@ -115,7 +109,7 @@ const TicketForm = ({selectedDivision,setSelectedDivision, setSelectedSection, r
         name="section"
         render={({ field }) => (
           <FormItem className="col-span-1">
-            <FormLabel>Section</FormLabel>
+            <FormLabel>Section*</FormLabel>
             <FormControl>
               <Select onValueChange={(value) => {
                 setSelectedSection(value);
@@ -129,14 +123,14 @@ const TicketForm = ({selectedDivision,setSelectedDivision, setSelectedSection, r
                   <SelectValue placeholder="Select section" />
                 </SelectTrigger>
                 <SelectContent>
-                          {sections?.section?.map((section) => (
-                            <SelectItem
-                              key={section.value}
-                              value={section.value!}
-                            >
-                              {section.name}
-                            </SelectItem>
-                          ))}
+                  {sections?.section?.map((section) => (
+                    <SelectItem
+                      key={section.value}
+                      value={section.value!}
+                    >
+                      {section.name}
+                    </SelectItem>
+                  ))}
                 </SelectContent>
               </Select>
             </FormControl>
@@ -145,7 +139,7 @@ const TicketForm = ({selectedDivision,setSelectedDivision, setSelectedSection, r
         )}
       />
 
-      
+
 
       {/* Status (Dropdown Select) */}
       <FormField
@@ -153,7 +147,7 @@ const TicketForm = ({selectedDivision,setSelectedDivision, setSelectedSection, r
         name="status"
         render={({ field }) => (
           <FormItem className="col-span-1">
-            <FormLabel>Status</FormLabel>
+            <FormLabel>Status*</FormLabel>
             <FormControl>
               <Select onValueChange={field.onChange} defaultValue={field.value}>
                 <SelectTrigger className="w-full">
@@ -179,7 +173,7 @@ const TicketForm = ({selectedDivision,setSelectedDivision, setSelectedSection, r
         name="priority"
         render={({ field }) => (
           <FormItem className="col-span-1">
-            <FormLabel>Priority</FormLabel>
+            <FormLabel>Priority*</FormLabel>
             <FormControl>
               <Select
                 onValueChange={field.onChange}
@@ -206,13 +200,13 @@ const TicketForm = ({selectedDivision,setSelectedDivision, setSelectedSection, r
         name="dueDate"
         render={({ field }) => (
           <FormItem className="col-span-1">
-            <FormLabel>Due Date</FormLabel>
+            <FormLabel>Due Date*</FormLabel>
             <FormControl>
               {/* <input
-                type="date"
-                className="w-full h-10 px-4 text-sm border border-gray-300 rounded-md"
-                {...field}
-              /> */}
+                      type="date"
+                      className="w-full h-10 px-4 text-sm border border-gray-300 rounded-md"
+                      {...field}
+                    /> */}
               <Popover>
                 <PopoverTrigger asChild>
                   <Button variant={"outline"} className={cn("w-full justify-start text-left font-normal", !field.value && "text-muted-foreground")}>
@@ -233,73 +227,79 @@ const TicketForm = ({selectedDivision,setSelectedDivision, setSelectedSection, r
             </FormControl>
             <FormMessage />
           </FormItem>
- )}
+        )}
       />
 
 
       {/* Receiver (Dropdown Select) */}
       <FormField
-  control={control}
-  name="receiverId"
-  render={({ field }) => (
-    <FormItem className="col-span-1">
-      <FormLabel>Receiver</FormLabel>
-      <FormControl>
-        <Select onValueChange={field.onChange} defaultValue={field.value}>
-          <SelectTrigger className="w-full">
-            <SelectValue placeholder="Select receiver" />
-          </SelectTrigger>
-          <SelectContent>
-            {/* Use receiver ?? [] to provide an empty array if receiver is undefined */}
-            {(receiver ?? []).map((user) => (
-              <SelectItem key={user.id} value={user.id}>
-                {user.userInfo.firstName} {user.userInfo.lastName}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-      </FormControl>
-      <FormMessage />
-    </FormItem>
-  )}
-/>
-
-      {/* Requestee (Dropdown Select) */}
-      {/* <FormField
         control={control}
-        name="requestee"
+        name="receiverId"
         render={({ field }) => (
           <FormItem className="col-span-1">
-            <FormLabel>Requestee</FormLabel>
+            <FormLabel>Receiver*</FormLabel>
             <FormControl>
               <Select onValueChange={field.onChange} defaultValue={field.value}>
                 <SelectTrigger className="w-full">
-                  <SelectValue placeholder="Select requestee" />
+                  <SelectValue placeholder="Select receiver" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="Requestee 1">Requestee 1</SelectItem>
-                  <SelectItem value="Requestee 2">Requestee 2</SelectItem>
-                  <SelectItem value="Requestee 3">Requestee 3</SelectItem>
+                  {/* Use receiver ?? [] to provide an empty array if receiver is undefined */}
+                  {(receiver ?? []).map((user) => (
+                    <SelectItem key={user.id} value={user.id}>
+                      {user.userInfo.firstName} {user.userInfo.lastName}
+                    </SelectItem>
+                  ))}
                 </SelectContent>
               </Select>
             </FormControl>
             <FormMessage />
           </FormItem>
         )}
-      /> */}
+      />
+
+      {/* Requestee (Dropdown Select) */}
+      {/* <FormField
+              control={control}
+              name="requestee"
+              render={({ field }) => (
+                <FormItem className="col-span-1">
+                  <FormLabel>Requestee</FormLabel>
+                  <FormControl>
+                    <Select onValueChange={field.onChange} defaultValue={field.value}>
+                      <SelectTrigger className="w-full">
+                        <SelectValue placeholder="Select requestee" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="Requestee 1">Requestee 1</SelectItem>
+                        <SelectItem value="Requestee 2">Requestee 2</SelectItem>
+                        <SelectItem value="Requestee 3">Requestee 3</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            /> */}
 
       {/* Remarks (Medium TextArea) */}
       <div className="mb-4">
-      <FormTextArea name="remarks" label="Remarks" placeholder="Enter remarks" />
+        <FormTextArea name="remarks" label="Remarks" placeholder="Enter remarks" />
       </div>
-      
+
+      <div className="col-span-2 mt-3">
+        {requestType === "EPD" && <TicketFormEPD />}
+        {requestType === "IT" && <TicketFormIT />}
+        {requestType === "Marketing" && <TicketFormMRKT />}
+      </div>
+
 
       {/* Attachments (File Input with Button Trigger) */}
       <FormField
         control={control}
         name="file"
         render={({ field }) => (
-          <FormItem className="col-span-3">
+          <FormItem className="col-span-3 mt-4">
             <FormLabel>Attachments</FormLabel>
             <FormControl>
               <div className="flex items-center space-x-4">
@@ -319,6 +319,8 @@ const TicketForm = ({selectedDivision,setSelectedDivision, setSelectedSection, r
           </FormItem>
         )}
       />
+
+
 
 
     </div>
