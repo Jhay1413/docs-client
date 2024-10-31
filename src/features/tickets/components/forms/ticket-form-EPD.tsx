@@ -11,8 +11,14 @@ import { tsr } from "@/services/tsr";
 import { keepPreviousData } from "@tanstack/react-query";
 import { useDebounce } from "use-debounce";
 import { cn } from "@/lib/utils";
-const TicketFormEPD = () => {
-  const { control, setValue } = useFormContext();
+import { Input } from "@/components/ui/input";
+
+type Props = {
+  isForwarding: boolean;
+};
+
+const TicketFormEPD = ({isForwarding}: Props) => {
+  const { control, setValue,formState } = useFormContext();
   const [searchQuery, setSearchQuery] = useState("");
   const [debouncedSearchQuery] = useDebounce(searchQuery, 500);
   const [selectedProject, setSelectedProject] = useState("");
@@ -44,17 +50,31 @@ const TicketFormEPD = () => {
     placeholderData: keepPreviousData,
   });
   console.log("transactions", transactions);
-
+  console.log(formState.defaultValues)
   return (
     <div className="grid grid-cols-2 gap-6 bg-gray-50 rounded-md mb-4">
-      {/* Project (Dropdown Select) */}
+      {/* Project (Dropdown Select or Input) */}
       <FormField
         control={control}
-        name="projects"
+        name="projectId"
         render={({ field }) => (
           <FormItem className="flex col-span-1 flex-col w-full justify-center">
-            <FormLabel>Project</FormLabel>
-            <Popover>
+            <FormLabel hidden={isForwarding}>Project</FormLabel>
+            {isForwarding ? (
+              <FormControl>
+                <Input
+                  
+                  type="text"
+                  className="w-full h-10 px-4 text-sm border border-gray-300 rounded-md hidden"
+                  {...field}
+                  placeholder="Project ID"
+                  
+                  disabled
+                  // Make it read-only during forwarding
+                />
+              </FormControl>
+            ) : (
+              <Popover>
               <PopoverTrigger asChild>
                 <FormControl>
                   <Button variant="outline" role="combobox" className={cn(" justify-between", !field.value && "text-muted-foreground")}>
@@ -87,7 +107,8 @@ const TicketFormEPD = () => {
                 </Command>
               </PopoverContent>
             </Popover>
-            <FormMessage />
+            )}
+
           </FormItem>
         )}
       />
@@ -95,10 +116,23 @@ const TicketFormEPD = () => {
       {/* Transaction ID (Input) */}
       <FormField
         control={control}
-        name="transactions"
+        name="transactionId"
         render={({ field }) => (
           <FormItem className="flex col-span-1 flex-col w-full justify-center">
-            <FormLabel>Transaction ID</FormLabel>
+            <FormLabel hidden={isForwarding}>Transaction ID</FormLabel>
+            {isForwarding ? (
+            <FormControl>
+              <input
+                type="text"
+                className="w-full h-10 px-4 text-sm border border-gray-300 rounded-md"
+                {...field}
+                placeholder="Enter transaction ID"
+                readOnly={isForwarding}
+                disabled={isForwarding} // Disable the input if isForwarding is true
+                hidden={isForwarding}
+              />
+            </FormControl>
+            ) : (
             <Popover>
               <PopoverTrigger asChild>
                 <FormControl>
@@ -132,6 +166,7 @@ const TicketFormEPD = () => {
                 </Command>
               </PopoverContent>
             </Popover>
+            )}
             <FormMessage />
           </FormItem>
         )}
