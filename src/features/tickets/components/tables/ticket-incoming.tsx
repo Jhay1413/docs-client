@@ -6,6 +6,7 @@ import { useNotificationStore } from "@/global-states/notification-store";
 import { toast } from "react-toastify";
 import { ticketsIncomingColumn } from "./tickets-incoming-columns";
 import { keepPreviousData } from "@tanstack/react-query";
+import { ticketingTableSchema } from "shared-contract";
 
 export const IncomingTicketComponent = () => {
   const tsrQueryClient = tsr.useQueryClient();

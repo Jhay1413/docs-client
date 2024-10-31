@@ -151,10 +151,6 @@ export const TicketDetails = () => {
                 <h2 className="font-semibold text-gray-700">Document Subtype:</h2>
                 <p className="text-gray-600">{data.body.transaction?.documentSubType}</p>
               </div>
-              <div className="bg-white p-4 rounded-lg h-full">
-                <h2 className="font-semibold text-gray-700">Status:</h2>
-                <p className="text-gray-600">{data.body.transaction?.status}</p>
-              </div>
                 <div className="bg-white p-4 rounded-lg h-full">
                 <h2 className="font-semibold text-gray-700">Priority:</h2>
                 <p className="text-gray-600">{data.body.transaction?.priority}</p>
