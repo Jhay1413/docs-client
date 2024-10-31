@@ -14,7 +14,7 @@ import { cn } from "@/lib/utils";
 import { Input } from "@/components/ui/input";
 
 type Props = {
-  isForwarding: boolean;
+  isForwarding?: boolean;
 };
 
 const TicketFormEPD = ({isForwarding}: Props) => {

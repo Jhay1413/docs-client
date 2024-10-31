@@ -29,7 +29,7 @@ type Props = {
     };
     accountRole: string;
   }[];
-  isForwarding: boolean;
+  isForwarding?: boolean;
 };
 
 const TicketForm = ({ selectedDivision, setSelectedDivision, setSelectedSection, receiver, isForwarding }: Props) => {
@@ -56,7 +56,7 @@ const TicketForm = ({ selectedDivision, setSelectedDivision, setSelectedSection,
 
       {/* Conditional Rendering of Ticket Forms */}
       <div className="col-span-2">
-        {requestType === "EPD" && <TicketFormEPD isForwarding={isForwarding} />}
+        {requestType === "EPD" &&  <TicketFormEPD isForwarding={isForwarding} />}
         {requestType === "IT" && <TicketFormIT />}
         {requestType === "Marketing" && <TicketFormMRKT />}
       </div>

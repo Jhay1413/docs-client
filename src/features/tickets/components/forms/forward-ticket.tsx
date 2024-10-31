@@ -52,7 +52,7 @@ export const ForwardTicketComponent = () => {
       dateForwarded: ticketData?.body.dateForwarded,
       dateReceived: ticketData?.body.dateReceived,
       senderId: ticketData?.body.sender.userInfo?.firstName,
-      receiverId: ticketData?.body.receiver.userInfo?.firstName || "", // This should be set to the new receiver's ID
+      // receiverId: ticketData?.body.receiver.userInfo?.firstName || "", // This should be set to the new receiver's ID
       requesteeId: ticketData?.body.requestee.userInfo?.firstName,
       remarks: ticketData?.body.remarks,
       projectId: ticketData?.body.project?.id,
