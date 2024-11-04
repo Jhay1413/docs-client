@@ -21,6 +21,7 @@ export const AddTicketComponent = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [selectectedType, setSelectedType] = useState("");
   const navigate = useNavigate();
+  
   const { mutate } = tsr.ticketing.createTickets.useMutation({
     onMutate: () => { },
     onSuccess: () => {

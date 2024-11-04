@@ -4,20 +4,24 @@ import { Form } from "@/components/ui/form";
 import { Button } from "@/components/ui/button";
 import { z } from "zod";
 import TicketForm from "./ticket-form";
-import { ticketingMutationSchema } from "shared-contract";
+import { ticketEditSchema, ticketingMutationSchema } from "shared-contract";
 
 import { useState, useEffect } from "react";
 import { tsr } from "@/services/tsr";
 import { toast } from "react-toastify";
 import { useMutation, useQuery } from "react-query";
 import { useParams, useNavigate } from "react-router-dom";
+import { useCurrentUserRole } from "@/hooks/use-user-hook";
 
 export const ForwardTicketComponent = () => {
-  const { id } = useParams(); // Get the ticket ID from the URL
-
+  const { id } = useParams();
+  const role = useCurrentUserRole();
   const [selectedDivision, setSelectedDivision] = useState("");
   const [selectedSection, setSelectedSection] = useState("");
-  const [isForwarding, setIsForwarding] = useState(true); // Add this line
+  const [isForwarding, setIsForwarding] = useState(true);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [selectectedType, setSelectedType] = useState("");
+  const navigate = useNavigate();
 
   // Fetch the existing ticket details
   const { data: ticketData, isLoading: isLoadingTicket } = tsr.ticketing.getTicketsById.useQuery({
@@ -25,21 +29,11 @@ export const ForwardTicketComponent = () => {
     queryData: { params: { id: id! } },
   });
 
-//   const { mutate } = tsr.ticketing.getTicketsById.useMutation({
-//     onSuccess: () => {
-//       toast.success("Ticket Forwarded Successfully!");
-//       navigate("/dashboard/tickets/list");
-//     },
-//     onError: (error) => {
-//       console.error("Error forwarding ticket:", error);
-//       toast.error("Failed to forward ticket. Please try again.");
-//     },
-//   });
-
-  const form = useForm<z.infer<typeof ticketingMutationSchema>>({
+  const form = useForm<z.infer<typeof ticketEditSchema>>({
     resolver: zodResolver(ticketingMutationSchema),
     mode: "onSubmit",
     defaultValues: {
+      id: ticketData?.body.id || "",
       ticketId: ticketData?.body.ticketId || "",
       requestType: ticketData?.body.requestType || "",
       subject: ticketData?.body.subject || "",
@@ -50,10 +44,9 @@ export const ForwardTicketComponent = () => {
       priority: ticketData?.body.priority || "",
       dueDate: ticketData?.body.dueDate || "", 
       dateForwarded: ticketData?.body.dateForwarded,
-      dateReceived: ticketData?.body.dateReceived,
-      senderId: ticketData?.body.sender.userInfo?.firstName,
-      receiverId: ticketData?.body.receiver.userInfo?.firstName || "", // This should be set to the new receiver's ID
-      requesteeId: ticketData?.body.requestee.userInfo?.firstName,
+      dateReceived: null,
+      senderId: ticketData?.body.receiver.id,
+      requesteeId: ticketData?.body.requestee.id,
       remarks: ticketData?.body.remarks,
       projectId: ticketData?.body.project?.id,
       transactionId: ticketData?.body.transactionId,
@@ -61,35 +54,40 @@ export const ForwardTicketComponent = () => {
     },
   });
 
-//   useEffect(() => {
-//     if (ticketData?.body) {
-//       form.reset({
-//         ticketId: ticketData.body.ticketId,
-//         requestType: ticketData.body.requestType,
-//         subject: ticketData.body.subject,
-//         section: ticketData.body.section,
-//         division: ticketData.body.division,
-//         status: ticketData.body.status,
-//         requestDetails: ticketData.body.requestDetails,
-//         priority: ticketData.body.priority,
-//         dueDate: ticketData.body.dueDate,
-//         dateForwarded: ticketData.body.dateForwarded,
-//         dateReceived: ticketData.body.dateReceived,
-//         senderId: ticketData.body.sender.id,
-//         receiverId: ticketData.body.receiver.id, // This should be set to the new receiver's ID
-//         requesteeId: ticketData.body.requestee.id,
-//         remarks: ticketData.body.remarks,
-//         projectId: ticketData.body.project?.projectName,
-//         transactionId: ticketData.body.transactionId,
-//         attachments: ticketData.body.attachments,
-//       });
-//     }
-//   }, [ticketData, form]);
+  const { data, isError, error } = tsr.userAccounts.getUsersForTickets.useQuery({
+    queryKey: ["usersForTicket", selectedDivision, selectedSection, selectectedType],
+    queryData: {
+      query: {
+        division: selectedDivision,
+        section: selectedSection,
+        role: role,
+        mode: "insert",
+        type: selectectedType,
+
+      },
+    },
+  });
+
+  const { mutate } = tsr.ticketing.forwardTickets.useMutation({
+    onMutate: () => { },
+    onSuccess: () => {
+      form.reset();
+      toast.success("Ticket Forwarded !");
+      navigate("/dashboard/tickets/list");
+    },
+    onError: (error) => {
+      console.error("Error forwarding ticket:", error);
+      toast.error("Failed to forward ticket. Please try again.");
+    },
+  });
 
   console.log("Ticket data:", ticketData);
-  const onSubmit: SubmitHandler<z.infer<typeof ticketingMutationSchema>> = async (data) => {
-    // setIsSubmitting(true);
-    // mutate({ body: data });
+  const onSubmit: SubmitHandler<z.infer<typeof ticketEditSchema>> = async (data) => {
+    setIsSubmitting(true);
+    mutate({ 
+      body: data, 
+      params: { id: id! }
+    });
   };
 
   if (isLoadingTicket) {
@@ -108,8 +106,8 @@ export const ForwardTicketComponent = () => {
             selectedDivision={selectedDivision} 
             setSelectedDivision={setSelectedDivision} 
             setSelectedSection={setSelectedSection} 
-            receiver={[]} 
-            isForwarding={isForwarding} // Pass the isForwarding state
+            receiver={data ? data?.body : []}
+            isForwarding={isForwarding}
           />
           
           {/* Submit Button */}

@@ -50,19 +50,19 @@ const TicketForm = ({ selectedDivision, setSelectedDivision, setSelectedSection,
     <div className="grid grid-cols-3 gap-6 p-4 bg-gray-50 rounded-md shadow-lg mb-4">
       
       {/* Subject (Small Input) */}
-      <div className="col-span-2 mb-6">
+      <div className="col-span-1 mb-4">
         <FormTextArea name="subject" label="Subject" placeholder="Enter subject" />
       </div>
 
       {/* Conditional Rendering of Ticket Forms */}
-      <div className="col-span-2">
+      <div className="col-span-2 mt-2">
         {requestType === "EPD" && <TicketFormEPD isForwarding={isForwarding} />}
         {requestType === "IT" && <TicketFormIT />}
         {requestType === "Marketing" && <TicketFormMRKT />}
       </div>
 
       <div className="col-span-3 mb-6">
-        <FormTextArea name="requestDetails" label="Request Details" placeholder="Enter details" />
+        <FormTextArea name="requestDetails" label="Request Details" placeholder="Enter details"/>
       </div>
 
       {/* Division Select */}
@@ -152,7 +152,7 @@ const TicketForm = ({ selectedDivision, setSelectedDivision, setSelectedSection,
           <FormItem className="col-span-1">
             <FormLabel>Status*</FormLabel>
             <FormControl>
-              <Select onValueChange={field.onChange} defaultValue={field.value} disabled={isForwarding}>
+              <Select onValueChange={field.onChange} defaultValue={field.value}>
                 <SelectTrigger className="w-full">
                   <SelectValue placeholder="Select status" />
                 </SelectTrigger>
@@ -180,8 +180,7 @@ const TicketForm = ({ selectedDivision, setSelectedDivision, setSelectedSection,
             <FormControl>
               <Select
                 onValueChange={field.onChange}
-                value={field.value || ""} // Ensure it handles an empty state properly
-                disabled={isForwarding}
+                value={field.value || ""}
               >
                 <SelectTrigger className="w-full">
                   <SelectValue placeholder="Select priority" />
@@ -263,7 +262,7 @@ const TicketForm = ({ selectedDivision, setSelectedDivision, setSelectedSection,
       />
 
       {/* Remarks (Medium TextArea) */}
-      <div className="mb-4">
+      <div className="mb-4 col-span-3">
         <FormTextArea name="remarks" label="Remarks" placeholder="Enter remarks" />
       </div>
 
