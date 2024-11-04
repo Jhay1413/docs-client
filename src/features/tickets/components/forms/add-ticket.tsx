@@ -21,6 +21,7 @@ export const AddTicketComponent = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [selectectedType, setSelectedType] = useState("");
   const navigate = useNavigate();
+  
   const { mutate } = tsr.ticketing.createTickets.useMutation({
     onMutate: () => { },
     onSuccess: () => {
@@ -120,7 +121,6 @@ export const AddTicketComponent = () => {
         />
       </div>
           <TicketForm selectedDivision={selectedDivision} setSelectedDivision={setSelectedDivision} setSelectedSection={setSelectedSection} receiver={data ? data.body : []} />
-
 
           {/* Submit Button */}
           <div className="flex justify-end py-4">
