@@ -64,8 +64,6 @@ export const ForwardTicketComponent = () => {
         mode: "forward",
         type: ticketData?.body.requestType,
         requesteedId:  ticketData?.body.requestee.id,
-
-
       },
     },
   });
