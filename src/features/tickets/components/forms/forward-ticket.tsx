@@ -48,21 +48,23 @@ export const ForwardTicketComponent = () => {
       senderId: ticketData?.body.receiver.id,
       requesteeId: ticketData?.body.requestee.id,
       remarks: ticketData?.body.remarks,
-      projectId: ticketData?.body.project?.id,
+      projectId: ticketData?.body.project?.id || null,
       transactionId: ticketData?.body.transactionId,
       attachments: ticketData?.body.attachments,
     },
   });
 
   const { data, isError, error } = tsr.userAccounts.getUsersForTickets.useQuery({
-    queryKey: ["usersForTicket", selectedDivision, selectedSection, selectectedType],
+    queryKey: ["usersForTicket"],
     queryData: {
       query: {
-        division: selectedDivision,
-        section: selectedSection,
+        division: ticketData?.body.division!,
+        section: ticketData?.body.section!,
         role: role,
-        mode: "insert",
-        type: selectectedType,
+        mode: "forward",
+        type: ticketData?.body.requestType,
+        requesteedId:  ticketData?.body.requestee.id,
+
 
       },
     },
