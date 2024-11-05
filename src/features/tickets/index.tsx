@@ -11,6 +11,9 @@ import { IncomingTicketComponent } from "./components/tables/ticket-incoming";
 import { ticketsIncomingColumn } from "./components/tables/ticket-incoming-columns";
 import ForwardTicketComponent from "./components/forms/forward-ticket";
 
+import { ticketsResolvedColumn } from "./components/tables/ticket-resolved-column";
+import { TicketResolved } from "./components/tables/ticket-resolved";
+
 export {
   TicketList,
   TicketForm,
@@ -21,7 +24,9 @@ export {
   TicketInboxComponent,
   IncomingTicketComponent,
   ticketsIncomingColumn,
-  ForwardTicketComponent
+  ForwardTicketComponent,
+  TicketResolved,
+  ticketsResolvedColumn,
 
 }
 

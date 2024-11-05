@@ -27,7 +27,7 @@ import { DashboardNewLayout } from "./routes/new-layout";
 import ProtectedRoute from "./components/routeGuard/protected-route";
 import { ReactQueryProvider } from "./utils/react-query-provider";
 
-import { AddTicketComponent, TicketForm, TicketInboxComponent, TicketList } from "./features/tickets";
+import { AddTicketComponent, TicketForm, TicketInboxComponent, TicketList, TicketResolved } from "./features/tickets";
 import { IncomingTicketComponent } from "./features/tickets/components/tables/ticket-incoming";
 import { TicketDetails } from "./features/tickets/components/tables/ticket-details";
 import ForwardTicketComponent from "./features/tickets/components/forms/forward-ticket";
@@ -94,6 +94,7 @@ function App() {
                 <Route path="inbox/:id" element={<TicketInboxComponent />} />
                 <Route path="incoming/:id" element={<IncomingTicketComponent />} />
                 <Route path="forward-ticket/:id" element={<ForwardTicketComponent />} />
+                <Route path="resolved-tickets" element={<TicketResolved />} />
               </Route>
             </Route>
             <Route path="/" element={<PublicRoutes />}>
