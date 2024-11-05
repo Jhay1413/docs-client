@@ -1,14 +1,19 @@
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { useQuery } from "react-query";
 import { Separator } from "@/components/ui/separator";
 import { DataTable } from "@/components/data-table";
 import { tsr } from "@/services/tsr";
-import { ticketsDetailsColumn } from "./tickets-details-column";
+import { ticketsDetailsColumn } from "./ticket-details-column";
 import { getSignUrlForView } from "@/features/transactions/services/getSignedUrl";
 import { Button } from "@/components/ui/button";
+import { Plus } from "lucide-react";
+import { getCurrentUserId } from "@/hooks/use-user-hook";
+
+
 
 export const TicketDetails = () => {
   const { id } = useParams();
+  const currentUserId = getCurrentUserId();
 
   const { data, isLoading, isError } = tsr.ticketing.getTicketsById.useQuery({
     queryKey: ["ticket", id],
@@ -17,6 +22,19 @@ export const TicketDetails = () => {
     },
   });
   console.log("ticket data:", data);
+
+  // Add the button component here
+const ForwardTicketBtn = () => (
+  <div>
+    <Link
+      to={`/dashboard/tickets/forward-ticket/${id}`}
+      className="bg-[#414140] px-4 py-2 text-lg flex items-center justify-center space-x rounded-lg text-white"
+    >
+      <Plus size={24} />
+      <h1>Forward Ticket</h1>
+    </Link>
+  </div>
+);
 
   const viewFile = async (key: string) => {
     const signedUrl = await getSignUrlForView(key);
@@ -35,7 +53,11 @@ export const TicketDetails = () => {
 
   return (
     <div className="flex flex-col w-full max-w-[90%] mx-auto p-6 bg-white shadow-lg rounded-lg">
-      <h1 className="text-3xl font-bold text-gray-800">Ticket Details</h1>
+      <div className="flex justify-between items-center mb-4">
+        <h1 className="text-3xl font-bold text-gray-800">Ticket Details</h1>
+        {data?.body.receiver.id === currentUserId && <ForwardTicketBtn />}
+        
+      </div>
       <Separator className="my-4" />
       {/* Ticket Subject Data */}
       <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-3 gap-6 mb-4 items-stretch">
@@ -150,10 +172,6 @@ export const TicketDetails = () => {
               <div className="bg-white p-4 rounded-lg h-full">
                 <h2 className="font-semibold text-gray-700">Document Subtype:</h2>
                 <p className="text-gray-600">{data.body.transaction?.documentSubType}</p>
-              </div>
-              <div className="bg-white p-4 rounded-lg h-full">
-                <h2 className="font-semibold text-gray-700">Status:</h2>
-                <p className="text-gray-600">{data.body.transaction?.status}</p>
               </div>
                 <div className="bg-white p-4 rounded-lg h-full">
                 <h2 className="font-semibold text-gray-700">Priority:</h2>

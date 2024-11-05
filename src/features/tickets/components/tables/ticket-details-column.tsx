@@ -66,7 +66,7 @@ export const ticketsDetailsColumn: ColumnDef<z.infer <typeof ticketLogsSchema>>[
     accessorKey: "receiver",
     cell: ({ row }) => {
       const transactionInfo = row.original;
-      const name = (`${transactionInfo.sender}`).toLocaleLowerCase();
+      const name = (`${transactionInfo.receiver}`).toLocaleLowerCase();
       const new_name = toPascalCase(name);
       return (
         <span>

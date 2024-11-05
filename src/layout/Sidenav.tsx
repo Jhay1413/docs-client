@@ -82,6 +82,7 @@ export const SideNav = () => {
             </NavLink>
           </li>
           <CompaniesItemWithRole roles={["SUPERADMIN", "MANAGER"]} exemptions={["Operations Department"]} />
+
         </ul>
         <UserAndAccountWithRole roles={["SUPERADMIN"]} exemptions={["Operations Department"]} />
         <Label className="text-[#DCFF8E] px-4 font-medium flex w-full text-sm">TRANSACTIONS</Label>
@@ -172,7 +173,7 @@ export const SideNav = () => {
               <Mailbox />
               <div className="flex gap-2">
                 <h1 className="text-base">Inbox</h1>
-                {notification?.inbox !== 0 && <span className="text-red-700 text-sm font-extrabold">{notification?.inbox}</span>}
+                
               </div>
             </NavLink>
           </li>

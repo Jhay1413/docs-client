@@ -1,6 +1,6 @@
 import { DataTable } from "@/components/data-table";
 import { useNavigate, useParams, useSearchParams } from "react-router-dom";
-import { ticketsInboxColumn } from "./tickets-inbox-columns"; // Import the tickets inbox column
+import { ticketsInboxColumn } from "./ticket-inbox-columns"; // Import the tickets inbox column
 import { useDebounce } from "use-debounce";
 import { Input } from "@/components/ui/input";
 import { Search } from "lucide-react";
