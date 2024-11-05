@@ -611,6 +611,7 @@ export const TransactionForm = ({ company, method, defaultValue, mutateFn, isPen
                                   <SelectContent>
                                     <SelectItem value="INITIAL_DOC">Initial documents</SelectItem>
                                     <SelectItem value="FOLLOWED_UP">Follow-up documents</SelectItem>
+                                    <SelectItem value="APPROVE">Approve</SelectItem>
                                   </SelectContent>
                                 </Select>
                               </FormControl>
@@ -638,6 +639,7 @@ export const TransactionForm = ({ company, method, defaultValue, mutateFn, isPen
                                   <SelectContent>
                                     <SelectItem value="FOR_REVIEW">For Review</SelectItem>
                                     <SelectItem value="FINAL_ATTACHMENT">Final Attachment</SelectItem>
+                                    <SelectItem value="NOT_APPLICABLE">Not Applicable</SelectItem>
                                   </SelectContent>
                                 </Select>
                               </FormControl>

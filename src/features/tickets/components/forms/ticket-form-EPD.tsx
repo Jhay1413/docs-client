@@ -22,14 +22,18 @@ const TicketFormEPD = ({isForwarding}: Props) => {
   const [searchQuery, setSearchQuery] = useState("");
   const [debouncedSearchQuery] = useDebounce(searchQuery, 500);
   const [selectedProject, setSelectedProject] = useState("");
-  const [ selectedSection, setSelectedSection ] = useState("");
+  const [selectedSection, setSelectedSection] = useState("");
   const [searchtTransaction, setSearchTransaction] = useState("");
   const [debouncedSearchTransaction] = useDebounce(searchtTransaction, 500);
   const [selectedTransaction, setSelectedTransaction] = useState("");
   if (!control) {
     return <div>Error: No form context found!</div>;
   }
-  const { data: projects, isError, error } = tsr.company.fetchCompanyProjectsBySearch.useQuery({
+  const {
+    data: projects,
+    isError,
+    error,
+  } = tsr.company.fetchCompanyProjectsBySearch.useQuery({
     queryKey: ["projects", debouncedSearchQuery],
     queryData: {
       query: {
@@ -43,9 +47,9 @@ const TicketFormEPD = ({isForwarding}: Props) => {
   const { data: transactions } = tsr.transaction.searchTransactionById.useQuery({
     queryKey: ["transactions-query", debouncedSearchTransaction],
     queryData: {
-        query: {
-          transactionId: debouncedSearchTransaction
-        },
+      query: {
+        transactionId: debouncedSearchTransaction,
+      },
     },
     placeholderData: keepPreviousData,
   });
@@ -94,7 +98,7 @@ const TicketFormEPD = ({isForwarding}: Props) => {
                           value={data.id}
                           key={data.id}
                           onSelect={() => {
-                            setValue("projectId", data.id)
+                            setValue("projectId", data.id);
                             setSelectedProject(data.projectName);
                           }}
                         >
@@ -153,7 +157,7 @@ const TicketFormEPD = ({isForwarding}: Props) => {
                           value={data.transactionId}
                           key={data.id}
                           onSelect={() => {
-                            setValue("transactionId", data.id)
+                            setValue("transactionId", data.id);
                             setSelectedTransaction(data.transactionId);
                           }}
                         >

@@ -9,8 +9,11 @@ import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
 import { getCurrentUserId } from "@/hooks/use-user-hook";
 
+
+
 export const TicketDetails = () => {
   const { id } = useParams();
+  const currentUserId = getCurrentUserId();
 
   const { data, isLoading, isError } = tsr.ticketing.getTicketsById.useQuery({
     queryKey: ["ticket", id],
@@ -48,14 +51,12 @@ const ForwardTicketBtn = () => (
     return <div className="flex justify-center items-center h-screen text-lg font-semibold text-red-500">Error fetching ticket details.</div>;
   }
 
-  const userId = getCurrentUserId();
-  const isReceiver = data?.body.receiver.id === userId; // Check if current user is the receiver
-
   return (
     <div className="flex flex-col w-full max-w-[90%] mx-auto p-6 bg-white shadow-lg rounded-lg">
       <div className="flex justify-between items-center mb-4">
         <h1 className="text-3xl font-bold text-gray-800">Ticket Details</h1>
-        {isReceiver && <ForwardTicketBtn />} {/* Render button only if user is the receiver */}
+        {data?.body.receiver.id === currentUserId && <ForwardTicketBtn />}
+        
       </div>
       <Separator className="my-4" />
       {/* Ticket Subject Data */}
