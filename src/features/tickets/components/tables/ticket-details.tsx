@@ -55,7 +55,10 @@ const ForwardTicketBtn = () => (
     <div className="flex flex-col w-full max-w-[90%] mx-auto p-6 bg-white shadow-lg rounded-lg">
       <div className="flex justify-between items-center mb-4">
         <h1 className="text-3xl font-bold text-gray-800">Ticket Details</h1>
-        {data?.body.receiver.id === currentUserId && <ForwardTicketBtn />}
+        <div className="flex justify-start items-center gap-4">
+          {data?.body.requestee.id === currentUserId && <Button>Resolve</Button>}
+          {data?.body.receiver.id === currentUserId && <ForwardTicketBtn />}
+        </div>
         
       </div>
       <Separator className="my-4" />

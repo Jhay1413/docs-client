@@ -139,7 +139,7 @@ export const SideNav = () => {
             >
               <FileCode />
               <div className="flex gap-2">
-                <h1 className="text-base">Archives</h1>
+                <h1 className="text-base">Archive</h1>
               </div>
             </NavLink>
           </li>
