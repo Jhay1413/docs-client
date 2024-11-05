@@ -36,6 +36,18 @@ const ForwardTicketBtn = () => (
   </div>
 );
 
+const ReopenTicketBtn = () => (
+  <div>
+    <Link
+      to={`/dashboard/tickets/forward-ticket/${id}`}
+      className="bg-[#414140] px-4 py-2 text-lg flex items-center justify-center space-x rounded-lg text-white"
+    >
+      
+      <h1>Reopen Ticket</h1>
+    </Link>
+  </div>
+);
+
   const viewFile = async (key: string) => {
     const signedUrl = await getSignUrlForView(key);
     if (signedUrl) {
@@ -56,8 +68,10 @@ const ForwardTicketBtn = () => (
       <div className="flex justify-between items-center mb-4">
         <h1 className="text-3xl font-bold text-gray-800">Ticket Details</h1>
         <div className="flex justify-start items-center gap-4">
+          {data?.body.status === 'Resolved' && <ReopenTicketBtn />}
           {data?.body.requestee.id === currentUserId && <Button>Resolve</Button>}
           {data?.body.receiver.id === currentUserId && <ForwardTicketBtn />}
+          
         </div>
         
       </div>

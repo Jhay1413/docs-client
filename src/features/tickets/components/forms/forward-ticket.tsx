@@ -62,7 +62,7 @@ export const ForwardTicketComponent = () => {
         section: ticketData?.body.section!,
         role: role,
         mode: "forward",
-        type: ticketData?.body.requestType,
+        type: ticketData?.body.requestType || '',
         requesteedId:  ticketData?.body.requestee.id,
 
 
