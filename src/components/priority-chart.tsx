@@ -34,7 +34,7 @@ export function PriorityChart({ data }: { data: z.infer<typeof PrioritySchema> |
       </div>
     );
   }
-
+  const sortedData = convertedData?.sort((a, b) => b.percentage - a.percentage);
   return (
     <Card className="absolute inset-0 flex flex-col">
       <CardHeader>
@@ -45,7 +45,7 @@ export function PriorityChart({ data }: { data: z.infer<typeof PrioritySchema> |
         <ChartContainer config={chartConfig} className="absolute h-full w-full">
           <BarChart
             accessibilityLayer
-            data={convertedData}
+            data={sortedData}
             layout="vertical"
             margin={{
               right: 100,
@@ -63,13 +63,13 @@ export function PriorityChart({ data }: { data: z.infer<typeof PrioritySchema> |
             />
             <XAxis dataKey="percentage" type="number" hide />
             <ChartTooltip cursor={false} content={<ChartTooltipContent indicator="line" />} />
-            <Bar dataKey="percentage" layout="vertical" fill="var(--color-transactionId)" radius={4}>
+            <Bar barSize={32} dataKey="percentage" layout="vertical" fill="var(--color-transactionId)" radius={4}>
               <LabelList dataKey="transactionId" position="insideLeft" offset={8} className="fill-[--color-label]" fontSize={12} />
               <LabelList
                 dataKey="percentage"
                 position="right"
                 offset={10} // Adjust offset to space out labels from the end of the bars
-                className="fill-foreground"
+                className="fill-foreground "
                 fontSize={12}
               />
             </Bar>

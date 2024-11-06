@@ -9,8 +9,6 @@ import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
 import { getCurrentUserId } from "@/hooks/use-user-hook";
 
-
-
 export const TicketDetails = () => {
   const { id } = useParams();
   const currentUserId = getCurrentUserId();
@@ -24,29 +22,28 @@ export const TicketDetails = () => {
   console.log("ticket data:", data);
 
   // Add the button component here
-const ForwardTicketBtn = () => (
-  <div>
-    <Link
-      to={`/dashboard/tickets/forward-ticket/${id}`}
-      className="bg-[#414140] px-4 py-2 text-lg flex items-center justify-center space-x rounded-lg text-white"
-    >
-      <Plus size={24} />
-      <h1>Forward Ticket</h1>
-    </Link>
-  </div>
-);
+  const ForwardTicketBtn = () => (
+    <div>
+      <Link
+        to={`/dashboard/tickets/forward-ticket/${id}`}
+        className="bg-[#414140] px-4 py-2 text-lg flex items-center justify-center space-x rounded-lg text-white"
+      >
+        <Plus size={24} />
+        <h1>Forward Ticket</h1>
+      </Link>
+    </div>
+  );
 
-const ReopenTicketBtn = () => (
-  <div>
-    <Link
-      to={`/dashboard/tickets/forward-ticket/${id}`}
-      className="bg-[#414140] px-4 py-2 text-lg flex items-center justify-center space-x rounded-lg text-white"
-    >
-      
-      <h1>Reopen Ticket</h1>
-    </Link>
-  </div>
-);
+  const ReopenTicketBtn = () => (
+    <div>
+      <Link
+        to={`/dashboard/tickets/forward-ticket/${id}`}
+        className="bg-[#414140] px-4 py-2 text-lg flex items-center justify-center space-x rounded-lg text-white"
+      >
+        <h1>Reopen Ticket</h1>
+      </Link>
+    </div>
+  );
 
 const ResolveTicketBtn = () => (
   <div>
@@ -80,12 +77,9 @@ const ResolveTicketBtn = () => (
       <div className="flex justify-between items-center mb-4">
         <h1 className="text-3xl font-bold text-gray-800">Ticket Details</h1>
         <div className="flex justify-start items-center gap-4">
-          {data?.body.status === 'Resolved' && <ReopenTicketBtn />}
-          {data?.body.requestee.id === currentUserId && data?.body.status != 'Resolved' && <ResolveTicketBtn />}
+          {data?.body.requestee?.id === currentUserId && <Button>Resolve</Button>}
           {data?.body.receiver?.id === currentUserId && <ForwardTicketBtn />}
-          
         </div>
-        
       </div>
       <Separator className="my-4" />
       {/* Ticket Subject Data */}
@@ -138,23 +132,26 @@ const ResolveTicketBtn = () => (
         </div>
         <div className="bg-white p-4 rounded-lg">
           <h2 className="font-semibold text-gray-700">Requestee:</h2>
-          <p className="text-gray-600">{data?.body.requestee.userInfo?.firstName || data?.body.requestee.userInfo?.lastName 
-                ? `${data.body.requestee.userInfo.firstName || ''} ${data.body.requestee.userInfo.lastName || ''}` 
-                : "No Name"}
+          <p className="text-gray-600">
+            {data?.body.requestee.userInfo?.firstName || data?.body.requestee.userInfo?.lastName
+              ? `${data.body.requestee.userInfo.firstName || ""} ${data.body.requestee.userInfo.lastName || ""}`
+              : "No Name"}
           </p>
         </div>
         <div className="bg-white p-4 rounded-lg">
           <h2 className="font-semibold text-gray-700">Sender:</h2>
-          <p className="text-gray-600">{data?.body.sender.userInfo?.firstName || data?.body.sender.userInfo?.lastName
-                ? `${data.body.sender.userInfo.firstName || ''} ${data.body.sender.userInfo.lastName || ''}` 
-                : "No Name"}
+          <p className="text-gray-600">
+            {data?.body.sender.userInfo?.firstName || data?.body.sender.userInfo?.lastName
+              ? `${data.body.sender.userInfo.firstName || ""} ${data.body.sender.userInfo.lastName || ""}`
+              : "No Name"}
           </p>
         </div>
         <div className="bg-white p-4 rounded-lg">
           <h2 className="font-semibold text-gray-700">Receiver:</h2>
-          <p className="text-gray-600">{data?.body.receiver?.userInfo?.firstName || data?.body.receiver?.userInfo?.lastName
-                ? `${data.body.receiver.userInfo.firstName || ''} ${data.body.receiver.userInfo.lastName || ''}` 
-                : "No Name"}
+          <p className="text-gray-600">
+            {data?.body.receiver?.userInfo?.firstName || data?.body.receiver?.userInfo?.lastName
+              ? `${data.body.receiver.userInfo.firstName || ""} ${data.body.receiver.userInfo.lastName || ""}`
+              : "No Name"}
           </p>
         </div>
       </div>
@@ -162,7 +159,7 @@ const ResolveTicketBtn = () => (
       {/* Conditionally render Project Details */}
       {data?.body.project && (
         <>
-        <Separator className="my-4" />
+          <Separator className="my-4" />
           <h1 className="text-xl font-bold text-gray-800 mb-4">Project Details</h1>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6 mb-4 shadow items-stretch">
             <div className="grid grid-cols-3 md:grid-cols-3 lg:grid-cols-3 col-span-2 gap-6 mb-4 shadow h-full">
@@ -190,8 +187,8 @@ const ResolveTicketBtn = () => (
       {/* Conditionally render Transaction ID */}
       {data?.body.transactionId && (
         <>
-        <Separator className="my-4" />
-        <h1 className="text-xl font-bold text-gray-800 mb-4">Transaction Details</h1>
+          <Separator className="my-4" />
+          <h1 className="text-xl font-bold text-gray-800 mb-4">Transaction Details</h1>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6 mb-4 shadow items-stretch">
             <div className="grid grid-cols-3 md:grid-cols-3 lg:grid-cols-3 col-span-2 gap-6 mb-4 shadow h-full">
               <div className="bg-white p-4 rounded-lg h-full">
@@ -202,11 +199,11 @@ const ResolveTicketBtn = () => (
                 <h2 className="font-semibold text-gray-700">Document Subtype:</h2>
                 <p className="text-gray-600">{data.body.transaction?.documentSubType}</p>
               </div>
-                <div className="bg-white p-4 rounded-lg h-full">
+              <div className="bg-white p-4 rounded-lg h-full">
                 <h2 className="font-semibold text-gray-700">Priority:</h2>
                 <p className="text-gray-600">{data.body.transaction?.priority}</p>
               </div>
-                <div className="bg-white p-4 rounded-lg h-full">
+              <div className="bg-white p-4 rounded-lg h-full">
                 <h2 className="font-semibold text-gray-700">Due Date:</h2>
                 <p className="text-gray-600">{data.body.transaction?.dueDate}</p>
               </div>
