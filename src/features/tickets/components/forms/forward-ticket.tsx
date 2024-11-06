@@ -16,8 +16,6 @@ import { useCurrentUserRole } from "@/hooks/use-user-hook";
 export const ForwardTicketComponent = () => {
   const { id } = useParams();
   const role = useCurrentUserRole();
-  const [selectedDivision, setSelectedDivision] = useState("");
-  const [selectedSection, setSelectedSection] = useState("");
   const [isForwarding, setIsForwarding] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [selectectedType, setSelectedType] = useState("");
@@ -29,7 +27,7 @@ export const ForwardTicketComponent = () => {
     queryData: { params: { id: id! } },
   });
 
-  const form = useForm<z.infer<typeof ticketEditSchema>>({
+  const form = useForm<z.infer<typeof ticketingMutationSchema>>({
     resolver: zodResolver(ticketingMutationSchema),
     mode: "onSubmit",
     defaultValues: {
@@ -42,10 +40,10 @@ export const ForwardTicketComponent = () => {
       status: ticketData?.body.status,
       requestDetails: ticketData?.body.requestDetails || "",
       priority: ticketData?.body.priority || "",
-      dueDate: ticketData?.body.dueDate || "", 
+      dueDate: ticketData?.body.dueDate || "",
       dateForwarded: ticketData?.body.dateForwarded,
       dateReceived: null,
-      senderId: ticketData?.body.receiver.id,
+      senderId: ticketData?.body.sender.id,
       requesteeId: ticketData?.body.requestee.id,
       remarks: ticketData?.body.remarks,
       projectId: ticketData?.body.project?.id || null,
@@ -62,16 +60,14 @@ export const ForwardTicketComponent = () => {
         section: ticketData?.body.section!,
         role: role,
         mode: "forward",
-        type: ticketData?.body.requestType,
-        requesteedId:  ticketData?.body.requestee.id,
-
-
+        type: ticketData?.body.requestType!,
+        requesteedId: ticketData?.body.requestee.id,
       },
     },
   });
 
   const { mutate } = tsr.ticketing.forwardTickets.useMutation({
-    onMutate: () => { },
+    onMutate: () => {},
     onSuccess: () => {
       form.reset();
       toast.success("Ticket Forwarded !");
@@ -84,11 +80,11 @@ export const ForwardTicketComponent = () => {
   });
 
   console.log("Ticket data:", ticketData);
-  const onSubmit: SubmitHandler<z.infer<typeof ticketEditSchema>> = async (data) => {
+  const onSubmit: SubmitHandler<z.infer<typeof ticketingMutationSchema>> = async (data) => {
     setIsSubmitting(true);
-    mutate({ 
-      body: data, 
-      params: { id: id! }
+    mutate({
+      body: data,
+      params: { id: id! },
     });
   };
 
@@ -104,16 +100,12 @@ export const ForwardTicketComponent = () => {
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)}>
           {/* Ticket Form Fields */}
-          <TicketForm 
-            selectedDivision={selectedDivision} 
-            setSelectedDivision={setSelectedDivision} 
-            setSelectedSection={setSelectedSection} 
-            receiver={data ? data?.body : []}
-            isForwarding={isForwarding}
-          />
-          
+          <TicketForm receiver={data ? data?.body : []} isForwarding={isForwarding} ticketData={ticketData!.body!} mutateFn={onSubmit} />
+
           {/* Submit Button */}
-          <Button type="submit" onClick={() => console.log(form.formState.errors)}>Forward Ticket</Button>
+          <Button type="submit" onClick={() => console.log(form.formState.errors)}>
+            Forward Ticket
+          </Button>
         </form>
       </Form>
     </div>

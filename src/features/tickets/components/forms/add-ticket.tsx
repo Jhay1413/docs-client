@@ -21,11 +21,10 @@ export const AddTicketComponent = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [selectectedType, setSelectedType] = useState("");
   const navigate = useNavigate();
-  
+
   const { mutate } = tsr.ticketing.createTickets.useMutation({
-    onMutate: () => { },
+    onMutate: () => {},
     onSuccess: () => {
-      form.reset();
       toast.success("Ticket Created !");
       navigate("/dashboard/tickets/list");
     },
@@ -33,32 +32,8 @@ export const AddTicketComponent = () => {
       console.error("Error creating ticket:", error);
       toast.error("Failed to create ticket. Please try again.");
     },
-  })
-
-  const form = useForm<z.infer<typeof ticketingMutationSchema>>({
-    resolver: zodResolver(ticketingMutationSchema),
-    mode: "onSubmit",
-    defaultValues: {
-      ticketId: "",
-      requestType: "",
-      subject: "",
-      section: "",
-      division: "",
-      status: "",
-      requestDetails: "",
-      priority: "",
-      dueDate: "",
-      dateForwarded: new Date().toISOString(),
-      dateReceived: null,
-      senderId: userId,
-      receiverId: "",
-      requesteeId: userId,
-      remarks: null,
-      projectId: null,
-      transactionId: null,
-      attachments: [],
-    },
   });
+
   const { data, isError, error } = tsr.userAccounts.getUsersForTickets.useQuery({
     queryKey: ["usersForTicket", selectedDivision, selectedSection, selectectedType],
     queryData: {
@@ -68,19 +43,13 @@ export const AddTicketComponent = () => {
         role: role,
         mode: "insert",
         type: selectectedType,
-
       },
     },
   });
 
-  const mutateFn = async (data: z.infer<typeof ticketingMutationSchema>, setSubmitting: (value: boolean) => void) => {
-    mutate({ body: data })
-
-  }
-
-  const onSubmit: SubmitHandler<z.infer<typeof ticketingMutationSchema>> = async (data) => {
-    mutateFn(data, setIsSubmitting);
+  const mutateFn = async (data: z.infer<typeof ticketingMutationSchema>) => {
     console.log(data);
+    mutate({ body: data });
   };
 
   return (
@@ -88,52 +57,18 @@ export const AddTicketComponent = () => {
       <h1 className="text-4xl">Add Ticket</h1>
 
       {/* The form */}
-      <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)}>
-        <div className="grid grid-cols-3 gap-6">
-          <FormField
-          control={form.control}
-          name="requestType"
-          render={({ field }) => (
-            <FormItem className="col-span-1 mb-4">
-              <FormLabel>Request Type</FormLabel>
-              <FormControl>
-                <Select
-                  onValueChange={(value) => {
-                    field.onChange(value);
-                    setSelectedType(value);
-                  }}
-                  defaultValue={field.value}
-                >
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select request type" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="EPD">EPD</SelectItem>
-                    <SelectItem value="Marketing">Marketing</SelectItem>
-                    <SelectItem value="IT">IT</SelectItem>
-                  </SelectContent>
-                </Select>
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-      </div>
-          <TicketForm selectedDivision={selectedDivision} setSelectedDivision={setSelectedDivision} setSelectedSection={setSelectedSection} receiver={data ? data.body : []} />
 
-          {/* Submit Button */}
-          <div className="flex justify-end py-4">
-            <Button
-              type="submit"
-              className="w-[256px]"
-              onClick={() => console.log(form.formState.errors)}
-            >
-              Submit
-            </Button>
-          </div>
-        </form>
-      </Form>
+      <TicketForm
+        selectedDivision={selectedDivision}
+        setSelectedDivision={setSelectedDivision}
+        setSelectedSection={setSelectedSection}
+        receiver={data ? data.body : []}
+        selectedType={selectectedType}
+        setSelectedType={setSelectedType}
+        mutateFn={mutateFn}
+      />
+
+      {/* Submit Button */}
     </div>
   );
 };
