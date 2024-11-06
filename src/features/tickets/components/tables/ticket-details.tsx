@@ -70,7 +70,7 @@ const ReopenTicketBtn = () => (
         <div className="flex justify-start items-center gap-4">
           {data?.body.status === 'Resolved' && <ReopenTicketBtn />}
           {data?.body.requestee.id === currentUserId && <Button>Resolve</Button>}
-          {data?.body.receiver.id === currentUserId && <ForwardTicketBtn />}
+          {data?.body.receiver?.id === currentUserId && <ForwardTicketBtn />}
           
         </div>
         
@@ -140,7 +140,7 @@ const ReopenTicketBtn = () => (
         </div>
         <div className="bg-white p-4 rounded-lg">
           <h2 className="font-semibold text-gray-700">Receiver:</h2>
-          <p className="text-gray-600">{data?.body.receiver.userInfo?.firstName || data?.body.receiver.userInfo?.lastName
+          <p className="text-gray-600">{data?.body.receiver?.userInfo?.firstName || data?.body.receiver?.userInfo?.lastName
                 ? `${data.body.receiver.userInfo.firstName || ''} ${data.body.receiver.userInfo.lastName || ''}` 
                 : "No Name"}
           </p>
