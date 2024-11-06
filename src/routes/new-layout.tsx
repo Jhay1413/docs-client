@@ -7,6 +7,7 @@ import { Header } from "@/layout/Header";
 import { SideNav } from "@/layout/Sidenav";
 import { useEffect } from "react";
 import { Outlet } from "react-router-dom";
+import { Bounce, toast } from "react-toastify";
 const toastId = "notification-toast";
 export const DashboardNewLayout = () => {
   const { socket } = useRealtimeStore();
@@ -18,6 +19,18 @@ export const DashboardNewLayout = () => {
     socket.on("notification", (numOfUnreadNotif: number, quantityTracker: NotificationType) => {
       setNotification(quantityTracker);
       setNumOfUnreadNotif(numOfUnreadNotif);
+
+      toast("🦄 You have new notification!", {
+        position: "bottom-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+        transition: Bounce,
+      });
     });
 
     socket.emit("register", currentUserId);

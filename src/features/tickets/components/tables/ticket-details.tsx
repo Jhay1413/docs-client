@@ -97,6 +97,8 @@ export const TicketDetails = () => {
         triggerButton="Resolve"
       />
           {data?.body.receiver?.id === currentUserId && <ForwardTicketBtn id={id}/>}
+          {data?.body.requestee?.id === currentUserId && <Button>Resolve</Button>}
+          {data?.body.receiver?.id === currentUserId && <ForwardTicketBtn />}
         </div>
       </div>
       <Separator className="my-4" />
@@ -150,23 +152,26 @@ export const TicketDetails = () => {
         </div>
         <div className="bg-white p-4 rounded-lg">
           <h2 className="font-semibold text-gray-700">Requestee:</h2>
-          <p className="text-gray-600">{data?.body.requestee.userInfo?.firstName || data?.body.requestee.userInfo?.lastName 
-                ? `${data.body.requestee.userInfo.firstName || ''} ${data.body.requestee.userInfo.lastName || ''}` 
-                : "No Name"}
+          <p className="text-gray-600">
+            {data?.body.requestee.userInfo?.firstName || data?.body.requestee.userInfo?.lastName
+              ? `${data.body.requestee.userInfo.firstName || ""} ${data.body.requestee.userInfo.lastName || ""}`
+              : "No Name"}
           </p>
         </div>
         <div className="bg-white p-4 rounded-lg">
           <h2 className="font-semibold text-gray-700">Sender:</h2>
-          <p className="text-gray-600">{data?.body.sender.userInfo?.firstName || data?.body.sender.userInfo?.lastName
-                ? `${data.body.sender.userInfo.firstName || ''} ${data.body.sender.userInfo.lastName || ''}` 
-                : "No Name"}
+          <p className="text-gray-600">
+            {data?.body.sender.userInfo?.firstName || data?.body.sender.userInfo?.lastName
+              ? `${data.body.sender.userInfo.firstName || ""} ${data.body.sender.userInfo.lastName || ""}`
+              : "No Name"}
           </p>
         </div>
         <div className="bg-white p-4 rounded-lg">
           <h2 className="font-semibold text-gray-700">Receiver:</h2>
-          <p className="text-gray-600">{data?.body.receiver?.userInfo?.firstName || data?.body.receiver?.userInfo?.lastName
-                ? `${data.body.receiver.userInfo.firstName || ''} ${data.body.receiver.userInfo.lastName || ''}` 
-                : "No Name"}
+          <p className="text-gray-600">
+            {data?.body.receiver?.userInfo?.firstName || data?.body.receiver?.userInfo?.lastName
+              ? `${data.body.receiver.userInfo.firstName || ""} ${data.body.receiver.userInfo.lastName || ""}`
+              : "No Name"}
           </p>
         </div>
       </div>
@@ -174,7 +179,7 @@ export const TicketDetails = () => {
       {/* Conditionally render Project Details */}
       {data?.body.project && (
         <>
-        <Separator className="my-4" />
+          <Separator className="my-4" />
           <h1 className="text-xl font-bold text-gray-800 mb-4">Project Details</h1>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6 mb-4 shadow items-stretch">
             <div className="grid grid-cols-3 md:grid-cols-3 lg:grid-cols-3 col-span-2 gap-6 mb-4 shadow h-full">
@@ -202,8 +207,8 @@ export const TicketDetails = () => {
       {/* Conditionally render Transaction ID */}
       {data?.body.transactionId && (
         <>
-        <Separator className="my-4" />
-        <h1 className="text-xl font-bold text-gray-800 mb-4">Transaction Details</h1>
+          <Separator className="my-4" />
+          <h1 className="text-xl font-bold text-gray-800 mb-4">Transaction Details</h1>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6 mb-4 shadow items-stretch">
             <div className="grid grid-cols-3 md:grid-cols-3 lg:grid-cols-3 col-span-2 gap-6 mb-4 shadow h-full">
               <div className="bg-white p-4 rounded-lg h-full">
@@ -214,11 +219,11 @@ export const TicketDetails = () => {
                 <h2 className="font-semibold text-gray-700">Document Subtype:</h2>
                 <p className="text-gray-600">{data.body.transaction?.documentSubType}</p>
               </div>
-                <div className="bg-white p-4 rounded-lg h-full">
+              <div className="bg-white p-4 rounded-lg h-full">
                 <h2 className="font-semibold text-gray-700">Priority:</h2>
                 <p className="text-gray-600">{data.body.transaction?.priority}</p>
               </div>
-                <div className="bg-white p-4 rounded-lg h-full">
+              <div className="bg-white p-4 rounded-lg h-full">
                 <h2 className="font-semibold text-gray-700">Due Date:</h2>
                 <p className="text-gray-600">{data.body.transaction?.dueDate}</p>
               </div>
