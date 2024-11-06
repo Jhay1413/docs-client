@@ -1,4 +1,4 @@
-import { ClipboardList, Factory, FileCode, FileText, LayoutDashboard, LibraryBig, Mailbox, Ticket, UserSearch, Users } from "lucide-react";
+import { BookCheck, ClipboardList, Factory, FileCode, FileText, LayoutDashboard, LibraryBig, Mailbox, Ticket, UserSearch, Users } from "lucide-react";
 import { Link, NavLink } from "react-router-dom";
 
 import { getCurrentUserId, useCurrentUserRole } from "@/hooks/use-user-hook";

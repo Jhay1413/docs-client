@@ -34,6 +34,17 @@ export const TicketDetails = () => {
     </div>
   );
 
+  const ReopenTicketBtn = () => (
+    <div>
+      <Link
+        to={`/dashboard/tickets/forward-ticket/${id}`}
+        className="bg-[#414140] px-4 py-2 text-lg flex items-center justify-center space-x rounded-lg text-white"
+      >
+        <h1>Reopen Ticket</h1>
+      </Link>
+    </div>
+  );
+
   const viewFile = async (key: string) => {
     const signedUrl = await getSignUrlForView(key);
     if (signedUrl) {
