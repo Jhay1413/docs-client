@@ -32,7 +32,7 @@ export function PriorityBarChart({ data }: { data: z.infer<typeof PerApplication
             <XAxis dataKey="category" tickLine={false} tickMargin={10} axisLine={false} tickFormatter={(value) => value.slice(0, 4)} />
             <ChartTooltip content={<ChartTooltipContent hideLabel />} />
             <ChartLegend content={<ChartLegendContent />} />
-            <Bar dataKey="count" stackId="a" fill="var(--color-count)" radius={[0, 0, 4, 4]} />
+            <Bar barSize={32} dataKey="count" stackId="a" fill="var(--color-count)" radius={[0, 0, 4, 4]} />
           </BarChart>
         </ChartContainer>
       </CardContent>
