@@ -5,17 +5,17 @@ import { Button } from "@/components/ui/button";
 import { z } from "zod";
 import TicketForm from "./ticket-form";
 import { ticketEditSchema, ticketingMutationSchema } from "shared-contract";
-
 import { useState, useEffect } from "react";
 import { tsr } from "@/services/tsr";
 import { toast } from "react-toastify";
 import { useMutation, useQuery } from "react-query";
 import { useParams, useNavigate } from "react-router-dom";
-import { useCurrentUserRole } from "@/hooks/use-user-hook";
+import { getCurrentUserId, useCurrentUserRole } from "@/hooks/use-user-hook";
 
 export const ForwardTicketComponent = () => {
   const { id } = useParams();
   const role = useCurrentUserRole();
+  const currentUserId = getCurrentUserId();
   const [selectedDivision, setSelectedDivision] = useState("");
   const [selectedSection, setSelectedSection] = useState("");
   const [isForwarding, setIsForwarding] = useState(true);
@@ -45,7 +45,7 @@ export const ForwardTicketComponent = () => {
       dueDate: ticketData?.body.dueDate || "", 
       dateForwarded: ticketData?.body.dateForwarded,
       dateReceived: null,
-      senderId: ticketData?.body.receiver.id,
+      senderId: currentUserId,
       requesteeId: ticketData?.body.requestee.id,
       remarks: ticketData?.body.remarks,
       projectId: ticketData?.body.project?.id || null,

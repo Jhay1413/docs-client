@@ -1,4 +1,4 @@
-import { Link, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { useQuery } from "react-query";
 import { Separator } from "@/components/ui/separator";
 import { DataTable } from "@/components/data-table";
@@ -8,23 +8,12 @@ import { getSignUrlForView } from "@/features/transactions/services/getSignedUrl
 import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
 import { getCurrentUserId } from "@/hooks/use-user-hook";
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
+import { useState } from "react";
+import ConfirmationModal from "@/components/confirmation-modal";
+import { toast } from "react-toastify";
 
-
-
-export const TicketDetails = () => {
-  const { id } = useParams();
-  const currentUserId = getCurrentUserId();
-
-  const { data, isLoading, isError } = tsr.ticketing.getTicketsById.useQuery({
-    queryKey: ["ticket", id],
-    queryData: {
-      params: { id: id! },
-    },
-  });
-  console.log("ticket data:", data);
-
-  // Add the button component here
-const ForwardTicketBtn = () => (
+const ForwardTicketBtn = ({id}: {id?:string}) => (
   <div>
     <Link
       to={`/dashboard/tickets/forward-ticket/${id}`}
@@ -37,16 +26,47 @@ const ForwardTicketBtn = () => (
 );
 
 const ReopenTicketBtn = () => (
-  <div>
-    <Link
-      to={`/dashboard/tickets/forward-ticket/${id}`}
-      className="bg-[#414140] px-4 py-2 text-lg flex items-center justify-center space-x rounded-lg text-white"
-    >
-      
-      <h1>Reopen Ticket</h1>
-    </Link>
-  </div>
+    <h1>Reopen Ticket</h1>
 );
+
+export const TicketDetails = () => {
+  const { id } = useParams();
+  const currentUserId = getCurrentUserId();
+  const [open, setIsOpen] = useState(false);
+  const navigate = useNavigate();
+  
+  const { data, isLoading, isError } = tsr.ticketing.getTicketsById.useQuery({
+    queryKey: ["ticket", id],
+    queryData: {
+      params: { id: id! },
+    },
+  });
+  const { mutate } = tsr.ticketing.resolveTickets.useMutation({
+    onMutate: () => { },
+    onSuccess: () => {
+      toast.success("Ticket resolved !");
+      navigate(`/dashboard/tickets/inbox/${currentUserId}`);
+    },
+    onError: (error) => {
+      console.error("Error forwarding ticket:", error);
+      toast.error("Failed to forward ticket. Please try again.");
+    },
+  });
+  console.log("ticket data:", data);
+
+
+
+  const handleConfirm = () => {
+    mutate({body:{
+      userId:currentUserId
+    },params:{
+      id:id!
+    }})
+  }
+
+  const handleCancel = () => {
+    console.log("Cancelled!")
+  }
 
   const viewFile = async (key: string) => {
     const signedUrl = await getSignUrlForView(key);
@@ -69,11 +89,15 @@ const ReopenTicketBtn = () => (
         <h1 className="text-3xl font-bold text-gray-800">Ticket Details</h1>
         <div className="flex justify-start items-center gap-4">
           {data?.body.status === 'Resolved' && <ReopenTicketBtn />}
-          {data?.body.requestee.id === currentUserId && <Button>Resolve</Button>}
-          {data?.body.receiver.id === currentUserId && <ForwardTicketBtn />}
-          
+          <ConfirmationModal
+        title="Are you sure?"
+        description="This action cannot be undone."
+        onConfirm={handleConfirm}
+        onCancel={handleCancel}
+        triggerButton="Resolve"
+      />
+          {data?.body.receiver?.id === currentUserId && <ForwardTicketBtn id={id}/>}
         </div>
-        
       </div>
       <Separator className="my-4" />
       {/* Ticket Subject Data */}
@@ -140,7 +164,7 @@ const ReopenTicketBtn = () => (
         </div>
         <div className="bg-white p-4 rounded-lg">
           <h2 className="font-semibold text-gray-700">Receiver:</h2>
-          <p className="text-gray-600">{data?.body.receiver.userInfo?.firstName || data?.body.receiver.userInfo?.lastName
+          <p className="text-gray-600">{data?.body.receiver?.userInfo?.firstName || data?.body.receiver?.userInfo?.lastName
                 ? `${data.body.receiver.userInfo.firstName || ''} ${data.body.receiver.userInfo.lastName || ''}` 
                 : "No Name"}
           </p>
