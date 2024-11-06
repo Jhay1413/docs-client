@@ -450,8 +450,11 @@ const TicketForm = ({
           <div className="col-span-1 mb-6">
             <FormTextArea name="remarks" label="Remarks" placeholder="Enter remarks" />
           </div>
-          {/* Remarks (Medium TextArea) */}
-          <div className="flex w-full flex-col p-4 gap-4 items-center justify-center rounded-md border-blue-300  border-dashed border-2 ">
+          
+          {/* Attachments (Medium Div) */}
+          <div className="col-span-2">
+            <p className="font-bold text-sm">Attachments</p>
+          <div className="flex w-full flex-col mt-2 items-center justify-center rounded-md border-blue-300  border-dashed border-2 ">
               <p className="text-xl">Upload File</p>
 
               <div className="flex items-center justify-center ">
@@ -495,6 +498,7 @@ const TicketForm = ({
                 </div>
               ))}
             </div>
+          </div>
           {/* Attachments (File Input with Button Trigger) */}
         </div>
         <div className="flex justify-end py-4">
