@@ -5,13 +5,12 @@ import { Button } from "@/components/ui/button";
 import { z } from "zod";
 import TicketForm from "./ticket-form";
 import { ticketEditSchema, ticketingMutationSchema } from "shared-contract";
-
 import { useState, useEffect } from "react";
 import { tsr } from "@/services/tsr";
 import { toast } from "react-toastify";
 import { useMutation, useQuery } from "react-query";
 import { useParams, useNavigate } from "react-router-dom";
-import { useCurrentUserRole } from "@/hooks/use-user-hook";
+import { getCurrentUserId, useCurrentUserRole } from "@/hooks/use-user-hook";
 
 export const ForwardTicketComponent = () => {
   const { id } = useParams();
