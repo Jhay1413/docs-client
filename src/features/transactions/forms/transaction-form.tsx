@@ -212,8 +212,7 @@ export const TransactionForm = ({ company, method, defaultValue, mutateFn, isPen
     mutation.mutateAsync({ data: formData, index, fileName });
   };
   const onSubmit: SubmitHandler<z.infer<typeof transactionMutationSchema>> = async (data) => {
-    console.log(data);
-    // mutateFn(data);
+    mutateFn(data);
   };
 
   const viewFile = async (key: string) => {
