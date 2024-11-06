@@ -45,7 +45,7 @@ export const ForwardTicketComponent = () => {
       dueDate: ticketData?.body.dueDate || "", 
       dateForwarded: ticketData?.body.dateForwarded,
       dateReceived: null,
-      senderId: ticketData?.body.receiver.id,
+      senderId: ticketData?.body.receiver?.id,
       requesteeId: ticketData?.body.requestee.id,
       remarks: ticketData?.body.remarks,
       projectId: ticketData?.body.project?.id || null,
