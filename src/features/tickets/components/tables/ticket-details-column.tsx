@@ -1,5 +1,12 @@
 import { Button } from "@/components/ui/button";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { ColumnDef } from "@tanstack/react-table";
 import { ArrowUpDown, MoreHorizontal } from "lucide-react";
 import { Link } from "react-router-dom";
@@ -9,7 +16,7 @@ import { toPascalCase } from "../ticket.utils";
 import { ticketLogsSchema } from "shared-contract";
 
 const maxLength = 50;
-export const ticketsDetailsColumn: ColumnDef<z.infer <typeof ticketLogsSchema>>[] = [
+export const ticketsDetailsColumn: ColumnDef<z.infer<typeof ticketLogsSchema>>[] = [
   {
     header: () => <span className="font-bold text-nowrap">Log ID</span>,
     accessorKey: "ticketId",
@@ -28,8 +35,7 @@ export const ticketsDetailsColumn: ColumnDef<z.infer <typeof ticketLogsSchema>>[
     cell: ({ row }) => {
       const ticketInfo = row.original;
 
-      return <span>{ ticketInfo.dateForwarded ? 
-        new Date(ticketInfo.dateForwarded).toDateString(): "No Date Available"}</span>;
+      return <span>{ticketInfo.dateForwarded ? new Date(ticketInfo.dateForwarded).toDateString() : "No Date Available"}</span>;
     },
   },
   {
@@ -37,13 +43,9 @@ export const ticketsDetailsColumn: ColumnDef<z.infer <typeof ticketLogsSchema>>[
     accessorKey: "sender",
     cell: ({ row }) => {
       const transactionInfo = row.original;
-      const name = (`${transactionInfo.sender}`).toLocaleLowerCase();
+      const name = `${transactionInfo.sender}`.toLocaleLowerCase();
       const new_name = toPascalCase(name);
-      return (
-        <span>
-          {new_name}
-        </span>
-      );
+      return <span>{new_name}</span>;
     },
   },
   {
@@ -51,14 +53,7 @@ export const ticketsDetailsColumn: ColumnDef<z.infer <typeof ticketLogsSchema>>[
     accessorKey: "dateReceived",
     cell: ({ row }) => {
       const ticketInfo = row.original;
-      return (
-        <span>
-          {ticketInfo.dateReceived 
-            ? new Date(ticketInfo.dateReceived).toDateString() 
-            : "No Date Available"}
-        </span>
-      );
-      
+      return <span>{ticketInfo.dateReceived ? new Date(ticketInfo.dateReceived).toDateString() : "Not yet received"}</span>;
     },
   },
   {
@@ -66,13 +61,9 @@ export const ticketsDetailsColumn: ColumnDef<z.infer <typeof ticketLogsSchema>>[
     accessorKey: "receiver",
     cell: ({ row }) => {
       const transactionInfo = row.original;
-      const name = (`${transactionInfo.receiver}`).toLocaleLowerCase();
+      const name = `${transactionInfo.receiver}`.toLocaleLowerCase();
       const new_name = toPascalCase(name);
-      return (
-        <span>
-          {new_name}
-        </span>
-      );
+      return <span>{new_name}</span>;
     },
   },
   {
@@ -80,14 +71,8 @@ export const ticketsDetailsColumn: ColumnDef<z.infer <typeof ticketLogsSchema>>[
     accessorKey: "remarks",
     cell: ({ row }) => {
       const transactionInfo = row.original;
-      const requestDetails = transactionInfo.remarks || "";  
-      return (
-        <span>
-          {requestDetails.length > maxLength
-            ? `${requestDetails.substring(0, maxLength)}...`
-            : requestDetails}
-        </span>
-      );
+      const requestDetails = transactionInfo.remarks || "";
+      return <span>{requestDetails.length > maxLength ? `${requestDetails.substring(0, maxLength)}...` : requestDetails}</span>;
     },
   },
   {
@@ -95,10 +80,7 @@ export const ticketsDetailsColumn: ColumnDef<z.infer <typeof ticketLogsSchema>>[
     accessorKey: "createdAt",
     cell: ({ row }) => {
       const ticketInfo = row.original;
-      return(
-        <span>{ ticketInfo.createdAt ? 
-          new Date(ticketInfo.createdAt).toDateString() : "No Date Available"}</span>
-      ) 
+      return <span>{ticketInfo.createdAt ? new Date(ticketInfo.createdAt).toDateString() : "No Date Available"}</span>;
     },
   },
   {
@@ -106,10 +88,7 @@ export const ticketsDetailsColumn: ColumnDef<z.infer <typeof ticketLogsSchema>>[
     accessorKey: "updatedAt",
     cell: ({ row }) => {
       const ticketInfo = row.original;
-      return(
-        <span>{ ticketInfo.updatedAt ? 
-          new Date(ticketInfo.updatedAt).toDateString() : "No Date Available"}</span>
-      ) 
+      return <span>{ticketInfo.updatedAt ? new Date(ticketInfo.updatedAt).toDateString() : "No Date Available"}</span>;
     },
   },
   // {

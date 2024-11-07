@@ -110,7 +110,7 @@ export const ticketsColumn: ColumnDef<z.infer<typeof ticketingTableSchema>>[] = 
     accessorKey: "receiver",
     cell: ({ row }) => {
       const transactionInfo = row.original;
-      const name = `${transactionInfo.receiver?.firstName} ${transactionInfo.receiver?.lastName}`.toLocaleLowerCase();
+      const name = (`${transactionInfo.receiver?.firstName} ${transactionInfo.receiver?.lastName}`).toLocaleLowerCase();
       const new_name = toPascalCase(name);
       return <span>{new_name}</span>;
     },

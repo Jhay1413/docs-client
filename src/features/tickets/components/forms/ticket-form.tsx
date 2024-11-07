@@ -52,13 +52,12 @@ const TicketForm = ({
   ticketData,
 }: Props) => {
   const userId = getCurrentUserId();
-  const sections = Divisions.find((division) => division.name === selectedDivision);
-
+  const sections = Divisions.find((division) => division.name === selectedDivision || ticketData?.division);
   const fileInputRef = useRef<HTMLInputElement | null>(null);
 
   const form = useForm<z.infer<typeof ticketingMutationSchema>>({
     resolver: zodResolver(ticketingMutationSchema),
-    mode: "onSubmit",
+    mode: "onChange",
     defaultValues: {
       ticketId: ticketData?.ticketId || "",
       requestType: ticketData?.requestType || "",
@@ -71,7 +70,7 @@ const TicketForm = ({
       dueDate: ticketData?.dueDate || "",
       dateForwarded: ticketData?.dateForwarded || new Date().toISOString(),
       dateReceived: null,
-      senderId: ticketData?.sender.id || userId,
+      senderId: userId,
       requesteeId: ticketData?.requestee.id || userId,
       remarks: ticketData?.remarks,
       projectId: ticketData?.project?.id || null,
@@ -79,14 +78,14 @@ const TicketForm = ({
       attachments: ticketData?.attachments || [],
     },
   });
-
+  console.log("asdsad");
   const handleFileUploadClick = () => {
     if (fileInputRef.current) {
       fileInputRef.current.click();
     }
   };
   const onSubmit: SubmitHandler<z.infer<typeof ticketingMutationSchema>> = async (data) => {
-    console.log(data);
+    console.log("ASdsad");
     mutateFn(data);
   };
   const onError = () => {
@@ -99,50 +98,92 @@ const TicketForm = ({
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit, onError)}>
         <div className="grid grid-cols-3 h-full gap-6 p-4 bg-gray-50 rounded-md shadow-lg ">
-          <FormField
-            control={form.control}
-            name="requestType"
-            render={({ field }) => (
-              <FormItem className="">
-                <FormLabel>Request Type</FormLabel>
-                <FormControl>
-                  <Select
-                    onValueChange={(value) => {
-                      field.onChange(value);
-                      if (setSelectedType) setSelectedType(value);
-                    }}
-                    defaultValue={field.value}
-                    disabled={isForwarding}
-                  >
-                    <SelectTrigger>
-                      <SelectValue placeholder="Select request type" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="EPD">EPD</SelectItem>
-                      <SelectItem value="Marketing">Marketing</SelectItem>
-                      <SelectItem value="IT">IT</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          {/* Subject (Small Input) */}
-          <div className="col-span-1 mb-4">
-            <FormTextArea name="subject" label="Subject" placeholder="Enter subject" />
+          <div className="col-span-3 ">
+            <div className="grid grid-cols-2 gap-4">
+              <div className="flex flex-col gap-4">
+                <FormField
+                  control={form.control}
+                  name="requestType"
+                  render={({ field }) => (
+                    <FormItem className="">
+                      <FormLabel>Request Type</FormLabel>
+                      <FormControl>
+                        <Select
+                          onValueChange={(value) => {
+                            field.onChange(value);
+                            if (setSelectedType) setSelectedType(value);
+                          }}
+                          defaultValue={field.value}
+                          disabled={isForwarding}
+                        >
+                          <SelectTrigger>
+                            <SelectValue placeholder="Select request type" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="EPD">EPD</SelectItem>
+                            <SelectItem value="Marketing">Marketing</SelectItem>
+                            <SelectItem value="IT">IT</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormInput name="subject" label="Subject" placeholder="Enter subject" />
+              </div>
+              <div className="">
+                {selectedType === "EPD" && <TicketFormEPD isForwarding={isForwarding} />}
+                {selectedType === "IT" && <TicketFormIT />}
+                {selectedType === "Marketing" && <TicketFormMRKT />}
+              </div>
+            </div>
           </div>
+          {/* <div className="col-span-3 grid grid-cols-2 gap-4 ">
+            <div className="col-span-2 grid gap-4 grid-cols-2 ">
+              <div className="flex flex-col gap-4  bg-blue-500 ">
+                <FormField
+                  control={form.control}
+                  name="requestType"
+                  render={({ field }) => (
+                    <FormItem className="">
+                      <FormLabel>Request Type</FormLabel>
+                      <FormControl>
+                        <Select
+                          onValueChange={(value) => {
+                            field.onChange(value);
+                            if (setSelectedType) setSelectedType(value);
+                          }}
+                          defaultValue={field.value}
+                          disabled={isForwarding}
+                        >
+                          <SelectTrigger>
+                            <SelectValue placeholder="Select request type" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="EPD">EPD</SelectItem>
+                            <SelectItem value="Marketing">Marketing</SelectItem>
+                            <SelectItem value="IT">IT</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormInput name="subject" label="Subject" placeholder="Enter subject" />
+              </div>
+              <div className="grid grid-cols-2 ">
+                {selectedType === "EPD" && <TicketFormEPD isForwarding={isForwarding} />}
+                {selectedType === "IT" && <TicketFormIT />}
+                {selectedType === "Marketing" && <TicketFormMRKT />}
+              </div>
+            </div>
+
+          
+          </div> */}
 
           {/* Conditional Rendering of Ticket Forms */}
-          <div className="col-span-2 ">
-            {selectedType === "EPD" && <TicketFormEPD isForwarding={isForwarding} />}
-            {selectedType === "IT" && <TicketFormIT />}
-            {selectedType === "Marketing" && <TicketFormMRKT />}
-          </div>
-
-          <div className="col-span-3 mb-6">
-            <FormTextArea name="requestDetails" label="Request Details" placeholder="Enter details" />
-          </div>
 
           {/* Division Select */}
 
@@ -184,7 +225,7 @@ const TicketForm = ({
             control={form.control}
             name="section"
             render={({ field }) => (
-              <FormItem className="col-span-1">
+              <FormItem>
                 <FormLabel>Section</FormLabel>
 
                 <FormControl>
@@ -196,7 +237,7 @@ const TicketForm = ({
                     defaultValue={field.value}
                     disabled={!selectedDivision || isForwarding}
                   >
-                    <SelectTrigger className="w-full">
+                    <SelectTrigger>
                       <SelectValue placeholder="Select section" />
                     </SelectTrigger>
                     <SelectContent>
@@ -219,11 +260,11 @@ const TicketForm = ({
             control={form.control}
             name="status"
             render={({ field }) => (
-              <FormItem className="col-span-1">
+              <FormItem>
                 <FormLabel>Status*</FormLabel>
                 <FormControl>
                   <Select onValueChange={field.onChange} defaultValue={field.value}>
-                    <SelectTrigger className="w-full">
+                    <SelectTrigger>
                       <SelectValue placeholder="Select status" />
                     </SelectTrigger>
                     <SelectContent>
@@ -245,11 +286,11 @@ const TicketForm = ({
             control={form.control}
             name="priority"
             render={({ field }) => (
-              <FormItem className="col-span-1">
+              <FormItem>
                 <FormLabel>Priority*</FormLabel>
                 <FormControl>
                   <Select onValueChange={field.onChange} value={field.value || ""}>
-                    <SelectTrigger className="w-full">
+                    <SelectTrigger>
                       <SelectValue placeholder="Select priority" />
                     </SelectTrigger>
                     <SelectContent>
@@ -314,12 +355,18 @@ const TicketForm = ({
               <FormItem className="col-span-1">
                 <FormLabel>Receiver</FormLabel>
                 <FormControl>
-                  <Select onValueChange={field.onChange}>
+                  <Select
+                    onValueChange={(value) => {
+                      console.log(value);
+                      field.onChange(value); // Ensure this is called
+                    }}
+                    value={field.value!}
+                  >
                     <SelectTrigger className="w-full">
                       <SelectValue placeholder="Select receiver" />
                     </SelectTrigger>
                     <SelectContent>
-                      {(receiver ?? []).map((user) => (
+                      {receiver.map((user) => (
                         <SelectItem key={user.id} value={user.id}>
                           {user.userInfo.firstName} {user.userInfo.lastName}
                         </SelectItem>
@@ -331,16 +378,19 @@ const TicketForm = ({
               </FormItem>
             )}
           />
+          <div className="col-span-1 mb-6">
+            <FormTextArea name="requestDetails" label="Request Details" placeholder="Enter details" />
+          </div>
 
-          {/* Remarks (Medium TextArea) */}
-          <div className="col-span-3">
+          <div className="col-span-1 mb-6">
             <FormTextArea name="remarks" label="Remarks" placeholder="Enter remarks" />
           </div>
+          {/* Remarks (Medium TextArea) */}
 
           {/* Attachments (File Input with Button Trigger) */}
         </div>
         <div className="flex justify-end py-4">
-          <Button type="submit" className="w-[256px]" onClick={() => console.log(form.formState.errors)}>
+          <Button type="submit" className="w-[256px]" onClick={() => console.log(form.formState.defaultValues)}>
             Submit
           </Button>
         </div>
