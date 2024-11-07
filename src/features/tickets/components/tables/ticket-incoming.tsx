@@ -60,7 +60,7 @@ export const IncomingTicketComponent = () => {
         inbox: notification?.inbox! + 1,
       });
 
-      toast.success("Ticket Resolved !");
+      toast.success("Ticket Received!");
     },
     onError: (error) => {
       console.log(error);

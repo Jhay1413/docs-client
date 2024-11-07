@@ -21,8 +21,9 @@ import { z } from "zod";
 import { getCurrentUserId } from "@/hooks/use-user-hook";
 import { toast } from "react-toastify";
 import axios, { AxiosProgressEvent } from "axios";
-import { Progress } from "@radix-ui/react-progress";
-import { ScrollArea } from "@/components/ui/scroll-area";
+
+import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
+import { Progress } from "@/components/ui/progress";
 
 const baseUrlV2 = import.meta.env.VITE_ENDPOINT;
 type Props = {
@@ -33,6 +34,7 @@ type Props = {
   setSelectedType?: React.Dispatch<React.SetStateAction<string>>;
   mutateFn: (data: z.infer<typeof ticketingMutationSchema>) => void;
   ticketData?: z.infer<typeof ticketFullDetailsSchema>;
+  isPending: boolean;
   receiver: {
     id: string;
     userInfo: {
@@ -58,6 +60,7 @@ const TicketForm = ({
   selectedType,
   setSelectedType,
   mutateFn,
+  isPending,
   ticketData,
 }: Props) => {
   const userId = getCurrentUserId();
@@ -79,7 +82,7 @@ const TicketForm = ({
       subject: ticketData?.subject || "",
       section: ticketData?.section || "",
       division: ticketData?.division || "",
-      status: ticketData?.status,
+      status: ticketData?.status  || "ROUTING",
       requestDetails: ticketData?.requestDetails || "",
       priority: ticketData?.priority || "",
       dueDate: ticketData?.dueDate || "",
@@ -329,15 +332,16 @@ const TicketForm = ({
               <FormItem>
                 <FormLabel>Status*</FormLabel>
                 <FormControl>
-                  <Select onValueChange={field.onChange} defaultValue={field.value}>
+                  <Select onValueChange={field.onChange} defaultValue={field.value} disabled={!isForwarding}>
                     <SelectTrigger>
                       <SelectValue placeholder="Select status" />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="On process">On process</SelectItem>
-                      <SelectItem value="Completed">Completed</SelectItem>
-                      <SelectItem value="Approved">Approved</SelectItem>
-                      <SelectItem value="For Sign and Seal">For Sign and Seal</SelectItem>
+                    <SelectItem value="ROUTING">For Routing</SelectItem>
+                      <SelectItem value="ON_PROCESS">On Process</SelectItem>
+                      <SelectItem value="COMPLETED">Completed</SelectItem>
+                      <SelectItem value="APPROVED">Approved</SelectItem>
+                      <SelectItem value="SIGN_AND_SEAL">For Sign and Seal</SelectItem>
                     </SelectContent>
                   </Select>
                 </FormControl>
@@ -446,7 +450,7 @@ const TicketForm = ({
           <div className="col-span-3 ">
             <div className="grid grid-cols-2 gap-4">
               <div className="col-span-1 mb-6">
-                <FormTextArea name="requestDetails" label="Request Details" placeholder="Enter details" />
+                <FormTextArea name="requestDetails" label="Request Details" placeholder="Enter details" disable={isForwarding}/>
               </div>
 
               <div className="col-span-1 mb-6">
@@ -482,7 +486,7 @@ const TicketForm = ({
                         <h1>{file.name}</h1>
                       </div>
                       <div className="flex justify-end w-full">
-                        <Progress value={file.loading} className="w-[60%] h-2" />
+                        <Progress value={file.loading} className="w-[60%] h-4" />
                       </div>
                     </div>
                   ))}
@@ -505,6 +509,7 @@ const TicketForm = ({
                     </div>
                   ))}
                 </div>
+               
               </ScrollArea>
             </div>
            
@@ -515,7 +520,7 @@ const TicketForm = ({
           {/* Attachments (File Input with Button Trigger) */}
         </div>
         <div className="flex justify-end py-4">
-          <Button type="submit" className="w-[256px]" onClick={() => console.log(form.formState.defaultValues)}>
+          <Button type="submit" className="w-[256px]" onClick={() => console.log(form.formState.defaultValues)} disabled={isPending}>
             Submit
           </Button>
         </div>
