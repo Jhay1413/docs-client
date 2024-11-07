@@ -164,7 +164,7 @@ export const SideNav = () => {
             >
               <LibraryBig />
               <div className="flex gap-2">
-                <h1 className="text-base">Incoming</h1>
+                <h1 className="text-base">Incoming Tickets</h1>
               </div>
             </NavLink>
           </li>
