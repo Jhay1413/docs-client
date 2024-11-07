@@ -26,8 +26,7 @@ export const TicketResolved = () => {
     queryKey: ["tickets", page, debouncedSearchQuery],
     queryData: {
       query: {
-        query: debouncedSearchQuery,
-
+        query: "RESOLVED",
         page: page,
         pageSize: "10",
       },
