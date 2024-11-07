@@ -23,6 +23,7 @@ import { toast } from "react-toastify";
 import axios, { AxiosProgressEvent } from "axios";
 import { Progress } from "@radix-ui/react-progress";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import DragNdrop from "@/features/others/drag-drop";
 
 const baseUrlV2 = import.meta.env.VITE_ENDPOINT;
 type Props = {
@@ -112,6 +113,47 @@ const TicketForm = ({
 
   const handleFileInputClick = () => {
     fileInputRef.current?.click();
+  };
+
+  const handleFileInputChange = (event: ChangeEvent<HTMLInputElement>) => {
+    const files = event.target.files;
+    if (files) {
+      Array.from(files).forEach((file) => {
+        const formData = new FormData();
+        formData.append("thumbnail", file);
+        formData.append("company", "Envicomm");
+        formData.append("fileName", file.name);
+        uploadFile2(formData); // Call uploadFile with the FormData
+      });
+    }
+  };
+
+  const uploadFile2 = async (formData: FormData) => {
+    setShowProgress(true);
+    try {
+      const result = await axios.post(`${baseUrlV2}/posts`, formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
+      setUploadedKeys((prevKeys) => [...prevKeys, result.data.key]);
+      setUploadedFile((prevFiles) => [...prevFiles, { name: formData.get("fileName") as string, loading: 100 }]);
+    } catch (error) {
+      toast.error("Something went wrong!");
+      console.log(error);
+    } finally {
+      setShowProgress(false);
+    }
+  };
+
+  const handleFilesSelected = (newFiles: File[]) => {
+    newFiles.forEach((file) => {
+      const formData = new FormData();
+      formData.append("thumbnail", file);
+      formData.append("company", "Envicomm");
+      formData.append("fileName", file.name);
+      uploadFile2(formData);
+    });
   };
 
   const uploadFile = async (event: ChangeEvent<HTMLInputElement>) => {
@@ -455,6 +497,7 @@ const TicketForm = ({
             </div>
           </div>
           
+
           {/* Attachments (Medium Div) */}
           <div className="col-span-3 ">
             <div className="grid grid-cols-2 gap-4">
@@ -507,15 +550,21 @@ const TicketForm = ({
                 </div>
               </ScrollArea>
             </div>
-           
-            
-
-            
+ 
           </div>
           {/* Attachments (File Input with Button Trigger) */}
+
+
+        {/* Drag and Drop File Upload Section */}
+        <div className="col-span-3">
+          <p className="text-xl">Drag and Drop Files</p>
+          <DragNdrop onFilesSelected={handleFilesSelected} width="100%" height="200px" />
         </div>
+
+            </div>
+        {/* Submit Button */}
         <div className="flex justify-end py-4">
-          <Button type="submit" className="w-[256px]" onClick={() => console.log(form.formState.defaultValues)}>
+          <Button type="submit" className="w-[256px]">
             Submit
           </Button>
         </div>
