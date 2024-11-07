@@ -250,12 +250,12 @@ export const TicketDetails = () => {
       )}
 
       {/* Conditionally render Attachments */}
-      {data?.body.attachments && (
+      {data?.body.attachments.length! > 0 && (
         <>
           <Separator className="my-4" />
           <h1 className="text-xl font-bold text-gray-800 mb-4">Attachments</h1>
           <div className="space-y-2 mb-4">
-            {data.body.attachments.map((attachment, index) => (
+            {data?.body.attachments.map((attachment, index) => (
               <div
                 key={index}
                 className="flex justify-between items-center p-3 rounded-lg shadow-md"
