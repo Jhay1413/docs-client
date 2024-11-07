@@ -130,7 +130,7 @@ const TicketForm = ({
                     </FormItem>
                   )}
                 />
-                <FormInput name="subject" label="Subject" placeholder="Enter subject" />
+                <FormInput name="subject" label="Subject" placeholder="Enter subject" disable={isForwarding} />
               </div>
               <div className="">
                 {selectedType === "EPD" && <TicketFormEPD isForwarding={isForwarding} />}
@@ -271,7 +271,6 @@ const TicketForm = ({
                       <SelectItem value="On process">On process</SelectItem>
                       <SelectItem value="Completed">Completed</SelectItem>
                       <SelectItem value="Approved">Approved</SelectItem>
-                      <SelectItem value="Resolved">Resolved</SelectItem>
                       <SelectItem value="For Sign and Seal">For Sign and Seal</SelectItem>
                     </SelectContent>
                   </Select>
