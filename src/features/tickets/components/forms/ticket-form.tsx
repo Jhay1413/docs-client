@@ -22,6 +22,7 @@ import { getCurrentUserId } from "@/hooks/use-user-hook";
 import { toast } from "react-toastify";
 import axios, { AxiosProgressEvent } from "axios";
 import { Progress } from "@radix-ui/react-progress";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 const baseUrlV2 = import.meta.env.VITE_ENDPOINT;
 type Props = {
@@ -195,7 +196,7 @@ const TicketForm = ({
                     </FormItem>
                   )}
                 />
-                <FormInput name="subject" label="Subject" placeholder="Enter subject" disable={isForwarding} />
+                <FormInput name="subject" label="Subject" placeholder="Enter subject" />
               </div>
               <div className="">
                 {selectedType === "EPD" && <TicketFormEPD isForwarding={isForwarding} />}
@@ -336,6 +337,7 @@ const TicketForm = ({
                       <SelectItem value="On process">On process</SelectItem>
                       <SelectItem value="Completed">Completed</SelectItem>
                       <SelectItem value="Approved">Approved</SelectItem>
+                      <SelectItem value="Resolved">Resolved</SelectItem>
                       <SelectItem value="For Sign and Seal">For Sign and Seal</SelectItem>
                     </SelectContent>
                   </Select>
@@ -442,61 +444,74 @@ const TicketForm = ({
               </FormItem>
             )}
           />
-          <div className="col-span-1 mb-6">
-            <FormTextArea name="requestDetails" label="Request Details" placeholder="Enter details" />
-          </div>
+          <div className="col-span-3 ">
+            <div className="grid grid-cols-2 gap-4">
+              <div className="col-span-1 mb-6">
+                <FormTextArea name="requestDetails" label="Request Details" placeholder="Enter details" />
+              </div>
 
-          <div className="col-span-1 mb-6">
-            <FormTextArea name="remarks" label="Remarks" placeholder="Enter remarks" />
+              <div className="col-span-1 mb-6">
+                <FormTextArea name="remarks" label="Remarks" placeholder="Enter remarks" />
+              </div>
+            </div>
           </div>
           
           {/* Attachments (Medium Div) */}
-          <div className="col-span-2">
-            <p className="font-bold text-sm">Attachments</p>
-          <div className="flex w-full flex-col mt-2 items-center justify-center rounded-md border-blue-300  border-dashed border-2 ">
-              <p className="text-xl">Upload File</p>
-
-              <div className="flex items-center justify-center ">
-                <input type="file" hidden ref={fileInputRef} onChange={uploadFile} />
-                <div className="flex items-center justify-center" onClick={handleFileInputClick}>
-                  <ImageUp className=" w-24 h-24 bg-blue-200 rounded-xl text-blue-500" />
-                </div>
+          <div className="col-span-3 ">
+            <div className="grid grid-cols-2 gap-4">
+              <div className="">
+                 <p className="font-bold text-sm">Attachments</p>
+                  <div className="flex w-full flex-col mt-2 items-center justify-center rounded-md border-blue-300  border-dashed border-2 ">
+                      <p className="text-xl">Upload File</p>
+                      <div className="flex items-center justify-center ">
+                        <input type="file" hidden ref={fileInputRef} onChange={uploadFile} />
+                        <div className="flex items-center justify-center" onClick={handleFileInputClick}>
+                          <ImageUp className=" w-24 h-24 bg-blue-200 rounded-xl text-blue-500" />
+                        </div>
+                      </div>
+                  </div>
               </div>
-            </div>
-
-            {showProgress && (
-              <div className="flex flex-col gap-2 text-white">
-                {files.map((file, index) => (
-                  <div className="flex justify-start items-center gap-2 rounded-md bg-blue-300 p-2 " key={index}>
-                    <div className="w-20">
-                      <FileCode size={32} />
+              <ScrollArea className="w-full min-h-full max-h-48 p-4 rounded-md">
+                {showProgress && (
+                <div className="flex flex-col gap-2 text-white">
+                  {files.map((file, index) => (
+                    <div className="flex justify-start items-center gap-2 rounded-md bg-blue-300 p-2 " key={index}>
+                      <div className="w-20">
+                        <FileCode size={32} />
+                      </div>
+                      <div className="w-1/2 ">
+                        <h1>{file.name}</h1>
+                      </div>
+                      <div className="flex justify-end w-full">
+                        <Progress value={file.loading} className="w-[60%] h-2" />
+                      </div>
                     </div>
-                    <div className="w-1/2 ">
-                      <h1>{file.name}</h1>
-                    </div>
-                    <div className="flex justify-end w-full">
-                      <Progress value={file.loading} className="w-[60%] h-2" />
-                    </div>
-                  </div>
-                ))}
-              </div>
-            )}
-            <div className="flex flex-col gap-2 text-white">
-              {uploadedFile.map((file, index) => (
-                <div className="flex justify-start items-center gap-2 rounded-md bg-blue-300 p-2  " key={index}>
-                  <div className="w-20">
-                    <FileCode size={32} />
-                  </div>
-
-                  <div className="w-full ">
-                    <h1>{file.name}</h1>
-                  </div>
-                  <div className="flex justify-end w-full">
-                    <Check />
-                  </div>
+                  ))}
                 </div>
-              ))}
+              
+                )}
+                <div className="flex flex-col gap-2 text-white">
+                  {uploadedFile.map((file, index) => (
+                    <div className="flex justify-start items-center gap-2 rounded-md bg-blue-300 p-2  " key={index}>
+                      <div className="w-20">
+                        <FileCode size={32} />
+                      </div>
+
+                      <div className="w-full ">
+                        <h1>{file.name}</h1>
+                      </div>
+                      <div className="flex justify-end w-full">
+                        <Check />
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </ScrollArea>
             </div>
+           
+            
+
+            
           </div>
           {/* Attachments (File Input with Button Trigger) */}
         </div>
