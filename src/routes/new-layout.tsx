@@ -16,21 +16,23 @@ export const DashboardNewLayout = () => {
   const setNumOfUnreadNotif = useNotificationStore((state) => state.setNumOfUnreadNotif);
   const setNotification = useNotificationStore((state) => state.setNotification);
   useEffect(() => {
-    socket.on("notification", (numOfUnreadNotif: number, quantityTracker: NotificationType) => {
+    socket.on("notification", (message: string, quantityTracker: NotificationType, numOfUnreadNotif?: number) => {
+      console.log(quantityTracker);
       setNotification(quantityTracker);
-      setNumOfUnreadNotif(numOfUnreadNotif);
-
-      toast("🦄 You have new notification!", {
-        position: "bottom-right",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "light",
-        transition: Bounce,
-      });
+      setNumOfUnreadNotif(numOfUnreadNotif || 0);
+      if (message) {
+        toast("🦄 You have new notification!", {
+          position: "bottom-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+          transition: Bounce,
+        });
+      }
     });
 
     socket.emit("register", currentUserId);
