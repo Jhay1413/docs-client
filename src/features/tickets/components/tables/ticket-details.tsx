@@ -6,7 +6,7 @@ import { tsr } from "@/services/tsr";
 import { ticketsDetailsColumn } from "./ticket-details-column";
 import { getSignUrlForView } from "@/features/transactions/services/getSignedUrl";
 import { Button } from "@/components/ui/button";
-import { FileText, Plus } from "lucide-react";
+import { CircleArrowRight, FileText, Forward, Plus } from "lucide-react";
 import { getCurrentUserId } from "@/hooks/use-user-hook";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
 import { useState } from "react";
@@ -19,16 +19,16 @@ const ForwardTicketBtn = ({id}: {id?:string}) => (
   <div>
     <Link
       to={`/dashboard/tickets/forward-ticket/${id}`}
-      className="bg-[#414140] px-4 py-2 text-lg flex items-center justify-center space-x rounded-lg text-white"
+      className="bg-blue-600 px-4 py-2 text-lg flex items-center justify-between space-x-3 rounded-lg text-white hover:bg-blue-500"
     >
-      <Plus size={24} />
-      <h1>Forward Ticket</h1>
+      <CircleArrowRight size={24} />
+      <h1 className="text-base">Forward</h1>
     </Link>
   </div>
 );
 
 const ReopenTicketBtn = () => (
-    <Button type="button" className="bg-[#414140] px-4 py-2 text-lg flex items-center justify-center space-x rounded-lg text-white">Reopen Ticket</Button>
+    <Button type="button" className="bg-[#414140] px-4 py-2 text-lg flex items-center justify-center space-x rounded-lg text-white">Reopen</Button>
 );
 
 
@@ -44,6 +44,8 @@ export const TicketDetails = () => {
       params: { id: id! },
     },
   });
+
+
   const { mutate } = tsr.ticketing.resolveTickets.useMutation({
     onMutate: () => { },
     onSuccess: () => {
@@ -94,8 +96,8 @@ export const TicketDetails = () => {
           
           {data?.body.requestee?.id === currentUserId && data?.body.status != 'RESOLVED' &&
             <ConfirmationModal
-              title="Are you sure?"
-              description="This action cannot be undone."
+              title="Confirm Ticket Resolution"
+              description="Are you sure you want to mark this ticket as resolved? This action cannot be undone, and further changes will not be allowed once the ticket is resolved."
               onConfirm={handleConfirm}
               onCancel={handleCancel}
               triggerButton="Resolve"
@@ -264,7 +266,7 @@ export const TicketDetails = () => {
                     <FileText className="text-gray-600" />
                     <p className="text-gray-700 truncate">{attachment}</p>
                   </div>
-                  <button className="ml-4 px-3 py-1 text-sm font-semibold text-blue-600 border border-blue-600 rounded hover:bg-blue-600 hover:text-white transition">
+                  <button onClick={() => viewFile(attachment)} className="ml-4 px-3 py-1 text-sm font-semibold text-blue-600 border border-blue-600 rounded hover:bg-blue-600 hover:text-white transition">
                     View
                   </button>
                 </div>
