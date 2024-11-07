@@ -12,6 +12,8 @@ import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, 
 import { useState } from "react";
 import ConfirmationModal from "@/components/confirmation-modal";
 import { toast } from "react-toastify";
+import { ScrollArea } from "@/components/ui/scroll-area";
+
 
 const ForwardTicketBtn = ({id}: {id?:string}) => (
   <div>
@@ -254,24 +256,21 @@ export const TicketDetails = () => {
         <>
           <Separator className="my-4" />
           <h1 className="text-xl font-bold text-gray-800 mb-4">Attachments</h1>
-          <div className="space-y-2 mb-4">
+         
+            <ScrollArea className="h-40">
             {data?.body.attachments.map((attachment, index) => (
-              <div
-                key={index}
-                className="flex justify-between items-center p-3 rounded-lg shadow-md"
-              >
-                <div className="flex items-center space-x-2">
-                  <FileText className="text-gray-600" />
-                  <p className="text-gray-700 truncate">{attachment}</p>
+                <div key={index} className="flex justify-between items-center p-3 rounded-lg shadow-md">
+                  <div className="flex items-center space-x-2">
+                    <FileText className="text-gray-600" />
+                    <p className="text-gray-700 truncate">{attachment}</p>
+                  </div>
+                  <button className="ml-4 px-3 py-1 text-sm font-semibold text-blue-600 border border-blue-600 rounded hover:bg-blue-600 hover:text-white transition">
+                    View
+                  </button>
                 </div>
-                <button
-                  className="ml-4 px-3 py-1 text-sm font-semibold text-blue-600 border border-blue-600 rounded hover:bg-blue-600 hover:text-white transition"
-                >
-                  View
-                </button>
-              </div>
             ))}
-          </div>
+            </ScrollArea>
+         
         </>
       )}
 
