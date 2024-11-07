@@ -22,6 +22,7 @@ import { getCurrentUserId } from "@/hooks/use-user-hook";
 import { toast } from "react-toastify";
 import axios, { AxiosProgressEvent } from "axios";
 
+import DragNdrop from "@/features/others/drag-drop";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import { Progress } from "@/components/ui/progress";
 
@@ -117,49 +118,59 @@ const TicketForm = ({
     fileInputRef.current?.click();
   };
 
-  const uploadFile = async (event: ChangeEvent<HTMLInputElement>) => {
-    const files = event.target.files![0];
-    const formData = new FormData();
-
-    if (!files) {
-      throw new Error("No file attached !");
-    }
-    const fileName = files.name;
-    const fileSubString = files.name.length > 12 ? `${files.name.substring(0, 13)}... .${files.name.split(".")[1]}` : files.name;
-
-    formData.append("thumbnail", files);
-    formData.append("company", "Envicomm");
-    formData.append("fileName", fileName);
-
-    setFiles((prevState) => [...prevState, { name: fileSubString, loading: 0 }]);
-    setShowProgress(true);
-
-    try {
-      const result = await axios.post(`${baseUrlV2}/posts`, formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-
-        onUploadProgress: (e: AxiosProgressEvent) => {
-          const total = e.total || 1;
-          setFiles((prevState) => {
-            const newFiles = [...prevState];
-            newFiles[newFiles.length - 1].loading = Math.floor((e.loaded / total) * 100);
-            return newFiles;
-          });
-          if (e.loaded == total) {
-            setUploadedFile([...uploadedFile, { name: fileSubString, loading: 100 }]);
-            setFiles([]);
-            setShowProgress(false);
-          }
-        },
-      });
-      setUploadedKeys((prevKeys) => [...prevKeys, result.data.key]);
-    } catch (error) {
-      toast.error("Something went wrong !");
-      console.log(error);
+  const handleFileInputChange = (event: ChangeEvent<HTMLInputElement>) => {
+    const selectedFiles = event.target.files;
+    if (selectedFiles) {
+      handleFileUpload(Array.from(selectedFiles));
     }
   };
+
+  const handleFilesSelected = (newFiles: File[]) => {
+    handleFileUpload(newFiles);
+  };
+
+  const handleFileUpload = async (filesToUpload: File[]) => {
+    setShowProgress(true);
+    
+    // Reset the loading state for all files before starting new uploads
+    const initialFilesState = filesToUpload.map(file => ({ name: file.name, loading: 0 }));
+    setFiles(initialFilesState);
+  
+    for (const file of filesToUpload) {
+      const formData = new FormData();
+      formData.append("thumbnail", file);
+      formData.append("company", "Envicomm");
+      formData.append("fileName", file.name);
+  
+      try {
+        const result = await axios.post(`${baseUrlV2}/posts`, formData, {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+          onUploadProgress: (e) => {
+            const total = e.total || 1;
+            setFiles((prevState) => {
+              const newFiles = [...prevState];
+              const currentIndex = newFiles.findIndex(f => f.name === file.name);
+              if (currentIndex !== -1) {
+                newFiles[currentIndex].loading = Math.floor((e.loaded / total) * 100);
+              }
+              return newFiles;
+            });
+          },
+        });
+        setUploadedKeys((prevKeys) => [...prevKeys, result.data.key]);
+        setUploadedFile((prevFiles) => [...prevFiles, { name: file.name, loading: 100 }]);
+      } catch (error) {
+        toast.error("Something went wrong!");
+        console.log(error);
+      }
+    }
+  
+    // Set showProgress to false after all uploads are complete
+    setShowProgress(false);
+  };
+
  
 
   
@@ -459,30 +470,28 @@ const TicketForm = ({
             </div>
           </div>
           
-          {/* Attachments (Medium Div) */}
-          <div className="col-span-3 ">
-            <div className="grid grid-cols-2 gap-4">
-              <div className="">
-                 <p className="font-bold text-sm text-gray-800">Attachments</p>
-                  <div className="flex w-full flex-col mt-2 items-center justify-center rounded-md border-blue-300  border-dashed border-2 h-48">
-                      <p className="text-xl">Upload File</p>
-                      <div className="flex items-center justify-center ">
-                        <input type="file" hidden ref={fileInputRef} onChange={uploadFile} />
-                        <div className="flex items-center justify-center" onClick={handleFileInputClick}>
-                          <ImageUp className=" w-24 h-24 bg-blue-200 rounded-xl text-blue-500" />
-                        </div>
-                      </div>
-                  </div>
+
+        {/* Attachments (Grid Layout) */}
+        <div className="col-span-3">
+          <div className="grid grid-cols-2 gap-4">
+            {/* Drag and Drop Section */}
+            <div>
+              <p className="font-bold text-sm text-gray-800">Attachments</p>
+              <div className="flex w-full flex-col mt-2 items-center justify-center rounded-md border-blue-300 border-dashed border-2">
+                <DragNdrop onFilesSelected={handleFilesSelected} width="100%" height="100%" />
               </div>
-              <ScrollArea className="w-full min-h-full max-h-48 p-4 rounded-md">
-                {showProgress && (
+            </div>
+          
+            {/* Scrollable Progress Display */}
+            <ScrollArea className="w-full min-h-full max-h-48 p-4 rounded-md">
+              {showProgress && (
                 <div className="flex flex-col gap-2 text-white">
                   {files.map((file, index) => (
-                    <div className="flex justify-start items-center gap-2 rounded-md bg-blue-300 p-2 " key={index}>
+                    <div className="flex justify-start items-center gap-2 rounded-md bg-blue-300 p-2" key={index}>
                       <div className="w-20">
                         <FileCode size={32} />
                       </div>
-                      <div className="w-1/2 ">
+                      <div className="w-1/2">
                         <h1>{file.name}</h1>
                       </div>
                       <div className="flex justify-end w-full">
@@ -491,34 +500,27 @@ const TicketForm = ({
                     </div>
                   ))}
                 </div>
-              
-                )}
-                <div className="flex flex-col gap-2 text-white">
-                  {uploadedFile.map((file, index) => (
-                    <div className="flex justify-start items-center gap-2 rounded-md bg-blue-300 p-2  " key={index}>
-                      <div className="w-20">
-                        <FileCode size={32} />
-                      </div>
-
-                      <div className="w-full ">
-                        <h1>{file.name}</h1>
-                      </div>
-                      <div className="flex justify-end w-full">
-                        <Check />
-                      </div>
+              )}
+              <div className="flex flex-col gap-2 text-white">
+                {uploadedFile.map((file, index) => (
+                  <div className="flex justify-start items-center gap-2 rounded-md bg-blue-300 p-2" key={index}>
+                    <div className="w-20">
+                      <FileCode size={32} />
                     </div>
-                  ))}
-                </div>
-               
-              </ScrollArea>
+                    <div className="w-full">
+                      <h1>{file.name}</h1>
+                    </div>
+                    <div className="flex justify-end w-full">
+                      <Check />
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </ScrollArea>
             </div>
-           
-            
-
-            
           </div>
-          {/* Attachments (File Input with Button Trigger) */}
         </div>
+        {/* Submit Button */}
         <div className="flex justify-end py-4">
           <Button type="submit" className="w-[256px]" onClick={() => console.log(form.formState.defaultValues)} disabled={isPending}>
             Submit
