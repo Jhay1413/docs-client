@@ -26,7 +26,7 @@ const ForwardTicketBtn = ({id}: {id?:string}) => (
 );
 
 const ReopenTicketBtn = () => (
-    <h1>Reopen Ticket</h1>
+    <Button type="button" className="bg-[#414140] px-4 py-2 text-lg flex items-center justify-center space-x rounded-lg text-white">Reopen Ticket</Button>
 );
 
 
