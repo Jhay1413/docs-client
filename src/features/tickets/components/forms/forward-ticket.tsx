@@ -15,11 +15,11 @@ import { getCurrentUserId, useCurrentUserRole } from "@/hooks/use-user-hook";
 export const ForwardTicketComponent = () => {
   const { id } = useParams();
   const role = useCurrentUserRole();
-  const [isForwarding, setIsForwarding] = useState(true);
+  
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [selectectedType, setSelectedType] = useState("");
   const navigate = useNavigate();
-
+   const isForwarding = true;
   // Fetch the existing ticket details
   const { data: ticketData, isLoading: isLoadingTicket } = tsr.ticketing.getTicketsById.useQuery({
     queryKey: ["ticket", id],
@@ -40,7 +40,7 @@ export const ForwardTicketComponent = () => {
     },
   });
 
-  const { mutate } = tsr.ticketing.forwardTickets.useMutation({
+  const { mutate, isPending } = tsr.ticketing.forwardTickets.useMutation({
     onMutate: () => {},
     onSuccess: () => {
       toast.success("Ticket Forwarded !");
@@ -71,7 +71,7 @@ export const ForwardTicketComponent = () => {
 
       {/* The form */}
 
-      <TicketForm receiver={data ? data?.body : []} isForwarding={isForwarding} ticketData={ticketData!.body!} mutateFn={onSubmit} />
+      <TicketForm receiver={data ? data?.body : []} isForwarding={isForwarding} ticketData={ticketData!.body!} mutateFn={onSubmit} isPending={isPending}/>
     </div>
   );
 };
