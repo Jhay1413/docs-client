@@ -6,7 +6,7 @@ import { tsr } from "@/services/tsr";
 import { ticketsDetailsColumn } from "./ticket-details-column";
 import { getSignUrlForView } from "@/features/transactions/services/getSignedUrl";
 import { Button } from "@/components/ui/button";
-import { Plus } from "lucide-react";
+import { FileText, Plus } from "lucide-react";
 import { getCurrentUserId } from "@/hooks/use-user-hook";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
 import { useState } from "react";
@@ -108,7 +108,7 @@ export const TicketDetails = () => {
       <Separator className="my-4" />
       {/* Ticket Subject Data */}
       <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-3 gap-6 mb-4 items-stretch">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 col-span-2 gap-6 mb-4 shadow h-full">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 col-span-2 gap-6 mb-4 shadow rounded-lg h-full">
           <div className="bg-white p-4 rounded-lg h-full">
             <h2 className="font-semibold text-gray-700">Ticket ID:</h2>
             <p className="text-gray-600">{data?.body.ticketId || "No Ticket ID"}</p>
@@ -127,7 +127,7 @@ export const TicketDetails = () => {
           </div>
         </div>
         {/* Ticket Importance Data */}
-        <div className="grid grid-cols-1 gap-6 col-span-1 shadow h-full">
+        <div className="grid grid-cols-1 gap-6 col-span-1 shadow rounded-lg h-full">
           <div className="bg-white p-4 pb-0 rounded-lg h-full">
             <h2 className="font-semibold text-gray-700">Status:</h2>
             <p className="text-gray-600">{data?.body.status || "No Status"}</p>
@@ -145,7 +145,7 @@ export const TicketDetails = () => {
 
       <Separator className="my-4" />
       {/* Ticket Sender/Receiver Data */}
-      <div className="grid grid-cols-3 md:grid-cols-3 lg:grid-cols-3 gap-6 mb-4 shadow">
+      <div className="grid grid-cols-3 md:grid-cols-3 lg:grid-cols-3 gap-6 mb-4 shadow rounded-lg">
         <div className="bg-white p-4 rounded-lg">
           <h2 className="font-semibold text-gray-700">Date Forwarded:</h2>
           <p className="text-gray-600">{new Date(data?.body.dateForwarded!).toLocaleDateString()}</p>
@@ -180,13 +180,26 @@ export const TicketDetails = () => {
         </div>
       </div>
 
+      <Separator className="my-4" />
+      {/* Request Details and Remarks */}
+      <div className="grid grid-cols-1 gap-6 mt-6">
+        <div className="bg-white p-6 rounded-lg shadow text-lg">
+          <h2 className="font-semibold text-gray-700">Request Details:</h2>
+          <p className="text-gray-600">{data?.body.requestDetails || "No Request Details"}</p>
+        </div>
+        <div className="bg-white p-6 rounded-lg shadow text-lg">
+          <h2 className="font-semibold text-gray-700">Remarks:</h2>
+          <p className="text-gray-600">{data?.body.remarks || "No Remarks"}</p>
+        </div>
+      </div>
+
       {/* Conditionally render Project Details */}
       {data?.body.project && (
         <>
           <Separator className="my-4" />
           <h1 className="text-xl font-bold text-gray-800 mb-4">Project Details</h1>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6 mb-4 shadow items-stretch">
-            <div className="grid grid-cols-3 md:grid-cols-3 lg:grid-cols-3 col-span-2 gap-6 mb-4 shadow h-full">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6 mb-4 shadow rounded-lg items-stretch">
+            <div className="grid grid-cols-3 md:grid-cols-3 lg:grid-cols-3 col-span-2 gap-6 mb-4 shadow rounded-lg h-full">
               <div className="bg-white p-4 rounded-lg h-full">
                 <h2 className="font-semibold text-gray-700">Project ID:</h2>
                 <p className="text-gray-600">{data.body.project.projectId || "No Project"}</p>
@@ -213,8 +226,8 @@ export const TicketDetails = () => {
         <>
           <Separator className="my-4" />
           <h1 className="text-xl font-bold text-gray-800 mb-4">Transaction Details</h1>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6 mb-4 shadow items-stretch">
-            <div className="grid grid-cols-3 md:grid-cols-3 lg:grid-cols-3 col-span-2 gap-6 mb-4 shadow h-full">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6 mb-4 shadow rounded-lg items-stretch">
+            <div className="grid grid-cols-3 md:grid-cols-3 lg:grid-cols-3 col-span-2 gap-6 mb-4 shadow rounded-lg h-full">
               <div className="bg-white p-4 rounded-lg h-full">
                 <h2 className="font-semibold text-gray-700">Transaction ID:</h2>
                 <p className="text-gray-600">{data.body.transaction?.transactionId}</p>
@@ -229,24 +242,38 @@ export const TicketDetails = () => {
               </div>
               <div className="bg-white p-4 rounded-lg h-full">
                 <h2 className="font-semibold text-gray-700">Due Date:</h2>
-                <p className="text-gray-600">{data.body.transaction?.dueDate}</p>
+                <p className="text-gray-600">{new Date(data.body.transaction?.dueDate!).toLocaleDateString()}</p>
               </div>
             </div>
           </div>
         </>
       )}
-      <Separator className="my-4" />
-      {/* Request Details and Remarks */}
-      <div className="grid grid-cols-1 gap-6 mt-6">
-        <div className="bg-white p-6 rounded-lg shadow text-lg">
-          <h2 className="font-semibold text-gray-700">Request Details:</h2>
-          <p className="text-gray-600">{data?.body.requestDetails || "No Request Details"}</p>
-        </div>
-        <div className="bg-white p-6 rounded-lg shadow text-lg">
-          <h2 className="font-semibold text-gray-700">Remarks:</h2>
-          <p className="text-gray-600">{data?.body.remarks || "No Remarks"}</p>
-        </div>
-      </div>
+
+      {/* Conditionally render Attachments */}
+      {data?.body.attachments && (
+        <>
+          <Separator className="my-4" />
+          <h1 className="text-xl font-bold text-gray-800 mb-4">Attachments</h1>
+          <div className="space-y-2 mb-4">
+            {data.body.attachments.map((attachment, index) => (
+              <div
+                key={index}
+                className="flex justify-between items-center p-3 rounded-lg shadow-md"
+              >
+                <div className="flex items-center space-x-2">
+                  <FileText className="text-gray-600" />
+                  <p className="text-gray-700 truncate">{attachment}</p>
+                </div>
+                <button
+                  className="ml-4 px-3 py-1 text-sm font-semibold text-blue-600 border border-blue-600 rounded hover:bg-blue-600 hover:text-white transition"
+                >
+                  View
+                </button>
+              </div>
+            ))}
+          </div>
+        </>
+      )}
 
       <Separator className="my-4" />
       <h2 className="text-lg font-bold text-gray-800">Ticket Logs:</h2>
