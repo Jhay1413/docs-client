@@ -26,8 +26,9 @@ const ForwardTicketBtn = ({id}: {id?:string}) => (
 );
 
 const ReopenTicketBtn = () => (
-    <h1>Reopen Ticket</h1>
+    <Button type="button" className="bg-[#414140] px-4 py-2 text-lg flex items-center justify-center space-x rounded-lg text-white">Reopen Ticket</Button>
 );
+
 
 export const TicketDetails = () => {
   const { id } = useParams();
@@ -88,17 +89,20 @@ export const TicketDetails = () => {
       <div className="flex justify-between items-center mb-4">
         <h1 className="text-3xl font-bold text-gray-800">Ticket Details</h1>
         <div className="flex justify-start items-center gap-4">
-          {data?.body.status === 'Resolved' && <ReopenTicketBtn />}
-          <ConfirmationModal
-        title="Are you sure?"
-        description="This action cannot be undone."
-        onConfirm={handleConfirm}
-        onCancel={handleCancel}
-        triggerButton="Resolve"
-      />
-          {data?.body.receiver?.id === currentUserId && <ForwardTicketBtn id={id}/>}
-          {data?.body.requestee?.id === currentUserId && <Button>Resolve</Button>}
-          {data?.body.receiver?.id === currentUserId && <ForwardTicketBtn />}
+          
+          {data?.body.requestee?.id === currentUserId && data?.body.status != 'RESOLVED' &&
+            <ConfirmationModal
+              title="Are you sure?"
+              description="This action cannot be undone."
+              onConfirm={handleConfirm}
+              onCancel={handleCancel}
+              triggerButton="Resolve"
+            />
+          }
+
+          {data?.body.status === 'RESOLVED' && <ReopenTicketBtn />}
+          {data?.body.receiver?.id === currentUserId && data?.body.status != 'RESOLVED' && <ForwardTicketBtn id={id}/>}
+
         </div>
       </div>
       <Separator className="my-4" />
