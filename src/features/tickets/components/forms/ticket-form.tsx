@@ -196,7 +196,7 @@ const TicketForm = ({
                     </FormItem>
                   )}
                 />
-                <FormInput name="subject" label="Subject" placeholder="Enter subject" />
+                <FormInput name="subject" label="Subject" placeholder="Enter subject" disable={isForwarding} />
               </div>
               <div className="">
                 {selectedType === "EPD" && <TicketFormEPD isForwarding={isForwarding} />}
@@ -461,7 +461,7 @@ const TicketForm = ({
             <div className="grid grid-cols-2 gap-4">
               <div className="">
                  <p className="font-bold text-sm">Attachments</p>
-                  <div className="flex w-full flex-col mt-2 items-center justify-center rounded-md border-blue-300  border-dashed border-2 ">
+                  <div className="flex w-full flex-col mt-2 items-center justify-center rounded-md border-blue-300  border-dashed border-2 h-48">
                       <p className="text-xl">Upload File</p>
                       <div className="flex items-center justify-center ">
                         <input type="file" hidden ref={fileInputRef} onChange={uploadFile} />
