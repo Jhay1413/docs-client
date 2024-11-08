@@ -14,16 +14,18 @@ import { Link } from "react-router-dom";
 import { z } from "zod";
 import { toPascalCase } from "../ticket.utils";
 import { ticketLogsSchema } from "shared-contract";
+import AttachmentsModal from "./attachments-modal";
 
 const maxLength = 50;
 export const ticketsDetailsColumn: ColumnDef<z.infer<typeof ticketLogsSchema>>[] = [
   {
-    header: () => <span className="font-bold text-nowrap">Log ID</span>,
-    accessorKey: "ticketId",
-  },
-  {
     header: () => <span className="font-bold text-nowrap">Status</span>,
     accessorKey: "status",
+    cell: ({ row }) => {
+      const ticketInfo = row.original;
+      const statusInPascalCase = toPascalCase(ticketInfo.status || "");
+      return <span>{statusInPascalCase}</span>;
+    },
   },
   {
     header: () => <span className="font-bold text-nowrap">Priority</span>,
@@ -63,7 +65,8 @@ export const ticketsDetailsColumn: ColumnDef<z.infer<typeof ticketLogsSchema>>[]
       const transactionInfo = row.original;
       const name = `${transactionInfo.receiver}`.toLocaleLowerCase();
       const new_name = toPascalCase(name);
-      return <span>{new_name}</span>;
+      console.log(transactionInfo)
+      return <span>{transactionInfo.receiver ? new_name : "--"}</span>;
     },
   },
   {
@@ -91,6 +94,18 @@ export const ticketsDetailsColumn: ColumnDef<z.infer<typeof ticketLogsSchema>>[]
       return <span>{ticketInfo.updatedAt ? new Date(ticketInfo.updatedAt).toDateString() : "No Date Available"}</span>;
     },
   },
+  {
+    header: "Attachments",
+    accessorKey: "attachments",
+    cell: ({ row }) => {
+      const attachments: string[] = row.original.attachments;
+      return attachments.length > 0 ? (
+        <AttachmentsModal attachments={attachments} />
+      ) : (
+        "No attachments"
+      );
+    }
+  }
   // {
   //   header: "Actions",
   //   accessorKey: "actions",

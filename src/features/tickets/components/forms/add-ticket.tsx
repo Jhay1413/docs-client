@@ -22,7 +22,7 @@ export const AddTicketComponent = () => {
   const [selectectedType, setSelectedType] = useState("");
   const navigate = useNavigate();
 
-  const { mutate } = tsr.ticketing.createTickets.useMutation({
+  const { mutate,isPending } = tsr.ticketing.createTickets.useMutation({
     onMutate: () => {},
     onSuccess: () => {
       toast.success("Ticket Created !");
@@ -66,9 +66,8 @@ export const AddTicketComponent = () => {
         selectedType={selectectedType}
         setSelectedType={setSelectedType}
         mutateFn={mutateFn}
+        isPending={isPending}
       />
-
-      {/* Submit Button */}
     </div>
   );
 };

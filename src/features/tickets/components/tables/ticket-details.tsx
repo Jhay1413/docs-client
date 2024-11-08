@@ -12,7 +12,8 @@ import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, 
 import { useState } from "react";
 import ConfirmationModal from "@/components/confirmation-modal";
 import { toast } from "react-toastify";
-import { ScrollArea } from "@/components/ui/scroll-area";
+import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
+import { toPascalCase } from "../ticket.utils";
 
 
 const ForwardTicketBtn = ({id}: {id?:string}) => (
@@ -53,8 +54,8 @@ export const TicketDetails = () => {
       navigate(`/dashboard/tickets/inbox/${currentUserId}`);
     },
     onError: (error) => {
-      console.error("Error forwarding ticket:", error);
-      toast.error("Failed to forward ticket. Please try again.");
+      console.error("Error resolving ticket:", error);
+      toast.error("Failed to resolve ticket. Please try again.");
     },
   });
   console.log("ticket data:", data);
@@ -134,7 +135,7 @@ export const TicketDetails = () => {
         <div className="grid grid-cols-1 gap-6 col-span-1 shadow rounded-lg h-full">
           <div className="bg-white p-4 pb-0 rounded-lg h-full">
             <h2 className="font-semibold text-gray-700">Status:</h2>
-            <p className="text-gray-600">{data?.body.status || "No Status"}</p>
+            <p className="text-gray-600">{toPascalCase(data?.body.status!) || "No Status"}</p>
           </div>
           <div className="bg-white p-4 pt-0 pb-0 rounded-lg h-full">
             <h2 className="font-semibold text-gray-700">Priority:</h2>
@@ -258,21 +259,27 @@ export const TicketDetails = () => {
         <>
           <Separator className="my-4" />
           <h1 className="text-xl font-bold text-gray-800 mb-4">Attachments</h1>
-         
-            <ScrollArea className="h-40">
+          
+          <ScrollArea className="h-60">
             {data?.body.attachments.map((attachment, index) => (
-                <div key={index} className="flex justify-between items-center p-3 rounded-lg shadow-md">
-                  <div className="flex items-center space-x-2">
-                    <FileText className="text-gray-600" />
-                    <p className="text-gray-700 truncate">{attachment}</p>
-                  </div>
-                  <button onClick={() => viewFile(attachment)} className="ml-4 px-3 py-1 text-sm font-semibold text-blue-600 border border-blue-600 rounded hover:bg-blue-600 hover:text-white transition">
-                    View
-                  </button>
+              <div 
+                key={index} 
+                className="flex justify-between items-center p-3 rounded-lg shadow-md relative"
+              >
+                <div className="flex items-center space-x-2">
+                  <FileText className="text-gray-600" />
+                  <p className="text-gray-700 truncate">{attachment}</p>
                 </div>
+                <button 
+                  onClick={() => viewFile(attachment)} 
+                  className="sticky right-0 ml-4 px-3 py-1 text-sm font-semibold bg-white text-blue-600 border border-blue-600 rounded hover:bg-blue-600 hover:text-white transition"
+                >
+                  View
+                </button>
+              </div>
             ))}
-            </ScrollArea>
-         
+            <ScrollBar orientation="horizontal" />
+          </ScrollArea>
         </>
       )}
 

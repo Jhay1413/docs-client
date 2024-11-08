@@ -11,6 +11,7 @@ import {
   AlertDialogCancel,
 } from "@/components/ui/alert-dialog"
 import { Button } from "./ui/button"
+import { CircleCheck } from "lucide-react"
 
 interface ConfirmationModalProps {
   title: string
@@ -32,7 +33,14 @@ const ConfirmationModal: React.FC<ConfirmationModalProps> = ({
   triggerButton,
 }) => (
   <AlertDialog>
-    <AlertDialogTrigger asChild><Button variant={"outline"}>{triggerButton}</Button></AlertDialogTrigger>
+    <AlertDialogTrigger asChild>
+      <Button className="bg-emerald-600 text-white hover:bg-emerald-500 rounded-lg">
+        <div className="flex justify-between gap-2 text-base">
+          <CircleCheck size={24}/>
+          {triggerButton}
+        </div>
+        </Button>
+      </AlertDialogTrigger>
     <AlertDialogContent>
       <AlertDialogHeader>
         <AlertDialogTitle>{title}</AlertDialogTitle>
