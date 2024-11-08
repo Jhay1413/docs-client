@@ -27,8 +27,8 @@ import { useMutation } from "@tanstack/react-query";
 import axios, { AxiosProgressEvent } from "axios";
 import { completeStaffWorkMutationSchema } from "shared-contract/dist/features/transactions/mutation-schema";
 import { toast } from "react-toastify";
-import { ScrollArea } from "@radix-ui/react-scroll-area";
 import DragNdrop from "@/features/others/drag-drop";
+import { ScrollArea } from "@/components/ui/scroll-area";
 type Props = {
   data?: z.infer<typeof completeStaffWork>[];
   transactionId: string;
@@ -238,7 +238,6 @@ export function CompleStaffWorkDialog({ transactionId }: Props) {
                 </FormItem>
               )}
             />
-
               {/* Drag and Drop Section */}
               <div>
                 <p className="font-bold text-sm text-gray-800">Attachments</p>
@@ -246,7 +245,7 @@ export function CompleStaffWorkDialog({ transactionId }: Props) {
                   <DragNdrop onFilesSelected={handleFilesSelected} width="100%" height="100%" />
                 </div>
               </div>
-             
+              <ScrollArea className="max-h-36">
                   {showProgress && (
                     <div className="flex flex-col gap-2 text-white">
                       {files.map((file, index) => (
@@ -284,6 +283,7 @@ export function CompleStaffWorkDialog({ transactionId }: Props) {
                     </div>
                   ))}
                 </div>
+            </ScrollArea>
             
 
             <DialogFooter className="mt-4">
