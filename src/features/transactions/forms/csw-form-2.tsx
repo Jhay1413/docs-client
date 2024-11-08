@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogOverlay, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Form } from "@/components/ui/form";
 import { Calendar } from "@/components/ui/calendar";
@@ -9,7 +9,7 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { cn } from "@/lib/utils";
 
 import { format } from "date-fns";
-import { CalendarIcon, Check, FileCode, ImageUp } from "lucide-react";
+import { CalendarIcon, Check, FileCode, ImageUp, XCircle } from "lucide-react";
 
 import FormTextArea from "@/components/formTextArea";
 import { completeStaffWork, signedUrlData } from "../schema/TransactionSchema";
@@ -27,6 +27,8 @@ import { useMutation } from "@tanstack/react-query";
 import axios, { AxiosProgressEvent } from "axios";
 import { completeStaffWorkMutationSchema } from "shared-contract/dist/features/transactions/mutation-schema";
 import { toast } from "react-toastify";
+import DragNdrop from "@/features/others/drag-drop";
+import { ScrollArea } from "@/components/ui/scroll-area";
 type Props = {
   data?: z.infer<typeof completeStaffWork>[];
   transactionId: string;
@@ -100,51 +102,48 @@ export function CompleStaffWorkDialog({ transactionId }: Props) {
       attachmentFile: undefined,
     },
   });
-  const handleFileInputClick = () => {
-    fileInputRef.current?.click();
+  const handleFilesSelected = (newFiles: File[]) => {
+    handleFileUpload(newFiles);
   };
-  const uploadFile = async (event: ChangeEvent<HTMLInputElement>) => {
-    const files = event.target.files![0];
-    const formData = new FormData();
 
-    if (!files) {
-      throw new Error("No file attached !");
-    }
-    const fileName = files.name;
-    const fileSubString = files.name.length > 12 ? `${files.name.substring(0, 13)}... .${files.name.split(".")[1]}` : files.name;
-
-    formData.append("thumbnail", files);
-    formData.append("company", "Envicomm");
-    formData.append("fileName", fileName);
-
-    setFiles((prevState) => [...prevState, { name: fileSubString, loading: 0 }]);
+  const handleFileUpload = async (filesToUpload: File[]) => {
     setShowProgress(true);
 
-    try {
-      const result = await axios.post(`${baseUrlV2}/posts`, formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
+    // Reset the loading state for all files before starting new uploads
+    const initialFilesState = filesToUpload.map((file) => ({ name: file.name, loading: 0 }));
+    setFiles(initialFilesState);
 
-        onUploadProgress: (e: AxiosProgressEvent) => {
-          const total = e.total || 1;
-          setFiles((prevState) => {
-            const newFiles = [...prevState];
-            newFiles[newFiles.length - 1].loading = Math.floor((e.loaded / total) * 100);
-            return newFiles;
-          });
-          if (e.loaded == total) {
-            setUploadedFile([...uploadedFile, { name: fileSubString, loading: 100 }]);
-            setFiles([]);
-            setShowProgress(false);
-          }
-        },
-      });
-      setUploadedKeys((prevKeys) => [...prevKeys, result.data.key]);
-    } catch (error) {
-      toast.error("Something went wrong !");
-      console.log(error);
+    for (const file of filesToUpload) {
+      const formData = new FormData();
+      formData.append("thumbnail", file);
+      formData.append("company", "Envicomm");
+      formData.append("fileName", file.name);
+
+      try {
+        const result = await axios.post(`${baseUrlV2}/posts`, formData, {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+          onUploadProgress: (e) => {
+            const total = e.total || 1;
+            setFiles((prevState) => {
+              const newFiles = [...prevState];
+              const currentIndex = newFiles.findIndex((f) => f.name === file.name);
+              if (currentIndex !== -1) {
+                newFiles[currentIndex].loading = Math.floor((e.loaded / total) * 100);
+              }
+              return newFiles;
+            });
+          },
+        });
+        setUploadedKeys((prevKeys) => [...prevKeys, result.data.key]);
+        setUploadedFile((prevFiles) => [...prevFiles, { name: file.name, loading: 100 }]);
+      } catch (error) {
+        toast.error("Something went wrong!");
+        console.log(error);
+      }
     }
+    setShowProgress(false);
   };
   const submit = async (data: z.infer<typeof completeStaffWorkMutationSchema>) => {
     console.log(uploadedKeys);
@@ -165,16 +164,25 @@ export function CompleStaffWorkDialog({ transactionId }: Props) {
     });
   };
 
+  const handleRemoveFile = (index: number) => {
+    setUploadedFile((prevFiles) => prevFiles.filter((_, i) => i !== index));
+    setUploadedKeys((prevKeys) => prevKeys.filter((_, i) => i !== index));
+  };
+  
+
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
         <Button variant="outline">Add CSW</Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[600px] ">
+    
+
+      <DialogContent className="sm:max-w-[600px]">
         <DialogHeader>
           <DialogTitle>Complete Staff Work</DialogTitle>
           <DialogDescription>Make changes to your profile here. Click save when you're done.</DialogDescription>
         </DialogHeader>
+          
         <Form {...form}>
           <form onSubmit={form.handleSubmit(submit)} className="flex flex-col gap-2">
             <FormField
@@ -230,51 +238,54 @@ export function CompleStaffWorkDialog({ transactionId }: Props) {
                 </FormItem>
               )}
             />
-
-            <div className="flex w-full flex-col p-4 gap-4 items-center justify-center rounded-md border-blue-300  border-dashed border-2 ">
-              <p className="text-xl">Upload File</p>
-
-              <div className="flex items-center justify-center ">
-                <input type="file" hidden ref={fileInputRef} onChange={uploadFile} />
-                <div className="flex items-center justify-center" onClick={handleFileInputClick}>
-                  <ImageUp className=" w-24 h-24 bg-blue-200 rounded-xl text-blue-500" />
+              {/* Drag and Drop Section */}
+              <div>
+                <p className="font-bold text-sm text-gray-800">Attachments</p>
+                <div className="flex w-full flex-col mt-2 items-center justify-center rounded-md border-blue-300 border-dashed border-2">
+                  <DragNdrop onFilesSelected={handleFilesSelected} width="100%" height="100%" />
                 </div>
               </div>
-            </div>
-
-            {showProgress && (
-              <div className="flex flex-col gap-2 text-white">
-                {files.map((file, index) => (
-                  <div className="flex justify-start items-center gap-2 rounded-md bg-blue-300 p-2 " key={index}>
-                    <div className="w-20">
-                      <FileCode size={32} />
+              <ScrollArea className="max-h-36">
+                  {showProgress && (
+                    <div className="flex flex-col gap-2 text-white">
+                      {files.map((file, index) => (
+                        <div className="flex justify-start items-center gap-2 rounded-md bg-blue-300 p-2" key={index}>
+                          <div className="w-20">
+                            <FileCode size={32} />
+                          </div>
+                          <div className="w-1/2">
+                            <h1>{file.name}</h1>
+                          </div>
+                          <div className="flex justify-end w-full">
+                            <Progress value={file.loading} className="w-[60%] h-4" />
+                          </div>
+                        </div>
+                      ))}
                     </div>
-                    <div className="w-1/2 ">
-                      <h1>{file.name}</h1>
+                  )}   
+                <div className="flex flex-col gap-2 text-white">
+                  {uploadedFile.map((file, index) => (
+                    <div className="flex justify-start items-center gap-2 rounded-md bg-blue-300 p-2" key={index}>
+                      <div className="w-20">
+                        <FileCode size={32} />
+                      </div>
+                      <div className="w-full">
+                        <h1>{file.name}</h1>
+                      </div>
+                      <div className="flex justify-end w-full gap-2">
+                        <Check size={28}/>
+                        <XCircle
+                          size={28}
+                          className="cursor-pointer hover:text-red-500"
+                          onClick={() => handleRemoveFile(index)}
+                        />
+                      </div>
                     </div>
-                    <div className="flex justify-end w-full">
-                      <Progress value={file.loading} className="w-[60%] h-2" />
-                    </div>
-                  </div>
-                ))}
-              </div>
-            )}
-            <div className="flex flex-col gap-2 text-white">
-              {uploadedFile.map((file, index) => (
-                <div className="flex justify-start items-center gap-2 rounded-md bg-blue-300 p-2  " key={index}>
-                  <div className="w-20">
-                    <FileCode size={32} />
-                  </div>
-
-                  <div className="w-full ">
-                    <h1>{file.name}</h1>
-                  </div>
-                  <div className="flex justify-end w-full">
-                    <Check />
-                  </div>
+                  ))}
                 </div>
-              ))}
-            </div>
+            </ScrollArea>
+            
+
             <DialogFooter className="mt-4">
               <Button type="submit" disabled={isSubmitting} onClick={() => console.log(form.formState.errors)}>
                 Save changes
@@ -283,6 +294,7 @@ export function CompleStaffWorkDialog({ transactionId }: Props) {
           </form>
         </Form>
       </DialogContent>
+    
     </Dialog>
   );
 }
