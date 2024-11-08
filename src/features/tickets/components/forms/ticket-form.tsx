@@ -108,9 +108,6 @@ const TicketForm = ({
     });
   };
 
-
-
-
   const handleFilesSelected = (newFiles: File[]) => {
     handleFileUpload(newFiles);
   };
