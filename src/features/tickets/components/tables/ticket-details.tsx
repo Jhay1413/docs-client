@@ -204,7 +204,7 @@ export const TicketDetails = () => {
           <Separator className="my-4" />
           <h1 className="text-xl font-bold text-gray-800 mb-4">Project Details</h1>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6 mb-4 shadow rounded-lg items-stretch">
-            <div className="grid grid-cols-3 md:grid-cols-3 lg:grid-cols-3 col-span-2 gap-6 mb-4 shadow rounded-lg h-full">
+            <div className="grid grid-cols-4 col-span-2 gap-6 mb-4 shadow rounded-lg h-full">
               <div className="bg-white p-4 rounded-lg h-full">
                 <h2 className="font-semibold text-gray-700">Project ID:</h2>
                 <p className="text-gray-600">{data.body.project.projectId || "No Project"}</p>
@@ -232,7 +232,7 @@ export const TicketDetails = () => {
           <Separator className="my-4" />
           <h1 className="text-xl font-bold text-gray-800 mb-4">Transaction Details</h1>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6 mb-4 shadow rounded-lg items-stretch">
-            <div className="grid grid-cols-3 md:grid-cols-3 lg:grid-cols-3 col-span-2 gap-6 mb-4 shadow rounded-lg h-full">
+            <div className="grid grid-cols-4 col-span-2 gap-6 mb-4 shadow rounded-lg h-full">
               <div className="bg-white p-4 rounded-lg h-full">
                 <h2 className="font-semibold text-gray-700">Transaction ID:</h2>
                 <p className="text-gray-600">{data.body.transaction?.transactionId}</p>
