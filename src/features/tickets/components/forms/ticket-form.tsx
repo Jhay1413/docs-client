@@ -7,7 +7,7 @@ import FormTextArea from "@/components/formTextArea";
 import { ChangeEvent, useRef, useState } from "react";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Button } from "@/components/ui/button";
-import { CalendarIcon, Check, ChevronsUpDown, FileCode, ImageUp } from "lucide-react";
+import { CalendarIcon, Check, ChevronsUpDown, FileCode, ImageUp, XCircle } from "lucide-react";
 import { Calendar } from "@/components/ui/calendar";
 import { cn } from "@/lib/utils";
 import { format } from "date-fns";
@@ -97,11 +97,7 @@ const TicketForm = ({
     },
   });
 
-  const handleFileUploadClick = () => {
-    if (fileInputRef.current) {
-      fileInputRef.current.click();
-    }
-  };
+
   const onSubmit: SubmitHandler<z.infer<typeof ticketingMutationSchema>> = async (data) => {
     mutateFn({ ...data, attachments: [...data.attachments, ...uploadedKeys] });
   };
@@ -112,16 +108,8 @@ const TicketForm = ({
     });
   };
 
-  const handleFileInputClick = () => {
-    fileInputRef.current?.click();
-  };
 
-  const handleFileInputChange = (event: ChangeEvent<HTMLInputElement>) => {
-    const selectedFiles = event.target.files;
-    if (selectedFiles) {
-      handleFileUpload(Array.from(selectedFiles));
-    }
-  };
+
 
   const handleFilesSelected = (newFiles: File[]) => {
     handleFileUpload(newFiles);
@@ -164,11 +152,17 @@ const TicketForm = ({
         console.log(error);
       }
     }
-
-    // Set showProgress to false after all uploads are complete
     setShowProgress(false);
   };
 
+  const handleRemoveFile = (index: number) => {
+    setUploadedFile((prevFiles) => prevFiles.filter((_, i) => i !== index));
+    setUploadedKeys((prevKeys) => prevKeys.filter((_, i) => i !== index));
+  };
+  
+  
+
+  
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit, onError)}>
@@ -494,23 +488,28 @@ const TicketForm = ({
                       </div>
                     ))}
                   </div>
-                )}
-                <div className="flex flex-col gap-2 text-white">
-                  {uploadedFile.map((file, index) => (
-                    <div className="flex justify-start items-center gap-2 rounded-md bg-blue-300 p-2" key={index}>
-                      <div className="w-20">
-                        <FileCode size={32} />
-                      </div>
-                      <div className="w-full">
-                        <h1>{file.name}</h1>
-                      </div>
-                      <div className="flex justify-end w-full">
-                        <Check />
-                      </div>
+                )}   
+              <div className="flex flex-col gap-2 text-white">
+                {uploadedFile.map((file, index) => (
+                  <div className="flex justify-start items-center gap-2 rounded-md bg-blue-300 p-2" key={index}>
+                    <div className="w-20">
+                      <FileCode size={32} />
                     </div>
-                  ))}
-                </div>
-              </ScrollArea>
+                    <div className="w-full">
+                      <h1>{file.name}</h1>
+                    </div>
+                    <div className="flex justify-end w-full gap-2">
+                      <Check size={28}/>
+                      <XCircle
+                        size={28}
+                        className="cursor-pointer hover:text-red-500"
+                        onClick={() => handleRemoveFile(index)}
+                      />
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </ScrollArea>
             </div>
           </div>
         </div>
