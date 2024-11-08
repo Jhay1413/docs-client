@@ -7,7 +7,7 @@ import FormTextArea from "@/components/formTextArea";
 import { ChangeEvent, useRef, useState } from "react";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Button } from "@/components/ui/button";
-import { CalendarIcon, Check, ChevronsUpDown, FileCode, ImageUp } from "lucide-react";
+import { CalendarIcon, Check, ChevronsUpDown, FileCode, ImageUp, XCircle } from "lucide-react";
 import { Calendar } from "@/components/ui/calendar";
 import { cn } from "@/lib/utils";
 import { format } from "date-fns";
@@ -21,8 +21,10 @@ import { z } from "zod";
 import { getCurrentUserId } from "@/hooks/use-user-hook";
 import { toast } from "react-toastify";
 import axios, { AxiosProgressEvent } from "axios";
-import { Progress } from "@radix-ui/react-progress";
-import { ScrollArea } from "@/components/ui/scroll-area";
+
+import DragNdrop from "@/features/others/drag-drop";
+import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
+import { Progress } from "@/components/ui/progress";
 
 const baseUrlV2 = import.meta.env.VITE_ENDPOINT;
 type Props = {
@@ -33,6 +35,7 @@ type Props = {
   setSelectedType?: React.Dispatch<React.SetStateAction<string>>;
   mutateFn: (data: z.infer<typeof ticketingMutationSchema>) => void;
   ticketData?: z.infer<typeof ticketFullDetailsSchema>;
+  isPending: boolean;
   receiver: {
     id: string;
     userInfo: {
@@ -48,7 +51,6 @@ type ticketFiles = {
   loading: number;
 }[];
 
-
 const TicketForm = ({
   selectedDivision,
   setSelectedDivision,
@@ -58,6 +60,7 @@ const TicketForm = ({
   selectedType,
   setSelectedType,
   mutateFn,
+  isPending,
   ticketData,
 }: Props) => {
   const userId = getCurrentUserId();
@@ -79,7 +82,7 @@ const TicketForm = ({
       subject: ticketData?.subject || "",
       section: ticketData?.section || "",
       division: ticketData?.division || "",
-      status: ticketData?.status,
+      status: ticketData?.status || "ROUTING",
       requestDetails: ticketData?.requestDetails || "",
       priority: ticketData?.priority || "",
       dueDate: ticketData?.dueDate || "",
@@ -94,14 +97,9 @@ const TicketForm = ({
     },
   });
 
-  const handleFileUploadClick = () => {
-    if (fileInputRef.current) {
-      fileInputRef.current.click();
-    }
-  };
+
   const onSubmit: SubmitHandler<z.infer<typeof ticketingMutationSchema>> = async (data) => {
-    console.log("ASdsad");
-    mutateFn({...data,attachments:uploadedKeys});
+    mutateFn({ ...data, attachments: [...data.attachments, ...uploadedKeys] });
   };
   const onError = () => {
     if (form.formState.errors) console.log(form.formState.errors);
@@ -110,54 +108,59 @@ const TicketForm = ({
     });
   };
 
-  const handleFileInputClick = () => {
-    fileInputRef.current?.click();
+
+
+
+  const handleFilesSelected = (newFiles: File[]) => {
+    handleFileUpload(newFiles);
   };
 
-  const uploadFile = async (event: ChangeEvent<HTMLInputElement>) => {
-    const files = event.target.files![0];
-    const formData = new FormData();
-
-    if (!files) {
-      throw new Error("No file attached !");
-    }
-    const fileName = files.name;
-    const fileSubString = files.name.length > 12 ? `${files.name.substring(0, 13)}... .${files.name.split(".")[1]}` : files.name;
-
-    formData.append("thumbnail", files);
-    formData.append("company", "Envicomm");
-    formData.append("fileName", fileName);
-
-    setFiles((prevState) => [...prevState, { name: fileSubString, loading: 0 }]);
+  const handleFileUpload = async (filesToUpload: File[]) => {
     setShowProgress(true);
 
-    try {
-      const result = await axios.post(`${baseUrlV2}/posts`, formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
+    // Reset the loading state for all files before starting new uploads
+    const initialFilesState = filesToUpload.map((file) => ({ name: file.name, loading: 0 }));
+    setFiles(initialFilesState);
 
-        onUploadProgress: (e: AxiosProgressEvent) => {
-          const total = e.total || 1;
-          setFiles((prevState) => {
-            const newFiles = [...prevState];
-            newFiles[newFiles.length - 1].loading = Math.floor((e.loaded / total) * 100);
-            return newFiles;
-          });
-          if (e.loaded == total) {
-            setUploadedFile([...uploadedFile, { name: fileSubString, loading: 100 }]);
-            setFiles([]);
-            setShowProgress(false);
-          }
-        },
-      });
-      setUploadedKeys((prevKeys) => [...prevKeys, result.data.key]);
-    } catch (error) {
-      toast.error("Something went wrong !");
-      console.log(error);
+    for (const file of filesToUpload) {
+      const formData = new FormData();
+      formData.append("thumbnail", file);
+      formData.append("company", "Envicomm");
+      formData.append("fileName", file.name);
+
+      try {
+        const result = await axios.post(`${baseUrlV2}/posts`, formData, {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+          onUploadProgress: (e) => {
+            const total = e.total || 1;
+            setFiles((prevState) => {
+              const newFiles = [...prevState];
+              const currentIndex = newFiles.findIndex((f) => f.name === file.name);
+              if (currentIndex !== -1) {
+                newFiles[currentIndex].loading = Math.floor((e.loaded / total) * 100);
+              }
+              return newFiles;
+            });
+          },
+        });
+        setUploadedKeys((prevKeys) => [...prevKeys, result.data.key]);
+        setUploadedFile((prevFiles) => [...prevFiles, { name: file.name, loading: 100 }]);
+      } catch (error) {
+        toast.error("Something went wrong!");
+        console.log(error);
+      }
     }
+    setShowProgress(false);
   };
- 
+
+  const handleRemoveFile = (index: number) => {
+    setUploadedFile((prevFiles) => prevFiles.filter((_, i) => i !== index));
+    setUploadedKeys((prevKeys) => prevKeys.filter((_, i) => i !== index));
+  };
+  
+  
 
   
   return (
@@ -329,15 +332,16 @@ const TicketForm = ({
               <FormItem>
                 <FormLabel>Status*</FormLabel>
                 <FormControl>
-                  <Select onValueChange={field.onChange} defaultValue={field.value}>
+                  <Select onValueChange={field.onChange} defaultValue={field.value} disabled={!isForwarding}>
                     <SelectTrigger>
                       <SelectValue placeholder="Select status" />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="On process">On process</SelectItem>
-                      <SelectItem value="Completed">Completed</SelectItem>
-                      <SelectItem value="Approved">Approved</SelectItem>
-                      <SelectItem value="For Sign and Seal">For Sign and Seal</SelectItem>
+                      <SelectItem value="ROUTING">For Routing</SelectItem>
+                      <SelectItem value="ON_PROCESS">On Process</SelectItem>
+                      <SelectItem value="COMPLETED">Completed</SelectItem>
+                      <SelectItem value="APPROVED">Approved</SelectItem>
+                      <SelectItem value="SIGN_AND_SEAL">For Sign and Seal</SelectItem>
                     </SelectContent>
                   </Select>
                 </FormControl>
@@ -446,7 +450,7 @@ const TicketForm = ({
           <div className="col-span-3 ">
             <div className="grid grid-cols-2 gap-4">
               <div className="col-span-1 mb-6">
-                <FormTextArea name="requestDetails" label="Request Details" placeholder="Enter details" />
+                <FormTextArea name="requestDetails" label="Request Details" placeholder="Enter details" disable={isForwarding} />
               </div>
 
               <div className="col-span-1 mb-6">
@@ -454,68 +458,64 @@ const TicketForm = ({
               </div>
             </div>
           </div>
-          
-          {/* Attachments (Medium Div) */}
-          <div className="col-span-3 ">
+
+          {/* Attachments (Grid Layout) */}
+          <div className="col-span-3">
             <div className="grid grid-cols-2 gap-4">
-              <div className="">
-                 <p className="font-bold text-sm text-gray-800">Attachments</p>
-                  <div className="flex w-full flex-col mt-2 items-center justify-center rounded-md border-blue-300  border-dashed border-2 h-48">
-                      <p className="text-xl">Upload File</p>
-                      <div className="flex items-center justify-center ">
-                        <input type="file" hidden ref={fileInputRef} onChange={uploadFile} />
-                        <div className="flex items-center justify-center" onClick={handleFileInputClick}>
-                          <ImageUp className=" w-24 h-24 bg-blue-200 rounded-xl text-blue-500" />
-                        </div>
-                      </div>
-                  </div>
+              {/* Drag and Drop Section */}
+              <div>
+                <p className="font-bold text-sm text-gray-800">Attachments</p>
+                <div className="flex w-full flex-col mt-2 items-center justify-center rounded-md border-blue-300 border-dashed border-2">
+                  <DragNdrop onFilesSelected={handleFilesSelected} width="100%" height="100%" />
+                </div>
               </div>
+
+              {/* Scrollable Progress Display */}
               <ScrollArea className="w-full min-h-full max-h-48 p-4 rounded-md">
                 {showProgress && (
-                <div className="flex flex-col gap-2 text-white">
-                  {files.map((file, index) => (
-                    <div className="flex justify-start items-center gap-2 rounded-md bg-blue-300 p-2 " key={index}>
-                      <div className="w-20">
-                        <FileCode size={32} />
+                  <div className="flex flex-col gap-2 text-white">
+                    {files.map((file, index) => (
+                      <div className="flex justify-start items-center gap-2 rounded-md bg-blue-300 p-2" key={index}>
+                        <div className="w-20">
+                          <FileCode size={32} />
+                        </div>
+                        <div className="w-1/2">
+                          <h1>{file.name}</h1>
+                        </div>
+                        <div className="flex justify-end w-full">
+                          <Progress value={file.loading} className="w-[60%] h-4" />
+                        </div>
                       </div>
-                      <div className="w-1/2 ">
-                        <h1>{file.name}</h1>
-                      </div>
-                      <div className="flex justify-end w-full">
-                        <Progress value={file.loading} className="w-[60%] h-2" />
-                      </div>
+                    ))}
+                  </div>
+                )}   
+              <div className="flex flex-col gap-2 text-white">
+                {uploadedFile.map((file, index) => (
+                  <div className="flex justify-start items-center gap-2 rounded-md bg-blue-300 p-2" key={index}>
+                    <div className="w-20">
+                      <FileCode size={32} />
                     </div>
-                  ))}
-                </div>
-              
-                )}
-                <div className="flex flex-col gap-2 text-white">
-                  {uploadedFile.map((file, index) => (
-                    <div className="flex justify-start items-center gap-2 rounded-md bg-blue-300 p-2  " key={index}>
-                      <div className="w-20">
-                        <FileCode size={32} />
-                      </div>
-
-                      <div className="w-full ">
-                        <h1>{file.name}</h1>
-                      </div>
-                      <div className="flex justify-end w-full">
-                        <Check />
-                      </div>
+                    <div className="w-full">
+                      <h1>{file.name}</h1>
                     </div>
-                  ))}
-                </div>
-              </ScrollArea>
+                    <div className="flex justify-end w-full gap-2">
+                      <Check size={28}/>
+                      <XCircle
+                        size={28}
+                        className="cursor-pointer hover:text-red-500"
+                        onClick={() => handleRemoveFile(index)}
+                      />
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </ScrollArea>
             </div>
-           
-            
-
-            
           </div>
-          {/* Attachments (File Input with Button Trigger) */}
         </div>
+        {/* Submit Button */}
         <div className="flex justify-end py-4">
-          <Button type="submit" className="w-[256px]" onClick={() => console.log(form.formState.defaultValues)}>
+          <Button type="submit" className="w-[256px]" onClick={() => console.log(form.formState.defaultValues)} disabled={isPending}>
             Submit
           </Button>
         </div>
