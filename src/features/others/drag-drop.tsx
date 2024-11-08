@@ -1,7 +1,6 @@
-// DragNdrop.tsx
-import React, { useEffect, useState } from "react";
-import { CloudUpload, X } from "lucide-react";
-import './drag-drop.css'
+import React, { useState } from "react";
+import { CloudUpload } from "lucide-react";
+import './drag-drop.css';
 
 type DragNdropProps = {
   onFilesSelected: (files: File[]) => void;
@@ -45,9 +44,8 @@ const DragNdrop: React.FC<DragNdropProps> = ({
   };
 
   const addFiles = (newFiles: File[]) => {
-    // Filter valid files if needed
     setFiles((prevFiles) => [...prevFiles, ...newFiles]);
-    onFilesSelected(newFiles); // Notify parent component
+    onFilesSelected(newFiles);
   };
 
   return (
@@ -58,11 +56,11 @@ const DragNdrop: React.FC<DragNdropProps> = ({
         onDragOver={handleDragOver}
         onDragLeave={handleDragLeave}
       >
-        <div className="upload-info">
-          <CloudUpload />
-          <div>
-            <p>Drag and drop your files here</p>
-            <p>Supported files: .JPG, .PNG, .PDF, .DOCX, .TXT, .XLSX</p>
+        <div className="upload-content">
+          <CloudUpload className="upload-icon" />
+          <div className="upload-text">
+            <p className="main-text">Drag and drop your files here</p>
+            <p className="sub-text">Supported files: .JPG, .PNG, .PDF, .DOCX, .TXT, .XLSX</p>
           </div>
         </div>
         <input
