@@ -57,15 +57,6 @@ export const IncomingTicketComponent = () => {
         };
       });
     },
-    onSuccess: () => {
-      setNotification({
-        ...notification,
-        incoming: notification?.incoming === 0 ? 0 : notification?.incoming! - 1,
-        inbox: notification?.inbox! + 1,
-      });
-
-      toast.success("Ticket Received!");
-    },
     onError: (error) => {
       console.log(error);
     },
