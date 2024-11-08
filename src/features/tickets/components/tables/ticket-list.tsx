@@ -38,7 +38,6 @@ export const TicketList = () => {
     queryData: {
       query: {
         query: debouncedSearchQuery,
-
         page: page,
         pageSize: "10",
       },
@@ -109,13 +108,13 @@ export const TicketList = () => {
 
       <DataTable
         columns={ticketsColumn}
-        data={data ? data.body : []}
+        data={data ? data.body.data : []}
         callbackFn={handleOnClickRow}
       />
       
       <div className="w-full flex justify-between items-center">
         <div className="text-muted-foreground">
-          <h1>Number of Tickets: {}</h1>
+          <h1>Number of Tickets: {data?.body.numOfTickets}</h1>
         </div>
         <div className="flex items-center space-x-2 py-4">
           <Button variant="outline" size="sm" disabled={intPage === 1}>
@@ -124,7 +123,7 @@ export const TicketList = () => {
           <Button variant="outline" size="sm" onClick={handlePreviousPage} disabled={intPage === 1}>
             Previous
           </Button>
-          <Button variant="outline" size="sm" onClick={handleNextPage}>
+          <Button variant="outline" size="sm" onClick={handleNextPage} disabled={data?.body.totalPages === 0 || data?.body.totalPages === parseInt(page)}>
             Next
           </Button>
           <Button variant="outline" size="sm">

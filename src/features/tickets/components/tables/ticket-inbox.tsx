@@ -9,6 +9,7 @@ import { keepPreviousData } from "@tanstack/react-query";
 import { tsr } from "@/services/tsr";
 import { z } from "zod";
 import { ticketingTableSchema } from "shared-contract";
+import { getCurrentUserId } from "@/hooks/use-user-hook";
 
 export const TicketInboxComponent = () => {
   const navigate = useNavigate();
@@ -21,21 +22,21 @@ export const TicketInboxComponent = () => {
   const page = searchParams.get("currentPage") || "1";
 
   const intPage = parseInt(page, 10);
-  const [debouncedSearchQuery] = useDebounce(searchQuery, 500); // Adjust the delay as needed
+  const [debouncedSearchQuery] = useDebounce(searchQuery, 500);
 
-  const { id } = useParams(); // Assuming `id` is the user ID or relevant identifier
+  const id = getCurrentUserId();
   console.log(id);
 
   // Fetch tickets instead of transactions
-  const { data, isError, error } = tsr.ticketing.getTicketsForUserByStatus.useQuery({
+  const { data, isError, error } = tsr.ticketing.getTickets.useQuery({
     queryKey: ["tickets", page, debouncedSearchQuery],
     queryData: {
-      params: {id:id!},
       query: {
         query: debouncedSearchQuery,
-        status: "inbox",
+        status: "INBOX",
         page: page,
         pageSize: "10",
+        userId: id,
       },
     },
     placeholderData: keepPreviousData,
@@ -98,14 +99,14 @@ export const TicketInboxComponent = () => {
 
       <DataTable
         columns={ticketsInboxColumn}
-        data={data ? data.body : []}
+        data={data ? data.body.data : []}
         callbackFn={handleOnClickRow}
       />
 
       
       <div className="w-full flex justify-between items-center">
         <div className="text-muted-foreground">
-            <h1>Number of Tickets: {}</h1>
+            <h1>Number of Tickets: {data?.body.numOfTickets}</h1>
         </div>
         <div className="flex items-center space-x-2 py-4">
           <Button variant="outline" size="sm" disabled={intPage === 1}>
@@ -114,7 +115,7 @@ export const TicketInboxComponent = () => {
           <Button variant="outline" size="sm" onClick={handlePreviousPage} disabled={intPage === 1}>
             Previous
           </Button>
-          <Button variant="outline" size="sm" onClick={handleNextPage}>
+          <Button variant="outline" size="sm" onClick={handleNextPage} disabled={data?.body.totalPages === 0 || data?.body.totalPages === parseInt(page)}>
             Next
           </Button>
           <Button variant="outline" size="sm">
