@@ -47,7 +47,7 @@ export const Login = () => {
             </svg>
           </div>
           <div className="w-full flex flex-col items-center justify-center space-y-12 h-full">
-            <h1 className="text-4xl">Document Tracking System</h1>
+            <h1 className="text-4xl">ENDOCTRACK</h1>
             <div className="flex flex-col  lg:w-[500px] sm:h-[550px] bg-white shadow-2xl px-[50px] rounded-lg items-center gap-8">
               <h1 className=" text-[28px] mt-16">Login</h1>
               <LoginForm />
