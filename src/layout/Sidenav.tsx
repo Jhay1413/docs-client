@@ -1,4 +1,4 @@
-import { ClipboardList, Factory, FileCode, FileText, LayoutDashboard, LibraryBig, UserSearch, Users } from "lucide-react";
+import { BookCheck, ClipboardList, Factory, FileCode, FileText, LayoutDashboard, LibraryBig, Mailbox, Ticket, UserSearch, Users } from "lucide-react";
 import { Link, NavLink } from "react-router-dom";
 
 import { getCurrentUserId, useCurrentUserRole } from "@/hooks/use-user-hook";
@@ -127,6 +127,48 @@ export const SideNav = () => {
             </NavLink>
           </li>
         </ul>
+        <Label className="text-[#DCFF8E] px-4 font-medium flex w-full text-sm">TICKETS</Label>
+        <ul className="flex flex-col space-y-4 w-full mx-2">
+          <li className="relative inline-block text-left px-4">
+            <NavLink
+              to={`/dashboard/tickets/list`}
+              className={({ isActive }) => {
+                return `justify-start items-center flex w-full p-2 space-x-4 text-lg rounded-md ${isActive ? "bg-green-100/30 text-white" : ""}`;
+              }}
+            >
+              <Ticket />
+              <div className="flex gap-2">
+                <h1 className="text-base">Tickets</h1>
+              </div>
+            </NavLink>
+          </li>
+          <li className="relative inline-block text-left px-4 ">
+            <NavLink
+              to={`/dashboard/tickets/inbox/${id}`}
+              className={({ isActive }) => {
+                return `justify-start items-center flex w-full p-2 space-x-4 text-lg  rounded-md ${isActive ? "bg-green-100/30 text-white" : ""}`;
+              }}
+            >
+              <Mailbox />
+              <div className="flex gap-2">
+                <h1 className="text-base">Inbox</h1>
+              </div>
+            </NavLink>
+          </li>
+          <li className="relative inline-block text-left px-4 ">
+            <NavLink
+              to={`/dashboard/tickets/incoming/${id}`}
+              className={({ isActive }) => {
+                return `justify-start items-center flex w-full p-2 space-x-4 text-lg  rounded-md ${isActive ? "bg-green-100/30 text-white" : ""}`;
+              }}
+            >
+              <LibraryBig />
+              <div className="flex gap-2">
+                <h1 className="text-base">Incoming Tickets</h1>
+              </div>
+            </NavLink>
+          </li>
+        </ul>
         <Label className="text-[#DCFF8E] px-4 font-medium flex w-full text-sm">ARCHIVE</Label>
         <ul className="flex flex-col  space-y-4 w-full   mx-2 ">
           <li className="relative inline-block text-left px-4 ">
@@ -138,27 +180,21 @@ export const SideNav = () => {
             >
               <FileCode />
               <div className="flex gap-2">
-                <h1 className="text-base">Archives</h1>
+                <h1 className="text-base">Archived Transactions</h1>
               </div>
             </NavLink>
           </li>
-        </ul>
-        <Label className="text-[#DCFF8E] px-4 font-medium flex w-full text-sm">
-          TICKETS
-        </Label>
-        <ul className="flex flex-col space-y-4 w-full mx-2">
-          <li className="relative inline-block text-left px-4">
+
+          <li className="relative inline-block text-left px-4 ">
             <NavLink
-              to={`/dashboard/tickets/list`}
+              to={`/dashboard/tickets/resolved-tickets`}
               className={({ isActive }) => {
-                return `justify-start items-center flex w-full p-2 space-x-4 text-lg rounded-md ${
-                  isActive ? "bg-green-100/30 text-white" : ""
-                }`;
+                return `justify-start items-center flex w-full p-2 space-x-4 text-lg  rounded-md ${isActive ? "bg-green-100/30 text-white" : ""}`;
               }}
             >
-              <FileCode />
+              <BookCheck />
               <div className="flex gap-2">
-                <h1 className="text-base">Tickets</h1>
+                <h1 className="text-base">Resolved Tickets</h1>
               </div>
             </NavLink>
           </li>

@@ -1,18 +1,32 @@
 
-import { AddTicketComponent } from "./components/add-ticket";
-import TicketForm from "./components/ticket-form";
-import TicketFormWrapper from "./components/ticket-formWrapper";
-import { TicketList } from "./components/ticket-list";
-import { ticketsColumn } from "./components/tickets-column";
-import { TicketDetails } from "./components/tickets-details";
+import { AddTicketComponent } from "./components/forms/add-ticket";
+import TicketForm from "./components/forms/ticket-form";
+import { TicketInboxComponent } from "./components/tables/ticket-inbox";
+
+import { TicketList } from "./components/tables/ticket-list";
+import { ticketsColumn } from "./components/tables/ticket-column";
+import { TicketDetails } from "./components/tables/ticket-details";
+import { ticketsInboxColumn } from "./components/tables/ticket-inbox-columns";
+import { IncomingTicketComponent } from "./components/tables/ticket-incoming";
+import { ticketsIncomingColumn } from "./components/tables/ticket-incoming-columns";
+import ForwardTicketComponent from "./components/forms/forward-ticket";
+
+import { ticketsResolvedColumn } from "./components/tables/ticket-resolved-column";
+import { TicketResolved } from "./components/tables/ticket-resolved";
 
 export {
   TicketList,
   TicketForm,
-  TicketFormWrapper,
   ticketsColumn,
   AddTicketComponent,
   TicketDetails,
+  ticketsInboxColumn,
+  TicketInboxComponent,
+  IncomingTicketComponent,
+  ticketsIncomingColumn,
+  ForwardTicketComponent,
+  TicketResolved,
+  ticketsResolvedColumn,
 
 }
 

@@ -13,9 +13,9 @@ import { ColumnDef } from "@tanstack/react-table";
 import { ArrowUpDown, MoreHorizontal } from "lucide-react";
 import { archivedTransaction } from "../../schema/TransactionSchema";
 import { getCurrentUserId, useCurrentUserRole } from "@/hooks/hooks/use-user-hook";
-import { transactionQueryData } from "shared-contract";
+import { transactionTable } from "shared-contract";
 
-type TArchieved = z.infer<typeof transactionQueryData>;
+type TArchieved = z.infer<typeof transactionTable>;
 
 export const archivedColumn: ColumnDef<TArchieved>[] = [
   {
@@ -24,33 +24,33 @@ export const archivedColumn: ColumnDef<TArchieved>[] = [
   },
   {
     header: "Company ID",
-    accessorKey: "companyId",
+    accessorKey: "companyName",
     cell: ({ row }) => {
       const data = row.original;
 
       return (
         <div>
-          <h1>{data.company?.companyId}</h1>
+          <h1>{data.company.companyName}</h1>
         </div>
       );
     },
   },
   {
     header: "Project ID",
-    accessorKey: "projectId",
+    accessorKey: "projectName",
     cell: ({ row }) => {
       const data = row.original;
 
       return (
         <div>
-          <h1>{data.project?.projectId}</h1>
+          <h1>{data.project.projectName}</h1>
         </div>
       );
     },
   },
   {
     header: "Application",
-    accessorKey: "application",
+    accessorKey: "documentSubType",
     cell: ({ row }) => {
       const data = row.original;
 
@@ -61,32 +61,7 @@ export const archivedColumn: ColumnDef<TArchieved>[] = [
       );
     },
   },
-  {
-    header: "Project Address",
-    accessorKey: "projectAddress",
-    cell: ({ row }) => {
-      const data = row.original;
 
-      return (
-        <div>
-          <h1>{data.project?.projectAddress}</h1>
-        </div>
-      );
-    },
-  },
-  {
-    header: "Remarks",
-    accessorKey: "remarks",
-    cell: ({ row }) => {
-      const data = row.original;
-
-      return (
-        <div className="flex items-center">
-          <h1>{data.remarks}</h1>
-        </div>
-      );
-    },
-  },
   // {
   //   header: "Actions",
   //   accessorKey: "actions",

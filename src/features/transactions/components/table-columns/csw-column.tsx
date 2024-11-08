@@ -44,39 +44,39 @@ export const cswColumn: ColumnDef<Csw>[] = [
       );
     },
   },
-  {
-    header: () => <div className="print-hide">Action</div>,
-    accessorKey: "actions",
-    id: "actions",
-    cell: ({ row }) => {
-      const cswInfo = row.original;
-      const viewFile = async (key: string) => {
-        const signedUrl = await getSignUrlForView(key);
+  // {
+  //   header: () => <div className="print-hide">Action</div>,
+  //   accessorKey: "actions",
+  //   id: "actions",
+  //   cell: ({ row }) => {
+  //     const cswInfo = row.original;
+  //     const viewFile = async (key: string) => {
+  //       const signedUrl = await getSignUrlForView(key);
 
-        if (signedUrl) {
-          window.open(signedUrl);
-        }
-      };
+  //       if (signedUrl) {
+  //         window.open(signedUrl);
+  //       }
+  //     };
 
-      return (
-        <div className="print-hide">
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="ghost" className="h-8 w-8 p-0">
-                <span className="sr-only">Open menu</span>
-                <MoreHorizontal className="h-4 w-4" />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
-              <DropdownMenuLabel>Actions</DropdownMenuLabel>
+  //     return (
+  //       <div className="print-hide">
+  //         <DropdownMenu>
+  //           <DropdownMenuTrigger asChild>
+  //             <Button variant="ghost" className="h-8 w-8 p-0">
+  //               <span className="sr-only">Open menu</span>
+  //               <MoreHorizontal className="h-4 w-4" />
+  //             </Button>
+  //           </DropdownMenuTrigger>
+  //           <DropdownMenuContent align="end">
+  //             <DropdownMenuLabel>Actions</DropdownMenuLabel>
 
-              <DropdownMenuItem onClick={() => viewFile(cswInfo.attachmentUrl!)}>View File</DropdownMenuItem>
+  //             <DropdownMenuItem onClick={() => viewFile(cswInfo.attachmentUrl!)}>View File</DropdownMenuItem>
 
-              <DropdownMenuSeparator />
-            </DropdownMenuContent>
-          </DropdownMenu>
-        </div>
-      );
-    },
-  },
+  //             <DropdownMenuSeparator />
+  //           </DropdownMenuContent>
+  //         </DropdownMenu>
+  //       </div>
+  //     );
+  //   },
+  // },
 ];

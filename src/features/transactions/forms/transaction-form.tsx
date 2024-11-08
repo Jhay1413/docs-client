@@ -61,6 +61,7 @@ export const TransactionForm = ({ company, method, defaultValue, mutateFn, isPen
   const [team, setTeam] = useState(defaultValue?.team || null);
   const [selectedDivision, setSelectedDivision] = useState(defaultValue?.targetDepartment || "");
   const [subType, setSubType] = useState("");
+  const [category, setCategory] = useState("");
   const temp_section = checkList.find((check) => check.name === team);
   const attachmentList = useMemo(() => temp_section?.application.find((check) => check.name === subType), [subType, temp_section]);
   const sections = Divisions.find((division) => division.name === selectedDivision);
@@ -133,7 +134,7 @@ export const TransactionForm = ({ company, method, defaultValue, mutateFn, isPen
           subject: defaultValue?.subject,
           dueDate: defaultValue ? new Date(defaultValue.dueDate).toISOString() : new Date().toISOString(),
           team: defaultValue.team,
-          category: defaultValue.category,
+          category: defaultValue.category || category,
           status: defaultValue?.status,
           priority: defaultValue?.priority,
           originDepartment: currentDivision,
@@ -421,7 +422,8 @@ export const TransactionForm = ({ company, method, defaultValue, mutateFn, isPen
                         value={field.value}
                         onValueChange={(value) => {
                           field.onChange(value);
-                          form.setValue("category", attachmentList?.category || "");
+                          const category = temp_section?.application.find((data) => data.name.toLocaleLowerCase() == value.toLocaleLowerCase());
+                          category ? form.setValue("category", category.category) : form.setValue("category", "");
                           setSubType(value);
                         }}
                         disabled={method === "UPDATE" && role !== "RECORDS"}
@@ -611,6 +613,7 @@ export const TransactionForm = ({ company, method, defaultValue, mutateFn, isPen
                                   <SelectContent>
                                     <SelectItem value="INITIAL_DOC">Initial documents</SelectItem>
                                     <SelectItem value="FOLLOWED_UP">Follow-up documents</SelectItem>
+                                    <SelectItem value="APPROVE">Approve</SelectItem>
                                   </SelectContent>
                                 </Select>
                               </FormControl>
@@ -638,6 +641,7 @@ export const TransactionForm = ({ company, method, defaultValue, mutateFn, isPen
                                   <SelectContent>
                                     <SelectItem value="FOR_REVIEW">For Review</SelectItem>
                                     <SelectItem value="FINAL_ATTACHMENT">Final Attachment</SelectItem>
+                                    <SelectItem value="NOT_APPLICABLE">Not Applicable</SelectItem>
                                   </SelectContent>
                                 </Select>
                               </FormControl>

@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Check, X } from "lucide-react";
+import { Check, Minus, X } from "lucide-react";
 import { z } from "zod";
 import { getSignUrlForView } from "../../services/getSignedUrl";
 import { useReactToPrint } from "react-to-print";
@@ -65,7 +65,7 @@ export const DocumentTable = ({ data, percentage }: Props) => {
                   </div>
                 ) : (
                   <div className="flex items-center justify-center">
-                    <X className="text-red-500 items-end  " />
+                    <Minus className="text-gray-400 items-end  " />
                   </div>
                 )}
               </TableCell>

@@ -20,7 +20,7 @@ export const Dashboard = () => {
   const { data, isLoading } = tsr.dashboardContract.getDashboardData.useQuery({
     queryKey: ["dashboard-data"],
   });
-
+  console.log(data);
   const currentUser = useCurrentUserFirstName();
 
   const { defaultDate } = useMemo(

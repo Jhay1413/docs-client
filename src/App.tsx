@@ -27,9 +27,10 @@ import { DashboardNewLayout } from "./routes/new-layout";
 import ProtectedRoute from "./components/routeGuard/protected-route";
 import { ReactQueryProvider } from "./utils/react-query-provider";
 
-import { AddTicketComponent, TicketForm, TicketList } from "./features/tickets";
-import TicketFormWrapper from "./features/tickets/components/ticket-formWrapper";
-import { TicketDetails } from "./features/tickets/components/tickets-details";
+import { AddTicketComponent, TicketForm, TicketInboxComponent, TicketList, TicketResolved } from "./features/tickets";
+import { IncomingTicketComponent } from "./features/tickets/components/tables/ticket-incoming";
+import { TicketDetails } from "./features/tickets/components/tables/ticket-details";
+import ForwardTicketComponent from "./features/tickets/components/forms/forward-ticket";
 
 function App() {
   return (
@@ -90,8 +91,10 @@ function App() {
                 <Route path="add-form" element={<AddTicketComponent />} />
                 {/* <Route path="tickets-form" element={<TicketForm  />} /> */}
                 <Route path="details/:id" element={<TicketDetails />} />
-                <Route path="tickets-form" element={<TicketFormWrapper />} />
-
+                <Route path="inbox/:id" element={<TicketInboxComponent />} />
+                <Route path="incoming/:id" element={<IncomingTicketComponent />} />
+                <Route path="forward-ticket/:id" element={<ForwardTicketComponent />} />
+                <Route path="resolved-tickets" element={<TicketResolved />} />
               </Route>
             </Route>
             <Route path="/" element={<PublicRoutes />}>
