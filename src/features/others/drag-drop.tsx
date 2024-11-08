@@ -60,7 +60,7 @@ const DragNdrop: React.FC<DragNdropProps> = ({
           <CloudUpload className="upload-icon" />
           <div className="upload-text">
             <p className="main-text">Drag and drop your files here</p>
-            <p className="sub-text">Supported files: .JPG, .PNG, .PDF, .DOCX, .TXT, .XLSX</p>
+            <p className="sub-text">Maximum file size: 40MB per file</p>
           </div>
         </div>
         <input
