@@ -52,12 +52,6 @@ export const IncomingComponent = () => {
       });
     },
     onSuccess: () => {
-      setNotification({
-        ...notification,
-        incoming: notification?.incoming === 0 ? 0 : notification?.incoming! - 1,
-        inbox: notification?.inbox! + 1,
-      });
-
       toast.success("Transaction Received !");
     },
     onError: (error) => {

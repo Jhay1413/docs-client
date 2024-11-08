@@ -3,7 +3,7 @@ import { z } from "zod";
 import { ColumnDef } from "@tanstack/react-table";
 import { ArrowUpDown } from "lucide-react";
 import { transactionTable } from "shared-contract";
-import './styles.css';
+import "./styles.css";
 
 type TransactionInfo = z.infer<typeof transactionTable>;
 
@@ -15,13 +15,12 @@ const TolowerCapitalize: React.FC<tolowerCapitalizeProps> = ({ tolowerCapitalize
   return (
     <h1 className="lowercasetoCapitalize whitespace-nowrap overflow-hidden text-ellipsis">
       {tolowerCapitalize
-        .split(' ')
+        .split(" ")
         .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
-        .join(' ')}
+        .join(" ")}
     </h1>
   );
 };
-
 
 export const transColumns: ColumnDef<TransactionInfo>[] = [
   {
@@ -52,8 +51,8 @@ export const transColumns: ColumnDef<TransactionInfo>[] = [
 
       return (
         <div className="">
-        <TolowerCapitalize tolowerCapitalize={data.company.companyName} />
-      </div>
+          <TolowerCapitalize tolowerCapitalize={data.company.companyName} />
+        </div>
       );
     },
   },
@@ -63,9 +62,11 @@ export const transColumns: ColumnDef<TransactionInfo>[] = [
     cell: ({ row }) => {
       const data = row.original;
 
-      return  <div className="font-bold">
-        <TolowerCapitalize tolowerCapitalize={data.project?.projectName} />
-      </div>;
+      return (
+        <div className="font-bold">
+          <TolowerCapitalize tolowerCapitalize={data.project?.projectName} />
+        </div>
+      );
     },
   },
   {
@@ -74,11 +75,12 @@ export const transColumns: ColumnDef<TransactionInfo>[] = [
     cell: ({ row }) => {
       const data = row.original;
 
-      return   <div>
-        <TolowerCapitalize tolowerCapitalize={data.documentType!} />
-      </div>;
+      return (
+        <div>
+          <TolowerCapitalize tolowerCapitalize={data.documentType!} />
+        </div>
+      );
     },
-    
   },
   {
     header: "Subtype",
@@ -86,9 +88,11 @@ export const transColumns: ColumnDef<TransactionInfo>[] = [
     cell: ({ row }) => {
       const data = row.original;
 
-      return   <div>
-        <TolowerCapitalize tolowerCapitalize={data.documentSubType!} />
-      </div>;
+      return (
+        <div>
+          <TolowerCapitalize tolowerCapitalize={data.documentSubType!} />
+        </div>
+      );
     },
   },
   {
@@ -97,10 +101,12 @@ export const transColumns: ColumnDef<TransactionInfo>[] = [
     cell: ({ row }) => {
       const data = row.original;
 
-      return   <div>
-        <TolowerCapitalize tolowerCapitalize={data.subject!} />
-      </div>;
-    }, 
+      return (
+        <div>
+          <TolowerCapitalize tolowerCapitalize={data.subject!} />
+        </div>
+      );
+    },
   },
   {
     header: "Forwarder",
@@ -108,9 +114,11 @@ export const transColumns: ColumnDef<TransactionInfo>[] = [
     cell: ({ row }) => {
       const data = row.original;
 
-      return   <div>
-        <TolowerCapitalize tolowerCapitalize={data.forwarder!} />
-      </div>;
+      return (
+        <div>
+          <TolowerCapitalize tolowerCapitalize={data.forwarder!} />
+        </div>
+      );
     },
   },
   {
@@ -119,11 +127,11 @@ export const transColumns: ColumnDef<TransactionInfo>[] = [
     cell: ({ row }) => {
       const data = row.original;
 
-      return  <div className="font-bold">
-        <TolowerCapitalize tolowerCapitalize={data.receiver!} />
-      </div>
-      ;
-      
+      return (
+        <div className="font-bold">
+          <TolowerCapitalize tolowerCapitalize={data.receiver!} />
+        </div>
+      );
     },
   },
   {
@@ -132,10 +140,12 @@ export const transColumns: ColumnDef<TransactionInfo>[] = [
     cell: ({ row }) => {
       const data = row.original;
 
-      return       <div>
-      <TolowerCapitalize tolowerCapitalize={data.status} />
-    </div>;
-    // <h1 className="hyphens-none">{data.status}</h1>;
+      return (
+        <div>
+          <TolowerCapitalize tolowerCapitalize={data.status} />
+        </div>
+      );
+      // <h1 className="hyphens-none">{data.status}</h1>;
     },
   },
   {
@@ -164,9 +174,7 @@ export const transColumns: ColumnDef<TransactionInfo>[] = [
     cell: ({ row }) => {
       const transactionInfo = row.original;
 
-      return <div>{transactionInfo.percentage}</div>;
+      return <div>{transactionInfo.percentage}%</div>;
     },
   },
 ];
-
-
