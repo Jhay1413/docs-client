@@ -29,7 +29,7 @@ export const IncomingTicketComponent = () => {
   const { data, isError, error } = tsr.ticketing.getTicketsForUserByStatus.useQuery({
     queryKey: ["tickets", page, debouncedSearchQuery],
     queryData: {
-      params: {id:id!},
+      params: { id: id! },
       query: {
         query: debouncedSearchQuery,
         status: "incoming",
@@ -42,6 +42,7 @@ export const IncomingTicketComponent = () => {
 
   const { mutate } = tsr.ticketing.receiveTickets.useMutation({
     onMutate: (data) => {
+      toast.success("Ticket Received!");
       tsrQueryClient.ticketing.getTicketsForUserByStatus.setQueryData(["tickets", page, debouncedSearchQuery], (old) => {
         if (!old || !old.body) return old;
         return {
@@ -52,15 +53,6 @@ export const IncomingTicketComponent = () => {
           },
         };
       });
-    },
-    onSuccess: () => {
-      setNotification({
-        ...notification,
-        incoming: notification?.incoming === 0 ? 0 : notification?.incoming! - 1,
-        inbox: notification?.inbox! + 1,
-      });
-
-      toast.success("Ticket Received!");
     },
     onError: (error) => {
       console.log(error);
@@ -77,11 +69,9 @@ export const IncomingTicketComponent = () => {
       <div className="flex flex-col w-full items-center justify-center p-4 bg-white rounded-lg">
         <div className="flex justify-start w-full flex-col pb-4">
           <h1 className="text-[#404041] font-medium text-[28px]">Incoming Tickets</h1>
-          <p className="text-muted-foreground text-[12px]">
-            All your new tickets will appear here. Stay informed and don't miss any updates.
-          </p>
+          <p className="text-muted-foreground text-[12px]">All your new tickets will appear here. Stay informed and don't miss any updates.</p>
         </div>
-        <DataTable columns={incomingColumns} data={data ? data.body : []}  />
+        <DataTable columns={incomingColumns} data={data ? data.body : []} />
       </div>
     </div>
   );
