@@ -1,6 +1,6 @@
 import { DataTable } from "@/components/data-table";
 import { useNavigate, useParams, useSearchParams } from "react-router-dom";
-import { ticketsInboxColumn } from "./tickets-inbox-columns"; // Import the tickets inbox column
+import { ticketsInboxColumn } from "./ticket-inbox-columns"; // Import the tickets inbox column
 import { useDebounce } from "use-debounce";
 import { Input } from "@/components/ui/input";
 import { Search } from "lucide-react";
@@ -9,6 +9,7 @@ import { keepPreviousData } from "@tanstack/react-query";
 import { tsr } from "@/services/tsr";
 import { z } from "zod";
 import { ticketingTableSchema } from "shared-contract";
+import { getCurrentUserId } from "@/hooks/use-user-hook";
 
 export const TicketInboxComponent = () => {
   const navigate = useNavigate();
@@ -21,21 +22,21 @@ export const TicketInboxComponent = () => {
   const page = searchParams.get("currentPage") || "1";
 
   const intPage = parseInt(page, 10);
-  const [debouncedSearchQuery] = useDebounce(searchQuery, 500); // Adjust the delay as needed
+  const [debouncedSearchQuery] = useDebounce(searchQuery, 500);
 
-  const { id } = useParams(); // Assuming `id` is the user ID or relevant identifier
+  const id = getCurrentUserId();
   console.log(id);
 
   // Fetch tickets instead of transactions
-  const { data, isError, error } = tsr.ticketing.getTicketsForUserByStatus.useQuery({
+  const { data, isError, error } = tsr.ticketing.getTickets.useQuery({
     queryKey: ["tickets", page, debouncedSearchQuery],
     queryData: {
-      params: {id:id!},
       query: {
         query: debouncedSearchQuery,
-        status: "inbox",
+        status: "INBOX",
         page: page,
         pageSize: "10",
+        userId: id,
       },
     },
     placeholderData: keepPreviousData,
@@ -66,15 +67,15 @@ export const TicketInboxComponent = () => {
   };
 
   return (
-    <div className="flex flex-col gap-y-6 items-center">
-        <div className="flex flex-col w-full space-y-4">
-            <div className="flex justify-between items-center w-full">  
-                <div className="flex flex-col">
+    <div className="min-h-full flex flex-col w-full items-center p-4 bg-white rounded-lg ">
+      <div className="flex flex-col w-full items-center justify-center p-4 bg-white rounded-lg">
+        <div className="flex justify-between items-center w-full pb-4"> 
+                <div className="flex justify-start w-full flex-col ">
                     <h1 className="text-[#404041] font-medium text-[28px]">Inbox</h1>
                     <p className="text-muted-foreground text-[12px]">Stay updated with the latest tickets here.</p>
                 </div>
 
-                <div className="flex items-center">
+              <div className="flex items-center justify-end w-full">
                 <Input
                     placeholder="Search ...."
                     defaultValue={debouncedSearchQuery}
@@ -93,33 +94,39 @@ export const TicketInboxComponent = () => {
                 <button className="p-2 bg-primaryColor text-white rounded-r-md">
                     <Search />
                 </button>
-                </div>
-            </div>
+              </div>
         </div>
-
 
       <DataTable
         columns={ticketsInboxColumn}
-        data={data ? data.body : []}
+        data={data ? data.body.data : []}
         callbackFn={handleOnClickRow}
       />
-      <div className="flex items-center w-full justify-center space-x-2 py-4">
-        <Button variant="outline" size="sm" disabled={intPage === 1}>
-          {"<<"}
-        </Button>
-        <Button variant="outline" size="sm" onClick={handlePreviousPage} disabled={intPage === 1}>
-          Previous
-        </Button>
-        <Button variant="outline" size="sm" onClick={handleNextPage}>
-          Next
-        </Button>
-        <Button variant="outline" size="sm">
-          {">>"}
-        </Button>
-      </div>
-      {/* Add the button here */}
 
       
+      <div className="w-full flex justify-between items-center">
+        <div className="text-muted-foreground">
+            <h1>Number of Tickets: {data?.body.numOfTickets}</h1>
+        </div>
+        <div className="flex items-center space-x-2 py-4">
+          <Button variant="outline" size="sm" disabled={intPage === 1}>
+            {"<<"}
+          </Button>
+          <Button variant="outline" size="sm" onClick={handlePreviousPage} disabled={intPage === 1}>
+            Previous
+          </Button>
+          <Button variant="outline" size="sm" onClick={handleNextPage} disabled={data?.body.totalPages === 0 || data?.body.totalPages === parseInt(page)}>
+            Next
+          </Button>
+          <Button variant="outline" size="sm">
+            {">>"}
+          </Button>
+        </div>
+      </div>
+
+
+
+      </div>
     </div>
   );
 };
