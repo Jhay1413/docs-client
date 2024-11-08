@@ -51,7 +51,6 @@ type ticketFiles = {
   loading: number;
 }[];
 
-
 const TicketForm = ({
   selectedDivision,
   setSelectedDivision,
@@ -83,7 +82,7 @@ const TicketForm = ({
       subject: ticketData?.subject || "",
       section: ticketData?.section || "",
       division: ticketData?.division || "",
-      status: ticketData?.status  || "ROUTING",
+      status: ticketData?.status || "ROUTING",
       requestDetails: ticketData?.requestDetails || "",
       priority: ticketData?.priority || "",
       dueDate: ticketData?.dueDate || "",
@@ -104,8 +103,7 @@ const TicketForm = ({
     }
   };
   const onSubmit: SubmitHandler<z.infer<typeof ticketingMutationSchema>> = async (data) => {
-    console.log("ASdsad");
-    mutateFn({...data,attachments:uploadedKeys});
+    mutateFn({ ...data, attachments: [...data.attachments, ...uploadedKeys] });
   };
   const onError = () => {
     if (form.formState.errors) console.log(form.formState.errors);
@@ -131,17 +129,17 @@ const TicketForm = ({
 
   const handleFileUpload = async (filesToUpload: File[]) => {
     setShowProgress(true);
-    
+
     // Reset the loading state for all files before starting new uploads
-    const initialFilesState = filesToUpload.map(file => ({ name: file.name, loading: 0 }));
+    const initialFilesState = filesToUpload.map((file) => ({ name: file.name, loading: 0 }));
     setFiles(initialFilesState);
-  
+
     for (const file of filesToUpload) {
       const formData = new FormData();
       formData.append("thumbnail", file);
       formData.append("company", "Envicomm");
       formData.append("fileName", file.name);
-  
+
       try {
         const result = await axios.post(`${baseUrlV2}/posts`, formData, {
           headers: {
@@ -151,7 +149,7 @@ const TicketForm = ({
             const total = e.total || 1;
             setFiles((prevState) => {
               const newFiles = [...prevState];
-              const currentIndex = newFiles.findIndex(f => f.name === file.name);
+              const currentIndex = newFiles.findIndex((f) => f.name === file.name);
               if (currentIndex !== -1) {
                 newFiles[currentIndex].loading = Math.floor((e.loaded / total) * 100);
               }
@@ -166,14 +164,11 @@ const TicketForm = ({
         console.log(error);
       }
     }
-  
+
     // Set showProgress to false after all uploads are complete
     setShowProgress(false);
   };
 
- 
-
-  
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit, onError)}>
@@ -348,7 +343,7 @@ const TicketForm = ({
                       <SelectValue placeholder="Select status" />
                     </SelectTrigger>
                     <SelectContent>
-                    <SelectItem value="ROUTING">For Routing</SelectItem>
+                      <SelectItem value="ROUTING">For Routing</SelectItem>
                       <SelectItem value="ON_PROCESS">On Process</SelectItem>
                       <SelectItem value="COMPLETED">Completed</SelectItem>
                       <SelectItem value="APPROVED">Approved</SelectItem>
@@ -461,7 +456,7 @@ const TicketForm = ({
           <div className="col-span-3 ">
             <div className="grid grid-cols-2 gap-4">
               <div className="col-span-1 mb-6">
-                <FormTextArea name="requestDetails" label="Request Details" placeholder="Enter details" disable={isForwarding}/>
+                <FormTextArea name="requestDetails" label="Request Details" placeholder="Enter details" disable={isForwarding} />
               </div>
 
               <div className="col-span-1 mb-6">
@@ -469,54 +464,53 @@ const TicketForm = ({
               </div>
             </div>
           </div>
-          
 
-        {/* Attachments (Grid Layout) */}
-        <div className="col-span-3">
-          <div className="grid grid-cols-2 gap-4">
-            {/* Drag and Drop Section */}
-            <div>
-              <p className="font-bold text-sm text-gray-800">Attachments</p>
-              <div className="flex w-full flex-col mt-2 items-center justify-center rounded-md border-blue-300 border-dashed border-2">
-                <DragNdrop onFilesSelected={handleFilesSelected} width="100%" height="100%" />
+          {/* Attachments (Grid Layout) */}
+          <div className="col-span-3">
+            <div className="grid grid-cols-2 gap-4">
+              {/* Drag and Drop Section */}
+              <div>
+                <p className="font-bold text-sm text-gray-800">Attachments</p>
+                <div className="flex w-full flex-col mt-2 items-center justify-center rounded-md border-blue-300 border-dashed border-2">
+                  <DragNdrop onFilesSelected={handleFilesSelected} width="100%" height="100%" />
+                </div>
               </div>
-            </div>
-          
-            {/* Scrollable Progress Display */}
-            <ScrollArea className="w-full min-h-full max-h-48 p-4 rounded-md">
-              {showProgress && (
+
+              {/* Scrollable Progress Display */}
+              <ScrollArea className="w-full min-h-full max-h-48 p-4 rounded-md">
+                {showProgress && (
+                  <div className="flex flex-col gap-2 text-white">
+                    {files.map((file, index) => (
+                      <div className="flex justify-start items-center gap-2 rounded-md bg-blue-300 p-2" key={index}>
+                        <div className="w-20">
+                          <FileCode size={32} />
+                        </div>
+                        <div className="w-1/2">
+                          <h1>{file.name}</h1>
+                        </div>
+                        <div className="flex justify-end w-full">
+                          <Progress value={file.loading} className="w-[60%] h-4" />
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
                 <div className="flex flex-col gap-2 text-white">
-                  {files.map((file, index) => (
+                  {uploadedFile.map((file, index) => (
                     <div className="flex justify-start items-center gap-2 rounded-md bg-blue-300 p-2" key={index}>
                       <div className="w-20">
                         <FileCode size={32} />
                       </div>
-                      <div className="w-1/2">
+                      <div className="w-full">
                         <h1>{file.name}</h1>
                       </div>
                       <div className="flex justify-end w-full">
-                        <Progress value={file.loading} className="w-[60%] h-4" />
+                        <Check />
                       </div>
                     </div>
                   ))}
                 </div>
-              )}
-              <div className="flex flex-col gap-2 text-white">
-                {uploadedFile.map((file, index) => (
-                  <div className="flex justify-start items-center gap-2 rounded-md bg-blue-300 p-2" key={index}>
-                    <div className="w-20">
-                      <FileCode size={32} />
-                    </div>
-                    <div className="w-full">
-                      <h1>{file.name}</h1>
-                    </div>
-                    <div className="flex justify-end w-full">
-                      <Check />
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </ScrollArea>
+              </ScrollArea>
             </div>
           </div>
         </div>
