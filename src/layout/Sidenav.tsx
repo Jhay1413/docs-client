@@ -127,8 +127,8 @@ export const SideNav = () => {
             </NavLink>
           </li>
         </ul>
-        {/* <Label className="text-[#DCFF8E] px-4 font-medium flex w-full text-sm">TICKETS</Label> */}
-        {/* <ul className="flex flex-col space-y-4 w-full mx-2">
+        <Label className="text-[#DCFF8E] px-4 font-medium flex w-full text-sm">TICKETS</Label>
+        <ul className="flex flex-col space-y-4 w-full mx-2">
           <li className="relative inline-block text-left px-4">
             <NavLink
               to={`/dashboard/tickets/list`}
@@ -154,8 +154,8 @@ export const SideNav = () => {
                 <h1 className="text-base">Inbox</h1>
               </div>
             </NavLink>
-          </li> */}
-          {/* <li className="relative inline-block text-left px-4 ">
+          </li>
+          <li className="relative inline-block text-left px-4 ">
             <NavLink
               to={`/dashboard/tickets/incoming/${id}`}
               className={({ isActive }) => {
@@ -167,8 +167,8 @@ export const SideNav = () => {
                 <h1 className="text-base">Incoming Tickets</h1>
               </div>
             </NavLink>
-          </li> 
-        </ul> */}
+          </li>
+        </ul>
         <Label className="text-[#DCFF8E] px-4 font-medium flex w-full text-sm">ARCHIVE</Label>
         <ul className="flex flex-col  space-y-4 w-full   mx-2 ">
           <li className="relative inline-block text-left px-4 ">
@@ -185,7 +185,7 @@ export const SideNav = () => {
             </NavLink>
           </li>
 
-          {/* <li className="relative inline-block text-left px-4 ">
+          <li className="relative inline-block text-left px-4 ">
             <NavLink
               to={`/dashboard/tickets/resolved-tickets`}
               className={({ isActive }) => {
@@ -197,9 +197,8 @@ export const SideNav = () => {
                 <h1 className="text-base">Resolved Tickets</h1>
               </div>
             </NavLink>
-          </li> */}
+          </li>
         </ul>
-
       </div>
     </div>
   );
