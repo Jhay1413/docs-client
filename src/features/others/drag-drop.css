@@ -1,0 +1,69 @@
+.drag-drop {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 10px;
+  border: 2px dashed #d1d5db;
+  border-radius: 8px;
+  background-color: #f9fafb;
+}
+
+.document-uploader {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  width: 100%;
+  height: 100%;
+  position: relative;
+}
+
+.document-uploader.drag-over {
+  background-color: #e0f7fa;
+  border-color: #0288d1;
+}
+
+.upload-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.upload-icon {
+  width: 48px;
+  height: 48px;
+  color: #0288d1;
+}
+
+.upload-text {
+  margin-top: 10px;
+}
+
+.main-text {
+  font-weight: 600;
+  color: #333;
+}
+
+.sub-text {
+  color: #666;
+  font-size: 0.875rem;
+}
+
+.browse-btn {
+  display: inline-block;
+  margin-top: 12px;
+  padding: 8px 16px;
+  background-color: #0288d1;
+  color: #fff;
+  border-radius: 4px;
+  cursor: pointer;
+  text-align: center;
+  font-weight: 600;
+}
+
+.browse-btn:hover {
+  background-color: #026ca1;
+}
