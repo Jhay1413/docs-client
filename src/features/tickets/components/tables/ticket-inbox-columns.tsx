@@ -4,7 +4,7 @@ import { ticketingTableSchema } from "shared-contract"; // Adjust the import bas
 import { toPascalCase } from "../ticket.utils"; // Adjust the import based on your project structure
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
-import { CircleArrowRight, Dot, Eye, MoreHorizontal, Pencil, View } from "lucide-react";
+import { CircleArrowRight, Dot, Eye, Minus, MoreHorizontal, Pencil, View } from "lucide-react";
 import { InboxUpdateForm } from "../forms/inbox-update-form";
 import { useNavigate } from "react-router-dom";
 
@@ -19,7 +19,11 @@ export const ticketsInboxColumn: ColumnDef<z.infer<typeof ticketingTableSchema>>
     accessorKey: "transactionId", // Still keep this for consistency
     cell: ({ row }) => {
       const ticketInfo = row.original;
-      const transactionId = ticketInfo.transaction?.transactionId ?? ticketInfo.transaction?.transactionId ?? <div className="text-gray-400 flex justify-center items-center"><Minus /></div>;
+      const transactionId = ticketInfo.transaction?.transactionId ?? ticketInfo.transaction?.transactionId ?? (
+        <div className="text-gray-400 flex justify-center items-center">
+          <Minus />
+        </div>
+      );
       return <span>{transactionId}</span>;
     },
   },
@@ -28,7 +32,11 @@ export const ticketsInboxColumn: ColumnDef<z.infer<typeof ticketingTableSchema>>
     accessorKey: "project.projectId", // Still keep this for consistency
     cell: ({ row }) => {
       const ticketInfo = row.original;
-      const projectId = ticketInfo.project?.projectId ?? ticketInfo.project?.projectId ?? <div className="text-gray-400 flex justify-center items-center"><Minus /></div>;
+      const projectId = ticketInfo.project?.projectId ?? ticketInfo.project?.projectId ?? (
+        <div className="text-gray-400 flex justify-center items-center">
+          <Minus />
+        </div>
+      );
       return <span>{projectId}</span>;
     },
   },
@@ -42,13 +50,7 @@ export const ticketsInboxColumn: ColumnDef<z.infer<typeof ticketingTableSchema>>
     cell: ({ row }) => {
       const transactionInfo = row.original;
       const requestDetails = transactionInfo.requestDetails || "";
-      return (
-        <span>
-          {requestDetails.length > maxLength
-            ? `${requestDetails.substring(0, maxLength)}...`
-            : requestDetails}
-        </span>
-      );
+      return <span>{requestDetails.length > maxLength ? `${requestDetails.substring(0, maxLength)}...` : requestDetails}</span>;
     },
   },
   {
@@ -127,13 +129,7 @@ export const ticketsInboxColumn: ColumnDef<z.infer<typeof ticketingTableSchema>>
     accessorKey: "dateReceived",
     cell: ({ row }) => {
       const ticketInfo = row.original;
-      return (
-        <span>
-          {ticketInfo.dateReceived
-            ? new Date(ticketInfo.dateReceived).toLocaleDateString()
-            : "Not received yet"}
-        </span>
-      );
+      return <span>{ticketInfo.dateReceived ? new Date(ticketInfo.dateReceived).toLocaleDateString() : "Not received yet"}</span>;
     },
   },
   {
