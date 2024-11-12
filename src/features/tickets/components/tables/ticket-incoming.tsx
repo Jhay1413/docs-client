@@ -46,6 +46,7 @@ export const IncomingTicketComponent = () => {
 
   const { mutate } = tsr.ticketing.receiveTickets.useMutation({
     onMutate: (data) => {
+      toast.success("Ticket Received!");
       tsrQueryClient.ticketing.getTickets.setQueryData(["ticket-incoming", page, debouncedSearchQuery], (old) => {
         if (!old || !old.body) return old;
         return {

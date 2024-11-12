@@ -90,7 +90,6 @@ const TicketForm = ({
       dateReceived: null,
       senderId: userId,
       requesteeId: ticketData?.requestee.id || userId,
-      remarks: ticketData?.remarks,
       projectId: ticketData?.project?.id || null,
       transactionId: ticketData?.transactionId || null,
       attachments: ticketData?.attachments || [],

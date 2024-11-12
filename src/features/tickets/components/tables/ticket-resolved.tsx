@@ -95,7 +95,7 @@ export const TicketResolved = () => {
 
         <DataTable
           columns={ticketsResolvedColumn}
-          data={data ? data.body : []}
+          data={data ? data.body.data : []}
           callbackFn={handleOnClickRow}
         />
         
