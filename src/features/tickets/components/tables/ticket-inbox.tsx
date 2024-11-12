@@ -14,12 +14,25 @@ export const TicketInboxComponent = () => {
   const [searchParams, setSearchParams] = useSearchParams({
     currentPage: "1",
     search: "",
-    sortOrder: "asc", // Default sort order
+    sortOrder: "asc",
+    projectId: "",
+    transactionId: "",
+    priority: "",
+    status: "",
+    assigneeId: "",
+
+    // Default sort order
   });
 
   const searchQuery = searchParams.get("search") || "";
   const page = searchParams.get("currentPage") || "1";
-  const sortOrder = searchParams.get("sortOrder") || "asc"; // Get sort order from searchParams
+  const sortOrder = searchParams.get("sortOrder") || "asc";
+  const projectId = searchParams.get("projectId") || "";
+  const transactionId = searchParams.get("transactionId") || "";
+  const priority = searchParams.get("priority") || "";
+  const status = searchParams.get("status") || "";
+  const assigneeId = searchParams.get("assigneeId") || "";
+  const senderId = searchParams.get("senderId") || "";
 
   const intPage = parseInt(page, 10);
   const [debouncedSearchQuery] = useDebounce(searchQuery, 500);
@@ -27,23 +40,28 @@ export const TicketInboxComponent = () => {
   const id = getCurrentUserId();
 
   // Fetch tickets with sorting
-  const { data, isError, error } = tsr.ticketing.getTickets.useQuery({
+  const { data, isError, error, refetch } = tsr.ticketing.getTickets.useQuery({
     queryKey: ["tickets-inbox", page, debouncedSearchQuery, sortOrder],
     queryData: {
       query: {
         query: debouncedSearchQuery,
-        status: "INBOX",
+        state: "INBOX",
         page: page,
         pageSize: "10",
         userId: id,
         sortOrder: sortOrder,
+        projectId: projectId,
+        transactionId: transactionId,
+        priority: priority,
+        status: status,
+        senderId: senderId,
       },
     },
+
     placeholderData: keepPreviousData,
   });
 
   // Filter Options
-
 
   // Toggle sort order between 'asc' and 'desc'
   const toggleSortOrder = () => {
@@ -98,10 +116,17 @@ export const TicketInboxComponent = () => {
           <div className="flex items-center justify-end w-full">
             <div className="flex m-1 text-gray-700">
               {/* Sort Button */}
-              <Button variant="outline" onClick={toggleSortOrder} size="icon" className="" title={sortOrder === "asc" ? "Sort by ascending order" : "Sort by descending order"}>
-                {sortOrder === "asc" ? <SquareChevronUp /> : <SquareChevronDown />}<h1></h1>
+              <Button
+                variant="outline"
+                onClick={toggleSortOrder}
+                size="icon"
+                className=""
+                title={sortOrder === "asc" ? "Sort by ascending order" : "Sort by descending order"}
+              >
+                {sortOrder === "asc" ? <SquareChevronUp /> : <SquareChevronDown />}
+                <h1></h1>
               </Button>
-              <FilterOptions onFilterChange={handleFilterChange} />
+              <FilterOptions onFilterChange={handleFilterChange} setSearchParams={setSearchParams} refetch={refetch} />
             </div>
             <Input
               placeholder="Search ...."
@@ -137,7 +162,12 @@ export const TicketInboxComponent = () => {
             <Button variant="outline" size="sm" onClick={handlePreviousPage} disabled={intPage === 1}>
               Previous
             </Button>
-            <Button variant="outline" size="sm" onClick={handleNextPage} disabled={data?.body.totalPages === 0 || data?.body.totalPages === parseInt(page)}>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={handleNextPage}
+              disabled={data?.body.totalPages === 0 || data?.body.totalPages === parseInt(page)}
+            >
               Next
             </Button>
             <Button variant="outline" size="sm">
