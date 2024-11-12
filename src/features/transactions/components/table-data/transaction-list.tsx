@@ -78,7 +78,7 @@ export const TransactionList = () => {
     <div className="min-h-full flex flex-col w-full items-center p-4 bg-white rounded-lg ">
       <div className="flex flex-col w-full items-center justify-center p-4 bg-white rounded-lg">
         <div className="flex justify-start w-full flex-col ">
-          <h1 className="text-[#404041] font-medium text-[28px]">List of Transactions</h1>
+          <h1 className="trans-header text-[#404041] font-medium text-[28px] ">List of Transactions</h1>
           <p className="text-muted-foreground text-[12px]">Review the details below to track and manage recent activities.</p>
         </div>
         <AddTransactionBtnWithRole roles={["SUPERADMIN", "RECORDS"]} />

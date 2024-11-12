@@ -40,6 +40,7 @@ export const TicketList = () => {
         query: debouncedSearchQuery,
         page: page,
         pageSize: "10",
+        
       },
     },
     placeholderData: keepPreviousData,
