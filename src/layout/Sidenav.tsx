@@ -155,6 +155,7 @@ export const SideNav = () => {
               </div>
             </NavLink>
           </li>
+
           <li className="relative inline-block text-left px-4 ">
             <NavLink
               to={`/dashboard/tickets/incoming/${id}`}
@@ -165,6 +166,19 @@ export const SideNav = () => {
               <LibraryBig />
               <div className="flex gap-2">
                 <h1 className="text-base">Incoming Tickets</h1>
+              </div>
+            </NavLink>
+          </li>
+          <li className="relative inline-block text-left px-4 ">
+            <NavLink
+              to={`/dashboard/tickets/pending-tickets/${id}`}
+              className={({ isActive }) => {
+                return `justify-start items-center flex w-full p-2 space-x-4 text-lg  rounded-md ${isActive ? "bg-green-100/30 text-white" : ""}`;
+              }}
+            >
+              <LibraryBig />
+              <div className="flex gap-2">
+                <h1 className="text-base">Pending Requests</h1>
               </div>
             </NavLink>
           </li>

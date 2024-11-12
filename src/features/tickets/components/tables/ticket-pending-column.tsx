@@ -9,7 +9,7 @@ import { InboxUpdateForm } from "../forms/inbox-update-form";
 import { useNavigate } from "react-router-dom";
 
 const maxLength = 20;
-export const ticketsInboxColumn: ColumnDef<z.infer<typeof ticketingTableSchema>>[] = [
+export const pendingTicketsColumn: ColumnDef<z.infer<typeof ticketingTableSchema>>[] = [
   {
     header: () => <span className="font-bold text-nowrap">Ticket ID</span>,
     accessorKey: "ticketId",
@@ -107,19 +107,7 @@ export const ticketsInboxColumn: ColumnDef<z.infer<typeof ticketingTableSchema>>
       return <span>{new Date(ticketInfo.dateForwarded).toLocaleDateString()}</span>;
     },
   },
-  {
-    header: () => (
-      <div className="w-full font-bold text-nowrap items-center flex justify-center">
-        <h1>Sender</h1>
-      </div>
-    ),
-    accessorKey: "sender",
-    cell: ({ row }) => {
-      const ticketInfo = row.original;
-      const name = `${ticketInfo.sender.firstName} ${ticketInfo.sender.lastName}`;
-      return <span>{toPascalCase(name)}</span>;
-    },
-  },
+
   {
     header: () => (
       <div className="w-full font-bold text-nowrap items-center flex justify-center">
@@ -166,7 +154,6 @@ export const ticketsInboxColumn: ColumnDef<z.infer<typeof ticketingTableSchema>>
           <Button variant="outline" size="icon" title="View ticket" onClick={handleOnClickRow}>
             <Eye />
           </Button>
-          <InboxUpdateForm id={ticket.id} />
         </div>
       );
     },
