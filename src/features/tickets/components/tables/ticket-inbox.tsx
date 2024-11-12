@@ -36,7 +36,7 @@ export const TicketInboxComponent = () => {
         page: page,
         pageSize: "10",
         userId: id,
-        // sortOrder: sortOrder,
+        sortOrder: sortOrder,
       },
     },
     placeholderData: keepPreviousData,
