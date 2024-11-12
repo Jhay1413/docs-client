@@ -144,7 +144,6 @@ export const TransactionForm = ({ company, method, defaultValue, mutateFn, isPen
           companyId: defaultValue?.companyId || "",
           projectId: defaultValue?.projectId || "",
           receiverId: defaultValue?.receiverId,
-          remarks: isForwarding ? "" : defaultValue?.remarks, // Set remarks to blank if isForwarding is true
           forwarderId: userId,
           dateForwarded: new Date().toISOString(),
           documentSubType: defaultValue?.documentSubType,
@@ -249,7 +248,7 @@ export const TransactionForm = ({ company, method, defaultValue, mutateFn, isPen
                     <Popover>
                       <PopoverTrigger asChild>
                         <FormControl>
-                          <Button variant="outline" role="combobox" className={cn(" justify-between", !field.value && "text-muted-foreground")}>
+                          <Button variant="outline" role="combobox" disabled={isForwarding} className={cn(" justify-between", !field.value && "text-muted-foreground")}>
                             {field.value ? company?.find((comp) => comp.id === field.value)?.companyName : "Select Company"}
                             <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                           </Button>
