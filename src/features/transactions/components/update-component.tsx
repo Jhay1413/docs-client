@@ -35,7 +35,8 @@ export const TransactionUpdateComponent = () => {
     queryKey: ["companies"],
   });
 
-  const { mutate, mutateAsync, isPending } = tsr.transaction.updateTransaction.useMutation({
+  const isForwarding = true;
+  const { mutate, mutateAsync, isPending} = tsr.transaction.updateTransaction.useMutation({
     onMutate: (data) => {
       const lastGoodKnown = tsrQueryClient.transaction.fetchTransactionsV2.getQueryData(["inbox-transactions"]);
       tsrQueryClient.transaction.getTransactionByParams.setQueryData(["inbox-transactions"], (old) => {
@@ -89,6 +90,7 @@ export const TransactionUpdateComponent = () => {
         mutateFn={mutateFn}
         defaultValue={data?.body}
         isPending={isPending}
+        isForwarding={isForwarding}
       />
     </div>
   );
