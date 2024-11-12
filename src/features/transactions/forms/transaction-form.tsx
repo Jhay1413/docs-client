@@ -48,9 +48,10 @@ type props = {
   defaultValue?: z.infer<typeof transactionQueryData> | null;
   mutateFn: (data: z.infer<typeof transactionMutationSchema>) => void;
   isPending: boolean;
+  isForwarding: boolean;
 };
 const baseUrlV2 = import.meta.env.VITE_ENDPOINT;
-export const TransactionForm = ({ company, method, defaultValue, mutateFn, isPending }: props) => {
+export const TransactionForm = ({ company, method, defaultValue, mutateFn, isPending, isForwarding }: props) => {
   const role = useCurrentUserRole();
   const currentDivision = useCurrentDivision();
   const userId = getCurrentUserId();
@@ -143,7 +144,7 @@ export const TransactionForm = ({ company, method, defaultValue, mutateFn, isPen
           companyId: defaultValue?.companyId || "",
           projectId: defaultValue?.projectId || "",
           receiverId: defaultValue?.receiverId,
-          remarks: defaultValue?.remarks,
+          remarks: isForwarding ? "" : defaultValue?.remarks, // Set remarks to blank if isForwarding is true
           forwarderId: userId,
           dateForwarded: new Date().toISOString(),
           documentSubType: defaultValue?.documentSubType,
@@ -383,7 +384,7 @@ export const TransactionForm = ({ company, method, defaultValue, mutateFn, isPen
                 )}
               />
               <div className="row-span-2 ">
-                <FormTextArea placeholder="Subject" label="Subject" name="subject" />
+                <FormTextArea placeholder="Subject" label="Subject" name="subject" disable={isForwarding} />
               </div>
               <FormField
                 control={form.control}
