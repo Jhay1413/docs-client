@@ -1,50 +1,80 @@
 import { DataTable } from "@/components/data-table";
 import { useNavigate, useSearchParams } from "react-router-dom";
-import { ticketsInboxColumn } from "./ticket-inbox-columns"; // Import the tickets inbox column
+import { ticketsInboxColumn } from "./ticket-inbox-columns";
 import { useDebounce } from "use-debounce";
 import { Input } from "@/components/ui/input";
-import { Search } from "lucide-react";
+import { Search, SquareChevronUp, SquareChevronDown, SlidersHorizontal } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { keepPreviousData } from "@tanstack/react-query";
 import { tsr } from "@/services/tsr";
 import { getCurrentUserId } from "@/hooks/use-user-hook";
+import { FilterOptions } from "../filter-options";
 
 export const TicketInboxComponent = () => {
   const [searchParams, setSearchParams] = useSearchParams({
     currentPage: "1",
     search: "",
+    sortOrder: "asc",
+    projectId: "",
+    transactionId: "",
+    priority: "",
+    status: "",
+    assigneeId: "",
+
+    // Default sort order
   });
 
   const searchQuery = searchParams.get("search") || "";
   const page = searchParams.get("currentPage") || "1";
+  const sortOrder = searchParams.get("sortOrder") || "asc";
+  const projectId = searchParams.get("projectId") || "";
+  const transactionId = searchParams.get("transactionId") || "";
+  const priority = searchParams.get("priority") || "";
+  const status = searchParams.get("status") || "";
+  const assigneeId = searchParams.get("assigneeId") || "";
 
   const intPage = parseInt(page, 10);
   const [debouncedSearchQuery] = useDebounce(searchQuery, 500);
 
   const id = getCurrentUserId();
-  console.log(id);
 
-  // Fetch tickets instead of transactions
-  const { data, isError, error } = tsr.ticketing.getTickets.useQuery({
-    queryKey: ["tickets-inbox", page, debouncedSearchQuery],
+  // Fetch tickets with sorting
+  const { data, isError, error, refetch } = tsr.ticketing.getTickets.useQuery({
+    queryKey: ["tickets-inbox", page, debouncedSearchQuery, sortOrder],
     queryData: {
       query: {
         query: debouncedSearchQuery,
-        status: "INBOX",
+        state: "INBOX",
         page: page,
         pageSize: "10",
         userId: id,
+        sortOrder: sortOrder,
+        projectId: projectId,
+        transactionId: transactionId,
+        priority: priority,
+        status: status,
       },
     },
+
     placeholderData: keepPreviousData,
   });
 
-  console.log(data);
+  // Filter Options
+
+  // Toggle sort order between 'asc' and 'desc'
+  const toggleSortOrder = () => {
+    setSearchParams((prev) => {
+      const newSortOrder = sortOrder === "asc" ? "desc" : "asc";
+      prev.set("sortOrder", newSortOrder);
+      prev.set("currentPage", "1"); // Reset to first page on sort change
+      return prev;
+    });
+  };
 
   const handleNextPage = () => {
     setSearchParams((prev) => {
       const nextPage = (intPage + 1).toString();
-      prev.set("currentPage", nextPage); // Increment the page
+      prev.set("currentPage", nextPage);
       return prev;
     });
   };
@@ -53,22 +83,49 @@ export const TicketInboxComponent = () => {
     if (intPage > 1) {
       setSearchParams((prev) => {
         const previousPage = (intPage - 1).toString();
-        prev.set("currentPage", previousPage); // Decrement the page
+        prev.set("currentPage", previousPage);
         return prev;
       });
     }
   };
 
+  const handleFilterChange = (newFilters: { [key: string]: string }) => {
+    setSearchParams((prev) => {
+      Object.keys(newFilters).forEach((key) => {
+        if (newFilters[key]) {
+          prev.set(key, newFilters[key]);
+        } else {
+          prev.delete(key);
+        }
+      });
+      return prev;
+    });
+  };
+
   return (
-    <div className="min-h-full flex flex-col w-full items-center p-4 bg-white rounded-lg ">
+    <div className="min-h-full flex flex-col w-full items-center p-4 bg-white rounded-lg">
       <div className="flex flex-col w-full items-center justify-center p-4 bg-white rounded-lg">
         <div className="flex justify-between items-center w-full pb-4">
-          <div className="flex justify-start w-full flex-col ">
+          <div className="flex justify-start w-full flex-col">
             <h1 className="text-[#404041] font-medium text-[28px]">Inbox</h1>
             <p className="text-muted-foreground text-[12px]">Stay updated with the latest tickets here.</p>
           </div>
 
           <div className="flex items-center justify-end w-full">
+            <div className="flex m-1 text-gray-700">
+              {/* Sort Button */}
+              <Button
+                variant="outline"
+                onClick={toggleSortOrder}
+                size="icon"
+                className=""
+                title={sortOrder === "asc" ? "Sort by ascending order" : "Sort by descending order"}
+              >
+                {sortOrder === "asc" ? <SquareChevronUp /> : <SquareChevronDown />}
+                <h1></h1>
+              </Button>
+              <FilterOptions onFilterChange={handleFilterChange} setSearchParams={setSearchParams} refetch={refetch} />
+            </div>
             <Input
               placeholder="Search ...."
               defaultValue={debouncedSearchQuery}
