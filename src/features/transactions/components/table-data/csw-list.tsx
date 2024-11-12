@@ -30,7 +30,7 @@ export const CswComponent = ({ transactionId, data }: Props) => {
 
   return (
     <div className="flex flex-col gap-2">
-      {(role === "CH" || role == "QA") && (
+      {(role === "CH" || role == "QA" || role == "MANAGER" || role == "TL") && (
         <div className="">
           <CompleStaffWorkDialog transactionId={transactionId} />
         </div>
