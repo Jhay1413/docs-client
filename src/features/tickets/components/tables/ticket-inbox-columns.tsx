@@ -4,7 +4,7 @@ import { ticketingTableSchema } from "shared-contract"; // Adjust the import bas
 import { toPascalCase } from "../ticket.utils"; // Adjust the import based on your project structure
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
-import { CircleArrowRight, Dot, Eye, MoreHorizontal, Pencil, View } from "lucide-react";
+import { CircleArrowRight, Dot, Eye, Minus, MoreHorizontal, Pencil, View } from "lucide-react";
 import { InboxUpdateForm } from "../forms/inbox-update-form";
 import { useNavigate } from "react-router-dom";
 
