@@ -11,7 +11,6 @@ import { getCurrentUserId } from "@/hooks/use-user-hook";
 import { FilterOptions } from "../filter-options";
 
 export const TicketInboxComponent = () => {
-  const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams({
     currentPage: "1",
     search: "",
@@ -114,7 +113,7 @@ export const TicketInboxComponent = () => {
                     prev.set("currentPage", "1");
                     return prev;
                   },
-                  { replace: true }
+                  { replace: true },
                 )
               }
               className="w-[289px] rounded-none rounded-l-md"

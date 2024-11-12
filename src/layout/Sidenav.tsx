@@ -199,7 +199,6 @@ export const SideNav = () => {
             </NavLink>
           </li>
         </ul>
-
       </div>
     </div>
   );

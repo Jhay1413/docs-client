@@ -4,11 +4,10 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Plus, Search } from "lucide-react";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
-import { ticketsColumn } from "./ticket-column"; 
+import { ticketsColumn } from "./ticket-column";
 import { tsr } from "@/services/tsr";
 import { keepPreviousData } from "@tanstack/react-query";
 import { ticketsResolvedColumn } from "./ticket-resolved-column";
-
 
 export const TicketResolved = () => {
   const [searchParams, setSearchParams] = useSearchParams({
@@ -62,43 +61,34 @@ export const TicketResolved = () => {
       <div className="flex flex-col w-full items-center justify-center p-4 bg-white rounded-lg">
         <div className="flex justify-between items-center w-full pb-4">
           <div className="flex justify-start w-full flex-col">
-            <h1 className="text-[#404041] font-medium text-[28px]">
-              List of Tickets
-            </h1>
-            <p className="text-muted-foreground text-[12px]">
-              View and manage all support tickets.
-            </p>
-          </div>
-        
-          <div className="flex items-center justify-end w-full">
-              <Input
-                placeholder="Search ...."
-                defaultValue={debouncedSearchQuery}
-                onChange={(e) =>
-                  setSearchParams(
-                    (prev) => {
-                      prev.set("search", e.target.value);
-                      prev.set("currentPage", "1");
-                      return prev;
-                    },
-                    { replace: true }
-                  )
-                }
-                className="w-[289px] rounded-none rounded-l-md"
-              />
-              <button className="p-2 bg-primaryColor text-white rounded-r-md">
-                <Search />
-              </button>
+            <h1 className="text-[#404041] font-medium text-[28px]">List of Tickets</h1>
+            <p className="text-muted-foreground text-[12px]">View and manage all support tickets.</p>
           </div>
 
+          <div className="flex items-center justify-end w-full">
+            <Input
+              placeholder="Search ...."
+              defaultValue={debouncedSearchQuery}
+              onChange={(e) =>
+                setSearchParams(
+                  (prev) => {
+                    prev.set("search", e.target.value);
+                    prev.set("currentPage", "1");
+                    return prev;
+                  },
+                  { replace: true },
+                )
+              }
+              className="w-[289px] rounded-none rounded-l-md"
+            />
+            <button className="p-2 bg-primaryColor text-white rounded-r-md">
+              <Search />
+            </button>
+          </div>
         </div>
 
-        <DataTable
-          columns={ticketsResolvedColumn}
-          data={data ? data.body.data : []}
-          callbackFn={handleOnClickRow}
-        />
-        
+        <DataTable columns={ticketsResolvedColumn} data={data ? data.body.data : []} callbackFn={handleOnClickRow} />
+
         <div className="w-full flex justify-between items-center">
           <div className="text-muted-foreground">
             <h1>Number of Tickets: {}</h1>
@@ -120,7 +110,6 @@ export const TicketResolved = () => {
         </div>
 
         {/* Add the button here */}
-
       </div>
     </div>
   );
