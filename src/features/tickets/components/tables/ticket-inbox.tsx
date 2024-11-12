@@ -32,6 +32,7 @@ export const TicketInboxComponent = () => {
   const priority = searchParams.get("priority") || "";
   const status = searchParams.get("status") || "";
   const assigneeId = searchParams.get("assigneeId") || "";
+  const senderId = searchParams.get("senderId") || "";
 
   const intPage = parseInt(page, 10);
   const [debouncedSearchQuery] = useDebounce(searchQuery, 500);
@@ -53,6 +54,7 @@ export const TicketInboxComponent = () => {
         transactionId: transactionId,
         priority: priority,
         status: status,
+        senderId: senderId,
       },
     },
 
