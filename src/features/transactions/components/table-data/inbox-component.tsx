@@ -93,7 +93,7 @@ export const InboxComponent = () => {
         </div>
 
         <DataTable columns={inboxColumn} data={data ? data.body.data : []} callbackFn={handleOnClickRow} />
-        
+
         <div className="w-full flex justify-between items-center">
           <div className="text-muted-foreground">
             <h1>Number of Transactions: {data?.body.numOfTransactions}</h1>
@@ -118,7 +118,6 @@ export const InboxComponent = () => {
             </Button>
           </div>
         </div>
-        
       </div>
     </div>
   );
