@@ -1,47 +1,39 @@
-import { DataTable } from "@/components/data-table";
-import { useDebounce } from "use-debounce";
 import { Input } from "@/components/ui/input";
+import { Search } from "lucide-react";
+import { pendingTicketsColumn } from "./ticket-pending-column";
 import { Button } from "@/components/ui/button";
-import { Plus, Search } from "lucide-react";
-import { Link, useNavigate, useSearchParams } from "react-router-dom";
-import { ticketsColumn } from "./ticket-column";
+import { getCurrentUserId } from "@/hooks/use-user-hook";
+import { useNavigate, useSearchParams } from "react-router-dom";
+import { useDebounce } from "use-debounce";
 import { tsr } from "@/services/tsr";
 import { keepPreviousData } from "@tanstack/react-query";
+import { DataTable } from "@/components/data-table";
+import { z } from "zod";
+import { ticketingTableSchema, transactionTable } from "shared-contract";
 
-// Add the button component here
-const AddTicketBtn = () => (
-  <div>
-    <Link to="/dashboard/tickets/add-form" className="bg-[#414140] px-4 py-2 text-lg flex items-center justify-center space-x rounded-lg text-white">
-      <Plus size={24} />
-      <h1>Add Ticket</h1>
-    </Link>
-  </div>
-);
-
-export const TicketList = () => {
+export const PendingTickets = () => {
+  const id = getCurrentUserId();
   const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams({
     currentPage: "1",
     search: "",
-    sortOrder: "asc", // Default sort order
   });
 
   const searchQuery = searchParams.get("search") || "";
   const page = searchParams.get("currentPage") || "1";
-  const sortOrder = searchParams.get("sortOrder") || "asc"; // Get sort order from searchParams
 
   const intPage = parseInt(page, 10);
-
   const [debouncedSearchQuery] = useDebounce(searchQuery, 500);
 
-  const { data, isError, error } = tsr.ticketing.getTickets.useQuery({
-    queryKey: ["tickets", page, debouncedSearchQuery],
+  const { data, isError, error } = tsr.ticketing.fetchPendingRequesteeTicketRoutes.useQuery({
+    queryKey: ["pending-tickets", page, debouncedSearchQuery],
     queryData: {
       query: {
         query: debouncedSearchQuery,
         page: page,
         pageSize: "10",
-        sortOrder: sortOrder,
+        userId: id,
+        sortOrder: "desc",
       },
     },
     placeholderData: keepPreviousData,
@@ -50,7 +42,7 @@ export const TicketList = () => {
   const handleNextPage = () => {
     setSearchParams((prev) => {
       const nextPage = (intPage + 1).toString();
-      prev.set("currentPage", nextPage);
+      prev.set("currentPage", nextPage); // Increment the page
       return prev;
     });
   };
@@ -59,30 +51,22 @@ export const TicketList = () => {
     if (intPage > 1) {
       setSearchParams((prev) => {
         const previousPage = (intPage - 1).toString();
-        prev.set("currentPage", previousPage);
+        prev.set("currentPage", previousPage); // Decrement the page
         return prev;
       });
     }
   };
 
-  const handleOnClickRow = (data: any) => {
-    // Navigate to ticket details page when a row is clicked
-    navigate(`/dashboard/tickets/details/${data.id}`);
-  };
-
   return (
     <div className="min-h-full flex flex-col w-full items-center p-4 bg-white rounded-lg ">
       <div className="flex flex-col w-full items-center justify-center p-4 bg-white rounded-lg">
-        <div className="flex justify-start w-full flex-col">
-          <h1 className="text-[#404041] font-medium text-[28px]">List of Tickets</h1>
-          <p className="text-muted-foreground text-[12px]">View and manage all support tickets.</p>
-        </div>
-
-        <div className="flex items-center py-4 justify-between w-full">
-          <div className="flex w-full relative">
-            <AddTicketBtn />
+        <div className="flex justify-between items-center w-full pb-4">
+          <div className="flex justify-start w-full flex-col ">
+            <h1 className="text-[#404041] font-medium text-[28px]">Pending Request</h1>
+            <p className="text-muted-foreground text-[12px]">Stay updated with the latest messages and notifications here.</p>
           </div>
-          <div className="flex items-center">
+
+          <div className="flex items-center justify-end w-full ">
             <Input
               placeholder="Search ...."
               defaultValue={debouncedSearchQuery}
@@ -96,25 +80,23 @@ export const TicketList = () => {
                   { replace: true },
                 )
               }
-              className="w-[289px] rounded-none rounded-l-md"
+              className="w-[289px] rounded-none  rounded-l-md"
             />
-            <button className="p-2 bg-primaryColor text-white rounded-r-md">
+            <button className="p-2 bg-primaryColor text-white rounded-r-md ">
               <Search />
             </button>
           </div>
         </div>
 
-        <DataTable columns={ticketsColumn} data={data ? data.body.data : []} callbackFn={handleOnClickRow} />
+        <DataTable columns={pendingTicketsColumn} data={data ? data.body.data : []} />
 
         <div className="w-full flex justify-between items-center">
-          <div className="text-muted-foreground">
-            <h1>Number of Tickets: {data?.body.numOfTickets}</h1>
-          </div>
+          <div className="text-muted-foreground">{/* <h1>Number of Transactions: {data?.body.numOfTransactions}</h1> */}</div>
           <div className="flex items-center space-x-2 py-4">
-            <Button variant="outline" size="sm" disabled={intPage === 1}>
+            <Button variant="outline" size="sm" disabled={parseInt(page) == 1}>
               {"<<"}
             </Button>
-            <Button variant="outline" size="sm" onClick={handlePreviousPage} disabled={intPage === 1}>
+            <Button variant="outline" size="sm" onClick={handlePreviousPage} disabled={intPage == 1}>
               Previous
             </Button>
             <Button
@@ -125,13 +107,11 @@ export const TicketList = () => {
             >
               Next
             </Button>
-            <Button variant="outline" size="sm">
+            <Button variant="outline" size="sm" disabled={data?.body.totalPages === 0 || data?.body.totalPages === parseInt(page)}>
               {">>"}
             </Button>
           </div>
         </div>
-
-        {/* Add the button here */}
       </div>
     </div>
   );

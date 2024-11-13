@@ -6,7 +6,7 @@
     "module": "ESNext",
     "skipLibCheck": true,
     "jsx": "react-jsx",
-
+    "types": ["cypress"],
     /* for shadcn */
     "baseUrl": ".",
     "paths": {
@@ -30,6 +30,6 @@
     "noUnusedParameters": false,
     "noFallthroughCasesInSwitch": true
   },
-  "include": ["src","new_src"],
+  "include": ["src","new_src", "cypress/e2e/*.cy.ts"],
   "references": [{ "path": "./tsconfig.node.json" }]
 }
