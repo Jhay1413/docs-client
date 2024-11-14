@@ -49,7 +49,7 @@ type props = {
   defaultValue?: z.infer<typeof transactionQueryData> | null;
   mutateFn: (data: z.infer<typeof transactionMutationSchema>) => void;
   isPending: boolean;
-  isForwarding: boolean;
+  isForwarding?: boolean;
 };
 const baseUrlV2 = import.meta.env.VITE_ENDPOINT;
 export const TransactionForm = ({ company, method, defaultValue, mutateFn, isPending, isForwarding }: props) => {

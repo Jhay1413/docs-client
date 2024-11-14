@@ -1,12 +1,6 @@
-import { userInfo } from "os";
 import { z } from "zod";
 
-const ACCEPTED_IMAGE_TYPES = [
-  "image/jpeg",
-  "image/jpg",
-  "image/png",
-  "image/webp",
-];
+const ACCEPTED_IMAGE_TYPES = ["image/jpeg", "image/jpg", "image/png", "image/webp"];
 
 export const RegisterSchema = z.object({
   email: z.string().email({
@@ -29,7 +23,7 @@ export const RegisterSchema = z.object({
   assignedSection: z.nullable(
     z.string().min(1, {
       message: "Section is required",
-    })
+    }),
   ),
   assignedPosition: z.string().min(1, {
     message: "Position is required",
@@ -52,7 +46,7 @@ export const RegisterSchema = z.object({
   password: z.optional(
     z.string().min(1, {
       message: "Password is required",
-    })
+    }),
   ),
   accountRole: z.string({
     message: "Invalid Input",
@@ -63,10 +57,7 @@ export const RegisterSchema = z.object({
       .refine((file) => !file || (!!file && file.size <= 10 * 1024 * 1024), {
         message: "The profile picture must be a maximum of 10MB.",
       })
-      .refine(
-        (files) => ACCEPTED_IMAGE_TYPES.includes(files?.type),
-        "Only .jpg, .jpeg, .png and .webp formats are supported."
-      )
+      .refine((files) => ACCEPTED_IMAGE_TYPES.includes(files?.type), "Only .jpg, .jpeg, .png and .webp formats are supported."),
   ),
   contactNumber: z.string().min(1, {
     message: "Contact number is required",
@@ -104,9 +95,8 @@ export const UsersInfo = z.object({
   jobStatus: z.string(),
   birthDate: z.string().datetime(),
   signedUrl: z.string().optional(),
-  email:z.string(),
-  contactNumber:z.string()
-
+  email: z.string(),
+  contactNumber: z.string(),
 });
 
 export const AccountSchema = z.object({
@@ -114,11 +104,11 @@ export const AccountSchema = z.object({
   email: z.string(),
   accountRole: z.string(),
   password: z.string(),
-  userInfo:z.nullable(UsersInfo).optional()
-})
+  userInfo: z.nullable(UsersInfo).optional(),
+});
 export const UserInfoWithAccount = UsersInfo.extend({
   email: z.string(),
- account :AccountSchema
+  account: AccountSchema,
 });
 
 export const UsersArray = z.array(UsersInfo);
