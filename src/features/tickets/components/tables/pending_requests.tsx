@@ -1,16 +1,18 @@
-import { DataTable } from "@/components/data-table";
-import { useNavigate, useParams, useSearchParams } from "react-router-dom";
-import { inboxColumn } from "../table-columns/inbox-column";
-import { z } from "zod";
-import { tsr } from "@/services/tsr";
-import { transactionTable } from "shared-contract";
 import { Input } from "@/components/ui/input";
 import { Search } from "lucide-react";
-import { useDebounce } from "use-debounce";
+import { pendingTicketsColumn } from "./ticket-pending-column";
 import { Button } from "@/components/ui/button";
+import { getCurrentUserId } from "@/hooks/use-user-hook";
+import { useNavigate, useSearchParams } from "react-router-dom";
+import { useDebounce } from "use-debounce";
+import { tsr } from "@/services/tsr";
 import { keepPreviousData } from "@tanstack/react-query";
+import { DataTable } from "@/components/data-table";
+import { z } from "zod";
+import { ticketingTableSchema, transactionTable } from "shared-contract";
 
-export const InboxComponent = () => {
+export const PendingTickets = () => {
+  const id = getCurrentUserId();
   const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams({
     currentPage: "1",
@@ -21,23 +23,22 @@ export const InboxComponent = () => {
   const page = searchParams.get("currentPage") || "1";
 
   const intPage = parseInt(page, 10);
-  const [debouncedSearchQuery] = useDebounce(searchQuery, 500); // Adjust the delay as needed
+  const [debouncedSearchQuery] = useDebounce(searchQuery, 500);
 
-  const { id } = useParams();
-  console.log(id);
-  const { data } = tsr.transaction.fetchTransactionsV2.useQuery({
-    queryKey: ["inbox-transactions", page, debouncedSearchQuery],
+  const { data, isError, error } = tsr.ticketing.fetchPendingRequesteeTicketRoutes.useQuery({
+    queryKey: ["pending-tickets", page, debouncedSearchQuery],
     queryData: {
       query: {
         query: debouncedSearchQuery,
-        status: "INBOX",
         page: page,
         pageSize: "10",
         userId: id,
+        sortOrder: "desc",
       },
     },
     placeholderData: keepPreviousData,
   });
+
   const handleNextPage = () => {
     setSearchParams((prev) => {
       const nextPage = (intPage + 1).toString();
@@ -55,15 +56,13 @@ export const InboxComponent = () => {
       });
     }
   };
-  const handleOnClickRow = (data: z.infer<typeof transactionTable>) => {
-    navigate(`/dashboard/transactions/history/${data.id}`);
-  };
+
   return (
     <div className="min-h-full flex flex-col w-full items-center p-4 bg-white rounded-lg ">
       <div className="flex flex-col w-full items-center justify-center p-4 bg-white rounded-lg">
         <div className="flex justify-between items-center w-full pb-4">
           <div className="flex justify-start w-full flex-col ">
-            <h1 className="text-[#404041] font-medium text-[28px]">Inbox</h1>
+            <h1 className="text-[#404041] font-medium text-[28px]">Pending Request</h1>
             <p className="text-muted-foreground text-[12px]">Stay updated with the latest messages and notifications here.</p>
           </div>
 
@@ -89,12 +88,10 @@ export const InboxComponent = () => {
           </div>
         </div>
 
-        <DataTable columns={inboxColumn} data={data ? data.body.data : []} callbackFn={handleOnClickRow} />
+        <DataTable columns={pendingTicketsColumn} data={data ? data.body.data : []} />
 
         <div className="w-full flex justify-between items-center">
-          <div className="text-muted-foreground">
-            <h1>Number of Transactions: {data?.body.numOfTransactions}</h1>
-          </div>
+          <div className="text-muted-foreground">{/* <h1>Number of Transactions: {data?.body.numOfTransactions}</h1> */}</div>
           <div className="flex items-center space-x-2 py-4">
             <Button variant="outline" size="sm" disabled={parseInt(page) == 1}>
               {"<<"}
