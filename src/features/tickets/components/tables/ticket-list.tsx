@@ -2,11 +2,13 @@ import { DataTable } from "@/components/data-table";
 import { useDebounce } from "use-debounce";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Plus, Search } from "lucide-react";
+import { Plus, Search, SquareChevronDown, SquareChevronUp } from "lucide-react";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { ticketsColumn } from "./ticket-column";
 import { tsr } from "@/services/tsr";
 import { keepPreviousData } from "@tanstack/react-query";
+import { FilterOptions } from "../filter-options";
+import { getCurrentUserId } from "@/hooks/use-user-hook";
 
 // Add the button component here
 const AddTicketBtn = () => (
@@ -23,29 +25,54 @@ export const TicketList = () => {
   const [searchParams, setSearchParams] = useSearchParams({
     currentPage: "1",
     search: "",
-    sortOrder: "asc", // Default sort order
+    sortOrder: "asc",
+    projectId: "",
+    transactionId: "",
+    priority: "",
+    status: "",
+    assigneeId: "",
   });
 
   const searchQuery = searchParams.get("search") || "";
   const page = searchParams.get("currentPage") || "1";
-  const sortOrder = searchParams.get("sortOrder") || "asc"; // Get sort order from searchParams
+  const sortOrder = searchParams.get("sortOrder") || "asc";
+  const projectId = searchParams.get("projectId") || "";
+  const transactionId = searchParams.get("transactionId") || "";
+  const priority = searchParams.get("priority") || "";
+  const status = searchParams.get("status") || "";
+  const assigneeId = searchParams.get("assigneeId") || "";
+  const senderId = searchParams.get("senderId") || "";
 
   const intPage = parseInt(page, 10);
-
   const [debouncedSearchQuery] = useDebounce(searchQuery, 500);
 
-  const { data, isError, error } = tsr.ticketing.getTickets.useQuery({
-    queryKey: ["tickets", page, debouncedSearchQuery],
+  const { data, isError, error, refetch } = tsr.ticketing.getTickets.useQuery({
+    queryKey: ["tickets-inbox", page, debouncedSearchQuery, sortOrder],
     queryData: {
       query: {
         query: debouncedSearchQuery,
         page: page,
         pageSize: "10",
         sortOrder: sortOrder,
+        projectId: projectId,
+        transactionId: transactionId,
+        priority: priority,
+        status: status,
+        senderId: senderId,
       },
     },
     placeholderData: keepPreviousData,
   });
+
+    // Toggle sort order between 'asc' and 'desc'
+  const toggleSortOrder = () => {
+    setSearchParams((prev) => {
+      const newSortOrder = sortOrder === "asc" ? "desc" : "asc";
+      prev.set("sortOrder", newSortOrder);
+      prev.set("currentPage", "1"); // Reset to first page on sort change
+      return prev;
+    });
+  };
 
   const handleNextPage = () => {
     setSearchParams((prev) => {
@@ -70,6 +97,7 @@ export const TicketList = () => {
     navigate(`/dashboard/tickets/details/${data.id}`);
   };
 
+
   return (
     <div className="min-h-full flex flex-col w-full items-center p-4 bg-white rounded-lg ">
       <div className="flex flex-col w-full items-center justify-center p-4 bg-white rounded-lg">
@@ -83,6 +111,18 @@ export const TicketList = () => {
             <AddTicketBtn />
           </div>
           <div className="flex items-center">
+                          {/* Sort Button */}
+                          <Button
+                variant="outline"
+                onClick={toggleSortOrder}
+                size="icon"
+                className=""
+                title={sortOrder === "asc" ? "Sort by ascending order" : "Sort by descending order"}
+              >
+                {sortOrder === "asc" ? <SquareChevronUp /> : <SquareChevronDown />}
+                <h1></h1>
+              </Button>
+            <FilterOptions  setSearchParams={setSearchParams} refetch={refetch} />
             <Input
               placeholder="Search ...."
               defaultValue={debouncedSearchQuery}

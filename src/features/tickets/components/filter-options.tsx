@@ -14,10 +14,10 @@ import { SetURLSearchParams } from "react-router-dom";
 interface FilterOptionsProps {
   setSearchParams: SetURLSearchParams;
   refetch: () => void;
-  onFilterChange: (filters: { project?: string; transaction?: string; priority?: string; status?: string; user?: string }) => void;
+ 
 }
 
-export function FilterOptions({ onFilterChange, setSearchParams, refetch }: FilterOptionsProps) {
+export function FilterOptions({ setSearchParams, refetch }: FilterOptionsProps) {
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [searchTransaction, setSearchTransaction] = useState<string>("");
   const [debouncedSearchQuery] = useDebounce(searchQuery, 500);
@@ -33,10 +33,10 @@ export function FilterOptions({ onFilterChange, setSearchParams, refetch }: Filt
   const role = useCurrentUserRole();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [selectectedType, setSelectedType] = useState("");
-  const [selectedUser, setSelectedUser] = useState("");
+  const [selectedSender, setSelectedSender] = useState("");
 
   const priorityOptions = ["Urgent", "Important", "Low"];
-  const statusOptions = ["ROUTING", "ON_PROCESS", "ON_GOING", "Completed", "APPROVED", "For Sign and Seal"];
+  const statusOptions = ["ROUTING", "ON_PROCESS", "ON_GOING", "COMPLETED", "APPROVED", "FOR SIGN AND SEAL"];
 
   // Fetching projects using React Query
   const { data: projects } = tsr.company.fetchCompanyProjectsBySearch.useQuery({
@@ -48,6 +48,7 @@ export function FilterOptions({ onFilterChange, setSearchParams, refetch }: Filt
     },
     placeholderData: keepPreviousData,
   });
+  
 
   // Fetching transactions using React Query
   const { data: transactions } = tsr.transaction.searchTransactionById.useQuery({
@@ -72,7 +73,8 @@ export function FilterOptions({ onFilterChange, setSearchParams, refetch }: Filt
       },
     },
   });
-
+  const selectedProjectObject = projects?.body.find(data=>data.id === selectedProject)
+  const selectedSenderObject = users?.body.find(data=>data.id === selectedSender)
   // Handlers
 
   return (
@@ -93,7 +95,7 @@ export function FilterOptions({ onFilterChange, setSearchParams, refetch }: Filt
           <Popover>
             <PopoverTrigger asChild>
               <Button variant="outline" role="combobox" className={cn("justify-between w-full", !selectedProject && "text-muted-foreground")}>
-                {selectedProject || "Search Project..."}
+                {selectedProjectObject?.projectName || "Search Project..."}
                 <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
               </Button>
             </PopoverTrigger>
@@ -104,7 +106,18 @@ export function FilterOptions({ onFilterChange, setSearchParams, refetch }: Filt
                   <CommandEmpty>No project found.</CommandEmpty>
                   <CommandGroup>
                     {projects?.body?.map((data) => (
-                      <CommandItem value={data.id} key={data.id} onSelect={() => console.log("asdsadsa")}>
+                      <CommandItem value={data.id} key={data.id} onSelect={() => {
+                        
+                        setSelectedProject(data.id)
+                        setSearchParams(
+                          (prev) => {
+                            prev.set("projectId", data.id);
+                            prev.set("currentPage", "1");
+                            return prev;
+                          },
+                          { replace: true },
+                        )
+                        }}>
                         <Check className={cn("mr-2 h-4 w-4", data.projectName === selectedProject ? "opacity-100" : "opacity-0")} />
                         {data.projectName}
                       </CommandItem>
@@ -135,7 +148,8 @@ export function FilterOptions({ onFilterChange, setSearchParams, refetch }: Filt
                       <CommandItem
                         value={data.transactionId}
                         key={data.id}
-                        onSelect={() =>
+                        onSelect={() =>{
+                          setSelectedTransaction(data.transactionId)
                           setSearchParams(
                             (prev) => {
                               prev.set("transactionId", data.transactionId);
@@ -145,6 +159,7 @@ export function FilterOptions({ onFilterChange, setSearchParams, refetch }: Filt
                             { replace: true },
                           )
                         }
+                      }
                       >
                         <Check className={cn("mr-2 h-4 w-4", data.transactionId === selectedTransaction ? "opacity-100" : "opacity-0")} />
                         {`${data.transactionId} - ${data.documentSubType}`}
@@ -172,7 +187,8 @@ export function FilterOptions({ onFilterChange, setSearchParams, refetch }: Filt
                   {priorityOptions.map((priority) => (
                     <CommandItem
                       key={priority}
-                      onSelect={() =>
+                      onSelect={() =>{
+                        setSelectedPriority(priority)
                         setSearchParams(
                           (prev) => {
                             prev.set("priority", priority);
@@ -182,6 +198,7 @@ export function FilterOptions({ onFilterChange, setSearchParams, refetch }: Filt
                           { replace: true },
                         )
                       }
+                    }
                     >
                       <Check className={cn("mr-2 h-4 w-4", priority === selectedPriority ? "opacity-100" : "opacity-0")} />
                       {priority}
@@ -208,7 +225,8 @@ export function FilterOptions({ onFilterChange, setSearchParams, refetch }: Filt
                   {statusOptions.map((status) => (
                     <CommandItem
                       key={status}
-                      onSelect={() =>
+                      onSelect={() =>{
+                        setSelectedStatus(status)
                         setSearchParams(
                           (prev) => {
                             prev.set("status", status);
@@ -218,6 +236,7 @@ export function FilterOptions({ onFilterChange, setSearchParams, refetch }: Filt
                           { replace: true },
                         )
                       }
+                    }
                     >
                       <Check className={cn("mr-2 h-4 w-4", status === selectedStatus ? "opacity-100" : "opacity-0")} />
                       {status}
@@ -233,9 +252,9 @@ export function FilterOptions({ onFilterChange, setSearchParams, refetch }: Filt
           <DropdownMenuLabel>Sender</DropdownMenuLabel>
           <Popover>
             <PopoverTrigger asChild>
-              <Button variant="outline" className={cn("w-full justify-between", !selectedUser && "text-muted-foreground")}>
-                {selectedUser
-                  ? `${users?.body?.find((user) => user.id === selectedUser)?.userInfo.firstName} ${users?.body?.find((user) => user.id === selectedUser)?.userInfo.lastName}`
+              <Button variant="outline" className={cn("w-full justify-between", !selectedSenderObject && "text-muted-foreground")}>
+                {selectedSenderObject
+                  ? `${users?.body?.find((user) => user.id === selectedSenderObject?.id)?.userInfo.firstName} ${users?.body?.find((user) => user.id === selectedSenderObject?.id)?.userInfo.lastName}`
                   : "Select Sender..."}
                 <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
               </Button>
@@ -247,7 +266,8 @@ export function FilterOptions({ onFilterChange, setSearchParams, refetch }: Filt
                     <CommandItem
                       key={user.id}
                       value={user.id}
-                      onSelect={() =>
+                      onSelect={() =>{
+                        setSelectedSender(user.id)
                         setSearchParams(
                           (prev) => {
                             prev.set("senderId", user.id);
@@ -257,8 +277,9 @@ export function FilterOptions({ onFilterChange, setSearchParams, refetch }: Filt
                           { replace: true },
                         )
                       }
+                    }
                     >
-                      <Check className={cn("mr-2 h-4 w-4", user.id === selectedUser ? "opacity-100" : "opacity-0")} />
+                      <Check className={cn("mr-2 h-4 w-4", user.id === selectedSender ? "opacity-100" : "opacity-0")} />
                       {user.userInfo.firstName} {user.userInfo.lastName}
                     </CommandItem>
                   )) || <CommandEmpty>No users found.</CommandEmpty>}

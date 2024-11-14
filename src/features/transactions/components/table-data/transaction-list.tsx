@@ -84,6 +84,7 @@ export const TransactionList = () => {
         <AddTransactionBtnWithRole roles={["SUPERADMIN", "RECORDS"]} />
         <div className="flex items-center py-4 justify-end w-full ">
           <Input
+            data-cy="trans-search"
             placeholder="Search ...."
             defaultValue={debouncedSearchQuery}
             onChange={(e) =>
@@ -102,7 +103,7 @@ export const TransactionList = () => {
             <Search />
           </button>
         </div>
-        <DataTable columns={transColumns} data={data ? data.body.data : []} callbackFn={handleOnClickRow} />
+        <DataTable data-cy="trans-table" columns={transColumns} data={data ? data.body.data : []} callbackFn={handleOnClickRow} />
         <div className="w-full flex justify-between items-center">
           <div className="text-muted-foreground">
             <h1>Number of Transactions: {data?.body.numOfTransactions}</h1>

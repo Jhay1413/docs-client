@@ -20,8 +20,6 @@ export const TicketInboxComponent = () => {
     priority: "",
     status: "",
     assigneeId: "",
-
-    // Default sort order
   });
 
   const searchQuery = searchParams.get("search") || "";
@@ -32,6 +30,7 @@ export const TicketInboxComponent = () => {
   const priority = searchParams.get("priority") || "";
   const status = searchParams.get("status") || "";
   const assigneeId = searchParams.get("assigneeId") || "";
+  const senderId = searchParams.get("senderId") || "";
 
   const intPage = parseInt(page, 10);
   const [debouncedSearchQuery] = useDebounce(searchQuery, 500);
@@ -53,15 +52,12 @@ export const TicketInboxComponent = () => {
         transactionId: transactionId,
         priority: priority,
         status: status,
+        senderId: senderId,
       },
     },
-
     placeholderData: keepPreviousData,
   });
-
-  // Filter Options
-
-  // Toggle sort order between 'asc' and 'desc'
+  
   const toggleSortOrder = () => {
     setSearchParams((prev) => {
       const newSortOrder = sortOrder === "asc" ? "desc" : "asc";
@@ -89,18 +85,7 @@ export const TicketInboxComponent = () => {
     }
   };
 
-  const handleFilterChange = (newFilters: { [key: string]: string }) => {
-    setSearchParams((prev) => {
-      Object.keys(newFilters).forEach((key) => {
-        if (newFilters[key]) {
-          prev.set(key, newFilters[key]);
-        } else {
-          prev.delete(key);
-        }
-      });
-      return prev;
-    });
-  };
+  
 
   return (
     <div className="min-h-full flex flex-col w-full items-center p-4 bg-white rounded-lg">
@@ -124,7 +109,7 @@ export const TicketInboxComponent = () => {
                 {sortOrder === "asc" ? <SquareChevronUp /> : <SquareChevronDown />}
                 <h1></h1>
               </Button>
-              <FilterOptions onFilterChange={handleFilterChange} setSearchParams={setSearchParams} refetch={refetch} />
+              <FilterOptions setSearchParams={setSearchParams} refetch={refetch} />
             </div>
             <Input
               placeholder="Search ...."

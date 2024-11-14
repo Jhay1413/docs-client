@@ -84,7 +84,7 @@ const TicketForm = ({
       division: ticketData?.division || "",
       status: ticketData?.status || "ROUTING",
       requestDetails: ticketData?.requestDetails || "",
-      priority: ticketData?.priority || "",
+      priority: ticketData?.priority || undefined,
       dueDate: ticketData?.dueDate || "",
       dateForwarded: ticketData?.dateForwarded || new Date().toISOString(),
       dateReceived: null,

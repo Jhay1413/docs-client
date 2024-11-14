@@ -19,8 +19,6 @@ export const ForwardTicketComponent = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [selectectedType, setSelectedType] = useState("");
   const navigate = useNavigate();
-   const isForwarding = true;
-  // Fetch the existing ticket details
   const { data: ticketData, isLoading: isLoadingTicket } = tsr.ticketing.getTicketsById.useQuery({
     queryKey: ["ticket", id],
     queryData: { params: { id: id! } },
@@ -39,6 +37,8 @@ export const ForwardTicketComponent = () => {
       },
     },
   });
+
+  const isForwarding = ticketData?.body.dateReceived !== null;
 
   const { mutate, isPending } = tsr.ticketing.forwardTickets.useMutation({
     onMutate: () => {},
