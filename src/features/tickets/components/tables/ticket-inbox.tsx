@@ -38,7 +38,7 @@ export const TicketInboxComponent = () => {
   const id = getCurrentUserId();
 
   // Fetch tickets with sorting
-  const { data, isError, error, refetch } = tsr.ticketing.getTickets.useQuery({
+  const { data, isError, error, refetch ,isPending} = tsr.ticketing.getTickets.useQuery({
     queryKey: ["tickets-inbox", page, debouncedSearchQuery, sortOrder],
     queryData: {
       query: {
@@ -105,9 +105,8 @@ export const TicketInboxComponent = () => {
                 title={sortOrder === "asc" ? "Sort by ascending order" : "Sort by descending order"}
               >
                 {sortOrder === "asc" ? <SquareChevronUp /> : <SquareChevronDown />}
-                <h1></h1>
               </Button>
-              <FilterOptions setSearchParams={setSearchParams} refetch={refetch} />
+              <FilterOptions setSearchParams={setSearchParams} refetch={refetch} isSubmitting={isPending}/>
             </div>
             <Input
               placeholder="Search ...."
