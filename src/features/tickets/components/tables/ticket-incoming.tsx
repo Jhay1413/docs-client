@@ -29,16 +29,17 @@ export const IncomingTicketComponent = () => {
 
   const notification = useNotificationStore((state) => state.notification);
   const setNotification = useNotificationStore((state) => state.setNotification);
+  const sortOrder = searchParams.get("sortOrder") || "asc";
 
-  const { data, isError, error } = tsr.ticketing.getTickets.useQuery({
-    queryKey: ["ticket-incoming", page, debouncedSearchQuery],
+  const { data, isError, error, refetch } = tsr.ticketing.getTickets.useQuery({
+    queryKey: ["tickets-inbox", page, debouncedSearchQuery, sortOrder],
     queryData: {
       query: {
         query: debouncedSearchQuery,
-        status: "INCOMING",
+        state: "INCOMING",
         page: page,
         pageSize: "10",
-        userId: id,
+        sortOrder: sortOrder,
       },
     },
     placeholderData: keepPreviousData,
