@@ -3,7 +3,7 @@ import { z } from "zod";
 import { ticketingTableSchema } from "shared-contract"; // Adjust the import based on your project structure
 import { toPascalCase } from "../ticket.utils"; // Adjust the import based on your project structure
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
-import { MoreHorizontal } from "lucide-react";
+import { Dot, MoreHorizontal } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 type IncomingColumn = z.infer<typeof ticketingTableSchema>;
@@ -37,8 +37,22 @@ export function ticketsIncomingColumn(mutateAsync: MutateAsyncFunction): ColumnD
       accessorKey: "division",
     },
     {
-      header: () => <span className="font-bold text-nowrap">Status</span>,
+      header: () => (
+        <div className="w-full font-bold text-nowrap items-center flex justify-center">
+          <h1>Status</h1>
+        </div>
+      ),
       accessorKey: "status",
+      cell: ({ row }) => {
+        const ticketInfo = row.original;
+        const statusInPascalCase = toPascalCase(ticketInfo.status || "");
+        return (
+          <div className="flex  gap-1 items-center w-24">
+            {ticketInfo.status === "ON_GOING" && <Dot size={32} className="text-green-500" />}
+            <span>{statusInPascalCase}</span>
+          </div>
+        );
+      },
     },
     {
       header: () => <span className="font-bold text-nowrap">Priority</span>,
