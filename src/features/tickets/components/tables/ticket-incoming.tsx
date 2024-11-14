@@ -76,7 +76,7 @@ export const IncomingTicketComponent = () => {
       console.log(error);
     },
     onSettled: () => {
-      tsrQueryClient.invalidateQueries({ queryKey: ["incoming-tickets", page, debouncedSearchQuery] });
+      tsrQueryClient.invalidateQueries({ queryKey: ["tickets-incoming", page, debouncedSearchQuery] });
     },
   });
 
