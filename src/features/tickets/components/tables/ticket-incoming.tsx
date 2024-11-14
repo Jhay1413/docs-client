@@ -120,7 +120,7 @@ export const IncomingTicketComponent = () => {
           </p>
         </div>
         <div className="flex items-center justify-end w-full">
-          <div className="flex m-1 text-gray-700">
+          <div className="flex m-1 text-gray-700 gap-1">
             <Button
               variant="outline"
               onClick={toggleSortOrder}

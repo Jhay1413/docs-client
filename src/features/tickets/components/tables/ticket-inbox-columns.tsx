@@ -165,9 +165,9 @@ export const ticketsInboxColumn: ColumnDef<z.infer<typeof ticketingTableSchema>>
       };
   
       return (
-        <div className="flex items-center justify-center gap-2 text-gray-700 sticky top-0 bg-white z-10">
+        <div className="flex items-center justify-center gap-2 text-gray-700">
           <Button title="View ticket" variant="outline" size="icon" onClick={handleOnClickRow}>
-            <Eye />
+            <Eye/>
           </Button>
           <InboxUpdateForm id={ticket.id} />
           <Button variant="outline" size="icon" title="Forward ticket" onClick={routeToForwardTicket}>

@@ -110,18 +110,17 @@ export const TicketList = () => {
           <div className="flex w-full relative">
             <AddTicketBtn />
           </div>
-          <div className="flex items-center">
-                          {/* Sort Button */}
-                          <Button
-                variant="outline"
-                onClick={toggleSortOrder}
-                size="icon"
-                className=""
-                title={sortOrder === "asc" ? "Sort by ascending order" : "Sort by descending order"}
-              >
-                {sortOrder === "asc" ? <SquareChevronUp /> : <SquareChevronDown />}
-                <h1></h1>
-              </Button>
+          <div className="flex items-center gap-1">
+            {/* Sort Button */}
+            <Button
+              variant="outline"
+              onClick={toggleSortOrder}
+              size="icon"
+              className=""
+              title={sortOrder === "asc" ? "Sort by ascending order" : "Sort by descending order"}
+            >
+              {sortOrder === "asc" ? <SquareChevronUp /> : <SquareChevronDown />}
+            </Button>
             <FilterOptions  setSearchParams={setSearchParams} refetch={refetch} />
             <Input
               placeholder="Search ...."
