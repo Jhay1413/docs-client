@@ -1,12 +1,10 @@
-import { useNavigate, useParams, useSearchParams } from "react-router-dom";
+import { useSearchParams } from "react-router-dom";
 import { DataTable } from "@/components/data-table";
 import { useDebounce } from "use-debounce";
 import { tsr } from "@/services/tsr";
-import { useNotificationStore } from "@/global-states/notification-store";
 import { toast } from "react-toastify";
 import { ticketsIncomingColumn } from "./ticket-incoming-columns";
 import { keepPreviousData } from "@tanstack/react-query";
-import { ticketingTableSchema } from "shared-contract";
 import { getCurrentUserId } from "@/hooks/use-user-hook";
 import { Button } from "@/components/ui/button";
 import { Search, SquareChevronDown, SquareChevronUp } from "lucide-react";
@@ -16,7 +14,7 @@ import { FilterOptions } from "../filter-options";
 export const IncomingTicketComponent = () => {
   const tsrQueryClient = tsr.useQueryClient();
   const id = getCurrentUserId();
-  const navigate = useNavigate();
+
   const [searchParams, setSearchParams] = useSearchParams({
     currentPage: "1",
     search: "",
