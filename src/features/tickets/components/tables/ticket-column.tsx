@@ -8,7 +8,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { ColumnDef } from "@tanstack/react-table";
-import { ArrowUpDown, MoreHorizontal } from "lucide-react";
+import { ArrowUpDown, Dot, MoreHorizontal } from "lucide-react";
 import { Link } from "react-router-dom";
 import { ticketingTableSchema } from "shared-contract";
 import { z } from "zod";
@@ -33,8 +33,22 @@ export const ticketsColumn: ColumnDef<z.infer<typeof ticketingTableSchema>>[] = 
     accessorKey: "division",
   },
   {
-    header: () => <span className="font-bold text-nowrap">Status</span>,
+    header: () => (
+      <div className="w-full font-bold text-nowrap items-center flex justify-center">
+        <h1>Status</h1>
+      </div>
+    ),
     accessorKey: "status",
+    cell: ({ row }) => {
+      const ticketInfo = row.original;
+      const statusInPascalCase = toPascalCase(ticketInfo.status || "");
+      return (
+        <div className="flex gap-1 items-center w-24">
+          {ticketInfo.status === "ON_GOING" && <Dot size={32} className="text-green-500" />}
+          <span>{statusInPascalCase}</span>
+        </div>
+      );
+    },
   },
   {
     header: () => <span className="font-bold text-nowrap">Priority</span>,
