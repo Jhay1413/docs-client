@@ -39,7 +39,7 @@ export const IncomingTicketComponent = () => {
   const senderId = searchParams.get("senderId") || "";
 
   const { data, isError, error, refetch } = tsr.ticketing.getTickets.useQuery({
-    queryKey: ["tickets-inbox", page, debouncedSearchQuery, sortOrder],
+    queryKey: ["tickets-incoming", page, debouncedSearchQuery, sortOrder],
     queryData: {
       query: {
         query: debouncedSearchQuery,
