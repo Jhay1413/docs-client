@@ -14,10 +14,10 @@ import { SetURLSearchParams } from "react-router-dom";
 interface FilterOptionsProps {
   setSearchParams: SetURLSearchParams;
   refetch: () => void;
-  onFilterChange: (filters: { project?: string; transaction?: string; priority?: string; status?: string; user?: string }) => void;
+ 
 }
 
-export function FilterOptions({ onFilterChange, setSearchParams, refetch }: FilterOptionsProps) {
+export function FilterOptions({ setSearchParams, refetch }: FilterOptionsProps) {
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [searchTransaction, setSearchTransaction] = useState<string>("");
   const [debouncedSearchQuery] = useDebounce(searchQuery, 500);

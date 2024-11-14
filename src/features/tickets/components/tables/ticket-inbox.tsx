@@ -20,8 +20,6 @@ export const TicketInboxComponent = () => {
     priority: "",
     status: "",
     assigneeId: "",
-
-    // Default sort order
   });
 
   const searchQuery = searchParams.get("search") || "";
@@ -91,18 +89,7 @@ export const TicketInboxComponent = () => {
     }
   };
 
-  const handleFilterChange = (newFilters: { [key: string]: string }) => {
-    setSearchParams((prev) => {
-      Object.keys(newFilters).forEach((key) => {
-        if (newFilters[key]) {
-          prev.set(key, newFilters[key]);
-        } else {
-          prev.delete(key);
-        }
-      });
-      return prev;
-    });
-  };
+  
 
   return (
     <div className="min-h-full flex flex-col w-full items-center p-4 bg-white rounded-lg">
@@ -126,7 +113,7 @@ export const TicketInboxComponent = () => {
                 {sortOrder === "asc" ? <SquareChevronUp /> : <SquareChevronDown />}
                 <h1></h1>
               </Button>
-              <FilterOptions onFilterChange={handleFilterChange} setSearchParams={setSearchParams} refetch={refetch} />
+              <FilterOptions setSearchParams={setSearchParams} refetch={refetch} />
             </div>
             <Input
               placeholder="Search ...."
