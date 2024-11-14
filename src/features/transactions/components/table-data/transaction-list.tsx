@@ -75,55 +75,58 @@ export const TransactionList = () => {
   };
 
   return (
-    <div className="min-h-full flex flex-col w-full items-center p-4 bg-white rounded-lg">
-      <div className="flex justify-start w-full flex-col ">
-        <h1 className="text-[#404041] font-medium text-[28px]">List of Transactions</h1>
-        <p className="text-muted-foreground text-[12px]">Review the details below to track and manage recent activities.</p>
-      </div>
-      <AddTransactionBtnWithRole roles={["SUPERADMIN", "RECORDS"]} />
-      <div className="flex items-center py-4 justify-end w-full ">
-        <Input
-          placeholder="Search ...."
-          defaultValue={debouncedSearchQuery}
-          onChange={(e) =>
-            setSearchParams(
-              (prev) => {
-                prev.set("search", e.target.value);
-                prev.set("currentPage", "1");
-                return prev;
-              },
-              { replace: true },
-            )
-          }
-          className="w-[289px] rounded-none  rounded-l-md"
-        />
-        <button className="p-2 bg-primaryColor text-white rounded-r-md ">
-          <Search />
-        </button>
-      </div>
-      <DataTable columns={transColumns} data={data ? data.body.data : []} callbackFn={handleOnClickRow} />
-      <div className="w-full flex justify-between items-center">
-        <div className="text-muted-foreground">
-          <h1>Number of Transactions: {data?.body.numOfTransactions}</h1>
+    <div className="min-h-full flex flex-col w-full items-center p-4 bg-white rounded-lg ">
+      <div className="flex flex-col w-full items-center justify-center p-4 bg-white rounded-lg">
+        <div className="flex justify-start w-full flex-col ">
+          <h1 className="trans-header text-[#404041] font-medium text-[28px] ">List of Transactions</h1>
+          <p className="text-muted-foreground text-[12px]">Review the details below to track and manage recent activities.</p>
         </div>
-        <div className="flex items-center space-x-2 py-4">
-          <Button variant="outline" size="sm" disabled={parseInt(page) == 1}>
-            {"<<"}
-          </Button>
-          <Button variant="outline" size="sm" onClick={handlePreviousPage} disabled={intPage == 1}>
-            Previous
-          </Button>
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={handleNextPage}
-            disabled={data?.body.totalPages === 0 || data?.body.totalPages === parseInt(page)}
-          >
-            Next
-          </Button>
-          <Button variant="outline" size="sm" disabled={data?.body.totalPages === 0 || data?.body.totalPages === parseInt(page)}>
-            {">>"}
-          </Button>
+        <AddTransactionBtnWithRole roles={["SUPERADMIN", "RECORDS"]} />
+        <div className="flex items-center py-4 justify-end w-full ">
+          <Input
+            data-cy="trans-search"
+            placeholder="Search ...."
+            defaultValue={debouncedSearchQuery}
+            onChange={(e) =>
+              setSearchParams(
+                (prev) => {
+                  prev.set("search", e.target.value);
+                  prev.set("currentPage", "1");
+                  return prev;
+                },
+                { replace: true },
+              )
+            }
+            className="w-[289px] rounded-none  rounded-l-md"
+          />
+          <button className="p-2 bg-primaryColor text-white rounded-r-md ">
+            <Search />
+          </button>
+        </div>
+        <DataTable data-cy="trans-table" columns={transColumns} data={data ? data.body.data : []} callbackFn={handleOnClickRow} />
+        <div className="w-full flex justify-between items-center">
+          <div className="text-muted-foreground">
+            <h1>Number of Transactions: {data?.body.numOfTransactions}</h1>
+          </div>
+          <div className="flex items-center space-x-2 py-4">
+            <Button variant="outline" size="sm" disabled={parseInt(page) == 1}>
+              {"<<"}
+            </Button>
+            <Button variant="outline" size="sm" onClick={handlePreviousPage} disabled={intPage == 1}>
+              Previous
+            </Button>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={handleNextPage}
+              disabled={data?.body.totalPages === 0 || data?.body.totalPages === parseInt(page)}
+            >
+              Next
+            </Button>
+            <Button variant="outline" size="sm" disabled={data?.body.totalPages === 0 || data?.body.totalPages === parseInt(page)}>
+              {">>"}
+            </Button>
+          </div>
         </div>
       </div>
     </div>

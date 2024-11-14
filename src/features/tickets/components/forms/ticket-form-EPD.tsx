@@ -17,8 +17,8 @@ type Props = {
   isForwarding?: boolean;
 };
 
-const TicketFormEPD = ({isForwarding}: Props) => {
-  const { control, setValue,formState } = useFormContext();
+const TicketFormEPD = ({ isForwarding }: Props) => {
+  const { control, setValue, formState } = useFormContext();
   const [searchQuery, setSearchQuery] = useState("");
   const [debouncedSearchQuery] = useDebounce(searchQuery, 500);
   const [selectedProject, setSelectedProject] = useState("");
@@ -54,65 +54,52 @@ const TicketFormEPD = ({isForwarding}: Props) => {
     placeholderData: keepPreviousData,
   });
   console.log("transactions", transactions);
-  console.log(formState.defaultValues)
+  console.log(formState.defaultValues);
   return (
-    <div className="grid grid-cols-2 gap-6 bg-gray-50 rounded-md mb-4">
+    <div className="w-full h-full grid grid-cols-2 gap-4">
       {/* Project (Dropdown Select or Input) */}
       <FormField
         control={control}
         name="projectId"
         render={({ field }) => (
-          <FormItem className="flex col-span-1 flex-col w-full justify-center">
-            <FormLabel hidden={isForwarding}>Project</FormLabel>
-            {isForwarding ? (
-              <FormControl>
-                <Input
-                  
-                  type="text"
-                  className="w-full h-10 px-4 text-sm border border-gray-300 rounded-md hidden"
-                  {...field}
-                  placeholder="Project ID"
-                  
-                  disabled
-                  // Make it read-only during forwarding
-                />
-              </FormControl>
-            ) : (
-              <Popover>
-              <PopoverTrigger asChild>
-                <FormControl>
-                  <Button variant="outline" role="combobox" className={cn(" justify-between", !field.value && "text-muted-foreground")}>
-                    {selectedProject ? selectedProject : "Select Project..."}
-                    <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-                  </Button>
-                </FormControl>
-              </PopoverTrigger>
-              <PopoverContent className="w-full p-0">
-                <Command shouldFilter={false}>
-                  <CommandInput placeholder="Search Company..." onValueChange={(e) => setSearchQuery(e)} />
-                  <CommandList>
-                    <CommandEmpty>No project found.</CommandEmpty>
-                    <CommandGroup>
-                      {projects?.body?.map((data) => (
-                        <CommandItem
-                          value={data.id}
-                          key={data.id}
-                          onSelect={() => {
-                            setValue("projectId", data.id);
-                            setSelectedProject(data.projectName);
-                          }}
-                        >
-                          <Check className={cn("mr-2 h-4 w-4", data.id === field.value ? "opacity-100" : "opacity-0")} />
-                          {data.projectName}
-                        </CommandItem>
-                      ))}
-                    </CommandGroup>
-                  </CommandList>
-                </Command>
-              </PopoverContent>
-            </Popover>
-            )}
+          <FormItem className="flex flex-col mt-2">
+            <FormLabel className="w-full">Project</FormLabel>
 
+            <FormControl>
+              <Popover>
+                <PopoverTrigger asChild>
+                  <FormControl>
+                    <Button variant="outline" role="combobox" className={cn(" justify-between", !field.value && "text-muted-foreground")}>
+                      {selectedProject ? selectedProject : "Select Project..."}
+                      <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                    </Button>
+                  </FormControl>
+                </PopoverTrigger>
+                <PopoverContent className="w-full p-0">
+                  <Command shouldFilter={false}>
+                    <CommandInput placeholder="Search Company..." onValueChange={(e) => setSearchQuery(e)} />
+                    <CommandList>
+                      <CommandEmpty>No project found.</CommandEmpty>
+                      <CommandGroup>
+                        {projects?.body?.map((data) => (
+                          <CommandItem
+                            value={data.id}
+                            key={data.id}
+                            onSelect={() => {
+                              setValue("projectId", data.id);
+                              setSelectedProject(data.projectName);
+                            }}
+                          >
+                            <Check className={cn("mr-2 h-4 w-4", data.id === field.value ? "opacity-100" : "opacity-0")} />
+                            {data.projectName}
+                          </CommandItem>
+                        ))}
+                      </CommandGroup>
+                    </CommandList>
+                  </Command>
+                </PopoverContent>
+              </Popover>
+            </FormControl>
           </FormItem>
         )}
       />
@@ -122,55 +109,45 @@ const TicketFormEPD = ({isForwarding}: Props) => {
         control={control}
         name="transactionId"
         render={({ field }) => (
-          <FormItem className="flex col-span-1 flex-col w-full justify-center">
+          <FormItem className="flex flex-col mt-2">
             <FormLabel hidden={isForwarding}>Transaction ID</FormLabel>
-            {isForwarding ? (
+
             <FormControl>
-              <input
-                type="text"
-                className="w-full h-10 px-4 text-sm border border-gray-300 rounded-md"
-                {...field}
-                placeholder="Enter transaction ID"
-                readOnly={isForwarding}
-                disabled={isForwarding} // Disable the input if isForwarding is true
-                hidden={isForwarding}
-              />
+              <Popover>
+                <PopoverTrigger asChild>
+                  <FormControl>
+                    <Button variant="outline" role="combobox" className={cn(" justify-between", !field.value && "text-muted-foreground")}>
+                      {selectedTransaction ? selectedTransaction : "Select Transaction..."}
+                      <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                    </Button>
+                  </FormControl>
+                </PopoverTrigger>
+                <PopoverContent className="w-full p-0">
+                  <Command shouldFilter={false}>
+                    <CommandInput placeholder="Search Transaction..." onValueChange={(e) => setSearchTransaction(e)} />
+                    <CommandList>
+                      <CommandEmpty>No Trsansaction found.</CommandEmpty>
+                      <CommandGroup>
+                        {transactions?.body?.map((data) => (
+                          <CommandItem
+                            value={data.transactionId}
+                            key={data.id}
+                            onSelect={() => {
+                              setValue("transactionId", data.id);
+                              setSelectedTransaction(data.transactionId);
+                            }}
+                          >
+                            <Check className={cn("mr-2 h-4 w-4", data.id === field.value ? "opacity-100" : "opacity-0")} />
+                            {`${data.transactionId} - ${data.documentSubType}`}
+                          </CommandItem>
+                        ))}
+                      </CommandGroup>
+                    </CommandList>
+                  </Command>
+                </PopoverContent>
+              </Popover>
             </FormControl>
-            ) : (
-            <Popover>
-              <PopoverTrigger asChild>
-                <FormControl>
-                  <Button variant="outline" role="combobox" className={cn(" justify-between", !field.value && "text-muted-foreground")}>
-                    {selectedTransaction ? selectedTransaction : "Select Transaction..."}
-                    <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-                  </Button>
-                </FormControl>
-              </PopoverTrigger>
-              <PopoverContent className="w-full p-0">
-                <Command shouldFilter={false}>
-                  <CommandInput placeholder="Search Transaction..." onValueChange={(e) => setSearchTransaction(e)} />
-                  <CommandList>
-                    <CommandEmpty>No Trsansaction found.</CommandEmpty>
-                    <CommandGroup>
-                      {transactions?.body?.map((data) => (
-                        <CommandItem
-                          value={data.transactionId}
-                          key={data.id}
-                          onSelect={() => {
-                            setValue("transactionId", data.id);
-                            setSelectedTransaction(data.transactionId);
-                          }}
-                        >
-                          <Check className={cn("mr-2 h-4 w-4", data.id === field.value ? "opacity-100" : "opacity-0")} />
-                          {`${data.transactionId} - ${data.documentSubType}`}
-                        </CommandItem>
-                      ))}
-                    </CommandGroup>
-                  </CommandList>
-                </Command>
-              </PopoverContent>
-            </Popover>
-            )}
+
             <FormMessage />
           </FormItem>
         )}

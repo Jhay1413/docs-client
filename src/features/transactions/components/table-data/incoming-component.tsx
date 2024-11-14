@@ -52,12 +52,6 @@ export const IncomingComponent = () => {
       });
     },
     onSuccess: () => {
-      setNotification({
-        ...notification,
-        incoming: notification?.incoming === 0 ? 0 : notification?.incoming! - 1,
-        inbox: notification?.inbox! + 1,
-      });
-
       toast.success("Transaction Received !");
     },
     onError: (error) => {
@@ -70,14 +64,16 @@ export const IncomingComponent = () => {
   const incomingColumns = useColumns(mutate);
 
   return (
-    <div className="flex flex-col gap-y-4 ">
-      <div className="flex justify-start w-full flex-col ">
-        <h1 className="text-[#404041] font-medium text-[28px]">Incoming</h1>
-        <p className="text-muted-foreground text-[12px]">
-          All your new messages and notifications will appear here. Stay informed and don't miss any updates.
-        </p>
+    <div className="min-h-full flex flex-col w-full items-center p-4 bg-white rounded-lg ">
+      <div className="flex flex-col w-full items-center justify-center p-4 bg-white rounded-lg">
+        <div className="flex justify-start w-full flex-col pb-4">
+          <h1 className="text-[#404041] font-medium text-[28px]">Incoming Files</h1>
+          <p className="text-muted-foreground text-[12px]">
+            All your new messages and notifications will appear here. Stay informed and don't miss any updates.
+          </p>
+        </div>
+        <DataTable columns={incomingColumns} data={data ? data.body.data : []} />
       </div>
-      <DataTable columns={incomingColumns} data={data ? data.body.data : []} />
     </div>
   );
 };
