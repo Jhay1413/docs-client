@@ -1,4 +1,4 @@
-import { BookCheck, ClipboardList, Factory, FileCode, FileText, LayoutDashboard, LibraryBig, Mailbox, Ticket, UserSearch, Users } from "lucide-react";
+import { AlertCircleIcon, BookCheck, ClipboardList, Factory, FileCode, FileText, LayoutDashboard, LibraryBig, Mailbox, Ticket, TicketPercent, UserSearch, Users } from "lucide-react";
 import { Link, NavLink } from "react-router-dom";
 
 import { getCurrentUserId, useCurrentUserRole } from "@/hooks/use-user-hook";
@@ -175,7 +175,7 @@ export const SideNav = () => {
                 return `justify-start items-center flex w-full p-2 space-x-4 text-lg  rounded-md ${isActive ? "bg-green-100/30 text-white" : ""}`;
               }}
             >
-              <LibraryBig />
+              <TicketPercent />
               <div className="flex gap-2">
                 <h1 className="text-base">Pending Requests</h1>
               </div>

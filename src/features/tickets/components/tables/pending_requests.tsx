@@ -1,5 +1,5 @@
 import { Input } from "@/components/ui/input";
-import { Search } from "lucide-react";
+import { Search, SquareChevronDown, SquareChevronUp } from "lucide-react";
 import { pendingTicketsColumn } from "./ticket-pending-column";
 import { Button } from "@/components/ui/button";
 import { getCurrentUserId } from "@/hooks/use-user-hook";
@@ -10,6 +10,7 @@ import { keepPreviousData } from "@tanstack/react-query";
 import { DataTable } from "@/components/data-table";
 import { z } from "zod";
 import { ticketingTableSchema, transactionTable } from "shared-contract";
+import { FilterOptions } from "../filter-options";
 
 export const PendingTickets = () => {
   const id = getCurrentUserId();
@@ -18,6 +19,13 @@ export const PendingTickets = () => {
     currentPage: "1",
     search: "",
   });
+  const sortOrder = searchParams.get("sortOrder") || "asc";
+  const projectId = searchParams.get("projectId") || "";
+  const transactionId = searchParams.get("transactionId") || "";
+  const priority = searchParams.get("priority") || "";
+  const status = searchParams.get("status") || "";
+  const assigneeId = searchParams.get("assigneeId") || "";
+  const senderId = searchParams.get("senderId") || "";
 
   const searchQuery = searchParams.get("search") || "";
   const page = searchParams.get("currentPage") || "1";
@@ -25,20 +33,24 @@ export const PendingTickets = () => {
   const intPage = parseInt(page, 10);
   const [debouncedSearchQuery] = useDebounce(searchQuery, 500);
 
-  const { data, isError, error } = tsr.ticketing.fetchPendingRequesteeTicketRoutes.useQuery({
-    queryKey: ["pending-tickets", page, debouncedSearchQuery],
+  const { data, isError, error, refetch } = tsr.ticketing.fetchPendingRequesteeTicketRoutes.useQuery({
+    queryKey: ["tickets-inbox", page, debouncedSearchQuery, sortOrder],
     queryData: {
       query: {
         query: debouncedSearchQuery,
         page: page,
         pageSize: "10",
         userId: id,
-        sortOrder: "desc",
+        sortOrder: sortOrder,
+        projectId: projectId,
+        transactionId: transactionId,
+        priority: priority,
+        status: status,
+        senderId: senderId,
       },
     },
     placeholderData: keepPreviousData,
   });
-
   const handleNextPage = () => {
     setSearchParams((prev) => {
       const nextPage = (intPage + 1).toString();
@@ -56,6 +68,14 @@ export const PendingTickets = () => {
       });
     }
   };
+  const toggleSortOrder = () => {
+    setSearchParams((prev) => {
+      const newSortOrder = sortOrder === "asc" ? "desc" : "asc";
+      prev.set("sortOrder", newSortOrder);
+      prev.set("currentPage", "1"); // Reset to first page on sort change
+      return prev;
+    });
+  };
 
   return (
     <div className="min-h-full flex flex-col w-full items-center p-4 bg-white rounded-lg ">
@@ -67,6 +87,18 @@ export const PendingTickets = () => {
           </div>
 
           <div className="flex items-center justify-end w-full ">
+          <div className="flex m-1 text-gray-700">
+            <Button
+              variant="outline"
+              onClick={toggleSortOrder}
+              size="icon"
+              className=""
+              title={sortOrder === "asc" ? "Sort by ascending order" : "Sort by descending order"}
+            >
+              {sortOrder === "asc" ? <SquareChevronUp /> : <SquareChevronDown />}
+            </Button>
+            <FilterOptions setSearchParams={setSearchParams} refetch={refetch} />
+          </div>
             <Input
               placeholder="Search ...."
               defaultValue={debouncedSearchQuery}

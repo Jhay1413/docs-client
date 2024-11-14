@@ -31,9 +31,15 @@ export const IncomingTicketComponent = () => {
   const notification = useNotificationStore((state) => state.notification);
   const setNotification = useNotificationStore((state) => state.setNotification);
   const sortOrder = searchParams.get("sortOrder") || "asc";
+  const projectId = searchParams.get("projectId") || "";
+  const transactionId = searchParams.get("transactionId") || "";
+  const priority = searchParams.get("priority") || "";
+  const status = searchParams.get("status") || "";
+  const assigneeId = searchParams.get("assigneeId") || "";
+  const senderId = searchParams.get("senderId") || "";
 
   const { data, isError, error, refetch } = tsr.ticketing.getTickets.useQuery({
-    queryKey: ["tickets-incoming", page, debouncedSearchQuery, sortOrder],
+    queryKey: ["tickets-inbox", page, debouncedSearchQuery, sortOrder],
     queryData: {
       query: {
         query: debouncedSearchQuery,
@@ -42,6 +48,11 @@ export const IncomingTicketComponent = () => {
         pageSize: "10",
         userId: id,
         sortOrder: sortOrder,
+        projectId: projectId,
+        transactionId: transactionId,
+        priority: priority,
+        status: status,
+        senderId: senderId,
       },
     },
     placeholderData: keepPreviousData,
@@ -99,25 +110,28 @@ export const IncomingTicketComponent = () => {
   };
 
   return (
-    <div className="min-h-full flex flex-col w-full items-center p-4 bg-white rounded-lg ">
-      <div className="flex flex-col w-full items-center justify-center p-4 bg-white rounded-lg">
-        <div className="flex justify-start w-full flex-col pb-4">
+    <div className="min-h-full flex flex-col w-full items-center p-4 bg-white rounded-lg">
+    <div className="flex flex-col w-full items-center justify-center p-4 bg-white rounded-lg">
+      <div className="flex justify-between items-center w-full pb-4">
+        <div className="flex justify-start w-full flex-col">
           <h1 className="text-[#404041] font-medium text-[28px]">Incoming Tickets</h1>
           <p className="text-muted-foreground text-[12px]">
             All your new tickets will appear here. Stay informed and don't miss any updates.
           </p>
-          <div className="flex items-center justify-end">
-          <Button
-                variant="outline"
-                onClick={toggleSortOrder}
-                size="icon"
-                className=""
-                title={sortOrder === "asc" ? "Sort by ascending order" : "Sort by descending order"}
-              >
-                {sortOrder === "asc" ? <SquareChevronUp /> : <SquareChevronDown />}
-                <h1></h1>
-              </Button>
-              <FilterOptions setSearchParams={setSearchParams} refetch={refetch} />
+        </div>
+        <div className="flex items-center justify-end w-full">
+          <div className="flex m-1 text-gray-700">
+            <Button
+              variant="outline"
+              onClick={toggleSortOrder}
+              size="icon"
+              className=""
+              title={sortOrder === "asc" ? "Sort by ascending order" : "Sort by descending order"}
+            >
+              {sortOrder === "asc" ? <SquareChevronUp /> : <SquareChevronDown />}
+            </Button>
+            <FilterOptions setSearchParams={setSearchParams} refetch={refetch} />
+          </div>
           <Input
             placeholder="Search ...."
             defaultValue={debouncedSearchQuery}
@@ -133,11 +147,13 @@ export const IncomingTicketComponent = () => {
             }
             className="w-[289px] rounded-none rounded-l-md"
           />
-          <button className="p-2 bg-primaryColor text-white rounded-r-md">
-            <Search />
-          </button>
+              <button className="p-2 bg-primaryColor text-white rounded-r-md">
+                <Search />
+              </button>
+        
         </div>
         </div>
+        
       
         <DataTable columns={incomingColumns} data={data ? data.body.data : []}  />
         <div className="w-full flex justify-between items-center">

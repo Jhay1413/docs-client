@@ -45,7 +45,7 @@ export function ticketsIncomingColumn(mutateAsync: MutateAsyncFunction): ColumnD
       accessorKey: "priority",
     },
     {
-      header: "Request Details",
+      header: () => <span className="font-bold text-nowrap">Request Details</span>,
       accessorKey: "requestDetails",
       cell: ({ row }) => {
           const transactionInfo = row.original;
@@ -60,7 +60,7 @@ export function ticketsIncomingColumn(mutateAsync: MutateAsyncFunction): ColumnD
         },
     },
     {
-      header: "Due Date",
+      header: () => <span className="font-bold text-nowrap">Due Date</span>,
       accessorKey: "dueDate",
       cell: ({ row }) => {
         const ticketInfo = row.original;
@@ -68,7 +68,7 @@ export function ticketsIncomingColumn(mutateAsync: MutateAsyncFunction): ColumnD
       },
     },
     {
-      header: "Date Created",
+      header: () => <span className="font-bold text-nowrap">Date Created</span>,
       accessorKey: "createdAt",
       cell: ({ row }) => {
         const ticketInfo = row.original;
@@ -76,7 +76,7 @@ export function ticketsIncomingColumn(mutateAsync: MutateAsyncFunction): ColumnD
       },
     },
     {
-      header: "Date Forwarded",
+      header: () => <span className="font-bold text-nowrap">Date Forwarded</span>,
       accessorKey: "dateForwarded",
       cell: ({ row }) => {
         const ticketInfo = row.original;
@@ -84,7 +84,7 @@ export function ticketsIncomingColumn(mutateAsync: MutateAsyncFunction): ColumnD
       },
     },
     {
-      header: "Forwarded By",
+      header: () => <span className="font-bold text-nowrap">Forwarded By</span>,
       accessorKey: "sender",
       cell: ({ row }) => {
         const ticketInfo = row.original;
@@ -93,7 +93,7 @@ export function ticketsIncomingColumn(mutateAsync: MutateAsyncFunction): ColumnD
       },
     },
     {
-      header: "Date Received",
+      header: () => <span className="font-bold text-nowrap">Date Received</span>,
       accessorKey: "dateReceived",
       cell: ({ row }) => {
         const ticketInfo = row.original;
@@ -101,7 +101,7 @@ export function ticketsIncomingColumn(mutateAsync: MutateAsyncFunction): ColumnD
       },
     },
     {
-      header: "Remarks",
+      header: () => <span className="font-bold text-nowrap">Remarks</span>,
       accessorKey: "remarks",
       cell: ({ row }) => {
           const transactionInfo = row.original;
@@ -118,7 +118,7 @@ export function ticketsIncomingColumn(mutateAsync: MutateAsyncFunction): ColumnD
     },
   
     {
-      header: "Actions",
+      header: () => <span className="font-bold text-nowrap">Actions</span>,
       accessorKey: "actions",
       id: "actions",
       cell: ({ row }) => {
