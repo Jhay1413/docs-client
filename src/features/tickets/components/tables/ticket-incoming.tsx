@@ -9,8 +9,9 @@ import { keepPreviousData } from "@tanstack/react-query";
 import { ticketingTableSchema } from "shared-contract";
 import { getCurrentUserId } from "@/hooks/use-user-hook";
 import { Button } from "@/components/ui/button";
-import { Search } from "lucide-react";
+import { Search, SquareChevronDown, SquareChevronUp } from "lucide-react";
 import { Input } from "@/components/ui/input";
+import { FilterOptions } from "../filter-options";
 
 export const IncomingTicketComponent = () => {
   const tsrQueryClient = tsr.useQueryClient();
@@ -32,13 +33,14 @@ export const IncomingTicketComponent = () => {
   const sortOrder = searchParams.get("sortOrder") || "asc";
 
   const { data, isError, error, refetch } = tsr.ticketing.getTickets.useQuery({
-    queryKey: ["tickets-inbox", page, debouncedSearchQuery, sortOrder],
+    queryKey: ["tickets-incoming", page, debouncedSearchQuery, sortOrder],
     queryData: {
       query: {
         query: debouncedSearchQuery,
         state: "INCOMING",
         page: page,
         pageSize: "10",
+        userId: id,
         sortOrder: sortOrder,
       },
     },
@@ -54,7 +56,7 @@ export const IncomingTicketComponent = () => {
           ...old,
           body: {
             ...old.body,
-            data: old.body.data.filter((ticket) => ticket.id !== data.params.id), // Filter out the ticket being mutated
+            data: old.body.data.filter((ticket) => ticket.id !== data.params.id),
           },
         };
       });
@@ -72,7 +74,7 @@ export const IncomingTicketComponent = () => {
   const handleNextPage = () => {
     setSearchParams((prev) => {
       const nextPage = (intPage + 1).toString();
-      prev.set("currentPage", nextPage); // Increment the page
+      prev.set("currentPage", nextPage);
       return prev;
     });
   };
@@ -87,6 +89,15 @@ export const IncomingTicketComponent = () => {
     }
   };
 
+  const toggleSortOrder = () => {
+    setSearchParams((prev) => {
+      const newSortOrder = sortOrder === "asc" ? "desc" : "asc";
+      prev.set("sortOrder", newSortOrder);
+      prev.set("currentPage", "1"); // Reset to first page on sort change
+      return prev;
+    });
+  };
+
   return (
     <div className="min-h-full flex flex-col w-full items-center p-4 bg-white rounded-lg ">
       <div className="flex flex-col w-full items-center justify-center p-4 bg-white rounded-lg">
@@ -96,6 +107,17 @@ export const IncomingTicketComponent = () => {
             All your new tickets will appear here. Stay informed and don't miss any updates.
           </p>
           <div className="flex items-center justify-end">
+          <Button
+                variant="outline"
+                onClick={toggleSortOrder}
+                size="icon"
+                className=""
+                title={sortOrder === "asc" ? "Sort by ascending order" : "Sort by descending order"}
+              >
+                {sortOrder === "asc" ? <SquareChevronUp /> : <SquareChevronDown />}
+                <h1></h1>
+              </Button>
+              <FilterOptions setSearchParams={setSearchParams} refetch={refetch} />
           <Input
             placeholder="Search ...."
             defaultValue={debouncedSearchQuery}

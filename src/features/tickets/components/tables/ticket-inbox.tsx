@@ -55,13 +55,9 @@ export const TicketInboxComponent = () => {
         senderId: senderId,
       },
     },
-
     placeholderData: keepPreviousData,
   });
-
-  // Filter Options
-
-  // Toggle sort order between 'asc' and 'desc'
+  
   const toggleSortOrder = () => {
     setSearchParams((prev) => {
       const newSortOrder = sortOrder === "asc" ? "desc" : "asc";

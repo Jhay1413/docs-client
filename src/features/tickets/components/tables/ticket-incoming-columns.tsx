@@ -21,27 +21,27 @@ const maxLength = 50;
 export function ticketsIncomingColumn(mutateAsync: MutateAsyncFunction): ColumnDef<IncomingColumn>[]{
   return[
     {
-      header: "Ticket ID",
+      header: () => <span className="font-bold text-nowrap">Ticket ID</span>,
       accessorKey: "ticketId",
     },
     {
-      header: "Subject",
+      header: () => <span className="font-bold text-nowrap">Subject</span>,
       accessorKey: "subject",
     },
     {
-      header: "Section",
+      header: () => <span className="font-bold text-nowrap">Section</span>,
       accessorKey: "section",
     },
     {
-      header: "Division",
+      header: () => <span className="font-bold text-nowrap">Division</span>,
       accessorKey: "division",
     },
     {
-      header: "Status",
+      header: () => <span className="font-bold text-nowrap">Status</span>,
       accessorKey: "status",
     },
     {
-      header: "Priority",
+      header: () => <span className="font-bold text-nowrap">Priority</span>,
       accessorKey: "priority",
     },
     {
