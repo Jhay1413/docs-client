@@ -19,25 +19,20 @@ import AttachmentsModal from "./attachments-modal";
 const maxLength = 50;
 export const ticketsDetailsColumn: ColumnDef<z.infer<typeof ticketLogsSchema>>[] = [
   {
-    header: () => <span className="font-bold text-nowrap">Status</span>,
-    accessorKey: "status",
-    cell: ({ row }) => {
-      const ticketInfo = row.original;
-      const statusInPascalCase = toPascalCase(ticketInfo.status || "");
-      return <span>{statusInPascalCase}</span>;
-    },
-  },
-  {
-    header: () => <span className="font-bold text-nowrap">Priority</span>,
-    accessorKey: "priority",
-  },
-  {
     header: () => <span className="font-bold text-nowrap">Date Forwarded</span>,
     accessorKey: "dateForwarded",
     cell: ({ row }) => {
       const ticketInfo = row.original;
 
-      return <span>{ticketInfo.dateForwarded ? new Date(ticketInfo.dateForwarded).toDateString() : "No Date Available"}</span>;
+      return <span className="text-nowrap">{ticketInfo.dateForwarded ? new Date(ticketInfo.dateForwarded).toDateString() : "No Date Available"}</span>;
+    },
+  },
+  {
+    header: () => <span className="font-bold text-nowrap">Date Received</span>,
+    accessorKey: "dateReceived",
+    cell: ({ row }) => {
+      const ticketInfo = row.original;
+      return <span className="text-nowrap">{ticketInfo.dateReceived ? new Date(ticketInfo.dateReceived).toDateString() : "Not yet received"}</span>;
     },
   },
   {
@@ -51,14 +46,6 @@ export const ticketsDetailsColumn: ColumnDef<z.infer<typeof ticketLogsSchema>>[]
     },
   },
   {
-    header: () => <span className="font-bold text-nowrap">Date Received</span>,
-    accessorKey: "dateReceived",
-    cell: ({ row }) => {
-      const ticketInfo = row.original;
-      return <span>{ticketInfo.dateReceived ? new Date(ticketInfo.dateReceived).toDateString() : "Not yet received"}</span>;
-    },
-  },
-  {
     header: () => <span className="font-bold text-nowrap">Forwarded To</span>,
     accessorKey: "receiver",
     cell: ({ row }) => {
@@ -68,6 +55,19 @@ export const ticketsDetailsColumn: ColumnDef<z.infer<typeof ticketLogsSchema>>[]
       console.log(transactionInfo)
       return <span>{transactionInfo.receiver ? new_name : "--"}</span>;
     },
+  },
+  {
+    header: () => <span className="font-bold text-nowrap">Status</span>,
+    accessorKey: "status",
+    cell: ({ row }) => {
+      const ticketInfo = row.original;
+      const statusInPascalCase = toPascalCase(ticketInfo.status || "");
+      return <span>{statusInPascalCase}</span>;
+    },
+  },
+  {
+    header: () => <span className="font-bold text-nowrap">Priority</span>,
+    accessorKey: "priority",
   },
   {
     header: () => <span className="font-bold text-nowrap">Remarks</span>,
