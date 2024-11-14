@@ -1,4 +1,18 @@
-import { AlertCircleIcon, BookCheck, ClipboardList, Factory, FileCode, FileText, LayoutDashboard, LibraryBig, Mailbox, Ticket, TicketPercent, UserSearch, Users } from "lucide-react";
+import {
+  AlertCircleIcon,
+  BookCheck,
+  ClipboardList,
+  Factory,
+  FileCode,
+  FileText,
+  LayoutDashboard,
+  LibraryBig,
+  Mailbox,
+  Ticket,
+  TicketPercent,
+  UserSearch,
+  Users,
+} from "lucide-react";
 import { Link, NavLink } from "react-router-dom";
 
 import { getCurrentUserId, useCurrentUserRole } from "@/hooks/use-user-hook";
@@ -82,7 +96,7 @@ export const SideNav = () => {
           </li>
           <CompaniesItemWithRole roles={["SUPERADMIN", "MANAGER"]} exemptions={["Operations Department"]} />
         </ul>
-
+        <UserAndAccountWithRole roles={["SUPERADMIN"]} exemptions={["Operations Department"]} />
         <Label className="text-[#DCFF8E] px-4 font-medium flex w-full text-sm">TRANSACTIONS</Label>
         <ul className="flex flex-col  space-y-4 w-full   mx-2">
           <li className="relative inline-block text-left px-4 ">
