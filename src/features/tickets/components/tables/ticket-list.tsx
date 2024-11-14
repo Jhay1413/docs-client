@@ -64,7 +64,6 @@ export const TicketList = () => {
     placeholderData: keepPreviousData,
   });
 
-
     // Toggle sort order between 'asc' and 'desc'
   const toggleSortOrder = () => {
     setSearchParams((prev) => {

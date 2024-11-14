@@ -48,6 +48,7 @@ export function FilterOptions({ setSearchParams, refetch }: FilterOptionsProps) 
     },
     placeholderData: keepPreviousData,
   });
+  
 
   // Fetching transactions using React Query
   const { data: transactions } = tsr.transaction.searchTransactionById.useQuery({
