@@ -85,8 +85,6 @@ export const TicketInboxComponent = () => {
     }
   };
 
-  
-
   return (
     <div className="min-h-full flex flex-col w-full items-center p-4 bg-white rounded-lg">
       <div className="flex flex-col w-full items-center justify-center p-4 bg-white rounded-lg">
@@ -97,7 +95,7 @@ export const TicketInboxComponent = () => {
           </div>
 
           <div className="flex items-center justify-end w-full">
-            <div className="flex m-1 text-gray-700">
+            <div className="flex m-1 text-gray-700 gap-1">
               {/* Sort Button */}
               <Button
                 variant="outline"

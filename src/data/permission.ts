@@ -1,4 +1,4 @@
-import { write } from "fs";
+
 
 const configuration = [
     {
