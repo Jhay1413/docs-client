@@ -13,6 +13,7 @@ export interface WithRoleProps {
 
 const withRole = <P extends object>(WrappedComponent: React.ComponentType<P>) => {
   const currentUserRole = useCurrentUserRole();
+  console.log(currentUserRole);
   const currentSection = useCurrentSection();
   const currentDivision = useCurrentDivision();
   return ({ roles, exemptions, className, Icon, label, callbackFn, ...props }: WithRoleProps & P) => {
