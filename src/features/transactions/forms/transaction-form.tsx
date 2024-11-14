@@ -34,6 +34,7 @@ import { tsr } from "@/services/tsr";
 import axios, { AxiosProgressEvent } from "axios";
 import { useMutation } from "@tanstack/react-query";
 import { Progress } from "@/components/ui/progress";
+import { useParams, useSearchParams } from "react-router-dom";
 interface UploadStatus {
   isLoading: boolean;
   isSuccess: boolean;
@@ -48,13 +49,17 @@ type props = {
   defaultValue?: z.infer<typeof transactionQueryData> | null;
   mutateFn: (data: z.infer<typeof transactionMutationSchema>) => void;
   isPending: boolean;
+  isForwarding?: boolean;
 };
 const baseUrlV2 = import.meta.env.VITE_ENDPOINT;
-export const TransactionForm = ({ company, method, defaultValue, mutateFn, isPending }: props) => {
+export const TransactionForm = ({ company, method, defaultValue, mutateFn, isPending, isForwarding }: props) => {
   const role = useCurrentUserRole();
   const currentDivision = useCurrentDivision();
   const userId = getCurrentUserId();
+  const [urlParams] = useSearchParams();
 
+  const mode = urlParams.get("mode") || undefined;
+  console.log(mode);
   const fileInputRef = useRef<(HTMLInputElement | null)[]>([]);
 
   const [selectedCompany, setSelectedCompany] = useState<string>(defaultValue?.companyId || "");
@@ -143,9 +148,9 @@ export const TransactionForm = ({ company, method, defaultValue, mutateFn, isPen
           companyId: defaultValue?.companyId || "",
           projectId: defaultValue?.projectId || "",
           receiverId: defaultValue?.receiverId,
-          remarks: defaultValue?.remarks,
           forwarderId: userId,
           dateForwarded: new Date().toISOString(),
+          dateReceived: mode ? defaultValue.dateReceived : null,
           documentSubType: defaultValue?.documentSubType,
           attachments: defaultValue.attachments?.sort((a, b) => (b.fileUrl || "").localeCompare(a.fileUrl || "")),
         }
@@ -248,7 +253,12 @@ export const TransactionForm = ({ company, method, defaultValue, mutateFn, isPen
                     <Popover>
                       <PopoverTrigger asChild>
                         <FormControl>
-                          <Button variant="outline" role="combobox" className={cn(" justify-between", !field.value && "text-muted-foreground")}>
+                          <Button
+                            variant="outline"
+                            role="combobox"
+                            disabled={isForwarding}
+                            className={cn(" justify-between", !field.value && "text-muted-foreground")}
+                          >
                             {field.value ? company?.find((comp) => comp.id === field.value)?.companyName : "Select Company"}
                             <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                           </Button>
@@ -383,7 +393,7 @@ export const TransactionForm = ({ company, method, defaultValue, mutateFn, isPen
                 )}
               />
               <div className="row-span-2 ">
-                <FormTextArea placeholder="Subject" label="Subject" name="subject" />
+                <FormTextArea placeholder="Subject" label="Subject" name="subject" disable={isForwarding} />
               </div>
               <FormField
                 control={form.control}

@@ -3,7 +3,7 @@ import { z } from "zod";
 import { ticketingTableSchema } from "shared-contract"; // Adjust the import based on your project structure
 import { toPascalCase } from "../ticket.utils"; // Adjust the import based on your project structure
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
-import { MoreHorizontal } from "lucide-react";
+import { Dot, MoreHorizontal } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 type IncomingColumn = z.infer<typeof ticketingTableSchema>;
@@ -21,31 +21,45 @@ const maxLength = 50;
 export function ticketsIncomingColumn(mutateAsync: MutateAsyncFunction): ColumnDef<IncomingColumn>[]{
   return[
     {
-      header: "Ticket ID",
+      header: () => <span className="font-bold text-nowrap">Ticket ID</span>,
       accessorKey: "ticketId",
     },
     {
-      header: "Subject",
+      header: () => <span className="font-bold text-nowrap">Subject</span>,
       accessorKey: "subject",
     },
     {
-      header: "Section",
+      header: () => <span className="font-bold text-nowrap">Section</span>,
       accessorKey: "section",
     },
     {
-      header: "Division",
+      header: () => <span className="font-bold text-nowrap">Division</span>,
       accessorKey: "division",
     },
     {
-      header: "Status",
+      header: () => (
+        <div className="w-full font-bold text-nowrap items-center flex justify-center">
+          <h1>Status</h1>
+        </div>
+      ),
       accessorKey: "status",
+      cell: ({ row }) => {
+        const ticketInfo = row.original;
+        const statusInPascalCase = toPascalCase(ticketInfo.status || "");
+        return (
+          <div className="flex  gap-1 items-center w-24">
+            {ticketInfo.status === "ON_GOING" && <Dot size={32} className="text-green-500" />}
+            <span>{statusInPascalCase}</span>
+          </div>
+        );
+      },
     },
     {
-      header: "Priority",
+      header: () => <span className="font-bold text-nowrap">Priority</span>,
       accessorKey: "priority",
     },
     {
-      header: "Request Details",
+      header: () => <span className="font-bold text-nowrap">Request Details</span>,
       accessorKey: "requestDetails",
       cell: ({ row }) => {
           const transactionInfo = row.original;
@@ -60,7 +74,7 @@ export function ticketsIncomingColumn(mutateAsync: MutateAsyncFunction): ColumnD
         },
     },
     {
-      header: "Due Date",
+      header: () => <span className="font-bold text-nowrap">Due Date</span>,
       accessorKey: "dueDate",
       cell: ({ row }) => {
         const ticketInfo = row.original;
@@ -68,7 +82,7 @@ export function ticketsIncomingColumn(mutateAsync: MutateAsyncFunction): ColumnD
       },
     },
     {
-      header: "Date Created",
+      header: () => <span className="font-bold text-nowrap">Date Created</span>,
       accessorKey: "createdAt",
       cell: ({ row }) => {
         const ticketInfo = row.original;
@@ -76,7 +90,7 @@ export function ticketsIncomingColumn(mutateAsync: MutateAsyncFunction): ColumnD
       },
     },
     {
-      header: "Date Forwarded",
+      header: () => <span className="font-bold text-nowrap">Date Forwarded</span>,
       accessorKey: "dateForwarded",
       cell: ({ row }) => {
         const ticketInfo = row.original;
@@ -84,7 +98,7 @@ export function ticketsIncomingColumn(mutateAsync: MutateAsyncFunction): ColumnD
       },
     },
     {
-      header: "Forwarded By",
+      header: () => <span className="font-bold text-nowrap">Forwarded By</span>,
       accessorKey: "sender",
       cell: ({ row }) => {
         const ticketInfo = row.original;
@@ -93,7 +107,7 @@ export function ticketsIncomingColumn(mutateAsync: MutateAsyncFunction): ColumnD
       },
     },
     {
-      header: "Date Received",
+      header: () => <span className="font-bold text-nowrap">Date Received</span>,
       accessorKey: "dateReceived",
       cell: ({ row }) => {
         const ticketInfo = row.original;
@@ -101,7 +115,7 @@ export function ticketsIncomingColumn(mutateAsync: MutateAsyncFunction): ColumnD
       },
     },
     {
-      header: "Remarks",
+      header: () => <span className="font-bold text-nowrap">Remarks</span>,
       accessorKey: "remarks",
       cell: ({ row }) => {
           const transactionInfo = row.original;
@@ -118,7 +132,7 @@ export function ticketsIncomingColumn(mutateAsync: MutateAsyncFunction): ColumnD
     },
   
     {
-      header: "Actions",
+      header: () => <span className="font-bold text-nowrap">Actions</span>,
       accessorKey: "actions",
       id: "actions",
       cell: ({ row }) => {

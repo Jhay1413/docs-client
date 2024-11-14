@@ -1,11 +1,9 @@
 import { DataTable } from "@/components/data-table";
 import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 import { inboxColumn } from "../table-columns/inbox-column";
-import { useTransactions } from "../../hooks/query-gate";
-import { transactionData } from "../../schema/TransactionSchema";
 import { z } from "zod";
 import { tsr } from "@/services/tsr";
-import { transactionQueryData, transactionTable } from "shared-contract";
+import { transactionTable } from "shared-contract";
 import { Input } from "@/components/ui/input";
 import { Search } from "lucide-react";
 import { useDebounce } from "use-debounce";
@@ -40,7 +38,6 @@ export const InboxComponent = () => {
     },
     placeholderData: keepPreviousData,
   });
-  console.log(data);
   const handleNextPage = () => {
     setSearchParams((prev) => {
       const nextPage = (intPage + 1).toString();
@@ -93,7 +90,7 @@ export const InboxComponent = () => {
         </div>
 
         <DataTable columns={inboxColumn} data={data ? data.body.data : []} callbackFn={handleOnClickRow} />
-        
+
         <div className="w-full flex justify-between items-center">
           <div className="text-muted-foreground">
             <h1>Number of Transactions: {data?.body.numOfTransactions}</h1>
@@ -118,7 +115,6 @@ export const InboxComponent = () => {
             </Button>
           </div>
         </div>
-        
       </div>
     </div>
   );

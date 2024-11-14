@@ -18,14 +18,16 @@ export const TicketResolved = () => {
   const searchQuery = searchParams.get("search") || "";
   const page = searchParams.get("currentPage") || "1";
   const intPage = parseInt(page, 10);
+  const sortOrder = searchParams.get("sortOrder") || "asc";
 
   const [debouncedSearchQuery] = useDebounce(searchQuery, 500);
 
   const { data, isError, error } = tsr.ticketing.getTickets.useQuery({
-    queryKey: ["tickets", page, debouncedSearchQuery],
+    queryKey: ["tickets-resolved", page, debouncedSearchQuery, sortOrder],
     queryData: {
       query: {
         query: "RESOLVED",
+        sortOrder: sortOrder,
         page: page,
         pageSize: "10",
       },

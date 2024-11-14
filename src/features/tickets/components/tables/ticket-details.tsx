@@ -95,7 +95,7 @@ export const TicketDetails = () => {
         <h1 className="text-3xl font-bold text-gray-800">Ticket Details</h1>
         <div className="flex justify-start items-center gap-4">
           
-          {data?.body.requestee?.id === currentUserId && data?.body.status != 'RESOLVED' &&
+          {((data?.body.dateReceived != null) && (data?.body.requestee?.id === currentUserId && data?.body.status != 'RESOLVED')) &&
             <ConfirmationModal
               title="Confirm Ticket Resolution"
               description="Are you sure you want to mark this ticket as resolved? This action cannot be undone, and further changes will not be allowed once the ticket is resolved."
@@ -106,7 +106,7 @@ export const TicketDetails = () => {
           }
 
           {data?.body.status === 'RESOLVED' && <ReopenTicketBtn />}
-          {data?.body.receiver?.id === currentUserId && data?.body.status != 'RESOLVED' && <ForwardTicketBtn id={id}/>}
+          {((data?.body.dateReceived != null) && (data?.body.receiver?.id === currentUserId && data?.body.status != 'RESOLVED')) && <ForwardTicketBtn id={id}/>}
 
         </div>
       </div>
