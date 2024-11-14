@@ -1,4 +1,4 @@
-import { BookCheck, ClipboardList, Factory, FileCode, FileText, LayoutDashboard, LibraryBig, Mailbox, Ticket, UserSearch, Users } from "lucide-react";
+import { AlertCircleIcon, BookCheck, ClipboardList, Factory, FileCode, FileText, LayoutDashboard, LibraryBig, Mailbox, Ticket, TicketPercent, UserSearch, Users } from "lucide-react";
 import { Link, NavLink } from "react-router-dom";
 
 import { getCurrentUserId, useCurrentUserRole } from "@/hooks/use-user-hook";
@@ -51,7 +51,6 @@ const UserAndAccountsMenu = () => (
     </ul>
   </>
 );
-
 const CompaniesItemWithRole = withRole(CompaniesMenu);
 const UserAndAccountWithRole = withRole(UserAndAccountsMenu);
 
@@ -83,7 +82,7 @@ export const SideNav = () => {
           </li>
           <CompaniesItemWithRole roles={["SUPERADMIN", "MANAGER"]} exemptions={["Operations Department"]} />
         </ul>
-        <UserAndAccountWithRole roles={["SUPERADMIN"]} exemptions={["Operations Department"]} />
+
         <Label className="text-[#DCFF8E] px-4 font-medium flex w-full text-sm">TRANSACTIONS</Label>
         <ul className="flex flex-col  space-y-4 w-full   mx-2">
           <li className="relative inline-block text-left px-4 ">
@@ -155,6 +154,7 @@ export const SideNav = () => {
               </div>
             </NavLink>
           </li>
+
           <li className="relative inline-block text-left px-4 ">
             <NavLink
               to={`/dashboard/tickets/incoming/${id}`}
@@ -165,6 +165,19 @@ export const SideNav = () => {
               <LibraryBig />
               <div className="flex gap-2">
                 <h1 className="text-base">Incoming Tickets</h1>
+              </div>
+            </NavLink>
+          </li>
+          <li className="relative inline-block text-left px-4 ">
+            <NavLink
+              to={`/dashboard/tickets/pending-tickets/${id}`}
+              className={({ isActive }) => {
+                return `justify-start items-center flex w-full p-2 space-x-4 text-lg  rounded-md ${isActive ? "bg-green-100/30 text-white" : ""}`;
+              }}
+            >
+              <TicketPercent />
+              <div className="flex gap-2">
+                <h1 className="text-base">Pending Requests</h1>
               </div>
             </NavLink>
           </li>
@@ -180,7 +193,7 @@ export const SideNav = () => {
             >
               <FileCode />
               <div className="flex gap-2">
-                <h1 className="text-base">Archived Transactions</h1>
+                <h1 className="text-base">Archives</h1>
               </div>
             </NavLink>
           </li>
@@ -199,7 +212,6 @@ export const SideNav = () => {
             </NavLink>
           </li>
         </ul>
-
       </div>
     </div>
   );

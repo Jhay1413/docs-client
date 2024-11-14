@@ -84,19 +84,17 @@ const TicketForm = ({
       division: ticketData?.division || "",
       status: ticketData?.status || "ROUTING",
       requestDetails: ticketData?.requestDetails || "",
-      priority: ticketData?.priority || "",
+      priority: ticketData?.priority || undefined,
       dueDate: ticketData?.dueDate || "",
       dateForwarded: ticketData?.dateForwarded || new Date().toISOString(),
       dateReceived: null,
       senderId: userId,
       requesteeId: ticketData?.requestee.id || userId,
-      remarks: ticketData?.remarks,
       projectId: ticketData?.project?.id || null,
       transactionId: ticketData?.transactionId || null,
       attachments: ticketData?.attachments || [],
     },
   });
-
 
   const onSubmit: SubmitHandler<z.infer<typeof ticketingMutationSchema>> = async (data) => {
     mutateFn({ ...data, attachments: [...data.attachments, ...uploadedKeys] });
@@ -156,10 +154,7 @@ const TicketForm = ({
     setUploadedFile((prevFiles) => prevFiles.filter((_, i) => i !== index));
     setUploadedKeys((prevKeys) => prevKeys.filter((_, i) => i !== index));
   };
-  
-  
 
-  
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit, onError)}>
@@ -336,6 +331,7 @@ const TicketForm = ({
                     <SelectContent>
                       <SelectItem value="ROUTING">For Routing</SelectItem>
                       <SelectItem value="ON_PROCESS">On Process</SelectItem>
+                      <SelectItem value="ON_GOING">On Going</SelectItem>
                       <SelectItem value="COMPLETED">Completed</SelectItem>
                       <SelectItem value="APPROVED">Approved</SelectItem>
                       <SelectItem value="SIGN_AND_SEAL">For Sign and Seal</SelectItem>
@@ -485,28 +481,24 @@ const TicketForm = ({
                       </div>
                     ))}
                   </div>
-                )}   
-              <div className="flex flex-col gap-2 text-white">
-                {uploadedFile.map((file, index) => (
-                  <div className="flex justify-start items-center gap-2 rounded-md bg-blue-300 p-2" key={index}>
-                    <div className="w-20">
-                      <FileCode size={32} />
+                )}
+                <div className="flex flex-col gap-2 text-white">
+                  {uploadedFile.map((file, index) => (
+                    <div className="flex justify-start items-center gap-2 rounded-md bg-blue-300 p-2" key={index}>
+                      <div className="w-20">
+                        <FileCode size={32} />
+                      </div>
+                      <div className="w-full">
+                        <h1>{file.name}</h1>
+                      </div>
+                      <div className="flex justify-end w-full gap-2">
+                        <Check size={28} />
+                        <XCircle size={28} className="cursor-pointer hover:text-red-500" onClick={() => handleRemoveFile(index)} />
+                      </div>
                     </div>
-                    <div className="w-full">
-                      <h1>{file.name}</h1>
-                    </div>
-                    <div className="flex justify-end w-full gap-2">
-                      <Check size={28}/>
-                      <XCircle
-                        size={28}
-                        className="cursor-pointer hover:text-red-500"
-                        onClick={() => handleRemoveFile(index)}
-                      />
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </ScrollArea>
+                  ))}
+                </div>
+              </ScrollArea>
             </div>
           </div>
         </div>

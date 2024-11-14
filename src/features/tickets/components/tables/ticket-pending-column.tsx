@@ -4,12 +4,12 @@ import { ticketingTableSchema } from "shared-contract"; // Adjust the import bas
 import { toPascalCase } from "../ticket.utils"; // Adjust the import based on your project structure
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
-import { CircleArrowRight, Dot, Eye, Forward, Minus, MoreHorizontal, Pencil, View } from "lucide-react";
+import { CircleArrowRight, Dot, Eye, Minus, MoreHorizontal, Pencil, View } from "lucide-react";
 import { InboxUpdateForm } from "../forms/inbox-update-form";
 import { useNavigate } from "react-router-dom";
 
 const maxLength = 20;
-export const ticketsInboxColumn: ColumnDef<z.infer<typeof ticketingTableSchema>>[] = [
+export const pendingTicketsColumn: ColumnDef<z.infer<typeof ticketingTableSchema>>[] = [
   {
     header: () => <span className="font-bold text-nowrap">Ticket ID</span>,
     accessorKey: "ticketId",
@@ -107,19 +107,7 @@ export const ticketsInboxColumn: ColumnDef<z.infer<typeof ticketingTableSchema>>
       return <span>{new Date(ticketInfo.dateForwarded).toLocaleDateString()}</span>;
     },
   },
-  {
-    header: () => (
-      <div className="w-full font-bold text-nowrap items-center flex justify-center">
-        <h1>Sender</h1>
-      </div>
-    ),
-    accessorKey: "sender",
-    cell: ({ row }) => {
-      const ticketInfo = row.original;
-      const name = `${ticketInfo.sender.firstName} ${ticketInfo.sender.lastName}`;
-      return <span>{toPascalCase(name)}</span>;
-    },
-  },
+
   {
     header: () => (
       <div className="w-full font-bold text-nowrap items-center flex justify-center">
@@ -160,18 +148,11 @@ export const ticketsInboxColumn: ColumnDef<z.infer<typeof ticketingTableSchema>>
       const handleOnClickRow = () => {
         navigate(`/dashboard/tickets/details/${ticket.id}`); // Navigate to ticket details page
       };
-      const routeToForwardTicket = () => {
-        navigate(`/dashboard/tickets/forward-ticket/${ticket.id}`); // Navigate to ticket details page
-      };
-  
+
       return (
-        <div className="flex items-center justify-center gap-2 text-gray-700">
-          <Button title="View ticket" variant="outline" size="icon" onClick={handleOnClickRow}>
-            <Eye/>
-          </Button>
-          <InboxUpdateForm id={ticket.id} />
-          <Button variant="outline" size="icon" title="Forward ticket" onClick={routeToForwardTicket}>
-            <Forward />
+        <div className="flex items-center justify-center gap-4 text-gray-700">
+          <Button variant="outline" size="icon" title="View ticket" onClick={handleOnClickRow}>
+            <Eye />
           </Button>
         </div>
       );

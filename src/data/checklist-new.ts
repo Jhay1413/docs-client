@@ -556,8 +556,8 @@ export const checkList = [
         ],
       },
       {
-        name: "ARCENIC",
-        value: "ARCENIC",
+        name: "ARSENIC",
+        value: "ARSENIC",
         category: "CCO",
         checkList: [
           "Hazardous Waste Generator ID",
@@ -802,6 +802,18 @@ export const checkList = [
           "Traffic Management Plan/Traffic Impact Assessment",
           "Emergency Response and Management Plan",
           "Environmental Monitoring Fund (EMF) and Environmental Guarantee Fund (EGF)",
+        ],
+      },
+      {
+        name: "Small Quantity Importation (SQI)",
+        value: "Small Quantity Importation (SQI)",
+        category: "EIS",
+        checkList: [
+          "Safety Data Sheet",
+          "Business Permit or SEC  Registration of the office",
+          "Business Permit or SEC Registration of the Warehouse/Storage Facility",
+          "Application Form",
+          "Official Receipt"
         ],
       },
       {
