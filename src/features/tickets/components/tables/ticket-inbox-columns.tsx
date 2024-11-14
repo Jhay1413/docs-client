@@ -4,7 +4,7 @@ import { ticketingTableSchema } from "shared-contract"; // Adjust the import bas
 import { toPascalCase } from "../ticket.utils"; // Adjust the import based on your project structure
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
-import { CircleArrowRight, Dot, Eye, Minus, MoreHorizontal, Pencil, View } from "lucide-react";
+import { CircleArrowRight, Dot, Eye, Forward, Minus, MoreHorizontal, Pencil, View } from "lucide-react";
 import { InboxUpdateForm } from "../forms/inbox-update-form";
 import { useNavigate } from "react-router-dom";
 
@@ -160,13 +160,19 @@ export const ticketsInboxColumn: ColumnDef<z.infer<typeof ticketingTableSchema>>
       const handleOnClickRow = () => {
         navigate(`/dashboard/tickets/details/${ticket.id}`); // Navigate to ticket details page
       };
-
+      const routeToForwardTicket = () => {
+        navigate(`/dashboard/tickets/forward-ticket/${ticket.id}`); // Navigate to ticket details page
+      };
+  
       return (
-        <div className="flex items-center justify-center gap-4 text-gray-700">
-          <Button variant="outline" size="icon" title="View ticket" onClick={handleOnClickRow}>
+        <div className="flex items-center justify-center gap-2 text-gray-700 sticky top-0 bg-white z-10">
+          <Button title="View ticket" variant="outline" size="icon" onClick={handleOnClickRow}>
             <Eye />
           </Button>
           <InboxUpdateForm id={ticket.id} />
+          <Button variant="outline" size="icon" title="Forward ticket" onClick={routeToForwardTicket}>
+            <Forward />
+          </Button>
         </div>
       );
     },
