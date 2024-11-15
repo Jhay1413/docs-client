@@ -10,6 +10,7 @@ import {
   Mailbox,
   Ticket,
   TicketPercent,
+  TicketPlus,
   UserSearch,
   Users,
 } from "lucide-react";
@@ -176,7 +177,7 @@ export const SideNav = () => {
                 return `justify-start items-center flex w-full p-2 space-x-4 text-lg  rounded-md ${isActive ? "bg-green-100/30 text-white" : ""}`;
               }}
             >
-              <LibraryBig />
+              <TicketPlus />
               <div className="flex gap-2">
                 <h1 className="text-base">Incoming Tickets</h1>
               </div>

@@ -158,10 +158,10 @@ export const ticketsInboxColumn: ColumnDef<z.infer<typeof ticketingTableSchema>>
       const navigate = useNavigate();
       const ticket = row.original;
       const handleOnClickRow = () => {
-        navigate(`/dashboard/tickets/details/${ticket.id}`); // Navigate to ticket details page
+        navigate(`/dashboard/tickets/details/${ticket.id}`);
       };
       const routeToForwardTicket = () => {
-        navigate(`/dashboard/tickets/forward-ticket/${ticket.id}`); // Navigate to ticket details page
+        navigate(`/dashboard/tickets/forward-ticket/${ticket.id}`);
       };
   
       return (

@@ -28,3 +28,4 @@ export const useNotificationStore = create<NotificationState>((set) => ({
   setNotification: (notification) => set({ notification }),
   setRefetch: (refetchFn) => set({ refetch: refetchFn }),
 }));
+

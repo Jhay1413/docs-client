@@ -13,9 +13,11 @@ import { getCurrentUserId } from "@/hooks/use-user-hook";
 // Add the button component here
 const AddTicketBtn = () => (
   <div>
-    <Link to="/dashboard/tickets/add-form" className="bg-[#414140] px-4 py-2 text-lg flex items-center justify-center space-x rounded-lg text-white">
+    <Link to="/dashboard/tickets/add-form">
+    <Button type="button" variant="outline" className="flex items-center gap-2">
       <Plus size={24} />
-      <h1>Add Ticket</h1>
+      Add Ticket
+    </Button>
     </Link>
   </div>
 );
@@ -46,7 +48,7 @@ export const TicketList = () => {
   const intPage = parseInt(page, 10);
   const [debouncedSearchQuery] = useDebounce(searchQuery, 500);
 
-  const { data, isError, error, refetch } = tsr.ticketing.getTickets.useQuery({
+  const { data, isError, error, refetch , isPending} = tsr.ticketing.getTickets.useQuery({
     queryKey: ["tickets-inbox", page, debouncedSearchQuery, sortOrder],
     queryData: {
       query: {
@@ -99,19 +101,20 @@ export const TicketList = () => {
 
 
   return (
-    <div className="min-h-full flex flex-col w-full items-center p-4 bg-white rounded-lg ">
+    <div className="min-h-full flex flex-col w-full items-center p-4 bg-white rounded-lg">
       <div className="flex flex-col w-full items-center justify-center p-4 bg-white rounded-lg">
-        <div className="flex justify-start w-full flex-col">
+        <div className="flex justify-between items-center w-full pb-4">
+          <div className="flex justify-start w-full flex-col">
           <h1 className="text-[#404041] font-medium text-[28px]">List of Tickets</h1>
           <p className="text-muted-foreground text-[12px]">View and manage all support tickets.</p>
         </div>
 
         <div className="flex items-center py-4 justify-between w-full">
           <div className="flex w-full relative">
-            <AddTicketBtn />
           </div>
           <div className="flex items-center gap-1">
             {/* Sort Button */}
+            <AddTicketBtn />
             <Button
               variant="outline"
               onClick={toggleSortOrder}
@@ -121,7 +124,7 @@ export const TicketList = () => {
             >
               {sortOrder === "asc" ? <SquareChevronUp /> : <SquareChevronDown />}
             </Button>
-            <FilterOptions  setSearchParams={setSearchParams} refetch={refetch} />
+            <FilterOptions  setSearchParams={setSearchParams} refetch={refetch} isSubmitting={isPending} />
             <Input
               placeholder="Search ...."
               defaultValue={debouncedSearchQuery}
@@ -137,6 +140,7 @@ export const TicketList = () => {
               }
               className="w-[289px] rounded-none rounded-l-md"
             />
+            </div>
             <button className="p-2 bg-primaryColor text-white rounded-r-md">
               <Search />
             </button>

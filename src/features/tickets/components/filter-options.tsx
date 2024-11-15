@@ -14,10 +14,11 @@ import { SetURLSearchParams } from "react-router-dom";
 interface FilterOptionsProps {
   setSearchParams: SetURLSearchParams;
   refetch: () => void;
+  isSubmitting:boolean
  
 }
 
-export function FilterOptions({ setSearchParams, refetch }: FilterOptionsProps) {
+export function FilterOptions({ setSearchParams, refetch,isSubmitting }: FilterOptionsProps) {
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [searchTransaction, setSearchTransaction] = useState<string>("");
   const [debouncedSearchQuery] = useDebounce(searchQuery, 500);
@@ -31,7 +32,7 @@ export function FilterOptions({ setSearchParams, refetch }: FilterOptionsProps) 
   const [selectedDivision, setSelectedDivision] = useState("");
   const [selectedSection, setSelectedSection] = useState("");
   const role = useCurrentUserRole();
-  const [isSubmitting, setIsSubmitting] = useState(false);
+
   const [selectectedType, setSelectedType] = useState("");
   const [selectedSender, setSelectedSender] = useState("");
 
@@ -49,6 +50,23 @@ export function FilterOptions({ setSearchParams, refetch }: FilterOptionsProps) 
     placeholderData: keepPreviousData,
   });
   
+  const clearSearchParams = () => {
+    setSearchParams({
+      projectId: "",
+      transactionId: "",
+      priority: "",
+      status: "",
+      sender: "",
+    });
+    setSelectedProject("");
+    setSelectedTransaction("");
+    setSelectedPriority("");
+    setSelectedStatus("");
+    setSelectedSection("");
+    setSelectedSender("");
+
+  
+  }
 
   // Fetching transactions using React Query
   const { data: transactions } = tsr.transaction.searchTransactionById.useQuery({
@@ -80,16 +98,15 @@ export function FilterOptions({ setSearchParams, refetch }: FilterOptionsProps) 
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <div className="flex justify-between items-start">
+        <div className="flex justify-between items-start ">
           <Button variant="outline">
-            <SlidersHorizontal className="mr-2 text-gray-500" />
+            <SlidersHorizontal className="mr-2"/>
             Filter
           </Button>
         </div>
       </DropdownMenuTrigger>
-      <DropdownMenuContent className="w-80">
-        <div>
-          <DropdownMenuSeparator />
+      <DropdownMenuContent className="w-80 p-4">
+        <div className="pb-4">
           {/* Project Search */}
           <DropdownMenuLabel>Project</DropdownMenuLabel>
           <Popover>
@@ -173,49 +190,51 @@ export function FilterOptions({ setSearchParams, refetch }: FilterOptionsProps) 
 
           <DropdownMenuSeparator />
           {/* Priority Dropdown */}
-          <DropdownMenuLabel>Priority</DropdownMenuLabel>
-          <Popover>
-            <PopoverTrigger asChild>
-              <Button variant="outline" className={cn("w-full justify-between", !selectedPriority && "text-muted-foreground")}>
-                {selectedPriority || "Select Priority..."}
-                <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-              </Button>
-            </PopoverTrigger>
-            <PopoverContent>
-              <Command>
-                <CommandList>
-                  {priorityOptions.map((priority) => (
-                    <CommandItem
-                      key={priority}
-                      onSelect={() =>{
-                        setSelectedPriority(priority)
-                        setSearchParams(
-                          (prev) => {
-                            prev.set("priority", priority);
-                            prev.set("currentPage", "1");
-                            return prev;
-                          },
-                          { replace: true },
-                        )
-                      }
-                    }
-                    >
-                      <Check className={cn("mr-2 h-4 w-4", priority === selectedPriority ? "opacity-100" : "opacity-0")} />
-                      {priority}
-                    </CommandItem>
-                  ))}
-                </CommandList>
-              </Command>
-            </PopoverContent>
-          </Popover>
+            <div className="grid grid-cols-2 gap-4">
+                  <div className="">
+                  <DropdownMenuLabel>Priority</DropdownMenuLabel>
+                  <Popover>
+                    <PopoverTrigger asChild>
+                      <Button variant="outline" className={cn("w-full justify-between", !selectedPriority && "text-muted-foreground")}>
+                        {selectedPriority || "Select"}
+                        <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                      </Button>
+                    </PopoverTrigger>
+                    <PopoverContent>
+                      <Command>
+                        <CommandList>
+                          {priorityOptions.map((priority) => (
+                            <CommandItem
+                              key={priority}
+                              onSelect={() =>{
+                                setSelectedPriority(priority)
+                                setSearchParams(
+                                  (prev) => {
+                                    prev.set("priority", priority);
+                                    prev.set("currentPage", "1");
+                                    return prev;
+                                  },
+                                  { replace: true },
+                                )
+                              }
+                            }
+                            >
+                              <Check className={cn("mr-2 h-4 w-4", priority === selectedPriority ? "opacity-100" : "opacity-0")} />
+                              {priority}
+                            </CommandItem>
+                          ))}
+                        </CommandList>
+                      </Command>
+                    </PopoverContent>
+                  </Popover>
 
-          <DropdownMenuSeparator />
-          {/* Status Dropdown */}
-          <DropdownMenuLabel>Status</DropdownMenuLabel>
+                  </div>
+                  <div className="">
+                  <DropdownMenuLabel>Status</DropdownMenuLabel>
           <Popover>
             <PopoverTrigger asChild>
               <Button variant="outline" className={cn("w-full justify-between", !selectedStatus && "text-muted-foreground")}>
-                {selectedStatus || "Select Status..."}
+                {selectedStatus || "Select"}
                 <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
               </Button>
             </PopoverTrigger>
@@ -246,6 +265,12 @@ export function FilterOptions({ setSearchParams, refetch }: FilterOptionsProps) 
               </Command>
             </PopoverContent>
           </Popover>
+                  </div>
+          </div>
+          
+          
+          {/* Status Dropdown */}
+         
 
           <DropdownMenuSeparator />
           {/* Sender Dropdown */}
@@ -288,7 +313,13 @@ export function FilterOptions({ setSearchParams, refetch }: FilterOptionsProps) 
             </PopoverContent>
           </Popover>
         </div>
-        <Button onClick={refetch}>Submit</Button>
+        <div className="grid grid-cols-2 gap-2">
+          <Button onClick={()=>{
+            clearSearchParams();
+            refetch()
+          }} variant="outline">Clear</Button>
+          <Button onClick={refetch} disabled={isSubmitting}>Submit</Button>
+        </div>
         <DropdownMenuSeparator />
       </DropdownMenuContent>
     </DropdownMenu>

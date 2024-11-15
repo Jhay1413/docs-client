@@ -38,7 +38,7 @@ export const TicketInboxComponent = () => {
   const id = getCurrentUserId();
 
   // Fetch tickets with sorting
-  const { data, isError, error, refetch } = tsr.ticketing.getTickets.useQuery({
+  const { data, isError, error, refetch ,isPending} = tsr.ticketing.getTickets.useQuery({
     queryKey: ["tickets-inbox", page, debouncedSearchQuery, sortOrder],
     queryData: {
       query: {
@@ -91,7 +91,7 @@ export const TicketInboxComponent = () => {
         <div className="flex justify-between items-center w-full pb-4">
           <div className="flex justify-start w-full flex-col">
             <h1 className="text-[#404041] font-medium text-[28px]">Inbox</h1>
-            <p className="text-muted-foreground text-[12px]">Stay updated with the latest tickets here.</p>
+            <p className="text-muted-foreground text-[12px]">Use the Tickets Inbox to efficiently track and manage your workload, ensuring no ticket goes unnoticed.</p>
           </div>
 
           <div className="flex items-center justify-end w-full">
@@ -105,9 +105,8 @@ export const TicketInboxComponent = () => {
                 title={sortOrder === "asc" ? "Sort by ascending order" : "Sort by descending order"}
               >
                 {sortOrder === "asc" ? <SquareChevronUp /> : <SquareChevronDown />}
-                <h1></h1>
               </Button>
-              <FilterOptions setSearchParams={setSearchParams} refetch={refetch} />
+              <FilterOptions setSearchParams={setSearchParams} refetch={refetch} isSubmitting={isPending}/>
             </div>
             <Input
               placeholder="Search ...."
@@ -129,7 +128,7 @@ export const TicketInboxComponent = () => {
             </button>
           </div>
         </div>
-
+        
         <DataTable columns={ticketsInboxColumn} data={data ? data.body.data : []} />
 
         <div className="w-full flex justify-between items-center">
