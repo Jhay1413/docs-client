@@ -136,6 +136,7 @@ export const SideNav = () => {
               className={({ isActive }) => {
                 return `justify-start items-center flex w-full p-2 space-x-4 text-lg  rounded-md ${isActive ? "bg-green-100/30 text-white" : ""}`;
               }}
+              
             >
 
               <div className="relative">
