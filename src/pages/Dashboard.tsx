@@ -207,74 +207,66 @@ export const Dashboard = () => {
               </ScrollArea>
             </div>
           </div>
-          <div className="flex flex-col  gap-4 row-span-1">
-            <h1 className="text-lg">Applications</h1>
-            <div className="grid grid-cols-2 h-full grid-rows-2 gap-4 ">
-              <div className="flex flex-col bg-white row-span-1  rounded-md ">
-                <div className="flex justify-start items-center gap-2 p-1">
-                  <div className="bg-blue-400/50 p-2 rounded-md text-white">
-                    <Search size={20} />
-                  </div>
-                  <h1 className="text-sm">Total Applications</h1>
+          <div className="grid grid-cols-2 h-full grid-rows-2 gap-4">
+            <div className="flex flex-col bg-white row-span-1 rounded-md overflow-hidden">
+              <div className="flex justify-start items-center gap-2 p-1">
+                <div className="bg-blue-400/50 p-2 rounded-md text-white">
+                  <Search size={20} />
                 </div>
-                <div className="flex flex-col items-center justify-center  h-full">
-                  <h1 className="font-bold text-4xl">{totalICS?.count || 0}</h1>
-                  <h1>
-                    <span className="text-blue-400 font-bold">ICS</span> Section
-                  </h1>
-                </div>
+                <h1 className="text-sm truncate">Total Applications</h1>
               </div>
-              <div className="flex flex-col bg-white w-full row-span-1 col-span-1 rounded-md ">
-                <div className="flex justify-start items-center gap-2 p-1">
-                  <div className="bg-primaryColor p-2 rounded-md text-white">
-                    <Search size={20} />
-                  </div>
-                  <h1 className="text-sm">Total Applications</h1>
-                </div>
-                <div className="flex flex-col items-center justify-center  h-full">
-                  <h1 className="font-bold text-4xl">{totalEIA?.count || 0}</h1>
-                  <h1>
-                    <span className="text-primaryColor font-bold">EIA</span> Section
-                  </h1>
-                </div>
+              <div className="flex flex-col items-center justify-center h-full">
+                <h1 className="font-bold text-4xl">{totalICS?.count || 0}</h1>
+                <h1 className="text-center">
+                  <span className="text-blue-400 font-bold">ICS</span> Section
+                </h1>
               </div>
-              <div className="flex flex-col bg-white w-full row-span-1 col-span-1 rounded-md ">
-                <div className="flex justify-start items-center gap-2 p-1">
-                  <div className="bg-red-500/50 p-2 rounded-md text-white">
-                    <Search size={20} />
-                  </div>
-                  <h1 className="text-sm">Total Applications</h1>
+            </div>
+            <div className="flex flex-col bg-white w-full row-span-1 col-span-1 rounded-md overflow-hidden">
+              <div className="flex justify-start items-center gap-2 p-1">
+                <div className="bg-primaryColor p-2 rounded-md text-white">
+                  <Search size={20} />
                 </div>
-                <div className="flex flex-col items-center justify-center  h-full">
-                  <h1 className="font-bold text-4xl">{totalEPD?.count || 0}</h1>
-                  <h1>
-                    <span className="text-red-500 font-bold">EPD</span> Section
-                  </h1>
-                </div>
+                <h1 className="text-sm truncate">Total Applications</h1>
               </div>
-              <div className="flex flex-col bg-white w-full row-span-1 col-span-1 rounded-md ">
-                <div className="flex justify-start items-center gap-2 p-1">
-                  <div className="bg-yellow-500/50 p-2 rounded-md text-white">
-                    <Search size={20} />
-                  </div>
-                  <h1 className="text-sm">Total Applications</h1>
+              <div className="flex flex-col items-center justify-center h-full">
+                <h1 className="font-bold text-4xl">{totalEIA?.count || 0}</h1>
+                <h1 className="text-center">
+                  <span className="text-primaryColor font-bold">EIA</span> Section
+                </h1>
+              </div>
+            </div>
+            <div className="flex flex-col bg-white w-full row-span-1 col-span-1 rounded-md overflow-hidden">
+              <div className="flex justify-start items-center gap-2 p-1">
+                <div className="bg-red-500/50 p-2 rounded-md text-white">
+                  <Search size={20} />
                 </div>
-                <div className="flex flex-col items-center justify-center  h-full">
-                  <h1 className="font-bold text-4xl">{totalTCTI?.count || 0}</h1>
-                  <h1>
-                    <span className="text-yellow-500 font-bold">TCTI</span> Section
-                  </h1>
+                <h1 className="text-sm truncate">Total Applications</h1>
+              </div>
+              <div className="flex flex-col items-center justify-center h-full">
+                <h1 className="font-bold text-4xl">{totalEPD?.count || 0}</h1>
+                <h1 className="text-center">
+                  <span className="text-red-500 font-bold">EPD</span> Section
+                </h1>
+              </div>
+            </div>
+            <div className="flex flex-col bg-white w-full row-span-1 col-span-1 rounded-md overflow-hidden">
+              <div className="flex justify-start items-center gap-2 p-1">
+                <div className="bg-yellow-500/50 p-2 rounded-md text-white">
+                  <Search size={20} />
                 </div>
+                <h1 className="text-sm truncate">Total Applications</h1>
+              </div>
+              <div className="flex flex-col items-center justify-center h-full">
+                <h1 className="font-bold text-4xl">{totalTCTI?.count || 0}</h1>
+                <h1 className="text-center">
+                  <span className="text-yellow-500 font-bold">TCTI</span> Section
+                </h1>
               </div>
             </div>
           </div>
-          <div className="flex flex-col gap-4 row-span-1">
-            <h1 className="text-lg">Charts</h1>
-            <div className="h-full relative">
-              <Component data={total} />
-            </div>
           </div>
-        </div>
+
 
         {/* </div> */}
       </div>
