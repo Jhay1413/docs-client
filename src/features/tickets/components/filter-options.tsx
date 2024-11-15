@@ -98,9 +98,9 @@ export function FilterOptions({ setSearchParams, refetch,isSubmitting }: FilterO
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <div className="flex justify-between items-start">
+        <div className="flex justify-between items-start ">
           <Button variant="outline">
-            <SlidersHorizontal className="mr-2 text-gray-500" />
+            <SlidersHorizontal className="mr-2"/>
             Filter
           </Button>
         </div>
@@ -314,11 +314,11 @@ export function FilterOptions({ setSearchParams, refetch,isSubmitting }: FilterO
           </Popover>
         </div>
         <div className="grid grid-cols-2 gap-2">
-          <Button onClick={refetch} disabled={isSubmitting}>Submit</Button>
           <Button onClick={()=>{
             clearSearchParams();
             refetch()
           }} variant="outline">Clear</Button>
+          <Button onClick={refetch} disabled={isSubmitting}>Submit</Button>
         </div>
         <DropdownMenuSeparator />
       </DropdownMenuContent>

@@ -33,7 +33,7 @@ export const PendingTickets = () => {
   const intPage = parseInt(page, 10);
   const [debouncedSearchQuery] = useDebounce(searchQuery, 500);
 
-  const { data, isError, error, refetch } = tsr.ticketing.fetchPendingRequesteeTicketRoutes.useQuery({
+  const { data, isError, error, refetch, isPending } = tsr.ticketing.fetchPendingRequesteeTicketRoutes.useQuery({
     queryKey: ["tickets-inbox", page, debouncedSearchQuery, sortOrder],
     queryData: {
       query: {
@@ -87,7 +87,7 @@ export const PendingTickets = () => {
           </div>
 
           <div className="flex items-center justify-end w-full ">
-          <div className="flex m-1 text-gray-700 gap-2">
+          <div className="flex m-1 text-gray-700 gap-1">
             <Button
               variant="outline"
               onClick={toggleSortOrder}
@@ -97,7 +97,7 @@ export const PendingTickets = () => {
             >
               {sortOrder === "asc" ? <SquareChevronUp /> : <SquareChevronDown />}
             </Button>
-            <FilterOptions setSearchParams={setSearchParams} refetch={refetch} />
+            <FilterOptions setSearchParams={setSearchParams} refetch={refetch} isSubmitting={isPending}/>
           </div>
             <Input
               placeholder="Search ...."

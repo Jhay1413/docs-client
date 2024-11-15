@@ -124,8 +124,7 @@ export const TicketList = () => {
             >
               {sortOrder === "asc" ? <SquareChevronUp /> : <SquareChevronDown />}
             </Button>
-            <FilterOptions  setSearchParams={setSearchParams} refetch={refetch} isSubmitting={isPending}/>
-          </div>
+            <FilterOptions  setSearchParams={setSearchParams} refetch={refetch} isSubmitting={isPending} />
             <Input
               placeholder="Search ...."
               defaultValue={debouncedSearchQuery}
@@ -141,6 +140,7 @@ export const TicketList = () => {
               }
               className="w-[289px] rounded-none rounded-l-md"
             />
+            </div>
             <button className="p-2 bg-primaryColor text-white rounded-r-md">
               <Search />
             </button>
