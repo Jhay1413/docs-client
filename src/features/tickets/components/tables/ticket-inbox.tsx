@@ -11,7 +11,6 @@ import { getCurrentUserId } from "@/hooks/use-user-hook";
 import { FilterOptions } from "../filter-options";
 
 export const TicketInboxComponent = () => {
-  const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams({
     currentPage: "1",
     search: "",
@@ -86,12 +85,6 @@ export const TicketInboxComponent = () => {
     }
   };
 
-  const handleOnClickRow = (data: any) => {
-    // Navigate to ticket details page when a row is clicked
-    // navigate(`/dashboard/tickets/details/${data.id}`);
-  };
-
-  
   return (
     <div className="min-h-full flex flex-col w-full items-center p-4 bg-white rounded-lg">
       <div className="flex flex-col w-full items-center justify-center p-4 bg-white rounded-lg">
@@ -136,7 +129,7 @@ export const TicketInboxComponent = () => {
           </div>
         </div>
         
-        <DataTable columns={ticketsInboxColumn} data={data ? data.body.data : []} callbackFn={handleOnClickRow} />
+        <DataTable columns={ticketsInboxColumn} data={data ? data.body.data : []} />
 
         <div className="w-full flex justify-between items-center">
           <div className="text-muted-foreground">
