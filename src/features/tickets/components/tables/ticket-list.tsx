@@ -64,7 +64,7 @@ export const TicketList = () => {
     placeholderData: keepPreviousData,
   });
 
-    // Toggle sort order between 'asc' and 'desc'
+  // Toggle sort order between 'asc' and 'desc'
   const toggleSortOrder = () => {
     setSearchParams((prev) => {
       const newSortOrder = sortOrder === "asc" ? "desc" : "asc";
@@ -97,7 +97,6 @@ export const TicketList = () => {
     navigate(`/dashboard/tickets/details/${data.id}`);
   };
 
-
   return (
     <div className="min-h-full flex flex-col w-full items-center p-4 bg-white rounded-lg ">
       <div className="flex flex-col w-full items-center justify-center p-4 bg-white rounded-lg">
@@ -121,7 +120,7 @@ export const TicketList = () => {
             >
               {sortOrder === "asc" ? <SquareChevronUp /> : <SquareChevronDown />}
             </Button>
-            <FilterOptions  setSearchParams={setSearchParams} refetch={refetch} />
+            <FilterOptions setSearchParams={setSearchParams} refetch={refetch} />
             <Input
               placeholder="Search ...."
               defaultValue={debouncedSearchQuery}
