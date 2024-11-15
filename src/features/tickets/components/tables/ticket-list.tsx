@@ -109,7 +109,7 @@ export const TicketList = () => {
           <p className="text-muted-foreground text-[12px]">View and manage all support tickets.</p>
         </div>
 
-        <div className="flex items-center py-4 justify-between w-full">
+        <div className="flex items-center justify-between w-full">
           <div className="flex w-full relative">
           </div>
           <div className="flex items-center gap-1">
