@@ -22,7 +22,7 @@ export const UserList = () => {
           <h1 className="text-[#404041] font-medium text-[28px]">
             List of Users
           </h1>
-          <p className="text-muted-foreground text-[12px]">
+          <p className="text-muted-foreground text-[12px] truncate">
             Browse and manage user profiles. Access detailed information and
             perform administrative actions as needed.
           </p>
