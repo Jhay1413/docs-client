@@ -67,7 +67,7 @@ export const TicketList = () => {
     placeholderData: keepPreviousData,
   });
 
-    // Toggle sort order between 'asc' and 'desc'
+  // Toggle sort order between 'asc' and 'desc'
   const toggleSortOrder = () => {
     setSearchParams((prev) => {
       const newSortOrder = sortOrder === "asc" ? "desc" : "asc";
@@ -99,7 +99,6 @@ export const TicketList = () => {
     // Navigate to ticket details page when a row is clicked
     navigate(`/dashboard/tickets/details/${data.id}`);
   };
-
 
   return (
     <div className="min-h-full flex flex-col w-full items-center p-4 bg-white rounded-lg">
