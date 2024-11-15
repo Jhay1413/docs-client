@@ -83,7 +83,7 @@ export const PendingTickets = () => {
         <div className="flex justify-between items-center w-full pb-4">
           <div className="flex justify-start w-full flex-col ">
             <h1 className="text-[#404041] font-medium text-[28px]">Pending Request</h1>
-            <p className="text-muted-foreground text-[12px]">Stay updated with the latest messages and notifications here.</p>
+            <p className="text-muted-foreground text-[12px] truncate">Stay updated with the latest messages and notifications here.</p>
           </div>
 
           <div className="flex items-center justify-end w-full ">
