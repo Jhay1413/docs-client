@@ -129,7 +129,7 @@ export const TicketInboxComponent = () => {
           </div>
         </div>
         
-        <DataTable columns={ticketsInboxColumn} data={data ? data.body.data : []} />
+        <DataTable columns={ticketsInboxColumn} data={data ? data.body.data : []} isSticky={true}/>
 
         <div className="w-full flex justify-between items-center">
           <div className="text-muted-foreground">

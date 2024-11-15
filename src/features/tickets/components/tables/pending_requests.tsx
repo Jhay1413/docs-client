@@ -120,7 +120,7 @@ export const PendingTickets = () => {
           </div>
         </div>
 
-        <DataTable columns={pendingTicketsColumn} data={data ? data.body.data : []} />
+        <DataTable columns={pendingTicketsColumn} data={data ? data.body.data : []} isSticky={true}/>
 
         <div className="w-full flex justify-between items-center">
           <div className="text-muted-foreground">{/* <h1>Number of Transactions: {data?.body.numOfTransactions}</h1> */}</div>

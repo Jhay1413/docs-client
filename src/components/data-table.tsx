@@ -23,8 +23,10 @@ interface DataTableProps<TData, TValue> {
   hasSearch?: boolean;
   callbackFn?: (data: TData) => void;
   hasPaginate?: boolean;
+  isSticky?: boolean;
 }
-export function DataTable<TData, TValue>({ columns, data, hasSearch, hasPaginate, callbackFn }: DataTableProps<TData, TValue>) {
+
+export function DataTable<TData, TValue>({ columns, data, hasSearch, hasPaginate, callbackFn, isSticky }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [filtering, setFiltering] = useState("");
@@ -53,18 +55,18 @@ export function DataTable<TData, TValue>({ columns, data, hasSearch, hasPaginate
   });
 
   return (
-    <div className="w-full  flex flex-col items-center  space-y-12 ">
+    <div className="w-full flex flex-col items-center space-y-12">
       <div className="flex flex-col w-full items-center justify-center">
         {hasSearch && (
-          <div className="flex  w-full items-center justify-center gap-2">
-            <div className="flex items-center py-4 justify-end w-full ">
+          <div className="flex w-full items-center justify-center gap-2">
+            <div className="flex items-center py-4 justify-end w-full">
               <Input
                 placeholder="Search ...."
                 value={filtering}
                 onChange={(event) => setFiltering(event.target.value)}
-                className="w-[289px] rounded-none  rounded-l-md"
+                className="w-[289px] rounded-none rounded-l-md"
               />
-              <button className="p-2 bg-primaryColor text-white rounded-r-md ">
+              <button className="p-2 bg-primaryColor text-white rounded-r-md">
                 <Search />
               </button>
             </div>
@@ -96,13 +98,16 @@ export function DataTable<TData, TValue>({ columns, data, hasSearch, hasPaginate
           </div>
         )}
 
-        <Table >
+        <Table>
           <TableHeader className="bg-[#BBD979]">
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id}>
-                {headerGroup.headers.map((header) => {
+                {headerGroup.headers.map((header, index) => {
                   return (
-                    <TableHead className="text-black " key={header.id}>
+                    <TableHead
+                      className={`text-black ${isSticky && index === headerGroup.headers.length - 1 ? "sticky right-0 bg-[#BBD979] z-10" : ""}`}
+                      key={header.id}
+                    >
                       {header.isPlaceholder ? null : flexRender(header.column.columnDef.header, header.getContext())}
                     </TableHead>
                   );
@@ -119,8 +124,13 @@ export function DataTable<TData, TValue>({ columns, data, hasSearch, hasPaginate
                   data-state={row.getIsSelected() && "selected"}
                   onClick={() => callbackFn && callbackFn(row.original)}
                 >
-                  {row.getVisibleCells().map((cell) => (
-                    <TableCell key={cell.id}>{flexRender(cell.column.columnDef.cell, cell.getContext())}</TableCell>
+                  {row.getVisibleCells().map((cell, index) => (
+                    <TableCell
+                      key={cell.id}
+                      className={isSticky && index === row.getVisibleCells().length - 1 ? "sticky right-0 bg-white z-10" : ""}
+                    >
+                      {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                    </TableCell>
                   ))}
                 </TableRow>
               ))
@@ -149,9 +159,6 @@ export function DataTable<TData, TValue>({ columns, data, hasSearch, hasPaginate
           </div>
         </div>
       )}
-      {/* <div className="flex-1 text-sm text-muted-foreground">
-        {table.getFilteredSelectedRowModel().rows.length} of {table.getFilteredRowModel().rows.length} row(s) selected.
-      </div> */}
     </div>
   );
 }
