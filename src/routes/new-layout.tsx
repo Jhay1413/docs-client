@@ -1,5 +1,5 @@
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
-import { NotificationType, useNotificationStore } from "@/global-states/notification-store";
+import { NotificationType, TicketNotificationType, useNotificationStore, useTicketNotificationStore } from "@/global-states/notification-store";
 import useRealtimeStore from "@/global-states/real-time-notification";
 import useSidebarState from "@/global-states/sidebar-function-store";
 import { getCurrentUserId } from "@/hooks/hooks/use-user-hook";
@@ -15,11 +15,27 @@ export const DashboardNewLayout = () => {
   const { open } = useSidebarState();
   const setNumOfUnreadNotif = useNotificationStore((state) => state.setNumOfUnreadNotif);
   const setNotification = useNotificationStore((state) => state.setNotification);
+  const setTicketNotification = useTicketNotificationStore((state) => state.setTicketNotification);
+
   useEffect(() => {
-    socket.on("notification", (message: string, quantityTracker: NotificationType, numOfUnreadNotif?: number) => {
-      console.log(quantityTracker);
+    socket.on("ticketNotification", (message:string, ticketTracker: TicketNotificationType) => {
+      setTicketNotification(ticketTracker);
+      if (message) {
+        toast("🦄 You have new notification!", {
+          position: "bottom-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+          transition: Bounce,
+        });
+      }
+    });
+    socket.on("notification", (message: string, quantityTracker: NotificationType) => {
       setNotification(quantityTracker);
-      setNumOfUnreadNotif(numOfUnreadNotif || 0);
       if (message) {
         toast("🦄 You have new notification!", {
           position: "bottom-right",
