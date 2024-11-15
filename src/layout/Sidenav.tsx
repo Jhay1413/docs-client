@@ -72,25 +72,8 @@ const UserAndAccountWithRole = withRole(UserAndAccountsMenu);
 export const SideNav = () => {
   const notification = useNotificationStore((state) => state.notification);
   const ticketNotification = useTicketNotificationStore((state) => state.ticketNotification);
-  const currentRole = useCurrentUserRole();
+
   const id = getCurrentUserId();
-  const location = useLocation();
-
-  // Define paths where notifications should be hidden
-  const hideInboxNotificationPath = `/dashboard/transactions/inbox/${id}`;
-  const hideIncomingNotificationPath = `/dashboard/transactions/incoming-transaction/${id}`;
-  const hideTicketInboxNotificationPath = `/dashboard/tickets/inbox/${id}`;
-  const hideTicketIncomingNotificationPath = `/dashboard/tickets/incoming/${id}`;
-
-  // Check if the current path matches any of the paths to hide notifications
-  const shouldHideInboxNotification = location.pathname === hideInboxNotificationPath;
-  const shouldHideIncomingNotification = location.pathname === hideIncomingNotificationPath;
-  const shouldHideTicketInboxNotification = location.pathname === hideTicketInboxNotificationPath;
-  const shouldHideTicketIncomingNotification = location.pathname === hideTicketIncomingNotificationPath;
-
-
-  console.log("Number of Inbox Tickets Notifications: ", ticketNotification?.inbox);
-  console.log("Number of Incoming Tickets Notifications: ", ticketNotification?.incoming);
 
   return (
     <div className="flex flex-col gap-4 w-full min-h-full pb-8 ">
@@ -140,7 +123,7 @@ export const SideNav = () => {
             >
 
               <div className="relative">
-                {!shouldHideInboxNotification && notification?.inbox !== 0 && (
+                {notification?.inbox !== 0 && (
                   <span className="absolute top-0 right-0 transform translate-x-1/2 -translate-y-1/2 flex items-center justify-center text-white text-[14px] font-extrabold rounded-full w-5 h-5 bg-red-700">
                     {notification?.inbox}
                   </span>
@@ -162,7 +145,7 @@ export const SideNav = () => {
               }}
             >
               <div className="relative">
-                {!shouldHideIncomingNotification && notification?.incoming !== 0 && (
+                {notification?.incoming !== 0 && (
                   <span className="absolute top-0 right-0 transform translate-x-1/2 -translate-y-1/2 flex items-center justify-center text-white text-[14px] font-extrabold rounded-full w-5 h-5 bg-red-700">
                     {notification?.incoming }
                   </span>
@@ -200,9 +183,9 @@ export const SideNav = () => {
               }}
             >
               <div className="relative">
-                {!shouldHideTicketInboxNotification && ticketNotification?.inbox !== 0 && (
+                {ticketNotification?.inboxTickets !== 0 && (
                   <span className="absolute top-0 right-0 transform translate-x-1/2 -translate-y-1/2 flex items-center justify-center text-white text-[14px] font-extrabold rounded-full w-5 h-5 bg-red-700">
-                    {ticketNotification?.inbox}
+                    {ticketNotification?.inboxTickets}
                   </span>
                 )}
                 <Mailbox />
@@ -222,9 +205,9 @@ export const SideNav = () => {
               }}
             >
               <div className="relative">
-                {!shouldHideTicketIncomingNotification && ticketNotification?.incoming !== 0 && (
+                {ticketNotification?.incomingTickets !== 0 && (
                   <span className="absolute top-0 right-0 transform translate-x-1/2 -translate-y-1/2 flex items-center justify-center text-white text-[14px] font-extrabold rounded-full w-5 h-5 bg-red-700">
-                    {ticketNotification?.incoming}
+                    {ticketNotification?.incomingTickets}
                   </span>
                 )}
                 <TicketPlus />
