@@ -1,7 +1,7 @@
 import { DataTable } from "@/components/data-table";
 import { transColumns } from "../table-columns/transaction-columns";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
-import { Plus, Search } from "lucide-react";
+import { Plus, Search, SquareChevronDown, SquareChevronUp } from "lucide-react";
 import withRole from "@/components/HOC/component-permission";
 import { tsr } from "@/services/tsr";
 import { Input } from "@/components/ui/input";
@@ -31,7 +31,10 @@ export const TransactionList = () => {
   const [searchParams, setSearchParams] = useSearchParams({
     currentPage: "1",
     search: "",
+    sortOrder: "asc",
   });
+
+  const sortOrder = searchParams.get("sortOrder") || "asc";
   const searchQuery = searchParams.get("search") || "";
   const page = searchParams.get("currentPage") || "1";
 
@@ -39,11 +42,11 @@ export const TransactionList = () => {
   const [debouncedSearchQuery] = useDebounce(searchQuery, 500); // Adjust the delay as needed
 
   const { data, isError, error } = tsr.transaction.fetchTransactionsV2.useQuery({
-    queryKey: ["transactions", page, debouncedSearchQuery],
+    queryKey: ["transactions", page, debouncedSearchQuery, sortOrder],
     queryData: {
       query: {
         query: debouncedSearchQuery,
-
+        sortOrder: sortOrder,
         page: page,
         pageSize: "10",
       },
@@ -73,6 +76,14 @@ export const TransactionList = () => {
   const handleOnClickRow = (data: z.infer<typeof transactionTable>) => {
     navigate(`/dashboard/transactions/history/${data.id}`);
   };
+  const toggleSortOrder = () => {
+    setSearchParams((prev) => {
+      const newSortOrder = sortOrder === "asc" ? "desc" : "asc";
+      prev.set("sortOrder", newSortOrder);
+      prev.set("currentPage", "1"); // Reset to first page on sort change
+      return prev;
+    });
+  };
 
   return (
     <div className="min-h-full flex flex-col w-full items-center p-4 bg-white rounded-lg ">
@@ -82,6 +93,17 @@ export const TransactionList = () => {
           <p className="text-muted-foreground text-[12px]">Review the details below to track and manage recent activities.</p>
         </div>
         <AddTransactionBtnWithRole roles={["SUPERADMIN", "RECORDS"]} />
+        <div className="">
+          <Button
+            variant="outline"
+            // onClick={toggleSortOrder}
+            size="icon"
+            className=""
+            // title={sortOrder === "asc" ? "Sort by ascending order" : "Sort by descending order"}
+          >
+            {sortOrder === "asc" ? <SquareChevronUp /> : <SquareChevronDown />}
+          </Button>
+        </div>
         <div className="flex items-center py-4 justify-end w-full ">
           <Input
             data-cy="trans-search"
