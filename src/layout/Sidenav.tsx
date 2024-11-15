@@ -17,7 +17,7 @@ import {
 import { Link, NavLink } from "react-router-dom";
 
 import { getCurrentUserId, useCurrentUserRole } from "@/hooks/use-user-hook";
-import { useNotificationStore } from "@/global-states/notification-store";
+import { useNotificationStore, useTicketNotificationStore } from "@/global-states/notification-store";
 import { Label } from "@/components/ui/label";
 import withRole from "@/components/HOC/component-permission";
 
@@ -71,9 +71,13 @@ const UserAndAccountWithRole = withRole(UserAndAccountsMenu);
 
 export const SideNav = () => {
   const notification = useNotificationStore((state) => state.notification);
+  const ticketNotification = useTicketNotificationStore((state) => state.ticketNotification);
   const currentRole = useCurrentUserRole();
   const id = getCurrentUserId();
-  console.log(id);
+
+  console.log("Number of Inbox Tickets Notifications: ", ticketNotification?.inbox);
+  console.log("Number of Incoming Tickets Notifications: ", ticketNotification?.incoming);
+
   return (
     <div className="flex flex-col gap-4 w-full min-h-full pb-8 ">
       <div className="flex items-center justify-center h-32 ">
@@ -166,6 +170,7 @@ export const SideNav = () => {
               <Mailbox />
               <div className="flex gap-2">
                 <h1 className="text-base">Inbox</h1>
+                {ticketNotification?.inbox != 0 && <span className="text-red-700 text-sm font-extrabold">{ticketNotification?.inbox }</span>}
               </div>
             </NavLink>
           </li>
@@ -180,6 +185,7 @@ export const SideNav = () => {
               <TicketPlus />
               <div className="flex gap-2">
                 <h1 className="text-base">Incoming Tickets</h1>
+                {ticketNotification?.incoming != 0 && <span className="text-red-700 text-sm font-extrabold">{ticketNotification?.incoming }</span>}
               </div>
             </NavLink>
           </li>
