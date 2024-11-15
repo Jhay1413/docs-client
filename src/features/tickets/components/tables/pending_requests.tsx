@@ -11,6 +11,7 @@ import { DataTable } from "@/components/data-table";
 import { z } from "zod";
 import { ticketingTableSchema, transactionTable } from "shared-contract";
 import { FilterOptions } from "../filter-options";
+import { ClipLoader } from "react-spinners";
 
 export const PendingTickets = () => {
   const id = getCurrentUserId();
@@ -33,7 +34,7 @@ export const PendingTickets = () => {
   const intPage = parseInt(page, 10);
   const [debouncedSearchQuery] = useDebounce(searchQuery, 500);
 
-  const { data, isError, error, refetch, isPending } = tsr.ticketing.fetchPendingRequesteeTicketRoutes.useQuery({
+  const { data, isError, error, refetch, isFetching } = tsr.ticketing.fetchPendingRequesteeTicketRoutes.useQuery({
     queryKey: ["tickets-inbox", page, debouncedSearchQuery, sortOrder],
     queryData: {
       query: {
@@ -97,7 +98,7 @@ export const PendingTickets = () => {
             >
               {sortOrder === "asc" ? <SquareChevronUp /> : <SquareChevronDown />}
             </Button>
-            <FilterOptions setSearchParams={setSearchParams} refetch={refetch} isSubmitting={isPending}/>
+            <FilterOptions setSearchParams={setSearchParams} refetch={refetch} isSubmitting={isFetching}/>
           </div>
             <Input
               placeholder="Search ...."
@@ -119,9 +120,15 @@ export const PendingTickets = () => {
             </button>
           </div>
         </div>
-
-        <DataTable columns={pendingTicketsColumn} data={data ? data.body.data : []} />
-
+        <div className="w-full">
+          {isFetching ? (
+              <div className="flex justify-center items-center py-10">
+                <ClipLoader size={30} color="#4a90e2" />
+              </div>
+            ) : (
+            <DataTable columns={pendingTicketsColumn} data={data ? data.body.data : []} />
+          )}
+        </div>
         <div className="w-full flex justify-between items-center">
           <div className="text-muted-foreground">{/* <h1>Number of Transactions: {data?.body.numOfTransactions}</h1> */}</div>
           <div className="flex items-center space-x-2 py-4">

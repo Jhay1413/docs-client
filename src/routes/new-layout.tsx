@@ -18,11 +18,24 @@ export const DashboardNewLayout = () => {
   const setTicketNotification = useTicketNotificationStore((state) => state.setTicketNotification);
 
   useEffect(() => {
-    socket.on("notification", (message: string, quantityTracker: NotificationType, ticketTracker: TicketNotificationType) => {
-
-      setNotification(quantityTracker);
+    socket.on("ticketNotification", (message:string, ticketTracker: TicketNotificationType) => {
       setTicketNotification(ticketTracker);
-      console.log(ticketTracker);
+      if (message) {
+        toast("🦄 You have new notification!", {
+          position: "bottom-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+          transition: Bounce,
+        });
+      }
+    });
+    socket.on("notification", (message: string, quantityTracker: NotificationType) => {
+      setNotification(quantityTracker);
       if (message) {
         toast("🦄 You have new notification!", {
           position: "bottom-right",
