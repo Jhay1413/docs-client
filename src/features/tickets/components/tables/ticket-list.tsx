@@ -9,6 +9,7 @@ import { tsr } from "@/services/tsr";
 import { keepPreviousData } from "@tanstack/react-query";
 import { FilterOptions } from "../filter-options";
 import { getCurrentUserId } from "@/hooks/use-user-hook";
+import { ClipLoader } from "react-spinners";
 
 // Add the button component here
 const AddTicketBtn = () => (
@@ -48,7 +49,7 @@ export const TicketList = () => {
   const intPage = parseInt(page, 10);
   const [debouncedSearchQuery] = useDebounce(searchQuery, 500);
 
-  const { data, isError, error, refetch , isPending} = tsr.ticketing.getTickets.useQuery({
+  const { data, isError, error, refetch , isFetching} = tsr.ticketing.getTickets.useQuery({
     queryKey: ["tickets-inbox", page, debouncedSearchQuery, sortOrder],
     queryData: {
       query: {
@@ -66,7 +67,7 @@ export const TicketList = () => {
     placeholderData: keepPreviousData,
   });
 
-    // Toggle sort order between 'asc' and 'desc'
+  // Toggle sort order between 'asc' and 'desc'
   const toggleSortOrder = () => {
     setSearchParams((prev) => {
       const newSortOrder = sortOrder === "asc" ? "desc" : "asc";
@@ -99,7 +100,6 @@ export const TicketList = () => {
     navigate(`/dashboard/tickets/details/${data.id}`);
   };
 
-
   return (
     <div className="min-h-full flex flex-col w-full items-center p-4 bg-white rounded-lg">
       <div className="flex flex-col w-full items-center justify-center p-4 bg-white rounded-lg">
@@ -124,7 +124,7 @@ export const TicketList = () => {
             >
               {sortOrder === "asc" ? <SquareChevronUp /> : <SquareChevronDown />}
             </Button>
-            <FilterOptions  setSearchParams={setSearchParams} refetch={refetch} isSubmitting={isPending} />
+            <FilterOptions  setSearchParams={setSearchParams} refetch={refetch} isSubmitting={isFetching} />
             <Input
               placeholder="Search ...."
               defaultValue={debouncedSearchQuery}
@@ -147,7 +147,15 @@ export const TicketList = () => {
           </div>
         </div>
 
-        <DataTable columns={ticketsColumn} data={data ? data.body.data : []} callbackFn={handleOnClickRow} />
+        <div className="w-full">
+          {isFetching ? (
+            <div className="flex justify-center items-center py-10">
+              <ClipLoader size={30} color="#4a90e2" />
+            </div>
+          ) : (
+            <DataTable columns={ticketsColumn} data={data ? data.body.data : []} callbackFn={handleOnClickRow}/>
+          )}
+        </div>
 
         <div className="w-full flex justify-between items-center">
           <div className="text-muted-foreground">

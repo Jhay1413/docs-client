@@ -31,8 +31,8 @@ export const useNotificationStore = create<NotificationState>((set) => ({
 }));
   
 export type TicketNotificationType = {
-  inbox: number,
-  incoming: number,
+  incomingTickets: number,
+  inboxTickets: number,
   refetch?: () => void;
   refetchAll?: () => void;
 }

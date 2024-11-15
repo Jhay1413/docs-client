@@ -18,11 +18,14 @@ export const DashboardNewLayout = () => {
   const setTicketNotification = useTicketNotificationStore((state) => state.setTicketNotification);
 
   useEffect(() => {
+    console.log("SAdasds")
+    socket.on("ticket-notification",(ticketTracker:TicketNotificationType)=>{
+      console.log(ticketTracker)
+      setTicketNotification(ticketTracker);
+    })
     socket.on("notification", (message: string, quantityTracker: NotificationType, ticketTracker: TicketNotificationType) => {
-
       setNotification(quantityTracker);
       setTicketNotification(ticketTracker);
-      console.log(ticketTracker);
       if (message) {
         toast("🦄 You have new notification!", {
           position: "bottom-right",
@@ -42,6 +45,7 @@ export const DashboardNewLayout = () => {
 
     return () => {
       socket.off("notification");
+      socket.off("ticket-notification")
     };
   }, [socket]);
 
