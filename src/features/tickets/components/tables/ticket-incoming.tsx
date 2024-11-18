@@ -154,7 +154,7 @@ export const IncomingTicketComponent = () => {
               <ClipLoader size={30} color="#4a90e2" />
             </div>
           ) : (
-            <DataTable columns={incomingColumns} data={data ? data.body.data : []} />
+            <DataTable columns={incomingColumns} data={data ? data.body.data : []} isSticky={true} />
           )}
         </div>
 
