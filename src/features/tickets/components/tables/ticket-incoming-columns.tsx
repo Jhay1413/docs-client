@@ -154,7 +154,7 @@ export function ticketsIncomingColumn(mutateAsync: MutateAsyncFunction): ColumnD
   
               <DropdownMenuItem>
                 <button className="w-full" onClick = { updateDateReceived}>
-                  Recieve
+                  Receive
                 </button>
               </DropdownMenuItem>
             </DropdownMenuContent>

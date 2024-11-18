@@ -136,7 +136,7 @@ export const TicketInboxComponent = () => {
               <ClipLoader size={30} color="#4a90e2" />
             </div>
           ) : (
-            <DataTable columns={ticketsInboxColumn} data={data ? data.body.data : []} />
+            <DataTable columns={ticketsInboxColumn} data={data ? data.body.data : []} isSticky={true}/>
           )}
         </div>
 
