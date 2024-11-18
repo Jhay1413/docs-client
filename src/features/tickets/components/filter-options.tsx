@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { useDebounce } from "use-debounce";
 import { keepPreviousData } from "@tanstack/react-query";
 import { cn } from "@/lib/utils";
@@ -39,6 +39,8 @@ export function FilterOptions({ setSearchParams, refetch,isSubmitting }: FilterO
   const priorityOptions = ["Urgent", "Important", "Low"];
   const statusOptions = ["ROUTING", "ON_PROCESS", "ON_GOING", "COMPLETED", "APPROVED", "FOR SIGN AND SEAL"];
 
+  const submitButtonRef = useRef<HTMLButtonElement>(null);
+
   // Fetching projects using React Query
   const { data: projects } = tsr.company.fetchCompanyProjectsBySearch.useQuery({
     queryKey: ["projects", debouncedSearchQuery],
@@ -64,10 +66,13 @@ export function FilterOptions({ setSearchParams, refetch,isSubmitting }: FilterO
     setSelectedStatus("");
     setSelectedSection("");
     setSelectedSender("");
-
-  
+    setTimeout(() => {
+      submitButtonRef.current?.click();
+    }, 200);
+    console.log(submitButtonRef.current);
   }
 
+  console.log(isSubmitting);
   // Fetching transactions using React Query
   const { data: transactions } = tsr.transaction.searchTransactionById.useQuery({
     queryKey: ["transactions-query", debouncedSearchTransaction],
@@ -118,7 +123,7 @@ export function FilterOptions({ setSearchParams, refetch,isSubmitting }: FilterO
             </PopoverTrigger>
             <PopoverContent className="w-full p-0">
               <Command shouldFilter={false}>
-                <CommandInput placeholder="Search Project..." onValueChange={(e) => e} />
+                <CommandInput placeholder="Search Project..." onValueChange={(e) => setSearchQuery(e)} />
                 <CommandList>
                   <CommandEmpty>No project found.</CommandEmpty>
                   <CommandGroup>
@@ -157,7 +162,7 @@ export function FilterOptions({ setSearchParams, refetch,isSubmitting }: FilterO
             </PopoverTrigger>
             <PopoverContent className="w-full p-0">
               <Command shouldFilter={false}>
-                <CommandInput placeholder="Search Transaction..." onValueChange={(e) => {}} />
+                <CommandInput placeholder="Search Transaction..." onValueChange={(e) => setSearchTransaction(e)} />
                 <CommandList>
                   <CommandEmpty>No transaction found.</CommandEmpty>
                   <CommandGroup>
@@ -317,8 +322,9 @@ export function FilterOptions({ setSearchParams, refetch,isSubmitting }: FilterO
           <Button onClick={()=>{
             clearSearchParams();
             refetch()
+            
           }} variant="outline">Clear</Button>
-          <Button onClick={refetch} disabled={isSubmitting}>Submit</Button>
+          <Button ref={submitButtonRef} onClick={refetch} disabled={isSubmitting}>Submit</Button>
         </div>
         <DropdownMenuSeparator />
       </DropdownMenuContent>
