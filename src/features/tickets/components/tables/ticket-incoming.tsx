@@ -112,7 +112,7 @@ export const IncomingTicketComponent = () => {
         <div className="flex justify-between items-center w-full pb-4">
           <div className="flex justify-start w-full flex-col">
             <h1 className="text-[#404041] font-medium text-[28px]">Incoming Tickets</h1>
-            <p className="text-muted-foreground text-[12px]">All your new tickets will appear here. Stay informed and don't miss any updates.</p>
+            <p className="text-muted-foreground text-[12px] truncate">All your new tickets will appear here. Stay informed and don't miss any updates.</p>
           </div>
           <div className="flex items-center justify-end w-full">
             <div className="flex m-1 text-gray-700 gap-1">
@@ -154,7 +154,7 @@ export const IncomingTicketComponent = () => {
               <ClipLoader size={30} color="#4a90e2" />
             </div>
           ) : (
-            <DataTable columns={incomingColumns} data={data ? data.body.data : []} />
+            <DataTable columns={incomingColumns} data={data ? data.body.data : []} isSticky={true} />
           )}
         </div>
 
