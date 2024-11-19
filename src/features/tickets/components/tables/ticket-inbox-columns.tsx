@@ -55,9 +55,7 @@ export const ticketsInboxColumn: ColumnDef<z.infer<typeof ticketingTableSchema>>
   },
   {
     header: () => (
-      <div className="w-full font-bold text-nowrap items-center flex justify-center">
-        <h1>Status</h1>
-      </div>
+      <span className="font-bold text-nowrap">Status</span>
     ),
     accessorKey: "status",
     cell: ({ row }) => {

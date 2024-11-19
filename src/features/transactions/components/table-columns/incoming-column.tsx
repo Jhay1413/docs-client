@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/button";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { z } from "zod";
 import { ColumnDef } from "@tanstack/react-table";
-import { ArrowUpDown, MoreHorizontal } from "lucide-react";
+import { ArrowUpDown, MailOpen, MoreHorizontal } from "lucide-react";
 import { toast } from "react-toastify";
 import { transactionTable } from "shared-contract";
 
@@ -85,7 +85,11 @@ export function useColumns(mutateAsync: MutateAsyncFunction): ColumnDef<Incoming
     },
 
     {
-      header: "Actions",
+      header: () => (
+        <div className="w-full font-bold text-nowrap items-center flex justify-center">
+          <h1>Actions</h1>
+        </div>
+      ),
       accessorKey: "actions",
       id: "actions",
       cell: ({ row }) => {
@@ -95,11 +99,12 @@ export function useColumns(mutateAsync: MutateAsyncFunction): ColumnDef<Incoming
           await mutateAsync({ params: { id: transaction.id! }, body: { dateReceived: new Date().toISOString() } });
         };
         return (
+          <div className="flex items-center justify-center gap-2 text-gray-700">
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="ghost" className="h-8 w-8 p-0">
+              <Button variant="ghost" className="h-8 w-8 p-0 flex items-center justify-center">
                 <span className="sr-only">Open menu</span>
-                <MoreHorizontal className="h-4 w-4" />
+                <MailOpen />
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
@@ -112,6 +117,10 @@ export function useColumns(mutateAsync: MutateAsyncFunction): ColumnDef<Incoming
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
+
+          </div> 
+
+      
         );
       },
     },
