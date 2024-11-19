@@ -32,6 +32,7 @@ import { IncomingTicketComponent } from "./features/tickets/components/tables/ti
 import { TicketDetails } from "./features/tickets/components/tables/ticket-details";
 import ForwardTicketComponent from "./features/tickets/components/forms/forward-ticket";
 import { PendingTickets } from "./features/tickets/components/tables/pending_requests";
+import { UserManual } from "./features/user-manual/user-manual";
 
 function App() {
   return (
@@ -98,6 +99,7 @@ function App() {
                 <Route path="resolved-tickets" element={<TicketResolved />} />
                 <Route path="pending-tickets/:id" element={<PendingTickets />} />
               </Route>
+              <Route path="user-manual" element={<UserManual />} />
             </Route>
             <Route path="/" element={<PublicRoutes />}>
               <Route path="form" element={<Login />} />
