@@ -22,7 +22,7 @@ export const UserAccountList = () => {
           <h1 className="text-[#404041] font-medium text-[28px]">
             List of Accounts
           </h1>
-          <p className="text-muted-foreground text-[12px]">
+          <p className="text-muted-foreground text-[12px] truncate">
             View and manage all your accounts in one place. Easily access account
             details and perform necessary actions.
           </p>

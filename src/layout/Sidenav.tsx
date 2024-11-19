@@ -10,13 +10,14 @@ import {
   Mailbox,
   Ticket,
   TicketPercent,
+  TicketPlus,
   UserSearch,
   Users,
 } from "lucide-react";
-import { Link, NavLink } from "react-router-dom";
+import { Link, NavLink, useLocation } from "react-router-dom";
 
 import { getCurrentUserId, useCurrentUserRole } from "@/hooks/use-user-hook";
-import { useNotificationStore } from "@/global-states/notification-store";
+import { useNotificationStore, useTicketNotificationStore } from "@/global-states/notification-store";
 import { Label } from "@/components/ui/label";
 import withRole from "@/components/HOC/component-permission";
 
@@ -70,9 +71,10 @@ const UserAndAccountWithRole = withRole(UserAndAccountsMenu);
 
 export const SideNav = () => {
   const notification = useNotificationStore((state) => state.notification);
-  const currentRole = useCurrentUserRole();
+  const ticketNotification = useTicketNotificationStore((state) => state.ticketNotification);
+
   const id = getCurrentUserId();
-  console.log(id);
+
   return (
     <div className="flex flex-col gap-4 w-full min-h-full pb-8 ">
       <div className="flex items-center justify-center h-32 ">
@@ -117,11 +119,21 @@ export const SideNav = () => {
               className={({ isActive }) => {
                 return `justify-start items-center flex w-full p-2 space-x-4 text-lg  rounded-md ${isActive ? "bg-green-100/30 text-white" : ""}`;
               }}
+              
             >
-              <LibraryBig />
+
+              <div className="relative">
+                {notification?.inbox !== 0 && (
+                  <span className="absolute top-0 right-0 transform translate-x-1/2 -translate-y-1/2 flex items-center justify-center text-white text-[14px] font-extrabold rounded-full w-5 h-5 bg-red-700">
+                    {notification?.inbox}
+                  </span>
+                )}
+                <LibraryBig />
+              </div>
+              
               <div className="flex gap-2">
                 <h1 className="text-base">Inbox</h1>
-                {notification?.inbox !== 0 && <span className="text-red-700 text-sm font-extrabold">{notification?.inbox}</span>}
+                {/* {notification?.inbox !== 0 && <span className="text-red-700 text-sm font-extrabold">{notification?.inbox}</span>} */}
               </div>
             </NavLink>
           </li>
@@ -132,10 +144,18 @@ export const SideNav = () => {
                 return `justify-start items-center flex w-full p-2 space-x-4 text-lg  rounded-md ${isActive ? "bg-green-100/30 text-white" : ""}`;
               }}
             >
-              <ClipboardList />
+              <div className="relative">
+                {notification?.incoming !== 0 && (
+                  <span className="absolute top-0 right-0 transform translate-x-1/2 -translate-y-1/2 flex items-center justify-center text-white text-[14px] font-extrabold rounded-full w-5 h-5 bg-red-700">
+                    {notification?.incoming }
+                  </span>
+                )}
+                <ClipboardList />
+              </div>
+              
               <div className="flex gap-2">
                 <h1 className="text-base">Incoming files</h1>
-                {notification?.incoming !== 0 && <span className="text-red-700 text-sm font-extrabold">{notification?.incoming}</span>}
+                {/* {notification?.incoming !== 0 && <span className="text-red-700 text-sm font-extrabold">{notification?.incoming}</span>} */}
               </div>
             </NavLink>
           </li>
@@ -162,9 +182,17 @@ export const SideNav = () => {
                 return `justify-start items-center flex w-full p-2 space-x-4 text-lg  rounded-md ${isActive ? "bg-green-100/30 text-white" : ""}`;
               }}
             >
-              <Mailbox />
+              <div className="relative">
+                {ticketNotification?.inboxTickets !== 0 && (
+                  <span className="absolute top-0 right-0 transform translate-x-1/2 -translate-y-1/2 flex items-center justify-center text-white text-[14px] font-extrabold rounded-full w-5 h-5 bg-red-700">
+                    {ticketNotification?.inboxTickets}
+                  </span>
+                )}
+                <Mailbox />
+              </div>
               <div className="flex gap-2">
                 <h1 className="text-base">Inbox</h1>
+                {/* {ticketNotification?.inbox != 0 && <span className="flex items-center justify-center text-red-700 text-[12px] font-extrabold rounded-full w-4 h-4 bg-white border border-red-700">{ticketNotification?.inbox }</span>} */}
               </div>
             </NavLink>
           </li>
@@ -176,9 +204,18 @@ export const SideNav = () => {
                 return `justify-start items-center flex w-full p-2 space-x-4 text-lg  rounded-md ${isActive ? "bg-green-100/30 text-white" : ""}`;
               }}
             >
-              <LibraryBig />
+              <div className="relative">
+                {ticketNotification?.incomingTickets !== 0 && (
+                  <span className="absolute top-0 right-0 transform translate-x-1/2 -translate-y-1/2 flex items-center justify-center text-white text-[14px] font-extrabold rounded-full w-5 h-5 bg-red-700">
+                    {ticketNotification?.incomingTickets}
+                  </span>
+                )}
+                <TicketPlus />
+              </div>
+              
               <div className="flex gap-2">
                 <h1 className="text-base">Incoming Tickets</h1>
+                {/* {ticketNotification?.incoming != 0 && <span className="text-red-700 text-sm font-extrabold">{ticketNotification?.incoming }</span>} */}
               </div>
             </NavLink>
           </li>
