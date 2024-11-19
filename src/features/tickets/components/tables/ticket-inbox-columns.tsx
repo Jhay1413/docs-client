@@ -83,9 +83,7 @@ export const ticketsInboxColumn: ColumnDef<z.infer<typeof ticketingTableSchema>>
   },
   {
     header: () => (
-      <div className="w-full font-bold text-nowrap items-center flex justify-center">
-        <h1>Date Created</h1>
-      </div>
+      <span className="font-bold text-nowrap">Date Created</span>
     ),
     accessorKey: "createdAt",
     cell: ({ row }) => {
@@ -95,9 +93,7 @@ export const ticketsInboxColumn: ColumnDef<z.infer<typeof ticketingTableSchema>>
   },
   {
     header: () => (
-      <div className="w-full font-bold text-nowrap items-center flex justify-center">
-        <h1>Date Forwarded</h1>
-      </div>
+    <span className="font-bold text-nowrap">Date Forwarded</span>
     ),
     accessorKey: "dateForwarded",
     cell: ({ row }) => {
@@ -107,9 +103,7 @@ export const ticketsInboxColumn: ColumnDef<z.infer<typeof ticketingTableSchema>>
   },
   {
     header: () => (
-      <div className="w-full font-bold text-nowrap items-center flex justify-center">
-        <h1>Sender</h1>
-      </div>
+      <span className="font-bold text-nowrap">Sender</span>
     ),
     accessorKey: "sender",
     cell: ({ row }) => {
@@ -120,9 +114,7 @@ export const ticketsInboxColumn: ColumnDef<z.infer<typeof ticketingTableSchema>>
   },
   {
     header: () => (
-      <div className="w-full font-bold text-nowrap items-center flex justify-center">
-        <h1>Date Received</h1>
-      </div>
+      <span className="font-bold text-nowrap">Date Received</span>
     ),
     accessorKey: "dateReceived",
     cell: ({ row }) => {
@@ -132,9 +124,7 @@ export const ticketsInboxColumn: ColumnDef<z.infer<typeof ticketingTableSchema>>
   },
   {
     header: () => (
-      <div className="w-full font-bold text-nowrap items-center flex justify-center">
-        <h1>Remarks</h1>
-      </div>
+      <span className="font-bold text-nowrap">Remarks</span>
     ),
     accessorKey: "remarks",
     cell: ({ row }) => {

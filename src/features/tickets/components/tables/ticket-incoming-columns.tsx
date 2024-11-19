@@ -47,7 +47,7 @@ export function ticketsIncomingColumn(mutateAsync: MutateAsyncFunction): ColumnD
         const ticketInfo = row.original;
         const statusInPascalCase = toPascalCase(ticketInfo.status || "");
         return (
-          <div>
+          <div className="flex  gap-1 items-center w-24">
             {ticketInfo.status === "ON_GOING" && <Dot size={32} className="text-green-500" />}
             <span>{statusInPascalCase}</span>
           </div>

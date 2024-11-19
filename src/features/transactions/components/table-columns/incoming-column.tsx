@@ -112,7 +112,7 @@ export function useColumns(mutateAsync: MutateAsyncFunction): ColumnDef<Incoming
 
               <DropdownMenuItem>
                 <button className="w-full" onClick={updateHistory}>
-                  Recieve
+                  Receive
                 </button>
               </DropdownMenuItem>
             </DropdownMenuContent>
