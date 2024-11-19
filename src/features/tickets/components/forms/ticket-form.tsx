@@ -166,9 +166,9 @@ const TicketForm = ({
           {/* Division Select */}
 
           <div className="">
-            {selectedSection === "EPD" && <TicketFormEPD isForwarding={isForwarding} />}
-            {selectedSection === "IT" && <TicketFormIT />}
-            {selectedSection === "Marketing" && <TicketFormMRKT />}
+            {selectedDivision === "Technical Department" && <TicketFormEPD isForwarding={isForwarding} />}
+            {selectedDivision === "Operations Department" && <TicketFormIT />}
+            {selectedDivision === "Sales/Marketing Department" && <TicketFormMRKT />}
           </div>
 
           <FormField
@@ -367,11 +367,11 @@ const TicketForm = ({
           <div className="col-span-2 ">
             <div className="grid grid-cols-2 gap-4">
               <div className="col-span-1 mb-6">
-                <FormTextArea name="requestDetails" label="Request Details" placeholder="Enter details" disable={isForwarding} />
+                <FormTextArea name="requestDetails" label="Request Details*" placeholder="Enter details" disable={isForwarding} />
               </div>
 
               <div className="col-span-1 mb-6">
-                <FormTextArea name="remarks" label="Remarks" placeholder="Enter remarks" />
+                <FormTextArea name="remarks" label="Remarks*" placeholder="Enter remarks" />
               </div>
             </div>
           </div>
