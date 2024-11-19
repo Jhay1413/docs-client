@@ -43,6 +43,7 @@ export const UserList = () => {
           data={entities.data}
           hasSearch={true}
           hasPaginate={true}
+          isSticky={true}
         ></DataTable>
       </div>
     </div>
