@@ -4,6 +4,7 @@ import {
   ClipboardList,
   Factory,
   FileCode,
+  FilePen,
   FileText,
   LayoutDashboard,
   LibraryBig,
@@ -16,7 +17,6 @@ import {
   Users,
 } from "lucide-react";
 import { Link, NavLink, useLocation } from "react-router-dom";
-
 import { getCurrentUserId, useCurrentUserRole } from "@/hooks/use-user-hook";
 import { useNotificationStore, useTicketNotificationStore } from "@/global-states/notification-store";
 import { Label } from "@/components/ui/label";
@@ -264,8 +264,7 @@ export const SideNav = () => {
               </div>
             </NavLink>
           </li>
-        </ul>
-        
+        </ul>        
         <Label className="text-[#DCFF8E] px-4 font-medium flex w-full text-sm">USER MANUAL</Label>
         <ul className="flex flex-col  space-y-4 w-full   mx-2 ">
           <li className="relative inline-block text-left px-4 ">
@@ -280,6 +279,21 @@ export const SideNav = () => {
                 <h1 className="text-base">User Manual</h1>
               </div>
             </NavLink>
+
+        <Label className="text-[#DCFF8E] px-4 font-medium flex w-full text-sm">ADMIN</Label>
+          <ul className="flex flex-col  space-y-4 w-full   mx-2 ">
+            <li className="relative inline-block text-left px-4 ">
+              <NavLink
+                to={`/dashboard/admin/request`}
+                className={({ isActive }) => {
+                  return `justify-start items-center flex w-full p-2 space-x-4 text-lg  rounded-md ${isActive ? "bg-green-100/30 text-white" : ""}`;
+                }}
+              >
+                <FilePen />
+                <div className="flex gap-2">
+                  <h1 className="text-base">Request Forms</h1>
+                </div>
+              </NavLink>
           </li>
         </ul>
       </div>

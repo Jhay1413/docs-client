@@ -33,6 +33,8 @@ import { TicketDetails } from "./features/tickets/components/tables/ticket-detai
 import ForwardTicketComponent from "./features/tickets/components/forms/forward-ticket";
 import { PendingTickets } from "./features/tickets/components/tables/pending_requests";
 import { UserManual } from "./features/user-manual/user-manual";
+import { AdminIndex } from "./pages/admin-index";
+import { RequestForms } from "./features/admin";
 
 function App() {
   return (
@@ -61,6 +63,7 @@ function App() {
                 </RouteGuard>
               }
             >
+
               <Route path="overview" element={<Dashboard />} />
               <Route path="users" element={<Users />}>
                 <Route path={`profile/:id`} element={<Profile />} />
@@ -70,6 +73,7 @@ function App() {
                   <Route path={`userAccount`} element={<UserAccountList />} />
                 </Route>
               </Route>
+
               <Route path="companies" element={<CompanyIndex />}>
                 <Route index element={<CompanyList />} />
                 <Route element={<ProtectedRoute allowedRoles={["SUPERADMIN"]} exemptions={["Operations Department"]} />}>
@@ -77,6 +81,7 @@ function App() {
                   <Route path={`:id`} element={<EditComponent />} />
                 </Route>
               </Route>
+
               <Route path="transactions" element={<TransactionIndex />}>
                 <Route path="list" element={<TransactionList />} />
                 <Route path="transaction-form" element={<InsertComponent />} />
@@ -87,11 +92,10 @@ function App() {
                 <Route path="log/:id" element={<ViewHistory />} />
                 <Route path="archived" element={<ArchivedList />} />
               </Route>
+
               <Route path="tickets" element={<TicketsIndex />}>
                 <Route path="list" element={<TicketList />} />
-                {/* <Route path="history/:id" element={<TicketDetails />} /> */}
                 <Route path="add-form" element={<AddTicketComponent />} />
-                {/* <Route path="tickets-form" element={<TicketForm  />} /> */}
                 <Route path="details/:id" element={<TicketDetails />} />
                 <Route path="inbox/:id" element={<TicketInboxComponent />} />
                 <Route path="incoming/:id" element={<IncomingTicketComponent />} />
@@ -100,6 +104,10 @@ function App() {
                 <Route path="pending-tickets/:id" element={<PendingTickets />} />
               </Route>
               <Route path="user-manual" element={<UserManual />} />
+              
+              <Route path="admin" element={<AdminIndex />}>
+                <Route path="request" element={<RequestForms />} />
+              </Route>
             </Route>
             <Route path="/" element={<PublicRoutes />}>
               <Route path="form" element={<Login />} />
