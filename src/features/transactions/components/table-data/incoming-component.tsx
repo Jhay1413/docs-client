@@ -72,7 +72,7 @@ export const IncomingComponent = () => {
             All your new messages and notifications will appear here. Stay informed and don't miss any updates.
           </p>
         </div>
-        <DataTable columns={incomingColumns} data={data ? data.body.data : []} />
+        <DataTable columns={incomingColumns} data={data ? data.body.data : []} isSticky={true}/>
       </div>
     </div>
   );
