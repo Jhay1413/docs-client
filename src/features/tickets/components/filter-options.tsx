@@ -92,7 +92,6 @@ export function FilterOptions({ setSearchParams, refetch,isSubmitting }: FilterO
         section: selectedSection,
         role: role,
         mode: "insert",
-        type: selectectedType,
       },
     },
   });
