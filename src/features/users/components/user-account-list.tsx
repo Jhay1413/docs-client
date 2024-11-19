@@ -28,7 +28,7 @@ export const UserAccountList = () => {
           </p>
         </div>
 
-        <DataTable columns={accountColumn} hasSearch={true} data={useAccountHook.data}></DataTable>
+        <DataTable columns={accountColumn} hasSearch={true} data={useAccountHook.data} isSticky={true}></DataTable>
       </div>
     </div>
   );

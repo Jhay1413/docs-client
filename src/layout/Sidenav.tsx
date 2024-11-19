@@ -1,6 +1,8 @@
 import {
   AlertCircleIcon,
   BookCheck,
+  BookKey,
+  BookType,
   ClipboardList,
   Factory,
   FileCode,
@@ -281,22 +283,36 @@ export const SideNav = () => {
             </NavLink>
           </li>
         </ul>        
-        <Label className="text-[#DCFF8E] px-4 font-medium flex w-full text-sm">USER MANUAL</Label>
+        <Label className="text-[#DCFF8E] px-4 font-medium flex w-full text-sm">MANUALS</Label>
         <ul className="flex flex-col  space-y-4 w-full   mx-2 ">
           <li className="relative inline-block text-left px-4 ">
             <NavLink
-              to={`/dashboard/user-manual`}
+              to={`/dashboard/manuals/ticket-manual`}
               className={({ isActive }) => {
                 return `justify-start items-center flex w-full p-2 space-x-4 text-lg  rounded-md ${isActive ? "bg-green-100/30 text-white" : ""}`;
               }}
             >
-              <NotebookText />
+              <BookKey />
               <div className="flex gap-2">
-                <h1 className="text-base">User Manual</h1>
+                <h1 className="text-base">Ticket Manual</h1>
+              </div>
+            </NavLink>
+          </li>
+          <li className="relative inline-block text-left px-4 ">
+            <NavLink
+              to={`/dashboard/manuals/transaction-manual`}
+              className={({ isActive }) => {
+                return `justify-start items-center flex w-full p-2 space-x-4 text-lg  rounded-md ${isActive ? "bg-green-100/30 text-white" : ""}`;
+              }}
+            >
+              <BookType />
+              <div className="flex gap-2">
+                <h1 className="text-base">Transaction Manual</h1>
               </div>
             </NavLink>
           </li>
         </ul>
+       
       </div>
     </div>
   );

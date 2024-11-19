@@ -308,7 +308,7 @@ export const TransactionForm = ({ company, method, defaultValue, mutateFn, isPen
                           field.onChange(value);
                         }}
                         defaultValue={field.value}
-                        disabled={method === "UPDATE" && role !== "RECORDS"}
+                        disabled={method === "UPDATE" && role !== "RECORDS" || isForwarding}
                       >
                         <SelectTrigger className="w-full">
                           <SelectValue placeholder="Select Project" />
@@ -343,7 +343,7 @@ export const TransactionForm = ({ company, method, defaultValue, mutateFn, isPen
                           setSelectedDivision(value);
                           field.onChange(value);
                         }}
-                        disabled={role !== "RECORDS" && role !== "DMS" && role !== "MANAGER" && method == "UPDATE"}
+                        disabled={(role !== "RECORDS" && role !== "DMS" && role !== "MANAGER" && method == "UPDATE") || isForwarding}
                       >
                         <SelectTrigger className="w-full">
                           <SelectValue placeholder="Select Department" />
@@ -374,7 +374,7 @@ export const TransactionForm = ({ company, method, defaultValue, mutateFn, isPen
                           field.onChange(value);
                         }}
                         defaultValue={field.value || undefined}
-                        disabled={(role !== "RECORDS" && role !== "DMS" && role !== "MANAGER" && method == "UPDATE") || !selectedDivision}
+                        disabled={(role !== "RECORDS" && role !== "DMS" && role !== "MANAGER" && method == "UPDATE") || !selectedDivision  || isForwarding}
                       >
                         <SelectTrigger>
                           <SelectValue placeholder="Select team" />
@@ -407,7 +407,7 @@ export const TransactionForm = ({ company, method, defaultValue, mutateFn, isPen
                         onValueChange={(value) => {
                           field.onChange(value);
                         }}
-                        disabled={method === "UPDATE" && role !== "RECORDS"}
+                        disabled={(method === "UPDATE" && role !== "RECORDS") || isForwarding}
                       >
                         <SelectTrigger className="w-full">
                           <SelectValue placeholder="Select Document Type" />
@@ -436,7 +436,7 @@ export const TransactionForm = ({ company, method, defaultValue, mutateFn, isPen
                           category ? form.setValue("category", category.category) : form.setValue("category", "");
                           setSubType(value);
                         }}
-                        disabled={method === "UPDATE" && role !== "RECORDS"}
+                        disabled={(method === "UPDATE" && role !== "RECORDS") || isForwarding}
                       >
                         <SelectTrigger className="w-full">
                           <SelectValue placeholder="Select Document Sub" />
