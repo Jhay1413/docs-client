@@ -49,7 +49,7 @@ export const TicketList = () => {
   const intPage = parseInt(page, 10);
   const [debouncedSearchQuery] = useDebounce(searchQuery, 500);
 
-  const { data, isError, error, refetch , isFetching} = tsr.ticketing.getTickets.useQuery({
+  const { data, isError, error, refetch , isPending} = tsr.ticketing.getTickets.useQuery({
     queryKey: ["tickets-inbox", page, debouncedSearchQuery, sortOrder],
     queryData: {
       query: {
@@ -124,7 +124,7 @@ export const TicketList = () => {
             >
               {sortOrder === "asc" ? <SquareChevronUp /> : <SquareChevronDown />}
             </Button>
-            <FilterOptions  setSearchParams={setSearchParams} refetch={refetch} isSubmitting={isFetching} />
+            <FilterOptions  setSearchParams={setSearchParams} refetch={refetch} isSubmitting={isPending} />
             <Input
               placeholder="Search ...."
               defaultValue={debouncedSearchQuery}
@@ -148,7 +148,7 @@ export const TicketList = () => {
         </div>
 
         <div className="w-full">
-          {isFetching ? (
+          {isPending ? (
             <div className="flex justify-center items-center py-10">
               <ClipLoader size={30} color="#4a90e2" />
             </div>

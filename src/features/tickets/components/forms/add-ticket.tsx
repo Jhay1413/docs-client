@@ -42,7 +42,6 @@ export const AddTicketComponent = () => {
         section: selectedSection,
         role: role,
         mode: "insert",
-        type: selectectedType,
       },
     },
   });
@@ -62,9 +61,8 @@ export const AddTicketComponent = () => {
         selectedDivision={selectedDivision}
         setSelectedDivision={setSelectedDivision}
         setSelectedSection={setSelectedSection}
+        selectedSection={selectedSection}
         receiver={data ? data.body : []}
-        selectedType={selectectedType}
-        setSelectedType={setSelectedType}
         mutateFn={mutateFn}
         isPending={isPending}
       />

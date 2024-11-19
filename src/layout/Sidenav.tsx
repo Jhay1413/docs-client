@@ -1,13 +1,17 @@
 import {
   AlertCircleIcon,
   BookCheck,
+  BookKey,
+  BookType,
   ClipboardList,
   Factory,
   FileCode,
+  FilePen,
   FileText,
   LayoutDashboard,
   LibraryBig,
   Mailbox,
+  NotebookText,
   Ticket,
   TicketPercent,
   TicketPlus,
@@ -15,7 +19,6 @@ import {
   Users,
 } from "lucide-react";
 import { Link, NavLink, useLocation } from "react-router-dom";
-
 import { getCurrentUserId, useCurrentUserRole } from "@/hooks/use-user-hook";
 import { useNotificationStore, useTicketNotificationStore } from "@/global-states/notification-store";
 import { Label } from "@/components/ui/label";
@@ -97,6 +100,22 @@ export const SideNav = () => {
             </NavLink>
           </li>
           <CompaniesItemWithRole roles={["SUPERADMIN", "MANAGER"]} exemptions={["Operations Department"]} />
+        </ul>
+        <Label className="text-[#DCFF8E] px-4 font-medium flex w-full text-sm">ADMIN</Label>
+          <ul className="flex flex-col  space-y-4 w-full   mx-2 ">
+            <li className="relative inline-block text-left px-4 ">
+              <NavLink
+                to={`/dashboard/admin/request`}
+                className={({ isActive }) => {
+                  return `justify-start items-center flex w-full p-2 space-x-4 text-lg  rounded-md ${isActive ? "bg-green-100/30 text-white" : ""}`;
+                }}
+              >
+                <FilePen />
+                <div className="flex gap-2">
+                  <h1 className="text-base">Request Forms</h1>
+                </div>
+              </NavLink>
+          </li>
         </ul>
         <UserAndAccountWithRole roles={["SUPERADMIN"]} exemptions={["Operations Department"]} />
         <Label className="text-[#DCFF8E] px-4 font-medium flex w-full text-sm">TRANSACTIONS</Label>
@@ -249,6 +268,7 @@ export const SideNav = () => {
             </NavLink>
           </li>
 
+          
           <li className="relative inline-block text-left px-4 ">
             <NavLink
               to={`/dashboard/tickets/resolved-tickets`}
@@ -262,7 +282,37 @@ export const SideNav = () => {
               </div>
             </NavLink>
           </li>
+        </ul>        
+        <Label className="text-[#DCFF8E] px-4 font-medium flex w-full text-sm">MANUALS</Label>
+        <ul className="flex flex-col  space-y-4 w-full   mx-2 ">
+          <li className="relative inline-block text-left px-4 ">
+            <NavLink
+              to={`/dashboard/manuals/ticket-manual`}
+              className={({ isActive }) => {
+                return `justify-start items-center flex w-full p-2 space-x-4 text-lg  rounded-md ${isActive ? "bg-green-100/30 text-white" : ""}`;
+              }}
+            >
+              <BookKey />
+              <div className="flex gap-2">
+                <h1 className="text-base">Ticket Manual</h1>
+              </div>
+            </NavLink>
+          </li>
+          <li className="relative inline-block text-left px-4 ">
+            <NavLink
+              to={`/dashboard/manuals/transaction-manual`}
+              className={({ isActive }) => {
+                return `justify-start items-center flex w-full p-2 space-x-4 text-lg  rounded-md ${isActive ? "bg-green-100/30 text-white" : ""}`;
+              }}
+            >
+              <BookType />
+              <div className="flex gap-2">
+                <h1 className="text-base">Transaction Manual</h1>
+              </div>
+            </NavLink>
+          </li>
         </ul>
+       
       </div>
     </div>
   );
