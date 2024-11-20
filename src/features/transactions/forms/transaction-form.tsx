@@ -622,10 +622,8 @@ export const TransactionForm = ({ company, method, defaultValue, mutateFn, isPen
                 </TableHeader>
                 <TableBody className="">
                 {fields.map((item, index) => {
-                // Always render the first three rows
-                const shouldShowRows = isForwarding ? index < 3 || areRowsExpanded : index < 3 || areRowsExpanded;
 
-                if (shouldShowRows) {
+                if (index < 3 || areRowsExpanded ) {
                   return (
                     <TableRow key={item.id}>
                       <TableCell className="font-medium w-[300px]">
