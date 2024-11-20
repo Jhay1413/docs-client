@@ -237,6 +237,24 @@ export const TransactionForm = ({ company, method, defaultValue, mutateFn, isPen
       position: "bottom-right",
     });
   };
+
+  const [areRowsExpanded, setAreRowsExpanded] = useState(false); // State to track if rows are expanded
+
+  const toggleRows = () => {
+    setAreRowsExpanded((prev) => !prev); // Toggle the expanded state
+  };
+
+  // Inside your component
+  const [showSuccessMessage, setShowSuccessMessage] = useState(false);
+
+  // Function to handle upload success
+  const handleUploadSuccess = () => {
+    setShowSuccessMessage(true);
+    setTimeout(() => {
+      setShowSuccessMessage(false);
+    }, 2000); // Hide after 2 seconds
+  };
+
   return (
     <div className="w-full h-full bg-white p-4 rounded-lg">
       <Form {...form}>
@@ -588,6 +606,7 @@ export const TransactionForm = ({ company, method, defaultValue, mutateFn, isPen
 
           <div className="flex flex-col space-y-4 mt-12 ">
             <h1 className="text-2xl">List of Attachments Required</h1>
+            
             <ScrollArea className="w-full whitespace-nowrap rounded-md border">
               <Table>
                 <TableCaption>A list of your required attachments.</TableCaption>
@@ -602,7 +621,12 @@ export const TransactionForm = ({ company, method, defaultValue, mutateFn, isPen
                   </TableRow>
                 </TableHeader>
                 <TableBody className="">
-                  {fields.map((item, index) => (
+                {fields.map((item, index) => {
+                // Always render the first three rows
+                const shouldShowRows = isForwarding ? index < 3 || areRowsExpanded : index < 3 || areRowsExpanded;
+
+                if (shouldShowRows) {
+                  return (
                     <TableRow key={item.id}>
                       <TableCell className="font-medium w-[300px]">
                         <FormField
@@ -705,9 +729,14 @@ export const TransactionForm = ({ company, method, defaultValue, mutateFn, isPen
                               </div>
                             )}
                           </div>
-                          {uploadStatus[index]?.isLoading && <div className="success-message">Uploading !</div>}
-                          {uploadStatus[index]?.isSuccess && <div className="success-message">Upload successful!</div>}
+                          {uploadStatus[index]?.isLoading && <div className="success-message">Uploading!</div>}
+                          {showSuccessMessage && (
+                            <div className={`success-message transition-opacity duration-500 ${showSuccessMessage ? 'opacity-100' : 'opacity-0'}`}>
+                              Upload successful!
+                            </div>
+                          )}
                           {uploadStatus[index]?.isFailed && <div className="error-message">Upload failed!</div>}
+
                         </div>
                       </TableCell>
 
@@ -734,11 +763,19 @@ export const TransactionForm = ({ company, method, defaultValue, mutateFn, isPen
                         </div>
                       </TableCell>
                     </TableRow>
-                  ))}
+                  );
+                
+                }
+                return null; // Do not render anything for rows beyond the first three if collapsed
+              })}
+  
 
                   <TableCell>
                     <Button
                       onClick={() => {
+                        // Set areRowsExpanded to true
+                        setAreRowsExpanded(true);
+
                         append({
                           fileName: "",
                           fileOriginalName: "",
@@ -756,12 +793,18 @@ export const TransactionForm = ({ company, method, defaultValue, mutateFn, isPen
                       type="button"
                     >
                       Add
+                      
                     </Button>
                   </TableCell>
                 </TableBody>
               </Table>
               <ScrollBar orientation="horizontal" />
             </ScrollArea>
+            {fields.length > 3 && (
+            <Button type="button" onClick={toggleRows} className="mb-4 p-2 bg-blue-500 text-white rounded">
+              {areRowsExpanded ? "Collapse" : "Show All"}
+            </Button>
+            )}
           </div>
 
           <div className="flex justify-end mt-11">
