@@ -1,17 +1,13 @@
-import React, { useState } from "react";
-import { Button } from "@/components/ui/button";
-
-const formTemplates = [
-  { id: "resume", name: "Resume", description: "Professional resume template", preview: "Resume preview here..." },
-  { id: "report", name: "Report", description: "Project report template", preview: "Report preview here..." },
-  { id: "invoice", name: "Invoice", description: "Invoice template", preview: "Invoice preview here..." },
-];
-
 type FormSelectorProps = {
   onSelect: (templateId: string) => void;
 };
 
 const FormSelector: React.FC<FormSelectorProps> = ({ onSelect }) => {
+  const formTemplates = [
+    { id: "reimbursement", name: "Reimbursement Request", description: "Form for requesting reimbursements" },
+    { id: "purchase", name: "Purchase Request", description: "Form for submitting purchase requests" },
+  ];
+
   return (
     <div className="grid grid-cols-3 gap-4">
       {formTemplates.map((template) => (
@@ -21,7 +17,7 @@ const FormSelector: React.FC<FormSelectorProps> = ({ onSelect }) => {
           onClick={() => onSelect(template.id)}
         >
           <h3 className="text-xl font-bold">{template.name}</h3>
-          <p>{template.preview}</p>
+          <p>{template.description}</p>
         </div>
       ))}
     </div>

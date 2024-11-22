@@ -1,30 +1,31 @@
-import { useForm, SubmitHandler } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
-import { Button } from "@/components/ui/button";
-import { z } from "zod";
-import { ticketingMutationSchema } from "shared-contract";
-import { getCurrentUserId, useCurrentUserRole } from "@/hooks/use-user-hook";
 import { useState } from "react";
-import { tsr } from "@/services/tsr";
-import { toast } from "react-toastify";
-import { useMutation } from "react-query";
-import { useNavigate } from "react-router-dom";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Button } from "@/components/ui/button";
 import ReimbursementForm from "./reimbursement-form";
 import PurchaseRequestForm from "./purchase-request-form";
+import FormSelector from "./form-selector";
 
 export const RequestForms = () => {
-  const navigate = useNavigate();
-  const userId = getCurrentUserId();
-  const role = useCurrentUserRole();
+  const [selectedForm, setSelectedForm] = useState<string | null>(null);
+
+  const handleSelectForm = (formId: string) => {
+    setSelectedForm(formId);
+  };
 
   return (
-    <div className="flex flex-col gap-4 p-4 w-full h-full bs-white">
+    <div className="flex flex-col gap-4 p-4 w-full h-full bg-white">
       <h1 className="text-4xl">Admin Request Forms</h1>
-      {/* display all request forms */}
-        <ReimbursementForm />
-        <PurchaseRequestForm />
+
+      {selectedForm === null ? (
+        <FormSelector onSelect={handleSelectForm} />
+      ) : (
+        <div>
+          <Button variant="outline" onClick={() => setSelectedForm(null)} className="mb-4">
+            Back to Templates
+          </Button>
+          {selectedForm === "reimbursement" && <ReimbursementForm />}
+          {selectedForm === "purchase" && <PurchaseRequestForm />}
+        </div>
+      )}
     </div>
   );
 };
