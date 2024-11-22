@@ -9,33 +9,35 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { cn } from "@/lib/utils";
 import { Calendar } from "@/components/ui/calendar";
 import { format } from "date-fns";
-import { CalendarIcon, Plus, XIcon } from "lucide-react";
+import { ArrowLeft, CalendarIcon, Plus, XIcon } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
+import { NavLink } from "react-router-dom";
 
-const PaymentRequestMutationSchema = z.object({
-  requestee: z.string().nonempty("Payable to is required."),
-  projectName: z.string().nonempty("Project name is required."),
-  dateRequested: z.string().nonempty("Date filed is required."),
-  dueDate: z.string().nonempty("Due date filed is required."),
-  items: z.array(
-    z.object({
-      particulars: z.string().nonempty("Item/Particular name is required."),
-      amount: z.number().min(1, "Amount must be greater than 0."),
-      remarks: z.string(),
-    })
-  ),
-});
+// Define schema with expenditure fields as an array
+const PurchaseRequestMutationSchema = z.object({
+    department: z.string().nonempty("Department is required."),
+    purpose: z.string().nonempty("Purpose is required."),
+    dateRequested: z.string().nonempty("Date filed is required."),
+    items: z.array(
+      z.object({
+        quantity: z.number().min(1, "Quantity is required."),
+        uom: z.string().nonempty("Unit of measurement is required"),
+        description: z.string().nonempty("Item Description is required"),
+        suppliers: z.string().nonempty("Suppliers is required"),
+        remarks: z.string(),
+      })
+    ),
+});  
 
-const PaymentRequestForm = () => {
+const PurchaseRequestForm = () => {
   const form = useForm({
-    resolver: zodResolver(PaymentRequestMutationSchema),
+    resolver: zodResolver(PurchaseRequestMutationSchema),
     mode: "onChange",
     defaultValues: {
-      requestee: "",
-      projectName: "",
+      department: "",
+      purpose: "",
       dateRequested: "",
-      dueDate: "",
-      items: [{ particulars: "", amount: 0, remarks: "" }],
+      items: [{ quantity: 0, uom: "", description: "", suppliers: "", remarks: "" }],
     },
   });
 
@@ -44,29 +46,35 @@ const PaymentRequestForm = () => {
     name: "items",
   });
 
-  const onSubmit = (data: z.infer<typeof PaymentRequestMutationSchema>) => {
+  const onSubmit = (data: z.infer<typeof PurchaseRequestMutationSchema>) => {
     console.log("Form submitted:", data);
   };
 
   return (
     <Form {...form}>
+      <Button className="sticky top-0 bg-white bg-opacity-50 border-none rounded-lg p-2 shadow-md">
+        <NavLink to={`/dashboard/admin/request`}>
+          <ArrowLeft className="text-black hover:text-white" />
+        </NavLink>
+      </Button>
+
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 w-full mx-auto bg-white p-6 shadow rounded">
         <div className="flex justify-center mb-4">
           <img src="/LogoV3.png" alt="Logo" className="h-32 w-auto m-4" />
         </div>
-        <h2 className="text-3xl font-bold text-center">Payment Request Form</h2>
+        <h2 className="text-3xl font-bold text-center">Purchase Request Form</h2>
         <Separator className="h-1 w-full bg-lime-700" />
 
         {/* Requestee */}
-        <div className="grid grid-cols-4 gap-6 pt-8 px-24 pb-8">
+        <div className="grid grid-cols-3 gap-6 pt-8 px-24 pb-8">
           <FormField
             control={form.control}
-            name="requestee"
+            name="department"
             render={({ field }) => (
               <FormItem className="col-span-1">
-                <FormLabel>Payable To</FormLabel>
+                <FormLabel>Department</FormLabel>
                 <FormControl>
-                  <Input placeholder="Enter receiver" className="border-b-2 border-b-gray-700 rounded-b-none" {...field} />
+                  <Input placeholder="Enter Department name" className="border-b-2 border-b-gray-700 rounded-b-none" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -74,12 +82,12 @@ const PaymentRequestForm = () => {
           />
           <FormField
             control={form.control}
-            name="projectName"
+            name="purpose"
             render={({ field }) => (
               <FormItem className="col-span-1">
-                <FormLabel>Project Name</FormLabel>
+                <FormLabel>Purpose</FormLabel>
                 <FormControl>
-                  <Input placeholder="Enter project name" className="border-b-2 border-b-gray-700 rounded-b-none" {...field} />
+                  <Input placeholder="Enter Purpose" className="border-b-2 border-b-gray-700 rounded-b-none" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -117,38 +125,6 @@ const PaymentRequestForm = () => {
               </FormItem>
             )}
           />
-                    <FormField
-            control={form.control}
-            name="dueDate"
-            render={({ field }) => (
-              <FormItem className="col-span-1">
-                <FormLabel>Due Date</FormLabel>
-                <FormControl>
-                  <Popover >
-                    <PopoverTrigger asChild>
-                      <Button
-                        variant={"outline"}
-                        className={cn("w-full justify-start text-left font-normal", !field.value && "text-muted-foreground")}
-                      >
-                        <CalendarIcon className="mr-2 h-4 w-4" />
-                          {field.value ? format(new Date(field.value), "PPP") : <span>Pick a date</span>}                        
-                      </Button>
-                    </PopoverTrigger>
-                    <PopoverContent className="w-auto p-0">
-                      <Calendar
-                        mode="single"
-                        onSelect={(value) => {
-                          field.onChange(new Date(value!).toISOString());
-                        }}
-                        initialFocus
-                      />
-                    </PopoverContent>
-                  </Popover>
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
         </div>
 
         <Separator className="h-1 w-full bg-lime-700" />
@@ -160,8 +136,10 @@ const PaymentRequestForm = () => {
             <table className="table-auto w-full border-collapse border border-gray-300">
               <thead>
                 <tr>
-                  <th className="text-center border-2 border-gray-700 p-2">Particulars</th>
-                  <th className="text-center border-2 border-gray-700 p-2">Amount (PHP)</th>
+                  <th className="text-center border-2 border-gray-700 p-2">Quantity</th>
+                  <th className="text-center border-2 border-gray-700 p-2">Purpose</th>
+                  <th className="text-center border-2 border-gray-700 p-2">Item Description</th>
+                  <th className="text-center border-2 border-gray-700 p-2">Suppliers</th>
                   <th className="text-center border-2 border-gray-700 p-2">Remarks</th>
                   {/* <th className="text-center border border-transparent p-2">Actions</th> */}
                 </tr>
@@ -172,10 +150,10 @@ const PaymentRequestForm = () => {
                 <td className="border-2 border-gray-700 p-2">
                   <FormField
                     control={form.control}
-                    name={`items.${index}.particulars`}
+                    name={`items.${index}.quantity`}
                     render={({ field }) => (
                       <FormControl>
-                        <Input placeholder="Enter item/particular" {...field} />
+                        <Input type="number" placeholder="Number of items" {...field} />
                       </FormControl>
                     )}
                   />
@@ -183,10 +161,32 @@ const PaymentRequestForm = () => {
                 <td className="border-2 border-gray-700 p-2">
                   <FormField
                     control={form.control}
-                    name={`items.${index}.amount`}
+                    name={`items.${index}.uom`}
                     render={({ field }) => (
                       <FormControl>
-                        <Input type="number" placeholder="Amount" {...field} />
+                        <Input placeholder="Enter unit of measurement" {...field} />
+                      </FormControl>
+                    )}
+                  />
+                </td>
+                <td className="border-2 border-gray-700 p-2">
+                  <FormField
+                    control={form.control}
+                    name={`items.${index}.description`}
+                    render={({ field }) => (
+                      <FormControl>
+                        <Input placeholder="Enter item description" {...field} />
+                      </FormControl>
+                    )}
+                  />
+                </td>
+                <td className="border-2 border-gray-700 p-2">
+                  <FormField
+                    control={form.control}
+                    name={`items.${index}.suppliers`}
+                    render={({ field }) => (
+                      <FormControl>
+                        <Input placeholder="Enter Suppliers" {...field} />
                       </FormControl>
                     )}
                   />
@@ -197,12 +197,12 @@ const PaymentRequestForm = () => {
                     name={`items.${index}.remarks`}
                     render={({ field }) => (
                       <FormControl>
-                        <Input placeholder="Enter remarks" {...field} />
+                        <Input placeholder="Enter Remarks" {...field} />
                       </FormControl>
                     )}
                   />
                 </td>
-                {/* Remove button positioned outside the table */}
+
                 <td className="absolute top-0 right-[-120px] flex items-center justify-center">
                   <Button
                     variant="outline"
@@ -218,10 +218,11 @@ const PaymentRequestForm = () => {
           </tbody>
             </table>
           </div>
-          <Button type="button" variant="outline" className="flex items-center justify-center gap-2 mt-4" onClick={() => append({ particulars: "", amount: 0, remarks: "" })}>
+          <Button type="button" variant="outline" className="flex items-center justify-center gap-2 mt-4" onClick={() => append({ quantity: 0, uom: "", description: "", suppliers: "", remarks: "" })}>
             <Plus size={20} />
             Add Row
           </Button>
+          <p className="text-base text-center pb-8">NOTE: Write an "NF" / Nothing Follows at the end of the last item requested.</p>
         </div>
         <Separator className="h-1 w-full bg-lime-700" />
 
@@ -235,4 +236,4 @@ const PaymentRequestForm = () => {
   );
 };
 
-export default PaymentRequestForm;
+export default PurchaseRequestForm;

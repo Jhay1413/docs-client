@@ -9,8 +9,9 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { cn } from "@/lib/utils";
 import { Calendar } from "@/components/ui/calendar";
 import { format } from "date-fns";
-import { CalendarIcon, Plus, XIcon } from "lucide-react";
+import { ArrowLeft, CalendarIcon, Plus, XIcon } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
+import { NavLink } from "react-router-dom";
 
 // Define schema with expenditure fields as an array
 const ReimbursementRequestMutationSchema = z.object({
@@ -50,6 +51,12 @@ const ReimbursementForm = () => {
 
   return (
     <Form {...form}>
+      <Button className="sticky top-0 bg-white bg-opacity-50 border-none rounded-lg p-2 shadow-md">
+        <NavLink to={`/dashboard/admin/request`}>
+          <ArrowLeft className="text-black hover:text-white" />
+        </NavLink>
+      </Button>
+
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 w-full mx-auto bg-white p-6 shadow rounded">
         <div className="flex justify-center mb-4">
           <img src="/LogoV3.png" alt="Logo" className="h-32 w-auto m-4" />
