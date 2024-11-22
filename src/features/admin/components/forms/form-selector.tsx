@@ -6,10 +6,11 @@ const FormSelector: React.FC<FormSelectorProps> = ({ onSelect }) => {
   const formTemplates = [
     { id: "reimbursement", name: "Reimbursement Request", description: "Form for requesting reimbursements" },
     { id: "purchase", name: "Purchase Request", description: "Form for submitting purchase requests" },
+    { id: "payment", name: "Payment Request", description: "Form for submitting payment requests" },
   ];
 
   return (
-    <div className="grid grid-cols-3 gap-4">
+    <div className="grid grid-cols-3 gap-4 max-w-[1000px]">
       {formTemplates.map((template) => (
         <div
           key={template.id}
