@@ -14,10 +14,10 @@ import { Separator } from "@/components/ui/separator";
 import { NavLink } from "react-router-dom";
 
 // Define schema with expenditure fields as an array
-const purchaseRequestSchema = z.object({
+const PurchaseRequestMutationSchema = z.object({
     department: z.string().nonempty("Department is required."),
     purpose: z.string().nonempty("Purpose is required."),
-    date: z.string().nonempty("Date filed is required."),
+    dateRequested: z.string().nonempty("Date filed is required."),
     items: z.array(
       z.object({
         quantity: z.number().min(1, "Quantity is required."),
@@ -31,12 +31,12 @@ const purchaseRequestSchema = z.object({
 
 const PurchaseRequestForm = () => {
   const form = useForm({
-    resolver: zodResolver(purchaseRequestSchema),
+    resolver: zodResolver(PurchaseRequestMutationSchema),
     mode: "onChange",
     defaultValues: {
       department: "",
       purpose: "",
-      date: "",
+      dateRequested: "",
       items: [{ quantity: 0, uom: "", description: "", suppliers: "", remarks: "" }],
     },
   });
@@ -46,7 +46,7 @@ const PurchaseRequestForm = () => {
     name: "items",
   });
 
-  const onSubmit = (data: z.infer<typeof purchaseRequestSchema>) => {
+  const onSubmit = (data: z.infer<typeof PurchaseRequestMutationSchema>) => {
     console.log("Form submitted:", data);
   };
 
@@ -95,7 +95,7 @@ const PurchaseRequestForm = () => {
           />
           <FormField
             control={form.control}
-            name="date"
+            name="dateRequested"
             render={({ field }) => (
               <FormItem className="col-span-1">
                 <FormLabel>Date</FormLabel>

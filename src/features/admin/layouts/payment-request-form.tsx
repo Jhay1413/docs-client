@@ -13,10 +13,10 @@ import { ArrowLeft, CalendarIcon, Plus, XIcon } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
 import { NavLink } from "react-router-dom";
 
-const paymentRequestSchema = z.object({
+const PaymentRequestMutationSchema = z.object({
   requestee: z.string().nonempty("Payable to is required."),
   projectName: z.string().nonempty("Project name is required."),
-  date: z.string().nonempty("Date filed is required."),
+  dateRequested: z.string().nonempty("Date filed is required."),
   dueDate: z.string().nonempty("Due date filed is required."),
   items: z.array(
     z.object({
@@ -29,12 +29,12 @@ const paymentRequestSchema = z.object({
 
 const PaymentRequestForm = () => {
   const form = useForm({
-    resolver: zodResolver(paymentRequestSchema),
+    resolver: zodResolver(PaymentRequestMutationSchema),
     mode: "onChange",
     defaultValues: {
       requestee: "",
       projectName: "",
-      date: "",
+      dateRequested: "",
       dueDate: "",
       items: [{ particulars: "", amount: 0, remarks: "" }],
     },
@@ -45,7 +45,7 @@ const PaymentRequestForm = () => {
     name: "items",
   });
 
-  const onSubmit = (data: z.infer<typeof paymentRequestSchema>) => {
+  const onSubmit = (data: z.infer<typeof PaymentRequestMutationSchema>) => {
     console.log("Form submitted:", data);
   };
 
@@ -95,7 +95,7 @@ const PaymentRequestForm = () => {
           />
           <FormField
             control={form.control}
-            name="date"
+            name="dateRequested"
             render={({ field }) => (
               <FormItem className="col-span-1">
                 <FormLabel>Date</FormLabel>
@@ -127,10 +127,10 @@ const PaymentRequestForm = () => {
           />
                     <FormField
             control={form.control}
-            name="date"
+            name="dueDate"
             render={({ field }) => (
               <FormItem className="col-span-1">
-                <FormLabel>Date</FormLabel>
+                <FormLabel>Due Date</FormLabel>
                 <FormControl>
                   <Popover >
                     <PopoverTrigger asChild>

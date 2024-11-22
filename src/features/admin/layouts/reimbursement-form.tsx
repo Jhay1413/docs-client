@@ -14,10 +14,10 @@ import { Separator } from "@/components/ui/separator";
 import { NavLink } from "react-router-dom";
 
 // Define schema with expenditure fields as an array
-const reimbursementSchema = z.object({
+const ReimbursementRequestMutationSchema = z.object({
   requestee: z.string().nonempty("Requestee name is required."),
   position: z.string().nonempty("Position is required."),
-  dateFiled: z.string().nonempty("Date filed is required."),
+  dateRequested: z.string().nonempty("Date filed is required."),
   expenditure: z.array(
     z.object({
       name: z.string().nonempty("Expenditure name is required."),
@@ -30,12 +30,12 @@ const reimbursementSchema = z.object({
 
 const ReimbursementForm = () => {
   const form = useForm({
-    resolver: zodResolver(reimbursementSchema),
+    resolver: zodResolver(ReimbursementRequestMutationSchema),
     mode: "onChange",
     defaultValues: {
       requestee: "",
       position: "",
-      dateFiled: "",
+      dateRequested: "",
       expenditure: [{ name: "", amount: 0, remarks: "", attachment: "" }],
     },
   });
@@ -45,7 +45,7 @@ const ReimbursementForm = () => {
     name: "expenditure",
   });
 
-  const onSubmit = (data: z.infer<typeof reimbursementSchema>) => {
+  const onSubmit = (data: z.infer<typeof ReimbursementRequestMutationSchema>) => {
     console.log("Form submitted:", data);
   };
 
@@ -95,7 +95,7 @@ const ReimbursementForm = () => {
           />
           <FormField
             control={form.control}
-            name="dateFiled"
+            name="dateRequested"
             render={({ field }) => (
               <FormItem className="col-span-1">
                 <FormLabel>Date Filed</FormLabel>
