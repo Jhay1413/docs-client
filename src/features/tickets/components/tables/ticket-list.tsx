@@ -3,7 +3,7 @@ import { useDebounce } from "use-debounce";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Plus, Search, SquareChevronDown, SquareChevronUp } from "lucide-react";
-import { Link, useNavigate, useSearchParams } from "react-router-dom";
+import { Link, useLocation, useNavigate, useSearchParams } from "react-router-dom";
 import { ticketsColumn } from "./ticket-column";
 import { tsr } from "@/services/tsr";
 import { keepPreviousData } from "@tanstack/react-query";
@@ -25,6 +25,7 @@ const AddTicketBtn = () => (
 
 export const TicketList = () => {
   const navigate = useNavigate();
+  const location = useLocation(); // Get the current location
   const [searchParams, setSearchParams] = useSearchParams({
     currentPage: "1",
     search: "",
@@ -97,7 +98,7 @@ export const TicketList = () => {
 
   const handleOnClickRow = (data: any) => {
     // Navigate to ticket details page when a row is clicked
-    navigate(`/dashboard/tickets/details/${data.id}`);
+    navigate(`/dashboard/tickets/details/${data.id}`, { state: { from: location.pathname } }); // Pass the current location as state
   };
 
   return (

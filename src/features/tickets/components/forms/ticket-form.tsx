@@ -83,7 +83,7 @@ const TicketForm = ({
       requestDetails: ticketData?.requestDetails || "",
       priority: ticketData?.priority || undefined,
       dueDate: ticketData?.dueDate || "",
-      dateForwarded: ticketData?.dateForwarded || new Date().toISOString(),
+      dateForwarded: new Date().toISOString(), // dateForwarded always new date
       dateReceived: null,
       senderId: userId,
       requesteeId: ticketData?.requestee.id || userId,

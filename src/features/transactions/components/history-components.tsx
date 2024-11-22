@@ -1,5 +1,5 @@
 import { Separator } from "@/components/ui/separator";
-import { useParams, useSearchParams } from "react-router-dom";
+import { NavLink, useLocation, useNavigate, useParams, useSearchParams } from "react-router-dom";
 import { historyColumn } from "./table-columns/history-column";
 import { DataTable } from "@/components/data-table";
 import { TransactionDetails } from "./transaction-details";
@@ -9,6 +9,8 @@ import { CswComponent } from "./table-data/csw-list";
 import { tsr } from "@/services/tsr";
 import { TransactionActions } from "./transaction-actions";
 import { getCurrentUserId } from "@/hooks/use-user-hook";
+import { Button } from "@/components/ui/button";
+import { ArrowLeft } from "lucide-react";
 
 enum View {
   IER,
@@ -16,6 +18,11 @@ enum View {
   DETAILS,
 }
 export const HistoryComponent = () => {
+  const navigate = useNavigate();
+  const location = useLocation();
+  // Determine the navigation path based on the previous location
+  const previousPath = location.state?.from || `/dashboard/transactions/list`; // Default to the list if no state is found
+
   const tsrQueryClient = tsr.useQueryClient();
   const userId = getCurrentUserId();
   const { id } = useParams();
@@ -73,7 +80,17 @@ export const HistoryComponent = () => {
   }
   const attachmentForIer = data.body.attachments?.filter((attachment) => attachment.fileType === "INITIAL_DOC") || [];
   return (
+
+    <div>
+      <Button className="sticky top-0 bg-white bg-opacity-50 border-none rounded-lg p-2 shadow-md">
+        <NavLink to={previousPath}>
+          <ArrowLeft className="text-black hover:text-white" />
+        </NavLink>
+      </Button>
+    
     <div className="flex flex-col w-full  p-4 rounded-lg">
+      
+
       <div className=" space-y-8">
         {/* <h1 className="font-roboto text-xl">{id}</h1> */}
         <div className="flex justify-start px-2 gap-4 ">
@@ -132,5 +149,7 @@ export const HistoryComponent = () => {
         <Separator />
       </div>
     </div>
+    </div>
   );
 };
+    
