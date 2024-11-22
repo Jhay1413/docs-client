@@ -7,6 +7,7 @@ const FormSelector: React.FC<FormSelectorProps> = ({ onSelect }) => {
     { id: "reimbursement", name: "Reimbursement Request", description: "Form for requesting reimbursements" },
     { id: "purchase", name: "Purchase Request", description: "Form for submitting purchase requests" },
     { id: "payment", name: "Payment Request", description: "Form for submitting payment requests" },
+    { id: "quotation", name: "Quotation Request", description: "Form for requesting quotation requests" },
   ];
 
   return (

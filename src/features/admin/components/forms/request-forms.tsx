@@ -3,8 +3,8 @@ import { Button } from "@/components/ui/button";
 import ReimbursementForm from "./reimbursement-form";
 import PurchaseRequestForm from "./purchase-request-form";
 import FormSelector from "./form-selector";
-import ReceivingReportForm from "./payment-request-form";
 import PaymentRequestForm from "./payment-request-form";
+import QuotationRequestForm from "./quotation-request-form";
 
 export const RequestForms = () => {
   const [selectedForm, setSelectedForm] = useState<string | null>(null);
@@ -27,6 +27,7 @@ export const RequestForms = () => {
           {selectedForm === "reimbursement" && <ReimbursementForm />}
           {selectedForm === "purchase" && <PurchaseRequestForm />}
           {selectedForm === "payment" && <PaymentRequestForm />}
+          {selectedForm === "quotation" && <QuotationRequestForm />}
         </div>
       )}
     </div>
