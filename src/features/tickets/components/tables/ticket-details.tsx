@@ -1,4 +1,4 @@
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { Link, NavLink, useNavigate, useParams } from "react-router-dom";
 import { useQuery } from "react-query";
 import { Separator } from "@/components/ui/separator";
 import { DataTable } from "@/components/data-table";
@@ -6,7 +6,7 @@ import { tsr } from "@/services/tsr";
 import { ticketsDetailsColumn } from "./ticket-details-column";
 import { getSignUrlForView } from "@/features/transactions/services/getSignedUrl";
 import { Button } from "@/components/ui/button";
-import { CircleArrowRight, FileText, Forward, Plus } from "lucide-react";
+import { ArrowLeft, CircleArrowRight, FileText, Forward, Plus } from "lucide-react";
 import { getCurrentUserId } from "@/hooks/use-user-hook";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
 import { useState } from "react";
@@ -90,7 +90,15 @@ export const TicketDetails = () => {
   }
 
   return (
+    <div>
+      <Button className="sticky top-0 bg-white bg-opacity-50 border-none rounded-lg p-2 shadow-md">
+        <NavLink to={`/dashboard/tickets/list`}>
+          <ArrowLeft className="text-black hover:text-white" />
+        </NavLink>
+      </Button>
+    
     <div className="flex flex-col w-full max-w-[90%] mx-auto p-6 bg-white shadow-lg rounded-lg">
+
       <div className="flex justify-between items-center mb-4">
         <h1 className="text-3xl font-bold text-gray-800">Ticket Details</h1>
         <div className="flex justify-start items-center gap-4">
@@ -286,6 +294,7 @@ export const TicketDetails = () => {
       <Separator className="my-4" />
       <h2 className="text-lg font-bold text-gray-800">Ticket Logs:</h2>
       <DataTable columns={ticketsDetailsColumn} data={data ? data.body.ticketLogs : []} hasPaginate={true} />
+    </div>
     </div>
   );
 };
