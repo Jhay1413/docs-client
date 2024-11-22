@@ -1,5 +1,5 @@
 import { DataTable } from "@/components/data-table";
-import { useNavigate, useParams, useSearchParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams, useSearchParams } from "react-router-dom";
 import { inboxColumn } from "../table-columns/inbox-column";
 import { z } from "zod";
 import { tsr } from "@/services/tsr";
@@ -12,6 +12,7 @@ import { keepPreviousData } from "@tanstack/react-query";
 
 export const InboxComponent = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const [searchParams, setSearchParams] = useSearchParams({
     currentPage: "1",
     search: "",
@@ -55,9 +56,11 @@ export const InboxComponent = () => {
       });
     }
   };
-  const handleOnClickRow = (data: z.infer<typeof transactionTable>) => {
-    navigate(`/dashboard/transactions/history/${data.id}`);
+  const handleOnClickRow = (data: any) => {
+    // Navigate to ticket details page when a row is clicked
+    navigate(`/dashboard/transactions/history/${data.id}`, { state: { from: location.pathname } }); // Pass the current location as state
   };
+
   return (
     <div className="min-h-full flex flex-col w-full items-center p-4 bg-white rounded-lg ">
       <div className="flex flex-col w-full items-center justify-center p-4 bg-white rounded-lg">

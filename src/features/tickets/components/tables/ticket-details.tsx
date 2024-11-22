@@ -1,4 +1,4 @@
-import { Link, NavLink, useNavigate, useParams } from "react-router-dom";
+import { Link, NavLink, useLocation, useNavigate, useParams } from "react-router-dom";
 import { useQuery } from "react-query";
 import { Separator } from "@/components/ui/separator";
 import { DataTable } from "@/components/data-table";
@@ -16,21 +16,6 @@ import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import { toPascalCase } from "../ticket.utils";
 
 
-const ForwardTicketBtn = ({id}: {id?:string}) => (
-  <div>
-    <Link
-      to={`/dashboard/tickets/forward-ticket/${id}`}
-      className="bg-blue-600 px-4 py-2 text-lg flex items-center justify-between space-x-3 rounded-lg text-white hover:bg-blue-500"
-    >
-      <CircleArrowRight size={24} />
-      <h1 className="text-base">Forward</h1>
-    </Link>
-  </div>
-);
-
-const ReopenTicketBtn = () => (
-    <Button type="button" className="bg-[#414140] px-4 py-2 text-lg flex items-center justify-center space-x rounded-lg text-white">Reopen</Button>
-);
 
 
 export const TicketDetails = () => {
@@ -38,6 +23,25 @@ export const TicketDetails = () => {
   const currentUserId = getCurrentUserId();
   const [open, setIsOpen] = useState(false);
   const navigate = useNavigate();
+  const location = useLocation(); // Get the current location
+
+  // Determine the navigation path based on the previous location
+  const previousPath = location.state?.from || `/dashboard/tickets/list`; // Default to the list if no state is found
+
+  const ForwardTicketBtn = ({id}: {id?:string}) => (
+    <div
+      onClick={() => navigate(`/dashboard/tickets/forward-ticket/${id}`, { state: { from: location.pathname, isForwarding: true } })}
+      className="bg-blue-600 px-4 py-2 text-lg flex items-center justify-between space-x-3 rounded-lg text-white hover:bg-blue-500"
+    >
+      <CircleArrowRight size={24} />
+      <h1 className="text-base">Forward</h1>
+    </div>
+  );
+
+  const ReopenTicketBtn = () => (
+      <Button type="button" className="bg-[#414140] px-4 py-2 text-lg flex items-center justify-center space-x rounded-lg text-white">Reopen</Button>
+  );
+  
   
   const { data, isLoading, isError } = tsr.ticketing.getTicketsById.useQuery({
     queryKey: ["ticket", id],
@@ -92,7 +96,7 @@ export const TicketDetails = () => {
   return (
     <div>
       <Button className="sticky top-0 bg-white bg-opacity-50 border-none rounded-lg p-2 shadow-md">
-        <NavLink to={`/dashboard/tickets/list`}>
+        <NavLink to={previousPath}>
           <ArrowLeft className="text-black hover:text-white" />
         </NavLink>
       </Button>
@@ -102,8 +106,7 @@ export const TicketDetails = () => {
       <div className="flex justify-between items-center mb-4">
         <h1 className="text-3xl font-bold text-gray-800">Ticket Details</h1>
         <div className="flex justify-start items-center gap-4">
-          
-          {((data?.body.dateReceived != null) && (data?.body.requestee?.id === currentUserId && data?.body.status != 'RESOLVED')) &&
+          {((data?.body.dateReceived != null) && (data?.body.requestee?.id === currentUserId && data?.body.status !== 'RESOLVED')) && previousPath === `/dashboard/tickets/inbox/${currentUserId}` &&
             <ConfirmationModal
               title="Confirm Ticket Resolution"
               description="Are you sure you want to mark this ticket as resolved? This action cannot be undone, and further changes will not be allowed once the ticket is resolved."
@@ -113,9 +116,8 @@ export const TicketDetails = () => {
             />
           }
 
-          {data?.body.status === 'RESOLVED' && <ReopenTicketBtn />}
-          {((data?.body.dateReceived != null) && (data?.body.receiver?.id === currentUserId && data?.body.status != 'RESOLVED')) && <ForwardTicketBtn id={id}/>}
-
+          {data?.body.status === 'RESOLVED' && previousPath === `/dashboard/tickets/inbox/${currentUserId}` && <ReopenTicketBtn />}
+          {((data?.body.dateReceived != null) && (data?.body.receiver?.id === currentUserId && data?.body.status !== 'RESOLVED')) && previousPath === `/dashboard/tickets/inbox/${currentUserId}` && <ForwardTicketBtn id={id}/>}
         </div>
       </div>
       <Separator className="my-4" />

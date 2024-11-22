@@ -8,9 +8,9 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { z } from "zod";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { ColumnDef } from "@tanstack/react-table";
-import { MoreHorizontal } from "lucide-react";
+import { Eye, MoreHorizontal } from "lucide-react";
 import { transactionLogsData } from "shared-contract";
 
 
@@ -87,28 +87,15 @@ export const historyColumn: ColumnDef<History>[] = [
     accessorKey: "actions",
     id: "actions",
     cell: ({ row }) => {
+      const navigate = useNavigate();
       const transactionInfo = row.original;
-
+      const routetoLogs = () => {
+        navigate(`/dashboard/transactions/log/${transactionInfo.id}`, { state: { transactionInfo } });
+      };
       return (
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className="h-8 w-8 p-0">
-              <span className="sr-only">Open menu</span>
-              <MoreHorizontal className="h-4 w-4" />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuLabel>Actions</DropdownMenuLabel>
-
-            <DropdownMenuItem>
-              <Link to={`/dashboard/transactions/log/${transactionInfo.id}` } state= {{transactionInfo}}>View</Link>
-            </DropdownMenuItem>
-      
-
-            <DropdownMenuSeparator />
-           
-          </DropdownMenuContent>
-        </DropdownMenu>
+        <Button title="View ticket" variant="outline" size="icon" className="h-8 w-8 p-0" onClick={routetoLogs}>
+          <Eye />
+        </Button>
       );
     },
   },

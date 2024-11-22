@@ -6,7 +6,7 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel,
 import { Button } from "@/components/ui/button";
 import { CircleArrowRight, Dot, Eye, Forward, Minus, MoreHorizontal, Pencil, View } from "lucide-react";
 import { InboxUpdateForm } from "../forms/inbox-update-form";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 const maxLength = 20;
 export const ticketsInboxColumn: ColumnDef<z.infer<typeof ticketingTableSchema>>[] = [
@@ -145,11 +145,13 @@ export const ticketsInboxColumn: ColumnDef<z.infer<typeof ticketingTableSchema>>
     cell: ({ row }) => {
       const navigate = useNavigate();
       const ticket = row.original;
-      const handleOnClickRow = () => {
-        navigate(`/dashboard/tickets/details/${ticket.id}`);
+      const location = useLocation();
+      const handleOnClickRow = (data: any) => {
+        // Navigate to ticket details page when a row is clicked
+        navigate(`/dashboard/tickets/details/${ticket.id}`, { state: { from: location.pathname } }); // Pass the current location as state
       };
       const routeToForwardTicket = () => {
-        navigate(`/dashboard/tickets/forward-ticket/${ticket.id}`);
+        navigate(`/dashboard/tickets/forward-ticket/${ticket.id}`, { state: { from: location.pathname } }); // Pass the current location as state
       };
   
       return (

@@ -1,6 +1,6 @@
 import { DataTable } from "@/components/data-table";
 import { transColumns } from "../table-columns/transaction-columns";
-import { Link, useNavigate, useSearchParams } from "react-router-dom";
+import { Link, useLocation, useNavigate, useSearchParams } from "react-router-dom";
 import { Plus, Search } from "lucide-react";
 import withRole from "@/components/HOC/component-permission";
 import { tsr } from "@/services/tsr";
@@ -28,6 +28,7 @@ const AddTransactionBtnWithRole = withRole(addTransactionBtn);
 
 export const TransactionList = () => {
   const navigate = useNavigate();
+  const location = useLocation(); // Get the current location
   const [searchParams, setSearchParams] = useSearchParams({
     currentPage: "1",
     search: "",
@@ -70,9 +71,11 @@ export const TransactionList = () => {
     }
   };
 
-  const handleOnClickRow = (data: z.infer<typeof transactionTable>) => {
-    navigate(`/dashboard/transactions/history/${data.id}`);
+  const handleOnClickRow = (data: any) => {
+    // Navigate to ticket details page when a row is clicked
+    navigate(`/dashboard/transactions/history/${data.id}`, { state: { from: location.pathname } }); // Pass the current location as state
   };
+
 
   return (
     <div className="min-h-full flex flex-col w-full items-center p-4 bg-white rounded-lg ">
