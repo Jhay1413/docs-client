@@ -13,10 +13,10 @@ import { CalendarIcon, Plus, XIcon } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
 
 // Define schema with expenditure fields as an array
-const purchaseRequestSchema = z.object({
+const QuotationRequestMutationSchema = z.object({
     company: z.string().nonempty("Company is required."),
     project: z.string().nonempty("Purpose is required."),
-    date: z.string().nonempty("Date filed is required."),
+    dateRequested: z.string().nonempty("Date filed is required."),
     items: z.array(
       z.object({
         price: z.number().min(1, "price is required."),
@@ -28,12 +28,12 @@ const purchaseRequestSchema = z.object({
 
 const QuotationRequestForm = () => {
   const form = useForm({
-    resolver: zodResolver(purchaseRequestSchema),
+    resolver: zodResolver(QuotationRequestMutationSchema),
     mode: "onChange",
     defaultValues: {
       company: "",
       project: "",
-      date: "",
+      dateRequested: "",
       items: [{ price: 0, particulars: "", remarks: "" }],
     },
   });
@@ -43,7 +43,7 @@ const QuotationRequestForm = () => {
     name: "items",
   });
 
-  const onSubmit = (data: z.infer<typeof purchaseRequestSchema>) => {
+  const onSubmit = (data: z.infer<typeof QuotationRequestMutationSchema>) => {
     console.log("Form submitted:", data);
   };
 
@@ -86,7 +86,7 @@ const QuotationRequestForm = () => {
           />
           <FormField
             control={form.control}
-            name="date"
+            name="dateRequested"
             render={({ field }) => (
               <FormItem className="col-span-1">
                 <FormLabel>Date</FormLabel>
