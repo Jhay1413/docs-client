@@ -9,63 +9,72 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { cn } from "@/lib/utils";
 import { Calendar } from "@/components/ui/calendar";
 import { format } from "date-fns";
-import { CalendarIcon, Plus, XIcon } from "lucide-react";
+import { ArrowLeft, CalendarIcon, Plus, XIcon } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
+import { NavLink } from "react-router-dom";
 
 // Define schema with expenditure fields as an array
-const purchaseRequestSchema = z.object({
-    company: z.string().nonempty("Company is required."),
-    project: z.string().nonempty("Purpose is required."),
-    date: z.string().nonempty("Date filed is required."),
-    items: z.array(
-      z.object({
-        price: z.number().min(1, "price is required."),
-        particulars: z.string().nonempty("particulars is required"),
-        remarks: z.string(),
-      })
-    ),
-});  
+const reimbursementSchema = z.object({
+  requestee: z.string().nonempty("Requestee name is required."),
+  position: z.string().nonempty("Position is required."),
+  dateFiled: z.string().nonempty("Date filed is required."),
+  expenditure: z.array(
+    z.object({
+      name: z.string().nonempty("Expenditure name is required."),
+      amount: z.number().min(1, "Amount must be greater than 0."),
+      remarks: z.string(),
+      attachment: z.string().optional(),
+    })
+  ),
+});
 
-const QuotationRequestForm = () => {
+const ReimbursementForm = () => {
   const form = useForm({
-    resolver: zodResolver(purchaseRequestSchema),
+    resolver: zodResolver(reimbursementSchema),
     mode: "onChange",
     defaultValues: {
-      company: "",
-      project: "",
-      date: "",
-      items: [{ price: 0, particulars: "", remarks: "" }],
+      requestee: "",
+      position: "",
+      dateFiled: "",
+      expenditure: [{ name: "", amount: 0, remarks: "", attachment: "" }],
     },
   });
 
   const { fields, append, remove } = useFieldArray({
     control: form.control,
-    name: "items",
+    name: "expenditure",
   });
 
-  const onSubmit = (data: z.infer<typeof purchaseRequestSchema>) => {
+  const onSubmit = (data: z.infer<typeof reimbursementSchema>) => {
     console.log("Form submitted:", data);
   };
 
   return (
     <Form {...form}>
+      <Button className="sticky top-0 bg-white bg-opacity-50 border-none rounded-lg p-2 shadow-md">
+        <NavLink to={`/dashboard/admin/request`}>
+          <ArrowLeft className="text-black hover:text-white" />
+        </NavLink>
+      </Button>
+
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 w-full mx-auto bg-white p-6 shadow rounded">
         <div className="flex justify-center mb-4">
           <img src="/LogoV3.png" alt="Logo" className="h-32 w-auto m-4" />
         </div>
-        <h2 className="text-3xl font-bold text-center">Quotation Request Form</h2>
+        <h2 className="text-3xl font-bold text-center">Reimbursement Request Form</h2>
+        <p className="text-base text-center pb-8">NOTE: Please attach all receipts or any attachments together with this form</p>
         <Separator className="h-1 w-full bg-lime-700" />
 
         {/* Requestee */}
         <div className="grid grid-cols-3 gap-6 pt-8 px-24 pb-8">
           <FormField
             control={form.control}
-            name="company"
+            name="requestee"
             render={({ field }) => (
               <FormItem className="col-span-1">
-                <FormLabel>Company</FormLabel>
+                <FormLabel>Name</FormLabel>
                 <FormControl>
-                  <Input placeholder="Enter Company name" className="border-b-2 border-b-gray-700 rounded-b-none" {...field} />
+                  <Input placeholder="Enter requestee name" className="border-b-2 border-b-gray-700 rounded-b-none" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -73,12 +82,12 @@ const QuotationRequestForm = () => {
           />
           <FormField
             control={form.control}
-            name="project"
+            name="position"
             render={({ field }) => (
               <FormItem className="col-span-1">
-                <FormLabel>Project Name & Location</FormLabel>
+                <FormLabel>Position</FormLabel>
                 <FormControl>
-                  <Input placeholder="Enter Project name" className="border-b-2 border-b-gray-700 rounded-b-none" {...field} />
+                  <Input placeholder="Enter position" className="border-b-2 border-b-gray-700 rounded-b-none" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -86,10 +95,10 @@ const QuotationRequestForm = () => {
           />
           <FormField
             control={form.control}
-            name="date"
+            name="dateFiled"
             render={({ field }) => (
               <FormItem className="col-span-1">
-                <FormLabel>Date</FormLabel>
+                <FormLabel>Date Filed</FormLabel>
                 <FormControl>
                   <Popover >
                     <PopoverTrigger asChild>
@@ -127,8 +136,9 @@ const QuotationRequestForm = () => {
             <table className="table-auto w-full border-collapse border border-gray-300">
               <thead>
                 <tr>
-                  <th className="text-center border-2 border-gray-700 p-2">Particulars</th>
-                  <th className="text-center border-2 border-gray-700 p-2">Price</th>
+                  <th className="text-center border-2 border-gray-700 p-2">Expenditure</th>
+                  <th className="text-center border-2 border-gray-700 p-2">Amount (PHP)</th>
+                  <th className="text-center border-2 border-gray-700 p-2">Attachment</th>
                   <th className="text-center border-2 border-gray-700 p-2">Remarks</th>
                   {/* <th className="text-center border border-transparent p-2">Actions</th> */}
                 </tr>
@@ -139,10 +149,10 @@ const QuotationRequestForm = () => {
                 <td className="border-2 border-gray-700 p-2">
                   <FormField
                     control={form.control}
-                    name={`items.${index}.particulars`}
+                    name={`expenditure.${index}.name`}
                     render={({ field }) => (
                       <FormControl>
-                        <Input placeholder="Enter a particular " {...field} />
+                        <Input placeholder="Enter expenditure" {...field} />
                       </FormControl>
                     )}
                   />
@@ -150,27 +160,37 @@ const QuotationRequestForm = () => {
                 <td className="border-2 border-gray-700 p-2">
                   <FormField
                     control={form.control}
-                    name={`items.${index}.price`}
+                    name={`expenditure.${index}.amount`}
                     render={({ field }) => (
                       <FormControl>
-                        <Input type="number" placeholder="Number of items" {...field} />
+                        <Input type="number" placeholder="Amount" {...field} />
                       </FormControl>
                     )}
                   />
                 </td>
-
                 <td className="border-2 border-gray-700 p-2">
                   <FormField
                     control={form.control}
-                    name={`items.${index}.remarks`}
+                    name={`expenditure.${index}.attachment`}
                     render={({ field }) => (
                       <FormControl>
-                        <Input placeholder="Enter Remarks" {...field} />
+                        <Input type="file" {...field} />
                       </FormControl>
                     )}
                   />
                 </td>
-
+                <td className="border-2 border-gray-700 p-2">
+                  <FormField
+                    control={form.control}
+                    name={`expenditure.${index}.remarks`}
+                    render={({ field }) => (
+                      <FormControl>
+                        <Input placeholder="Enter remarks" {...field} />
+                      </FormControl>
+                    )}
+                  />
+                </td>
+                {/* Remove button positioned outside the table */}
                 <td className="absolute top-0 right-[-120px] flex items-center justify-center">
                   <Button
                     variant="outline"
@@ -186,11 +206,10 @@ const QuotationRequestForm = () => {
           </tbody>
             </table>
           </div>
-          <Button type="button" variant="outline" className="flex items-center justify-center gap-2 mt-4" onClick={() => append({ price: 0, particulars: "", remarks: "" })}>
+          <Button type="button" variant="outline" className="flex items-center justify-center gap-2 mt-4" onClick={() => append({ name: "", amount: 0, remarks: "", attachment: "" })}>
             <Plus size={20} />
             Add Row
           </Button>
-          <p className="text-base text-center pb-8">NOTE: Write an "NF" / Nothing Follows at the end of the last item requested.</p>
         </div>
         <Separator className="h-1 w-full bg-lime-700" />
 
@@ -204,4 +223,4 @@ const QuotationRequestForm = () => {
   );
 };
 
-export default QuotationRequestForm;
+export default ReimbursementForm;

@@ -34,10 +34,11 @@ import ForwardTicketComponent from "./features/tickets/components/forms/forward-
 import { PendingTickets } from "./features/tickets/components/tables/pending_requests";
 
 import { AdminIndex } from "./pages/admin-index";
-import { RequestForms } from "./features/admin";
+import { PaymentRequestForm, PurchaseRequestForm, QuotationRequestForm, ReimbursementForm, RequestForms } from "./features/admin";
 import { TicketManual } from "./features/manuals/components/ticket-manual";
 import { ManualIndex } from "./pages/manuals-index";
 import { TransactionManual } from "./features/manuals/components/transaction-manual";
+import { RequestFormsIndex } from "./pages/requestform-index";
 
 function App() {
   return (
@@ -111,7 +112,13 @@ function App() {
                 <Route path="transaction-manual" element={<TransactionManual />} />
               </Route>
               <Route path="admin" element={<AdminIndex />}>
-                <Route path="request" element={<RequestForms />} />
+              <Route path="request" element={<RequestForms />}/>
+                <Route path="request" element={<RequestFormsIndex />}>
+                  <Route path="reimbursement-request" element={<ReimbursementForm />} />
+                  <Route path="purchase-request" element={<PurchaseRequestForm />} />
+                  <Route path="payment-request" element={<PaymentRequestForm />} />
+                  <Route path="quotation-request" element={<QuotationRequestForm />} />
+                </Route> 
               </Route>
             </Route>
             <Route path="/" element={<PublicRoutes />}>
