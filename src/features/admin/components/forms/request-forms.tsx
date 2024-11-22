@@ -20,7 +20,7 @@ export const RequestForms = () => {
       {selectedForm === null ? (
         <FormSelector onSelect={handleSelectForm} />
       ) : (
-        <div>
+        <div className="col-span-1">
           <Button variant="outline" onClick={() => setSelectedForm(null)} className="mb-4">
             Back to Templates
           </Button>
