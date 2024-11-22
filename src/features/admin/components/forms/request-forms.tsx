@@ -11,6 +11,8 @@ import { toast } from "react-toastify";
 import { useMutation } from "react-query";
 import { useNavigate } from "react-router-dom";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import ReimbursementForm from "./reimbursement-form";
+import PurchaseRequestForm from "./purchase-request-form";
 
 export const RequestForms = () => {
   const navigate = useNavigate();
@@ -20,8 +22,9 @@ export const RequestForms = () => {
   return (
     <div className="flex flex-col gap-4 p-4 w-full h-full bs-white">
       <h1 className="text-4xl">Admin Request Forms</h1>
-      {/* The form */}
-      
+      {/* display all request forms */}
+        <ReimbursementForm />
+        <PurchaseRequestForm />
     </div>
   );
 };

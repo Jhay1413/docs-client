@@ -266,7 +266,6 @@ export const Dashboard = () => {
             </div>
           </div>
             <div className="flex flex-col gap-4 row-span-1">
-              <h1 className="text-lg">Charts</h1>
               <div className="h-full relative">
                 <Component data={total} />
               </div>
