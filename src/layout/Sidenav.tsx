@@ -12,11 +12,13 @@ import {
   LibraryBig,
   Mailbox,
   NotebookText,
+  Scroll,
   Ticket,
   TicketPercent,
   TicketPlus,
   UserSearch,
   Users,
+  WalletCards,
 } from "lucide-react";
 import { Link, NavLink, useLocation } from "react-router-dom";
 import { getCurrentUserId, useCurrentUserRole } from "@/hooks/use-user-hook";
@@ -115,8 +117,8 @@ export const SideNav = () => {
                   <h1 className="text-base">Request Forms</h1>
                 </div>
               </NavLink>
-          </li>
-        </ul>
+            </li>
+          </ul>
         <UserAndAccountWithRole roles={["SUPERADMIN"]} exemptions={["Operations Department"]} />
         <Label className="text-[#DCFF8E] px-4 font-medium flex w-full text-sm">TRANSACTIONS</Label>
         <ul className="flex flex-col  space-y-4 w-full   mx-2">
@@ -252,6 +254,25 @@ export const SideNav = () => {
             </NavLink>
           </li>
         </ul>
+
+        <Label className="text-[#DCFF8E] px-4 font-medium flex w-full text-sm">RETAINERSHIP</Label>
+          <ul className="flex flex-col  space-y-4 w-full   mx-2 ">
+            <li className="relative inline-block text-left px-4 ">
+              <NavLink
+                to={`/dashboard/retainership/list`}
+                className={({ isActive }) => {
+                  return `justify-start items-center flex w-full p-2 space-x-4 text-lg  rounded-md ${isActive ? "bg-green-100/30 text-white" : ""}`;
+                }}
+              >
+                <WalletCards />
+                <div className="flex gap-2">
+                  <h1 className="text-base">Retainership</h1>
+                </div>
+              </NavLink>
+            </li>
+          </ul>
+
+
         <Label className="text-[#DCFF8E] px-4 font-medium flex w-full text-sm">ARCHIVE</Label>
         <ul className="flex flex-col  space-y-4 w-full   mx-2 ">
           <li className="relative inline-block text-left px-4 ">
