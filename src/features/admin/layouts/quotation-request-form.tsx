@@ -197,7 +197,6 @@ const QuotationRequestForm = () => {
             <Plus size={20} />
             Add Row
           </Button>
-          <p className="text-base text-center pb-8">NOTE: Write an "NF" / Nothing Follows at the end of the last item requested.</p>
         </div>
         <Separator className="h-1 w-full bg-lime-700" />
 

@@ -9,7 +9,7 @@ import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, Tabl
 import { cn } from "@/lib/utils";
 
 import { format } from "date-fns";
-import { CalendarIcon, SquarePen, X } from "lucide-react";
+import { CalendarIcon, SquareMinus, SquarePen, SquarePlus, X } from "lucide-react";
 import { ChangeEvent, useEffect, useMemo, useRef, useState } from "react";
 import { SubmitHandler, useFieldArray, useForm } from "react-hook-form";
 
@@ -238,11 +238,13 @@ export const TransactionForm = ({ company, method, defaultValue, mutateFn, isPen
     });
   };
 
-  const [areRowsExpanded, setAreRowsExpanded] = useState(false); // State to track if rows are expanded
+  const [isTableVisible, setIsTableVisible] = useState(true);
 
-  const toggleRows = () => {
-    setAreRowsExpanded((prev) => !prev); // Toggle the expanded state
+    // Function to toggle table visibility
+  const toggleTableVisibility = () => {
+    setIsTableVisible((prev) => !prev);
   };
+
 
   // Inside your component
   const [showSuccessMessage, setShowSuccessMessage] = useState(false);
@@ -604,207 +606,210 @@ export const TransactionForm = ({ company, method, defaultValue, mutateFn, isPen
             <Separator className="col-span-3 mt-4" />
           </div>
 
+          
           <div className="flex flex-col space-y-4 mt-12 ">
-            <h1 className="text-2xl">List of Attachments Required</h1>
+            <div className="flex items-center space-x-4">
+              <h1 className="text-2xl">List of Attachments Required</h1>
+              <button
+                type="button"
+                onClick={toggleTableVisibility}
+                title={isTableVisible ? "Collapse" : "Expand"}
+              >
+                {isTableVisible ? <SquareMinus /> : <SquarePlus />}
+              </button>
+            </div>
             
-            <ScrollArea className="w-full whitespace-nowrap rounded-md border">
-              <Table>
-                <TableCaption>A list of your required attachments.</TableCaption>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead className="w-[100px]">Type</TableHead>
-                    <TableHead className="w-[200px]">Status</TableHead>
-                    <TableHead className="w-[200px]">Filename</TableHead>
-                    <TableHead className="w-[100px]">Remarks</TableHead>
-                    <TableHead className="">File</TableHead>
-                    <TableHead className="text-center">Action</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody className="">
-                {fields.map((item, index) => {
+            {isTableVisible && (
+            <div>
 
-                if (index < 3 || areRowsExpanded ) {
-                  return (
-                    <TableRow key={item.id}>
-                      <TableCell className="font-medium w-[300px]">
-                        <FormField
-                          control={form.control}
-                          name={`attachments.${index}.fileType`}
-                          render={({ field }) => (
-                            <FormItem>
-                              <FormControl>
-                                <Select
-                                  value={field.value || ""}
-                                  onValueChange={(value) => {
-                                    field.onChange(value);
-                                  }}
-                                >
-                                  <SelectTrigger className="w-full">
-                                    <SelectValue placeholder="Select type" />
-                                  </SelectTrigger>
-                                  <SelectContent>
-                                    <SelectItem value="INITIAL_DOC">Initial documents</SelectItem>
-                                    <SelectItem value="FOLLOWED_UP">Follow-up documents</SelectItem>
-                                    <SelectItem value="APPROVE">Approve</SelectItem>
-                                  </SelectContent>
-                                </Select>
-                              </FormControl>
-                              <FormMessage />
-                            </FormItem>
-                          )}
-                        />
-                      </TableCell>
-                      <TableCell>
-                        <FormField
-                          control={form.control}
-                          name={`attachments.${index}.fileStatus`}
-                          render={({ field }) => (
-                            <FormItem>
-                              <FormControl>
-                                <Select
-                                  value={field.value || ""}
-                                  onValueChange={(value) => {
-                                    field.onChange(value);
-                                  }}
-                                >
-                                  <SelectTrigger className="w-full">
-                                    <SelectValue placeholder="Select status" />
-                                  </SelectTrigger>
-                                  <SelectContent>
-                                    <SelectItem value="FOR_REVIEW">For Review</SelectItem>
-                                    <SelectItem value="FINAL_ATTACHMENT">Final Attachment</SelectItem>
-                                    <SelectItem value="NOT_APPLICABLE">Not Applicable</SelectItem>
-                                  </SelectContent>
-                                </Select>
-                              </FormControl>
-                              <FormMessage />
-                            </FormItem>
-                          )}
-                        />
-                      </TableCell>
-                      <TableCell className="font-medium w-[300px]">
-                        <FormTextArea name={`attachments.${index}.fileName`} />
-                      </TableCell>
-                      <TableCell className="font-medium w-[500px]">
-                        <FormTextArea name={`attachments.${index}.remarks`} />
-                      </TableCell>
-                      <TableCell className="">
-                        <div className="flex justify-center flex-col gap-2">
-                          <div className="flex w-full gap-4 justify-center items-center ">
-                            <FormField
-                              control={form.control}
-                              name={`attachments.${index}.file`}
-                              render={({ field: { onChange }, ...field }) => (
-                                <FormItem className="hidden">
-                                  <FormControl>
-                                    <Input
-                                      type="file"
-                                      accept="application/pdf"
-                                      {...field}
-                                      onChange={(e) => {
-                                        fileOnChangeSubmit(item, e, index);
-                                      }}
-                                      disabled={form.getValues(`attachments.${index!}.fileName`) === " "}
-                                      ref={(el) => (fileInputRef.current![index] = el)}
-                                    />
-                                  </FormControl>
-                                  <FormDescription></FormDescription>
-                                  <FormMessage />
-                                </FormItem>
+            
+              <ScrollArea className="w-full whitespace-nowrap rounded-md border">
+                <Table>
+                  <TableCaption>A list of your required attachments.</TableCaption>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead className="w-[100px]">Type</TableHead>
+                      <TableHead className="w-[200px]">Status</TableHead>
+                      <TableHead className="w-[200px]">Filename</TableHead>
+                      <TableHead className="w-[100px]">Remarks</TableHead>
+                      <TableHead className="">File</TableHead>
+                      <TableHead className="text-center">Action</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody className="">
+                  {fields.map((item, index) => (
+                      <TableRow key={item.id}>
+                        <TableCell className="font-medium w-[300px]">
+                          <FormField
+                            control={form.control}
+                            name={`attachments.${index}.fileType`}
+                            render={({ field }) => (
+                              <FormItem>
+                                <FormControl>
+                                  <Select
+                                    value={field.value || ""}
+                                    onValueChange={(value) => {
+                                      field.onChange(value);
+                                    }}
+                                  >
+                                    <SelectTrigger className="w-full">
+                                      <SelectValue placeholder="Select type" />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                      <SelectItem value="INITIAL_DOC">Initial documents</SelectItem>
+                                      <SelectItem value="FOLLOWED_UP">Follow-up documents</SelectItem>
+                                      <SelectItem value="APPROVE">Approve</SelectItem>
+                                    </SelectContent>
+                                  </Select>
+                                </FormControl>
+                                <FormMessage />
+                              </FormItem>
+                            )}
+                          />
+                        </TableCell>
+                        <TableCell>
+                          <FormField
+                            control={form.control}
+                            name={`attachments.${index}.fileStatus`}
+                            render={({ field }) => (
+                              <FormItem>
+                                <FormControl>
+                                  <Select
+                                    value={field.value || ""}
+                                    onValueChange={(value) => {
+                                      field.onChange(value);
+                                    }}
+                                  >
+                                    <SelectTrigger className="w-full">
+                                      <SelectValue placeholder="Select status" />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                      <SelectItem value="FOR_REVIEW">For Review</SelectItem>
+                                      <SelectItem value="FINAL_ATTACHMENT">Final Attachment</SelectItem>
+                                      <SelectItem value="NOT_APPLICABLE">Not Applicable</SelectItem>
+                                    </SelectContent>
+                                  </Select>
+                                </FormControl>
+                                <FormMessage />
+                              </FormItem>
+                            )}
+                          />
+                        </TableCell>
+                        <TableCell className="font-medium w-[300px]">
+                          <FormTextArea name={`attachments.${index}.fileName`} />
+                        </TableCell>
+                        <TableCell className="font-medium w-[500px]">
+                          <FormTextArea name={`attachments.${index}.remarks`} />
+                        </TableCell>
+                        <TableCell className="">
+                          <div className="flex justify-center flex-col gap-2">
+                            <div className="flex w-full gap-4 justify-center items-center ">
+                              <FormField
+                                control={form.control}
+                                name={`attachments.${index}.file`}
+                                render={({ field: { onChange }, ...field }) => (
+                                  <FormItem className="hidden">
+                                    <FormControl>
+                                      <Input
+                                        type="file"
+                                        accept="application/pdf"
+                                        {...field}
+                                        onChange={(e) => {
+                                          fileOnChangeSubmit(item, e, index);
+                                        }}
+                                        disabled={form.getValues(`attachments.${index!}.fileName`) === " "}
+                                        ref={(el) => (fileInputRef.current![index] = el)}
+                                      />
+                                    </FormControl>
+                                    <FormDescription></FormDescription>
+                                    <FormMessage />
+                                  </FormItem>
+                                )}
+                              />
+                              {uploadStatus[index]?.isLoading || uploadStatus[index]?.isSuccess || uploadStatus[index]?.isFailed ? (
+                                <div className="flex flex-col w-full">
+                                  <h1 className="text-wrap">{uploadStatus[index].fileName}</h1>
+                                  <h1 className="text-muted-foreground text-sm">{uploadStatus[index].progress} / 100%</h1>
+                                  <Progress value={uploadStatus[index].progress} className="w-full h-2" />
+                                </div>
+                              ) : (
+                                <div className="flex flex-col w-full">
+                                  <button type="button" onClick={() => viewFile(item.fileUrl!)}>
+                                    <h1 className="text-wrap text-blue-500/85">{form.getValues(`attachments.${index}.fileOriginalName`)}</h1>
+                                  </button>
+                                </div>
                               )}
-                            />
-                            {uploadStatus[index]?.isLoading || uploadStatus[index]?.isSuccess || uploadStatus[index]?.isFailed ? (
-                              <div className="flex flex-col w-full">
-                                <h1 className="text-wrap">{uploadStatus[index].fileName}</h1>
-                                <h1 className="text-muted-foreground text-sm">{uploadStatus[index].progress} / 100%</h1>
-                                <Progress value={uploadStatus[index].progress} className="w-full h-2" />
-                              </div>
-                            ) : (
-                              <div className="flex flex-col w-full">
-                                <button type="button" onClick={() => viewFile(item.fileUrl!)}>
-                                  <h1 className="text-wrap text-blue-500/85">{form.getValues(`attachments.${index}.fileOriginalName`)}</h1>
-                                </button>
+                            </div>
+                            {uploadStatus[index]?.isLoading && <div className="success-message">Uploading!</div>}
+                            {showSuccessMessage && (
+                              <div className={`success-message transition-opacity duration-500 ${showSuccessMessage ? 'opacity-100' : 'opacity-0'}`}>
+                                Upload successful!
                               </div>
                             )}
+                            {uploadStatus[index]?.isFailed && <div className="error-message">Upload failed!</div>}
+
                           </div>
-                          {uploadStatus[index]?.isLoading && <div className="success-message">Uploading!</div>}
-                          {showSuccessMessage && (
-                            <div className={`success-message transition-opacity duration-500 ${showSuccessMessage ? 'opacity-100' : 'opacity-0'}`}>
-                              Upload successful!
-                            </div>
-                          )}
-                          {uploadStatus[index]?.isFailed && <div className="error-message">Upload failed!</div>}
+                        </TableCell>
 
-                        </div>
-                      </TableCell>
+                        <TableCell className="w-32">
+                          <div className="flex w-full items-center gap-4 justify-center">
+                            <button type="button" onClick={() => reattachFile(index)}>
+                              <SquarePen className="text-green-800" />
+                            </button>
 
-                      <TableCell className="w-32">
-                        <div className="flex w-full items-center gap-4 justify-center">
-                          <button type="button" onClick={() => reattachFile(index)}>
-                            <SquarePen className="text-green-800" />
-                          </button>
+                            <button
+                              type="button"
+                              onClick={() => {
+                                console.log(index);
+                                remove(index);
+                                setUploadStatus((prev) => {
+                                  const newStatus = [...prev];
+                                  newStatus.splice(index, 1);
+                                  return newStatus;
+                                });
+                              }}
+                            >
+                              <X className="text-red-800" />
+                            </button>
+                          </div>
+                        </TableCell>
+                      </TableRow>
+                  ))}
+    
 
-                          <button
-                            type="button"
-                            onClick={() => {
-                              console.log(index);
-                              remove(index);
-                              setUploadStatus((prev) => {
-                                const newStatus = [...prev];
-                                newStatus.splice(index, 1);
-                                return newStatus;
-                              });
-                            }}
-                          >
-                            <X className="text-red-800" />
-                          </button>
-                        </div>
-                      </TableCell>
-                    </TableRow>
-                  );
-                
-                }
-                return null; // Do not render anything for rows beyond the first three if collapsed
-              })}
-  
+                    <TableCell>
+                      <Button
+                        onClick={() => {
+                          append({
+                            fileName: "",
+                            fileOriginalName: "",
+                            remarks: "",
+                            fileType: "INITIAL_DOC",
+                            fileStatus: null,
+                            fileUrl: null,
+                            file: undefined,
+                          });
+                          setUploadStatus((prev) => [
+                            ...prev,
+                            { isLoading: false, isSuccess: false, isFailed: false, progress: 0 }, // New status for the appended field
+                          ]);
+                        }}
+                        type="button"
+                      >
+                        Add
+                        
+                      </Button>
+                    </TableCell>
+                  </TableBody>
+                </Table>
+                <ScrollBar orientation="horizontal" />
+              </ScrollArea>
+              
 
-                  <TableCell>
-                    <Button
-                      onClick={() => {
-                        // Set areRowsExpanded to true
-                        setAreRowsExpanded(true);
-
-                        append({
-                          fileName: "",
-                          fileOriginalName: "",
-                          remarks: "",
-                          fileType: "INITIAL_DOC",
-                          fileStatus: null,
-                          fileUrl: null,
-                          file: undefined,
-                        });
-                        setUploadStatus((prev) => [
-                          ...prev,
-                          { isLoading: false, isSuccess: false, isFailed: false, progress: 0 }, // New status for the appended field
-                        ]);
-                      }}
-                      type="button"
-                    >
-                      Add
-                      
-                    </Button>
-                  </TableCell>
-                </TableBody>
-              </Table>
-              <ScrollBar orientation="horizontal" />
-            </ScrollArea>
-            {fields.length > 3 && (
-            <Button type="button" onClick={toggleRows} className="mb-4 p-2 bg-blue-500 text-white rounded">
-              {areRowsExpanded ? "Collapse" : "Show All"}
-            </Button>
-            )}
+            
+            </div>
+          )}
           </div>
-
           <div className="flex justify-end mt-11">
             <Button type="submit" onClick={() => console.log(form.formState.errors)} disabled={isPending}>
               Submit

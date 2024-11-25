@@ -11,18 +11,22 @@ const FormSelector = () => {
   ];
 
   return (
-    <div className="grid grid-cols-3 gap-4 max-w-[1000px]">
+    <div className="py-2 grid grid-cols-4 gap-4 ">
       {formTemplates.map((template) => (
         <NavLink
           key={template.id}
           to={`/dashboard/admin/request/${template.id}-request`}
-          className="border p-4 rounded-lg cursor-pointer hover:bg-gray-100"
+          className="border-2 p-4 rounded-lg cursor-pointer hover:bg-gray-100 "
         >
-          <h3 className="text-xl font-bold">{template.name}</h3>
-          <p>{template.description}</p>
-          {template.img && <img src={template.img} alt={`${template.name} image`} />} 
+          <h3 className="text-base font-bold">{template.name}</h3>
+          <p className="text-xs font-light pb-4">{template.description}</p>
+          {template.img && <img className="h-64 w-48"src={template.img} alt={`${template.name} image`} />} 
         </NavLink>
       ))}
+
+      <div className="col-span-4 text-center mt-4">
+        <h2 className="text-lg font-semibold">Select a Request Form</h2>
+      </div>
     </div>
   );
 };
