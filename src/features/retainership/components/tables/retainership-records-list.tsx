@@ -3,7 +3,7 @@ import { ColumnDef } from "@tanstack/react-table";
 import { DataTable } from "@/components/data-table";
 import { Separator } from "@/components/ui/separator";
 import RetainershipRecordDetails from "../../layouts/retainership-records-details";
-import { useNavigate } from "react-router-dom"; // Import useNavigate
+import { useLocation, useNavigate } from "react-router-dom"; // Import useNavigate
 
 interface RetainershipRecord {
   projectId: string;
@@ -76,7 +76,14 @@ const detailedData = {
 const RetainershipRecordsList: React.FC = () => {
   const [selectedRecord, setSelectedRecord] = useState<string | null>(null);
   const navigate = useNavigate(); // Get the navigate function
-
+  const location = useLocation();
+  const handleOnClickRow = (data: RetainershipRecord) => {
+    const { projectId } = data; // Extract projectId from the row data
+    navigate(`/dashboard/retainership/details/${projectId}`, {
+      state: { from: location.pathname }, // Pass the previous location for reference
+    });
+  };
+  
   const columns: ColumnDef<RetainershipRecord>[] = [
     {
       accessorKey: "projectId",
@@ -120,10 +127,18 @@ const RetainershipRecordsList: React.FC = () => {
   ];
 
   return (
-    <div className="flex flex-col w-full h-full bg-white p-8">
-      <h4 className="font-medium text-[28px] text-gray-700 mb-4">Retainership Records</h4>
-      <DataTable columns={columns} data={retainershipRecords} hasSearch={true} hasPaginate={true} />
-      
+    <div className="min-h-full flex flex-col w-full items-center p-4 bg-white rounded-lg">
+      <div className="flex flex-col w-full items-center justify-center p-4 bg-white rounded-lg">
+        <div className="flex justify-between items-center w-full pb-4">
+          <div className="flex justify-start w-full flex-col">
+          <h1 className="text-[#404041] font-medium text-[28px]">Retainership Records</h1>
+          <p className="text-muted-foreground text-[12px] truncate">View and manage the retainership.</p>
+          </div>
+        </div>
+
+      <div className="w-full">
+        <DataTable columns={columns} data={retainershipRecords} hasSearch={true} hasPaginate={true} callbackFn={handleOnClickRow}/>
+      </div>
       {selectedRecord && (
         <div className="mt-8">
           <h4 className="font-medium text-[28px] text-gray-700">
@@ -133,7 +148,9 @@ const RetainershipRecordsList: React.FC = () => {
           <RetainershipRecordDetails />
         </div>
       )}
+
     </div>
+  </div>
   );
 };
 
