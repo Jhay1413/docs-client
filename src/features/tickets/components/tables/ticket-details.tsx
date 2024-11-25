@@ -8,15 +8,23 @@ import { getSignUrlForView } from "@/features/transactions/services/getSignedUrl
 import { Button } from "@/components/ui/button";
 import { CircleArrowRight, FileText, Forward, Plus } from "lucide-react";
 import { getCurrentUserId } from "@/hooks/use-user-hook";
-import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 import { useState } from "react";
 import ConfirmationModal from "@/components/confirmation-modal";
 import { toast } from "react-toastify";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import { toPascalCase } from "../ticket.utils";
 
-
-const ForwardTicketBtn = ({id}: {id?:string}) => (
+const ForwardTicketBtn = ({ id }: { id?: string }) => (
   <div>
     <Link
       to={`/dashboard/tickets/forward-ticket/${id}`}
@@ -29,16 +37,17 @@ const ForwardTicketBtn = ({id}: {id?:string}) => (
 );
 
 const ReopenTicketBtn = () => (
-    <Button type="button" className="bg-[#414140] px-4 py-2 text-lg flex items-center justify-center space-x rounded-lg text-white">Reopen</Button>
+  <Button type="button" className="bg-[#414140] px-4 py-2 text-lg flex items-center justify-center space-x rounded-lg text-white">
+    Reopen
+  </Button>
 );
-
 
 export const TicketDetails = () => {
   const { id } = useParams();
   const currentUserId = getCurrentUserId();
   const [open, setIsOpen] = useState(false);
   const navigate = useNavigate();
-  
+
   const { data, isLoading, isError } = tsr.ticketing.getTicketsById.useQuery({
     queryKey: ["ticket", id],
     queryData: {
@@ -46,9 +55,8 @@ export const TicketDetails = () => {
     },
   });
 
-
   const { mutate } = tsr.ticketing.resolveTickets.useMutation({
-    onMutate: () => { },
+    onMutate: () => {},
     onSuccess: () => {
       toast.success("Ticket resolved !");
       navigate(`/dashboard/tickets/inbox/${currentUserId}`);
@@ -60,21 +68,23 @@ export const TicketDetails = () => {
   });
   console.log("ticket data:", data);
 
-
-
   const handleConfirm = () => {
-    mutate({body:{
-      userId:currentUserId
-    },params:{
-      id:id!
-    }})
-  }
+    mutate({
+      body: {
+        userId: currentUserId,
+      },
+      params: {
+        id: id!,
+      },
+    });
+  };
 
   const handleCancel = () => {
-    console.log("Cancelled!")
-  }
+    console.log("Cancelled!");
+  };
 
   const viewFile = async (key: string) => {
+    console.log(key);
     const signedUrl = await getSignUrlForView(key);
     if (signedUrl) {
       window.open(signedUrl);
@@ -94,8 +104,7 @@ export const TicketDetails = () => {
       <div className="flex justify-between items-center mb-4">
         <h1 className="text-3xl font-bold text-gray-800">Ticket Details</h1>
         <div className="flex justify-start items-center gap-4">
-          
-          {((data?.body.dateReceived != null) && (data?.body.requestee?.id === currentUserId && data?.body.status != 'RESOLVED')) &&
+          {data?.body.dateReceived != null && data?.body.requestee?.id === currentUserId && data?.body.status != "RESOLVED" && (
             <ConfirmationModal
               title="Confirm Ticket Resolution"
               description="Are you sure you want to mark this ticket as resolved? This action cannot be undone, and further changes will not be allowed once the ticket is resolved."
@@ -103,11 +112,12 @@ export const TicketDetails = () => {
               onCancel={handleCancel}
               triggerButton="Resolve"
             />
-          }
+          )}
 
-          {data?.body.status === 'RESOLVED' && <ReopenTicketBtn />}
-          {((data?.body.dateReceived != null) && (data?.body.receiver?.id === currentUserId && data?.body.status != 'RESOLVED')) && <ForwardTicketBtn id={id}/>}
-
+          {data?.body.status === "RESOLVED" && <ReopenTicketBtn />}
+          {data?.body.dateReceived != null && data?.body.receiver?.id === currentUserId && data?.body.status != "RESOLVED" && (
+            <ForwardTicketBtn id={id} />
+          )}
         </div>
       </div>
       <Separator className="my-4" />
@@ -259,19 +269,16 @@ export const TicketDetails = () => {
         <>
           <Separator className="my-4" />
           <h1 className="text-xl font-bold text-gray-800 mb-4">Attachments</h1>
-          
+
           <ScrollArea className="h-60">
             {data?.body.attachments.map((attachment, index) => (
-              <div 
-                key={index} 
-                className="flex justify-between items-center p-3 rounded-lg shadow-md relative"
-              >
+              <div key={index} className="flex justify-between items-center p-3 rounded-lg shadow-md relative">
                 <div className="flex items-center space-x-2">
                   <FileText className="text-gray-600" />
                   <p className="text-gray-700 truncate">{attachment}</p>
                 </div>
-                <button 
-                  onClick={() => viewFile(attachment)} 
+                <button
+                  onClick={() => viewFile(attachment)}
                   className="sticky right-0 ml-4 px-3 py-1 text-sm font-semibold bg-white text-blue-600 border border-blue-600 rounded hover:bg-blue-600 hover:text-white transition"
                 >
                   View

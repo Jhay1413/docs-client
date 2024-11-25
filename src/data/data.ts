@@ -4,20 +4,20 @@ export const Divisions = [
 
     section: [
       {
-        name: "Terrestrial, Climate & Tenurial Instrument",
-        value: "TCTI",
+        name: "Environmental Clearance and Certification Team",
+        value: "EECCT",
       },
       {
-        name: "Integrated Compliance & Sustainability",
-        value: "ICS",
+        name: "Compliance Monitoring and Reporting Team",
+        value: "CMRT",
       },
       {
-        name: "EIA & Chemical Substances",
-        value: "EIA",
+        name: "Strategic Environmental Assessment Team",
+        value: "SEAT",
       },
       {
-        name: "Environmental Planning & Design",
-        value: "EPD",
+        name: "Environmental Engineering and Design Team",
+        value: "EEDT",
       },
     ],
   },
