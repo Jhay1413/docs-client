@@ -2,7 +2,7 @@ import { Value } from "@radix-ui/react-select";
 
 export const checkList = [
   {
-    name: "ICS",
+    name: "CMRT",
     application: [
       {
         name: "Discharge Permit (DP) with wastewater Testing - New",
@@ -417,12 +417,12 @@ export const checkList = [
     ],
   },
   {
-    name: "EIA",
+    name: "SEAT",
     application: [
       {
         name: "CADMIUM AND CADMIUM COMPOUNDS",
         value: " CADMIUM AND CADMIUM COMPOUNDS",
-        category: "CCO ",
+        category: "CCO",
         checkList: [
           " Photocopy of the Environmental permits such as the following",
           "Photocopy of Registration with the Securities and Exchange Commission (SEC) or Department of Trade and Industry, with an updated list of officers",

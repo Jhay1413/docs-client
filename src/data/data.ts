@@ -5,7 +5,7 @@ export const Divisions = [
     section: [
       {
         name: "Environmental Clearance and Certification Team",
-        value: "EECCT",
+        value: "ECCT",
       },
       {
         name: "Compliance Monitoring and Reporting Team",
