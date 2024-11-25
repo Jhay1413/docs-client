@@ -106,10 +106,10 @@ const ReportingCard: React.FC = () => {
               </button>
             ))}
             <Button
-              className="text-sm p-2 rounded-full bg-green-500 text-white"
+              className="text-sm p-2 rounded-md bg-green-500 text-white"
               onClick={addYear}
             >
-              <Plus size={20}/>
+              <Plus size={16}/>
             </Button>
           </div>
 
