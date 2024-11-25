@@ -5,6 +5,7 @@ import { NavLink, useLocation, useNavigate, useParams } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft } from "lucide-react";
 import ReportingCard from "../components/tables/reporting-card";
+import ComplianceCard from "../components/tables/compliance-card";
 
 // Define the type for the detailedData object
 interface ProjectDetails {
@@ -123,6 +124,7 @@ const RetainershipRecordDetails: React.FC = () => {
           The Compliance section ensures adherence to industry regulations, internal policies, and legal standards, with resources for maintaining accountability.
         </p>
         {/* Insert Compliance Card */}
+        <ComplianceCard />
 
         <Separator />
       </div>

@@ -45,7 +45,7 @@ export const pendingTicketsColumn: ColumnDef<z.infer<typeof ticketingTableSchema
     accessorKey: "subject",
   },
   {
-    header: () => <span className="font-bold text-nowrap">Request Detais</span>,
+    header: () => <span className="font-bold text-nowrap">Request Details</span>,
     accessorKey: "requestDetails",
     cell: ({ row }) => {
       const transactionInfo = row.original;
@@ -79,21 +79,30 @@ export const pendingTicketsColumn: ColumnDef<z.infer<typeof ticketingTableSchema
     header: () => <span className="font-bold text-nowrap">Due Date</span>,
     accessorKey: "dueDate",
     cell: ({ row }) => {
-      const transactionInfo = row.original;
-      const current = new Date();
-      const date = `${current.getDate()}/${current.getMonth()+1}/${current.getFullYear()}`;
       const ticketInfo = row.original;
-
-      return(
+      const current = new Date();
+      const currentDate = new Date(current.getFullYear(), current.getMonth(), current.getDate()); // Create a date object for the current date
+      const dueDate = new Date(ticketInfo.dueDate); // Convert dueDate to a Date object
+      
+      return (
         <div className="flex gap-1 items-center w-24">
-          <span>{new Date(transactionInfo.dueDate).toDateString()}</span>
-          {ticketInfo.status !== "RESOLVED" && date >= transactionInfo.dueDate &&
-          <span title="Overdue">
-            <CircleAlert size={20} className="text-red-500" />
-          </span>
+          <span>{dueDate.toDateString()}</span>
+          {
+            ticketInfo.status !== "RESOLVED" && currentDate.getTime() > dueDate.getTime() ? (
+              <span title="Overdue">
+                <CircleAlert size={20} className="text-red-500" />
+              </span>
+            ) : ticketInfo.status !== "RESOLVED" && currentDate.getTime() === dueDate.getTime() ? (
+              <span title="Due Today">
+                <CircleAlert size={20} className="text-yellow-500" />
+              </span>
+            ) : null
           }
+
+
+
         </div>
-      )
+      );
     },
   },
   {

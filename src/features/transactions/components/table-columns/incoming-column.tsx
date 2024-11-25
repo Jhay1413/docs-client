@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/button";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { z } from "zod";
 import { ColumnDef } from "@tanstack/react-table";
-import { ArrowUpDown, MailOpen, MoreHorizontal } from "lucide-react";
+import { ArrowUpDown, CircleAlert, MailOpen, MoreHorizontal } from "lucide-react";
 import { toast } from "react-toastify";
 import { transactionTable } from "shared-contract";
 
@@ -83,7 +83,33 @@ export function useColumns(mutateAsync: MutateAsyncFunction): ColumnDef<Incoming
       header: "Priority",
       accessorKey: "priority",
     },
-
+    {
+      header: "Due Date", // Corrected header name
+      accessorKey: "dueDate",
+      cell: ({ row }: { row: { original: IncomingColumn } }) => { // Specify the type of row here
+        const transactionInfo = row.original;
+        const current = new Date();
+        const currentDate = new Date(current.getFullYear(), current.getMonth(), current.getDate()); // Create a date object for the current date
+        const dueDate = new Date(transactionInfo.dueDate); // Convert dueDate to a Date object
+    
+        return (
+          <div className="flex gap-1 items-center w-24">
+            <span>{dueDate.toDateString()}</span>
+            {
+              transactionInfo.status !== "ARCHIVED" && currentDate.getTime() > dueDate.getTime() ? (
+                <span title="Overdue">
+                  <CircleAlert size={20} className="text-red-500" />
+                </span>
+              ) : transactionInfo.status !== "ARCHIVED" && currentDate.getTime() === dueDate.getTime() ? (
+                <span title="Due Today">
+                  <CircleAlert size={20} className="text-yellow-500" />
+                </span>
+              ) : null
+            }
+          </div>
+        );
+      },
+    },
     {
       header: () => (
         <div className="w-full font-bold text-nowrap items-center flex justify-center">
