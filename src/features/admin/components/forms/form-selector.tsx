@@ -11,7 +11,7 @@ const FormSelector = () => {
   ];
 
   return (
-    <div className="grid grid-cols-4 gap-4 ">
+    <div className="py-2 grid grid-cols-4 gap-4 ">
       {formTemplates.map((template) => (
         <NavLink
           key={template.id}
