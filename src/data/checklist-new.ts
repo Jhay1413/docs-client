@@ -813,7 +813,7 @@ export const checkList = [
           "Business Permit or SEC  Registration of the office",
           "Business Permit or SEC Registration of the Warehouse/Storage Facility",
           "Application Form",
-          "Official Receipt"
+          "Official Receipt",
         ],
       },
       {
@@ -899,7 +899,7 @@ export const checkList = [
     ],
   },
   {
-    name: "TCTI",
+    name: "ECCT",
     application: [
       {
         name: "Foreshore Lease Agreement (FLA)",

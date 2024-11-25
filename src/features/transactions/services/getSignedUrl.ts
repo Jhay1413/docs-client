@@ -33,7 +33,8 @@ export const getSignedUrl = async <T>(data: T[]): Promise<T[]> => {
 };
 export const getSignUrlForView = async (key: string) => {
   try {
-    const response = await axios.get(`${baseUrl}/transactionGetUrl?key=${key}`);
+    const encoded_key = encodeURIComponent(key as string);
+    const response = await axios.get(`${baseUrl}/transactionGetUrl?key=${encoded_key}`);
     return response.data;
   } catch (error) {
     console.log(error);
