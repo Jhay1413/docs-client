@@ -79,7 +79,7 @@ const TicketForm = ({
       subject: ticketData?.subject || "",
       section: ticketData?.section || "",
       division: ticketData?.division || "",
-      status: ticketData?.status || "ROUTING",
+      status: isForwarding ? undefined : (ticketData?.status || "ROUTING"),
       requestDetails: ticketData?.requestDetails || "",
       priority: ticketData?.priority || undefined,
       dueDate: ticketData?.dueDate || "",

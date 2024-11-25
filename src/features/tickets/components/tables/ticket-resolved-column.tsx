@@ -2,6 +2,7 @@ import { ColumnDef } from "@tanstack/react-table";
 import { z } from "zod";
 import { ticketingTableSchema } from "shared-contract"; // Adjust the import based on your project structure
 import { toPascalCase } from "../ticket.utils"; // Adjust the import based on your project structure
+import { CircleAlert } from "lucide-react";
 
 const maxLength = 50;
 export const ticketsResolvedColumn: ColumnDef<z.infer<typeof ticketingTableSchema>>[] = [
@@ -48,8 +49,21 @@ export const ticketsResolvedColumn: ColumnDef<z.infer<typeof ticketingTableSchem
     header: "Due Date",
     accessorKey: "dueDate",
     cell: ({ row }) => {
+      const transactionInfo = row.original;
+      const current = new Date();
+      const date = `${current.getDate()}/${current.getMonth()+1}/${current.getFullYear()}`;
       const ticketInfo = row.original;
-      return <span>{new Date(ticketInfo.dueDate).toLocaleDateString()}</span>;
+
+      return(
+        <div className="flex gap-1 items-center w-24">
+          <span>{new Date(transactionInfo.dueDate).toDateString()}</span>
+          {ticketInfo.status !== "RESOLVED" && date >= transactionInfo.dueDate &&
+          <span title="Overdue">
+            <CircleAlert size={20} className="text-red-500" />
+          </span>
+          }
+        </div>
+      )
     },
   },
   {

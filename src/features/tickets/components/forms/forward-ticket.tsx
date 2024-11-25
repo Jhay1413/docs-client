@@ -83,7 +83,7 @@ export const ForwardTicketComponent = () => {
 
         {/* The form */}
 
-        <TicketForm receiver={data ? data?.body : []} isForwarding={isForwarding} ticketData={ticketData!.body!} mutateFn={onSubmit} isPending={isPending}/>
+        <TicketForm receiver={data ? data?.body : []} isForwarding={isForwarding} ticketData={ticketData!.body!} mutateFn={onSubmit} isPending={isPending} />
       </div>
     </div>
   );

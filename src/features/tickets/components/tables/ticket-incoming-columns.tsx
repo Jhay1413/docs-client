@@ -3,7 +3,7 @@ import { z } from "zod";
 import { ticketingTableSchema } from "shared-contract"; // Adjust the import based on your project structure
 import { toPascalCase } from "../ticket.utils"; // Adjust the import based on your project structure
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
-import { Dot, MailOpen, MoreHorizontal } from "lucide-react";
+import { CircleAlert, Dot, MailOpen, MoreHorizontal } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 type IncomingColumn = z.infer<typeof ticketingTableSchema>;
@@ -77,8 +77,21 @@ export function ticketsIncomingColumn(mutateAsync: MutateAsyncFunction): ColumnD
       header: () => <span className="font-bold text-nowrap">Due Date</span>,
       accessorKey: "dueDate",
       cell: ({ row }) => {
+        const transactionInfo = row.original;
+        const current = new Date();
+        const date = `${current.getDate()}/${current.getMonth()+1}/${current.getFullYear()}`;
         const ticketInfo = row.original;
-        return <span>{new Date(ticketInfo.dueDate).toLocaleDateString()}</span>;
+  
+        return(
+          <div className="flex gap-1 items-center w-24">
+            <span>{new Date(transactionInfo.dueDate).toDateString()}</span>
+            {ticketInfo.status !== "RESOLVED" && date >= transactionInfo.dueDate &&
+            <span title="Overdue">
+              <CircleAlert size={20} className="text-red-500" />
+            </span>
+            }
+          </div>
+        )
       },
     },
     {

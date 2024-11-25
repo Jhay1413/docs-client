@@ -8,7 +8,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { ColumnDef } from "@tanstack/react-table";
-import { ArrowUpDown, Dot, MoreHorizontal } from "lucide-react";
+import { ArrowUpDown, CircleAlert, Dot, MoreHorizontal } from "lucide-react";
 import { Link } from "react-router-dom";
 import { ticketingTableSchema } from "shared-contract";
 import { z } from "zod";
@@ -68,8 +68,22 @@ export const ticketsColumn: ColumnDef<z.infer<typeof ticketingTableSchema>>[] = 
     accessorKey: "dueDate",
     cell: ({ row }) => {
       const transactionInfo = row.original;
+      const current = new Date();
+      const date = `${current.getDate()}/${current.getMonth()+1}/${current.getFullYear()}`;
+      const ticketInfo = row.original;
 
-      return <span>{new Date(transactionInfo.dueDate).toDateString()}</span>;
+      return(
+        <div className="flex gap-1 items-center w-24">
+          <span>{new Date(transactionInfo.dueDate).toDateString()}</span>
+          {ticketInfo.status !== "RESOLVED" && date >= transactionInfo.dueDate &&
+          <span title="Overdue">
+            <CircleAlert size={20} className="text-red-500" />
+          </span>
+          }
+        </div>
+      )
+      
+      
     },
   },
   {
