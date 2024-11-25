@@ -12,6 +12,7 @@ import { format } from "date-fns";
 import { ArrowLeft, CalendarIcon, Plus, XIcon } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
 import { NavLink } from "react-router-dom";
+import SignatoriesSection from "./signatories-section";
 
 // Define schema with expenditure fields as an array
 const QuotationRequestMutationSchema = z.object({
@@ -129,7 +130,7 @@ const QuotationRequestForm = () => {
 
         {/* Request Details Table */}
         <div className="pt-4 px-24 pb-8">
-          <h3 className="text-lg font-semibold pb-4">Request Details</h3>
+          <h3 className="text-lg font-semibold pb-4 text-center">Request Details</h3>
           <div className="overflow-x-auto">
             <table className="table-auto w-full border-collapse border border-gray-300">
               <thead>
@@ -200,10 +201,17 @@ const QuotationRequestForm = () => {
         </div>
         <Separator className="h-1 w-full bg-lime-700" />
 
+        <SignatoriesSection form={form} />
+
+        <Separator className="h-1 w-full bg-lime-700" />
+
         <div className="flex items-end justify-end">
             <Button type="submit" className="w-min mt-4">
             Submit Request
             </Button>
+        </div>
+        <div className="flex justify-center mb-4">
+          <img src="/logo-footer.png" alt="Logo" className="h-40 w-auto m-4" />
         </div>
       </form>
     </Form>

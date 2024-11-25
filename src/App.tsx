@@ -39,6 +39,10 @@ import { TicketManual } from "./features/manuals/components/ticket-manual";
 import { ManualIndex } from "./pages/manuals-index";
 import { TransactionManual } from "./features/manuals/components/transaction-manual";
 import { RequestFormsIndex } from "./pages/requestform-index";
+import { RetainershipIndex } from "./pages/retainership-index";
+import RetainershipRecords from "./features/retainership/layouts/retainership-records-details";
+import RetainershipRecordsList from "./features/retainership/components/tables/retainership-records-list";
+import RetainershipRecordDetails from "./features/retainership/layouts/retainership-records-details";
 
 function App() {
   return (
@@ -95,6 +99,11 @@ function App() {
                 <Route path="update/:id" element={<TransactionUpdateComponent />} />
                 <Route path="log/:id" element={<ViewHistory />} />
                 <Route path="archived" element={<ArchivedList />} />
+              </Route>
+
+              <Route path="retainership" element={<RetainershipIndex />}>
+                <Route path="list" element={<RetainershipRecordsList />} />
+                <Route path="details/:projectId" element={<RetainershipRecordDetails />}/>
               </Route>
 
               <Route path="tickets" element={<TicketsIndex />}>
