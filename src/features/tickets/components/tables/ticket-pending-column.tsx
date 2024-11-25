@@ -4,7 +4,7 @@ import { ticketingTableSchema } from "shared-contract"; // Adjust the import bas
 import { toPascalCase } from "../ticket.utils"; // Adjust the import based on your project structure
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
-import { CircleArrowRight, Dot, Eye, Minus, MoreHorizontal, Pencil, View } from "lucide-react";
+import { CircleAlert, CircleArrowRight, Dot, Eye, Minus, MoreHorizontal, Pencil, View } from "lucide-react";
 import { InboxUpdateForm } from "../forms/inbox-update-form";
 import { useLocation, useNavigate } from "react-router-dom";
 
@@ -79,8 +79,21 @@ export const pendingTicketsColumn: ColumnDef<z.infer<typeof ticketingTableSchema
     header: () => <span className="font-bold text-nowrap">Due Date</span>,
     accessorKey: "dueDate",
     cell: ({ row }) => {
+      const transactionInfo = row.original;
+      const current = new Date();
+      const date = `${current.getDate()}/${current.getMonth()+1}/${current.getFullYear()}`;
       const ticketInfo = row.original;
-      return <span>{new Date(ticketInfo.dueDate).toLocaleDateString()}</span>;
+
+      return(
+        <div className="flex gap-1 items-center w-24">
+          <span>{new Date(transactionInfo.dueDate).toDateString()}</span>
+          {ticketInfo.status !== "RESOLVED" && date >= transactionInfo.dueDate &&
+          <span title="Overdue">
+            <CircleAlert size={20} className="text-red-500" />
+          </span>
+          }
+        </div>
+      )
     },
   },
   {
