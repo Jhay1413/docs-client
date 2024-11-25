@@ -4,6 +4,7 @@ import PermitsCard from "../components/tables/permits-card";
 import { NavLink, useLocation, useNavigate, useParams } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft } from "lucide-react";
+import ReportingCard from "../components/tables/reporting-card";
 
 // Define the type for the detailedData object
 interface ProjectDetails {
@@ -114,12 +115,15 @@ const RetainershipRecordDetails: React.FC = () => {
           This section includes tools and templates for tracking, summarizing, and analyzing data to monitor progress and performance.
         </p>
         {/* Insert Reporting Card */}
+        <ReportingCard />
+
         <Separator />
         <h4 className="font-medium text-[28px] text-gray-700">Compliance</h4>
         <p className="text-[#404041]">
           The Compliance section ensures adherence to industry regulations, internal policies, and legal standards, with resources for maintaining accountability.
         </p>
         {/* Insert Compliance Card */}
+
         <Separator />
       </div>
     </div>
