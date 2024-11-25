@@ -105,12 +105,12 @@ const ReportingCard: React.FC = () => {
                 {year}
               </button>
             ))}
-            <Button
-              className="text-sm p-2 rounded-full bg-green-500 text-white"
-              onClick={addYear}
-            >
-              <Plus size={20}/>
-            </Button>
+          <button
+            onClick={addYear}
+            className="flex items-center justify-center w-8 h-8 text-gray-600 bg-gray-200 rounded-full hover:bg-gray-300"
+          >
+            <Plus size={18} />
+          </button>
           </div>
 
           {/* Report Type Selection (SMR, CMR, ICR) */}
