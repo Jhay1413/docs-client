@@ -1,27 +1,18 @@
-import { useForm, SubmitHandler } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
-import { Button } from "@/components/ui/button";
-import { z } from "zod";
-import { ticketingMutationSchema } from "shared-contract";
-import { getCurrentUserId, useCurrentUserRole } from "@/hooks/use-user-hook";
-import { useState } from "react";
-import { tsr } from "@/services/tsr";
-import { toast } from "react-toastify";
-import { useMutation } from "react-query";
-import { useNavigate } from "react-router-dom";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+
+import FormSelector from "./form-selector";
 
 export const RequestForms = () => {
-  const navigate = useNavigate();
-  const userId = getCurrentUserId();
-  const role = useCurrentUserRole();
-
   return (
-    <div className="flex flex-col gap-4 p-4 w-full h-full bs-white">
-      <h1 className="text-4xl">Admin Request Forms</h1>
-      {/* The form */}
-      
+    <div className="min-h-full flex flex-col w-full items-center p-4 bg-white rounded-lg ">
+      <div className="flex flex-col w-full items-center justify-center p-4 bg-white rounded-lg">
+        <div className="flex justify-start w-full flex-col">
+          <h1 className="text-[#404041] font-medium text-[28px]">Admin Request Forms</h1>
+          <p className="text-muted-foreground text-[12px] truncate">
+            Select a form below to initiate your request. Each form is tailored to help you efficiently manage specific administrative requests.
+          </p>
+          <FormSelector />
+        </div>
+      </div>
     </div>
   );
 };

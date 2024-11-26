@@ -4,9 +4,9 @@ import { ticketingTableSchema } from "shared-contract"; // Adjust the import bas
 import { toPascalCase } from "../ticket.utils"; // Adjust the import based on your project structure
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
-import { CircleArrowRight, Dot, Eye, Forward, Minus, MoreHorizontal, Pencil, View } from "lucide-react";
+import { CircleAlert, CircleArrowRight, Dot, Eye, Forward, Minus, MoreHorizontal, Pencil, View } from "lucide-react";
 import { InboxUpdateForm } from "../forms/inbox-update-form";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 const maxLength = 20;
 export const ticketsInboxColumn: ColumnDef<z.infer<typeof ticketingTableSchema>>[] = [
@@ -44,15 +44,15 @@ export const ticketsInboxColumn: ColumnDef<z.infer<typeof ticketingTableSchema>>
     header: () => <span className="font-bold text-nowrap">Subject</span>,
     accessorKey: "subject",
   },
-  {
-    header: () => <span className="font-bold text-nowrap">Request Detais</span>,
-    accessorKey: "requestDetails",
-    cell: ({ row }) => {
-      const transactionInfo = row.original;
-      const requestDetails = transactionInfo.requestDetails || "";
-      return <span>{requestDetails.length > maxLength ? `${requestDetails.substring(0, maxLength)}...` : requestDetails}</span>;
-    },
-  },
+  // {
+  //   header: () => <span className="font-bold text-nowrap">Request Detais</span>,
+  //   accessorKey: "requestDetails",
+  //   cell: ({ row }) => {
+  //     const transactionInfo = row.original;
+  //     const requestDetails = transactionInfo.requestDetails || "";
+  //     return <span>{requestDetails.length > maxLength ? `${requestDetails.substring(0, maxLength)}...` : requestDetails}</span>;
+  //   },
+  // },
   {
     header: () => (
       <span className="font-bold text-nowrap">Status</span>
@@ -73,34 +73,27 @@ export const ticketsInboxColumn: ColumnDef<z.infer<typeof ticketingTableSchema>>
     header: () => <span className="font-bold text-nowrap">Priority</span>,
     accessorKey: "priority",
   },
-  {
-    header: () => <span className="font-bold text-nowrap">Due Date</span>,
-    accessorKey: "dueDate",
-    cell: ({ row }) => {
-      const ticketInfo = row.original;
-      return <span>{new Date(ticketInfo.dueDate).toLocaleDateString()}</span>;
-    },
-  },
-  {
-    header: () => (
-      <span className="font-bold text-nowrap">Date Created</span>
-    ),
-    accessorKey: "createdAt",
-    cell: ({ row }) => {
-      const ticketInfo = row.original;
-      return <span>{new Date(ticketInfo.createdAt!).toLocaleDateString()}</span>;
-    },
-  },
-  {
-    header: () => (
-    <span className="font-bold text-nowrap">Date Forwarded</span>
-    ),
-    accessorKey: "dateForwarded",
-    cell: ({ row }) => {
-      const ticketInfo = row.original;
-      return <span>{new Date(ticketInfo.dateForwarded).toLocaleDateString()}</span>;
-    },
-  },
+ 
+  // {
+  //   header: () => (
+  //     <span className="font-bold text-nowrap">Date Created</span>
+  //   ),
+  //   accessorKey: "createdAt",
+  //   cell: ({ row }) => {
+  //     const ticketInfo = row.original;
+  //     return <span>{new Date(ticketInfo.createdAt!).toLocaleDateString()}</span>;
+  //   },
+  // },
+  // {
+  //   header: () => (
+  //   <span className="font-bold text-nowrap">Date Forwarded</span>
+  //   ),
+  //   accessorKey: "dateForwarded",
+  //   cell: ({ row }) => {
+  //     const ticketInfo = row.original;
+  //     return <span>{new Date(ticketInfo.dateForwarded).toLocaleDateString()}</span>;
+  //   },
+  // },
   {
     header: () => (
       <span className="font-bold text-nowrap">Sender</span>
@@ -110,16 +103,6 @@ export const ticketsInboxColumn: ColumnDef<z.infer<typeof ticketingTableSchema>>
       const ticketInfo = row.original;
       const name = `${ticketInfo.sender.firstName} ${ticketInfo.sender.lastName}`;
       return <span>{toPascalCase(name)}</span>;
-    },
-  },
-  {
-    header: () => (
-      <span className="font-bold text-nowrap">Date Received</span>
-    ),
-    accessorKey: "dateReceived",
-    cell: ({ row }) => {
-      const ticketInfo = row.original;
-      return <span>{ticketInfo.dateReceived ? new Date(ticketInfo.dateReceived).toLocaleDateString() : "Not received yet"}</span>;
     },
   },
   {
@@ -134,6 +117,48 @@ export const ticketsInboxColumn: ColumnDef<z.infer<typeof ticketingTableSchema>>
       return <span>{remarks.length > maxLength ? `${remarks.substring(0, maxLength)}...` : remarks}</span>;
     },
   },
+  
+  {
+    header: () => (
+      <span className="font-bold text-nowrap">Date Received</span>
+    ),
+    accessorKey: "dateReceived",
+    cell: ({ row }) => {
+      const ticketInfo = row.original;
+      return <span>{ticketInfo.dateReceived ? new Date(ticketInfo.dateReceived).toLocaleDateString() : "Not received yet"}</span>;
+    },
+  },
+
+  {
+    header: () => <span className="font-bold text-nowrap">Due Date</span>,
+    accessorKey: "dueDate",
+    cell: ({ row }) => {
+      const ticketInfo = row.original;
+      const current = new Date();
+      const currentDate = new Date(current.getFullYear(), current.getMonth(), current.getDate()); // Create a date object for the current date
+      const dueDate = new Date(ticketInfo.dueDate); // Convert dueDate to a Date object
+      
+      return (
+        <div className="flex gap-1 items-center w-24">
+          <span>{dueDate.toDateString()}</span>
+          {
+            ticketInfo.status !== "RESOLVED" && currentDate.getTime() > dueDate.getTime() ? (
+              <span title="Overdue">
+                <CircleAlert size={20} className="text-red-500" />
+              </span>
+            ) : ticketInfo.status !== "RESOLVED" && currentDate.getTime() === dueDate.getTime() ? (
+              <span title="Due Today">
+                <CircleAlert size={20} className="text-yellow-500" />
+              </span>
+            ) : null
+          }
+
+
+
+        </div>
+      );
+    },
+  },
   {
     header: () => (
       <div className="w-full font-bold text-nowrap items-center flex justify-center">
@@ -145,11 +170,13 @@ export const ticketsInboxColumn: ColumnDef<z.infer<typeof ticketingTableSchema>>
     cell: ({ row }) => {
       const navigate = useNavigate();
       const ticket = row.original;
-      const handleOnClickRow = () => {
-        navigate(`/dashboard/tickets/details/${ticket.id}`);
+      const location = useLocation();
+      const handleOnClickRow = (data: any) => {
+        // Navigate to ticket details page when a row is clicked
+        navigate(`/dashboard/tickets/details/${ticket.id}`, { state: { from: location.pathname } }); // Pass the current location as state
       };
       const routeToForwardTicket = () => {
-        navigate(`/dashboard/tickets/forward-ticket/${ticket.id}`);
+        navigate(`/dashboard/tickets/forward-ticket/${ticket.id}`, { state: { from: location.pathname } }); // Pass the current location as state
       };
   
       return (
