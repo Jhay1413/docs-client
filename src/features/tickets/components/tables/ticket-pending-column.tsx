@@ -44,15 +44,15 @@ export const pendingTicketsColumn: ColumnDef<z.infer<typeof ticketingTableSchema
     header: () => <span className="font-bold text-nowrap">Subject</span>,
     accessorKey: "subject",
   },
-  {
-    header: () => <span className="font-bold text-nowrap">Request Details</span>,
-    accessorKey: "requestDetails",
-    cell: ({ row }) => {
-      const transactionInfo = row.original;
-      const requestDetails = transactionInfo.requestDetails || "";
-      return <span>{requestDetails.length > maxLength ? `${requestDetails.substring(0, maxLength)}...` : requestDetails}</span>;
-    },
-  },
+  // {
+  //   header: () => <span className="font-bold text-nowrap">Request Details</span>,
+  //   accessorKey: "requestDetails",
+  //   cell: ({ row }) => {
+  //     const transactionInfo = row.original;
+  //     const requestDetails = transactionInfo.requestDetails || "";
+  //     return <span>{requestDetails.length > maxLength ? `${requestDetails.substring(0, maxLength)}...` : requestDetails}</span>;
+  //   },
+  // },
   {
     header: () => (
       
@@ -74,6 +74,58 @@ export const pendingTicketsColumn: ColumnDef<z.infer<typeof ticketingTableSchema
   {
     header: () => <span className="font-bold text-nowrap">Priority</span>,
     accessorKey: "priority",
+  },
+
+  // {
+  //   header: () => (
+  //     <div className="w-full font-bold text-nowrap items-center flex justify-center">
+  //       <h1>Date Created</h1>
+  //     </div>
+  //   ),
+  //   accessorKey: "createdAt",
+  //   cell: ({ row }) => {
+  //     const ticketInfo = row.original;
+  //     return <span>{new Date(ticketInfo.createdAt!).toLocaleDateString()}</span>;
+  //   },
+  // },
+  {
+    header: () => (
+      <span className="font-bold text-nowrap">
+        Date Forwarded
+      </span>
+    ),
+    accessorKey: "dateForwarded",
+    cell: ({ row }) => {
+      const ticketInfo = row.original;
+      return <span>{new Date(ticketInfo.dateForwarded).toLocaleDateString()}</span>;
+    },
+  },
+
+  {
+    header: () => (
+      <span className="font-bold text-nowrap">
+        Date Received
+      </span>
+    ),
+    accessorKey: "dateReceived",
+    cell: ({ row }) => {
+      const ticketInfo = row.original;
+      return <span>{ticketInfo.dateReceived ? new Date(ticketInfo.dateReceived).toLocaleDateString() : "Not received yet"}</span>;
+    },
+  },
+  {
+    header: () => (
+      <span className="font-bold text-nowrap">
+        Remarks
+      </span>
+    ),
+    accessorKey: "remarks",
+    cell: ({ row }) => {
+      const transactionInfo = row.original;
+      const remarks = transactionInfo.remarks || "";
+
+      return <span>{remarks.length > maxLength ? `${remarks.substring(0, maxLength)}...` : remarks}</span>;
+    },
   },
   {
     header: () => <span className="font-bold text-nowrap">Due Date</span>,
@@ -105,81 +157,30 @@ export const pendingTicketsColumn: ColumnDef<z.infer<typeof ticketingTableSchema
       );
     },
   },
-  {
-    header: () => (
-      <div className="w-full font-bold text-nowrap items-center flex justify-center">
-        <h1>Date Created</h1>
-      </div>
-    ),
-    accessorKey: "createdAt",
-    cell: ({ row }) => {
-      const ticketInfo = row.original;
-      return <span>{new Date(ticketInfo.createdAt!).toLocaleDateString()}</span>;
-    },
-  },
-  {
-    header: () => (
-      <div className="w-full font-bold text-nowrap items-center flex justify-center">
-        <h1>Date Forwarded</h1>
-      </div>
-    ),
-    accessorKey: "dateForwarded",
-    cell: ({ row }) => {
-      const ticketInfo = row.original;
-      return <span>{new Date(ticketInfo.dateForwarded).toLocaleDateString()}</span>;
-    },
-  },
+  // {
+  //   header: () => (
+  //     <div className="w-full font-bold text-nowrap items-center flex justify-center">
+  //       <h1>Actions</h1>
+  //     </div>
+  //   ),
+  //   accessorKey: "actions",
+  //   id: "actions",
+  //   cell: ({ row }) => {
+  //     const navigate = useNavigate();
+  //     const ticket = row.original;
+  //     const location = useLocation();
+  //     const handleOnClickRow = (data: any) => {
+  //       // Navigate to ticket details page when a row is clicked
+  //       navigate(`/dashboard/tickets/details/${ticket.id}`, { state: { from: location.pathname } }); // Pass the current location as state
+  //     };
 
-  {
-    header: () => (
-      <div className="w-full font-bold text-nowrap items-center flex justify-center">
-        <h1>Date Received</h1>
-      </div>
-    ),
-    accessorKey: "dateReceived",
-    cell: ({ row }) => {
-      const ticketInfo = row.original;
-      return <span>{ticketInfo.dateReceived ? new Date(ticketInfo.dateReceived).toLocaleDateString() : "Not received yet"}</span>;
-    },
-  },
-  {
-    header: () => (
-      <div className="w-full font-bold text-nowrap items-center flex justify-center">
-        <h1>Remarks</h1>
-      </div>
-    ),
-    accessorKey: "remarks",
-    cell: ({ row }) => {
-      const transactionInfo = row.original;
-      const remarks = transactionInfo.remarks || "";
-
-      return <span>{remarks.length > maxLength ? `${remarks.substring(0, maxLength)}...` : remarks}</span>;
-    },
-  },
-  {
-    header: () => (
-      <div className="w-full font-bold text-nowrap items-center flex justify-center">
-        <h1>Actions</h1>
-      </div>
-    ),
-    accessorKey: "actions",
-    id: "actions",
-    cell: ({ row }) => {
-      const navigate = useNavigate();
-      const ticket = row.original;
-      const location = useLocation();
-      const handleOnClickRow = (data: any) => {
-        // Navigate to ticket details page when a row is clicked
-        navigate(`/dashboard/tickets/details/${ticket.id}`, { state: { from: location.pathname } }); // Pass the current location as state
-      };
-
-      return (
-        <div className="flex items-center justify-center gap-4 text-gray-700">
-          <Button variant="outline" size="icon" title="View ticket" onClick={handleOnClickRow}>
-            <Eye />
-          </Button>
-        </div>
-      );
-    },
-  },
+  //     return (
+  //       <div className="flex items-center justify-center gap-4 text-gray-700">
+  //         <Button variant="outline" size="icon" title="View ticket" onClick={handleOnClickRow}>
+  //           <Eye />
+  //         </Button>
+  //       </div>
+  //     );
+  //   },
+  // },
 ];

@@ -154,7 +154,7 @@ export const TicketList = () => {
               <ClipLoader size={30} color="#4a90e2" />
             </div>
           ) : (
-            <DataTable columns={ticketsColumn} data={data ? data.body.data : []} callbackFn={handleOnClickRow}/>
+            <DataTable columns={ticketsColumn} data={data ? data.body.data : []} callbackFn={handleOnClickRow} isSticky={true}/>
           )}
         </div>
 

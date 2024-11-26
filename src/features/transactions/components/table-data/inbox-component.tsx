@@ -92,7 +92,7 @@ export const InboxComponent = () => {
           </div>
         </div>
 
-        <DataTable columns={inboxColumn} data={data ? data.body.data : []} callbackFn={handleOnClickRow} />
+        <DataTable columns={inboxColumn} data={data ? data.body.data : []} callbackFn={handleOnClickRow} isSticky={true} />
 
         <div className="w-full flex justify-between items-center">
           <div className="text-muted-foreground">
