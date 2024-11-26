@@ -11,16 +11,20 @@ const FormSelector = () => {
   ];
 
   return (
-    <div className="py-2 grid grid-cols-4 gap-4 ">
+    <div className="py-2 grid grid-cols-4 gap-4 items-center justify-center">
       {formTemplates.map((template) => (
         <NavLink
           key={template.id}
           to={`/dashboard/admin/request/${template.id}-request`}
           className="border-2 p-4 rounded-lg cursor-pointer hover:bg-gray-100 "
         >
-          <h3 className="text-base font-bold">{template.name}</h3>
-          <p className="text-xs font-light pb-4">{template.description}</p>
-          {template.img && <img className="h-64 w-48"src={template.img} alt={`${template.name} image`} />} 
+          <h3 className="text-base font-bold text-center">{template.name}</h3>
+          <p className="text-xs font-light pb-4 text-center">{template.description}</p>
+          {template.img && 
+            <div className="flex items-center justify-center">
+              <img className="h-64 w-48 "src={template.img} alt={`${template.name} image`} />
+            </div> 
+          } 
         </NavLink>
       ))}
 
