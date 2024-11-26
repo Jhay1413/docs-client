@@ -3,7 +3,7 @@ import { z } from "zod";
 import { ticketingTableSchema } from "shared-contract"; // Adjust the import based on your project structure
 import { toPascalCase } from "../ticket.utils"; // Adjust the import based on your project structure
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
-import { Dot, MailOpen, MoreHorizontal } from "lucide-react";
+import { CircleAlert, Dot, MailOpen, MoreHorizontal } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 type IncomingColumn = z.infer<typeof ticketingTableSchema>;
@@ -78,7 +78,29 @@ export function ticketsIncomingColumn(mutateAsync: MutateAsyncFunction): ColumnD
       accessorKey: "dueDate",
       cell: ({ row }) => {
         const ticketInfo = row.original;
-        return <span>{new Date(ticketInfo.dueDate).toLocaleDateString()}</span>;
+        const current = new Date();
+        const currentDate = new Date(current.getFullYear(), current.getMonth(), current.getDate()); // Create a date object for the current date
+        const dueDate = new Date(ticketInfo.dueDate); // Convert dueDate to a Date object
+        
+        return (
+          <div className="flex gap-1 items-center w-24">
+            <span>{dueDate.toDateString()}</span>
+            {
+              ticketInfo.status !== "RESOLVED" && currentDate.getTime() > dueDate.getTime() ? (
+                <span title="Overdue">
+                  <CircleAlert size={20} className="text-red-500" />
+                </span>
+              ) : ticketInfo.status !== "RESOLVED" && currentDate.getTime() === dueDate.getTime() ? (
+                <span title="Due Today">
+                  <CircleAlert size={20} className="text-yellow-500" />
+                </span>
+              ) : null
+            }
+  
+  
+  
+          </div>
+        );
       },
     },
     {

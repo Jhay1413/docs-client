@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { z } from "zod";
 import { ColumnDef } from "@tanstack/react-table";
-import { ArrowUpDown, Eye } from "lucide-react";
+import { ArrowUpDown, CircleAlert, Eye } from "lucide-react";
 import { transactionTable } from "shared-contract";
 import { useNavigate } from "react-router-dom";
 
@@ -68,6 +68,33 @@ export const inboxColumn: ColumnDef<InboxColumn>[] = [
   {
     header: "Priority",
     accessorKey: "priority",
+  },
+  {
+    header: "Due Date", // Corrected header name
+    accessorKey: "dueDate",
+    cell: ({ row }) => { // Specify the type of row here
+      const transactionInfo = row.original;
+      const current = new Date();
+      const currentDate = new Date(current.getFullYear(), current.getMonth(), current.getDate()); // Create a date object for the current date
+      const dueDate = new Date(transactionInfo.dueDate); // Convert dueDate to a Date object
+  
+      return (
+        <div className="flex gap-1 items-center w-24">
+          <span>{dueDate.toDateString()}</span>
+          {
+            transactionInfo.status !== "ARCHIVED" && currentDate.getTime() > dueDate.getTime() ? (
+              <span title="Overdue">
+                <CircleAlert size={20} className="text-red-500" />
+              </span>
+            ) : transactionInfo.status !== "ARCHIVED" && currentDate.getTime() === dueDate.getTime() ? (
+              <span title="Due Today">
+                <CircleAlert size={20} className="text-yellow-500" />
+              </span>
+            ) : null
+          }
+        </div>
+      );
+    },
   },
   // {
   //   header: "Actions",

@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { z } from "zod";
 import { ColumnDef } from "@tanstack/react-table";
-import { ArrowUpDown } from "lucide-react";
+import { ArrowUpDown, CircleAlert } from "lucide-react";
 import { transactionTable } from "shared-contract";
 import "./styles.css";
 
@@ -152,6 +152,16 @@ export const transColumns: ColumnDef<TransactionInfo>[] = [
     header: "Priority",
     accessorKey: "priority",
   },
+
+  {
+    header: "Percentage",
+    accessorKey: "percentage",
+    cell: ({ row }) => {
+      const transactionInfo = row.original;
+
+      return <div>{transactionInfo.percentage}%</div>;
+    },
+  },
   {
     header: ({ column }) => {
       return (
@@ -164,17 +174,26 @@ export const transColumns: ColumnDef<TransactionInfo>[] = [
     accessorKey: "dueDate",
     cell: ({ row }) => {
       const transactionInfo = row.original;
-
-      return <span>{new Date(transactionInfo.dueDate).toDateString()}</span>;
-    },
-  },
-  {
-    header: "Percentage",
-    accessorKey: "percentage",
-    cell: ({ row }) => {
-      const transactionInfo = row.original;
-
-      return <div>{transactionInfo.percentage}%</div>;
+      const current = new Date();
+      const currentDate = new Date(current.getFullYear(), current.getMonth(), current.getDate()); // Create a date object for the current date
+      const dueDate = new Date(transactionInfo.dueDate); // Convert dueDate to a Date object
+      
+      return (
+        <div className="flex gap-1 items-center w-24">
+          <span>{dueDate.toDateString()}</span>
+          {
+            transactionInfo.status !== "ARCHIVED" && currentDate.getTime() > dueDate.getTime() ? (
+              <span title="Overdue">
+                <CircleAlert size={20} className="text-red-500" />
+              </span>
+            ) : transactionInfo.status !== "ARCHIVED" && currentDate.getTime() === dueDate.getTime() ? (
+              <span title="Due Today">
+                <CircleAlert size={20} className="text-yellow-500" />
+              </span>
+            ) : null
+          }
+        </div>
+      );
     },
   },
 ];

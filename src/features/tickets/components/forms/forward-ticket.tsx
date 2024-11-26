@@ -9,8 +9,9 @@ import { useState, useEffect } from "react";
 import { tsr } from "@/services/tsr";
 import { toast } from "react-toastify";
 import { useMutation, useQuery } from "react-query";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, NavLink, useLocation } from "react-router-dom";
 import { getCurrentUserId, useCurrentUserRole } from "@/hooks/use-user-hook";
+import { ArrowLeft } from "lucide-react";
 
 export const ForwardTicketComponent = () => {
   const { id } = useParams();
@@ -32,7 +33,6 @@ export const ForwardTicketComponent = () => {
         section: ticketData?.body.section!,
         role: role,
         mode: "forward",
-        type: ticketData?.body.requestType!,
         requesteedId: ticketData?.body.requestee.id,
       },
     },
@@ -65,13 +65,26 @@ export const ForwardTicketComponent = () => {
     return <div>Loading ticket details...</div>;
   }
 
+  const location = useLocation();
+  // Set previousPath to the ticket inbox route
+  const previousPath = `/dashboard/tickets/inbox/${getCurrentUserId()}`; // Assuming you want to go back to the user's inbox
+
   return (
-    <div className="flex flex-col gap-4 p-4 w-full h-full bs-white">
-      <h1 className="text-4xl">Forward Ticket</h1>
+    <div>
+      <Button
+        className="sticky top-0 bg-white bg-opacity-50 border-none rounded-lg p-2 shadow-md"
+        onClick={() => navigate(previousPath, { state: { from: location.pathname}  }, )} // Navigate back with state
+      >
+        <ArrowLeft className="text-black hover:text-white" />
+      </Button>
+   
+      <div className="flex flex-col gap-4 p-4 w-full h-full bs-white">
+        <h1 className="text-4xl">Forward Ticket</h1>
 
-      {/* The form */}
+        {/* The form */}
 
-      <TicketForm receiver={data ? data?.body : []} isForwarding={isForwarding} ticketData={ticketData!.body!} mutateFn={onSubmit} isPending={isPending}/>
+        <TicketForm receiver={data ? data?.body : []} isForwarding={isForwarding} ticketData={ticketData!.body!} mutateFn={onSubmit} isPending={isPending} />
+      </div>
     </div>
   );
 };
