@@ -44,15 +44,15 @@ export const ticketsInboxColumn: ColumnDef<z.infer<typeof ticketingTableSchema>>
     header: () => <span className="font-bold text-nowrap">Subject</span>,
     accessorKey: "subject",
   },
-  {
-    header: () => <span className="font-bold text-nowrap">Request Detais</span>,
-    accessorKey: "requestDetails",
-    cell: ({ row }) => {
-      const transactionInfo = row.original;
-      const requestDetails = transactionInfo.requestDetails || "";
-      return <span>{requestDetails.length > maxLength ? `${requestDetails.substring(0, maxLength)}...` : requestDetails}</span>;
-    },
-  },
+  // {
+  //   header: () => <span className="font-bold text-nowrap">Request Detais</span>,
+  //   accessorKey: "requestDetails",
+  //   cell: ({ row }) => {
+  //     const transactionInfo = row.original;
+  //     const requestDetails = transactionInfo.requestDetails || "";
+  //     return <span>{requestDetails.length > maxLength ? `${requestDetails.substring(0, maxLength)}...` : requestDetails}</span>;
+  //   },
+  // },
   {
     header: () => (
       <span className="font-bold text-nowrap">Status</span>
@@ -73,6 +73,62 @@ export const ticketsInboxColumn: ColumnDef<z.infer<typeof ticketingTableSchema>>
     header: () => <span className="font-bold text-nowrap">Priority</span>,
     accessorKey: "priority",
   },
+ 
+  // {
+  //   header: () => (
+  //     <span className="font-bold text-nowrap">Date Created</span>
+  //   ),
+  //   accessorKey: "createdAt",
+  //   cell: ({ row }) => {
+  //     const ticketInfo = row.original;
+  //     return <span>{new Date(ticketInfo.createdAt!).toLocaleDateString()}</span>;
+  //   },
+  // },
+  // {
+  //   header: () => (
+  //   <span className="font-bold text-nowrap">Date Forwarded</span>
+  //   ),
+  //   accessorKey: "dateForwarded",
+  //   cell: ({ row }) => {
+  //     const ticketInfo = row.original;
+  //     return <span>{new Date(ticketInfo.dateForwarded).toLocaleDateString()}</span>;
+  //   },
+  // },
+  {
+    header: () => (
+      <span className="font-bold text-nowrap">Sender</span>
+    ),
+    accessorKey: "sender",
+    cell: ({ row }) => {
+      const ticketInfo = row.original;
+      const name = `${ticketInfo.sender.firstName} ${ticketInfo.sender.lastName}`;
+      return <span>{toPascalCase(name)}</span>;
+    },
+  },
+  {
+    header: () => (
+      <span className="font-bold text-nowrap">Remarks</span>
+    ),
+    accessorKey: "remarks",
+    cell: ({ row }) => {
+      const transactionInfo = row.original;
+      const remarks = transactionInfo.remarks || "";
+
+      return <span>{remarks.length > maxLength ? `${remarks.substring(0, maxLength)}...` : remarks}</span>;
+    },
+  },
+  
+  {
+    header: () => (
+      <span className="font-bold text-nowrap">Date Received</span>
+    ),
+    accessorKey: "dateReceived",
+    cell: ({ row }) => {
+      const ticketInfo = row.original;
+      return <span>{ticketInfo.dateReceived ? new Date(ticketInfo.dateReceived).toLocaleDateString() : "Not received yet"}</span>;
+    },
+  },
+
   {
     header: () => <span className="font-bold text-nowrap">Due Date</span>,
     accessorKey: "dueDate",
@@ -101,59 +157,6 @@ export const ticketsInboxColumn: ColumnDef<z.infer<typeof ticketingTableSchema>>
 
         </div>
       );
-    },
-  },
-  {
-    header: () => (
-      <span className="font-bold text-nowrap">Date Created</span>
-    ),
-    accessorKey: "createdAt",
-    cell: ({ row }) => {
-      const ticketInfo = row.original;
-      return <span>{new Date(ticketInfo.createdAt!).toLocaleDateString()}</span>;
-    },
-  },
-  {
-    header: () => (
-    <span className="font-bold text-nowrap">Date Forwarded</span>
-    ),
-    accessorKey: "dateForwarded",
-    cell: ({ row }) => {
-      const ticketInfo = row.original;
-      return <span>{new Date(ticketInfo.dateForwarded).toLocaleDateString()}</span>;
-    },
-  },
-  {
-    header: () => (
-      <span className="font-bold text-nowrap">Sender</span>
-    ),
-    accessorKey: "sender",
-    cell: ({ row }) => {
-      const ticketInfo = row.original;
-      const name = `${ticketInfo.sender.firstName} ${ticketInfo.sender.lastName}`;
-      return <span>{toPascalCase(name)}</span>;
-    },
-  },
-  {
-    header: () => (
-      <span className="font-bold text-nowrap">Date Received</span>
-    ),
-    accessorKey: "dateReceived",
-    cell: ({ row }) => {
-      const ticketInfo = row.original;
-      return <span>{ticketInfo.dateReceived ? new Date(ticketInfo.dateReceived).toLocaleDateString() : "Not received yet"}</span>;
-    },
-  },
-  {
-    header: () => (
-      <span className="font-bold text-nowrap">Remarks</span>
-    ),
-    accessorKey: "remarks",
-    cell: ({ row }) => {
-      const transactionInfo = row.original;
-      const remarks = transactionInfo.remarks || "";
-
-      return <span>{remarks.length > maxLength ? `${remarks.substring(0, maxLength)}...` : remarks}</span>;
     },
   },
   {

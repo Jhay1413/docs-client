@@ -169,12 +169,13 @@ export const TicketDetails = () => {
           <h2 className="font-semibold text-gray-700">Date Received:</h2>
           <p className="text-gray -600">{data?.body.dateReceived ? new Date(data?.body.dateReceived).toLocaleDateString() : "Not received yet"}</p>
         </div>
+        
         <div className="bg-white p-4 rounded-lg">
           <h2 className="font-semibold text-gray-700">Requestee:</h2>
           <p className="text-gray-600">
             {data?.body.requestee.userInfo?.firstName || data?.body.requestee.userInfo?.lastName
               ? `${data.body.requestee.userInfo.firstName || ""} ${data.body.requestee.userInfo.lastName || ""}`
-              : "No Name"}
+              : "Not Received Yet"}
           </p>
         </div>
         <div className="bg-white p-4 rounded-lg">
@@ -182,7 +183,7 @@ export const TicketDetails = () => {
           <p className="text-gray-600">
             {data?.body.sender.userInfo?.firstName || data?.body.sender.userInfo?.lastName
               ? `${data.body.sender.userInfo.firstName || ""} ${data.body.sender.userInfo.lastName || ""}`
-              : "No Name"}
+              : "Not Received Yet"}
           </p>
         </div>
         <div className="bg-white p-4 rounded-lg">
@@ -190,7 +191,7 @@ export const TicketDetails = () => {
           <p className="text-gray-600">
             {data?.body.receiver?.userInfo?.firstName || data?.body.receiver?.userInfo?.lastName
               ? `${data.body.receiver.userInfo.firstName || ""} ${data.body.receiver.userInfo.lastName || ""}`
-              : "No Name"}
+              : "Not Received Yet"}
           </p>
         </div>
       </div>

@@ -152,6 +152,16 @@ export const transColumns: ColumnDef<TransactionInfo>[] = [
     header: "Priority",
     accessorKey: "priority",
   },
+
+  {
+    header: "Percentage",
+    accessorKey: "percentage",
+    cell: ({ row }) => {
+      const transactionInfo = row.original;
+
+      return <div>{transactionInfo.percentage}%</div>;
+    },
+  },
   {
     header: ({ column }) => {
       return (
@@ -184,15 +194,6 @@ export const transColumns: ColumnDef<TransactionInfo>[] = [
           }
         </div>
       );
-    },
-  },
-  {
-    header: "Percentage",
-    accessorKey: "percentage",
-    cell: ({ row }) => {
-      const transactionInfo = row.original;
-
-      return <div>{transactionInfo.percentage}%</div>;
     },
   },
 ];

@@ -106,7 +106,7 @@ export const TransactionList = () => {
             <Search />
           </button>
         </div>
-        <DataTable data-cy="trans-table" columns={transColumns} data={data ? data.body.data : []} callbackFn={handleOnClickRow} />
+        <DataTable data-cy="trans-table" columns={transColumns} data={data ? data.body.data : []} callbackFn={handleOnClickRow} isSticky={true}/>
         <div className="w-full flex justify-between items-center">
           <div className="text-muted-foreground">
             <h1>Number of Transactions: {data?.body.numOfTransactions}</h1>
