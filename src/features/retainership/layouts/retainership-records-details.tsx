@@ -29,7 +29,7 @@ const detailedData: Record<ProjectId, ProjectDetails> = {
   "PID-2024-001": {
     details: {
       projectName: "Project Alpha",
-      caseHandler: "John Doe",
+      caseHandler: "Philip CH-EPD",
       nda: "NDA-001",
       companyName: "Acme Corp",
       companyContactNumber: "123-456-7890",
@@ -46,7 +46,7 @@ const detailedData: Record<ProjectId, ProjectDetails> = {
   "PID-2024-002": {
     details: {
       projectName: "Project Beta",
-      caseHandler: "Jane Smith",
+      caseHandler: "Philip CH-EPD",
       nda: "NDA-002",
       companyName: "Beta Corp",
       companyContactNumber: "321-654-0987",
@@ -63,12 +63,12 @@ const detailedData: Record<ProjectId, ProjectDetails> = {
   "PID-2024-003": {
     details: {
       projectName: "Project Gamma",
-      caseHandler: "Robert Brown",
+      caseHandler: "Mariko CH-ITOP",
       nda: "NDA-003",
       companyName: "Gamma LLC",
       companyContactNumber: "555-555-5555",
       companyEmail: "contact@gammallc.com",
-      contactNumber: "666-666-6666",
+      contactNumber: "696-969-6969",
       contactEmail: "robertbrown@gammallc.com",
       companyAddress: "789 Gamma Road, Gotham, NY",
     },
