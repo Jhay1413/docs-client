@@ -15,7 +15,7 @@ const PermitsCard: React.FC<PermitsCardProps> = ({ permits }) => {
     <div className="p-6 rounded-lg shadow-md">
       <table className="table-auto w-full border-collapse border border-white">
         <thead>
-          <tr className="bg-gray-200 text-center">
+          <tr className="bg-lime-500/70 text-center">
             <th className="border border-white p-2">Permit</th>
             <th className="border border-white p-2">Status</th>
             <th className="border border-white p-2">Links</th>

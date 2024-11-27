@@ -90,42 +90,48 @@ const RetainershipRecordDetails: React.FC = () => {
 
   return (
     <div>
-      <Button className="sticky top-0 bg-white bg-opacity-50 border-none rounded-lg p-2 shadow-md">
+      <Button className="sticky top-0 bg-gray-100 bg-opacity-50 border-none rounded-lg p-2 shadow-md">
         <NavLink to={previousPath}>
           <ArrowLeft className="text-black hover:text-white" />
         </NavLink>
       </Button>
-      <div className="flex flex-col gap-4 w-full h-full bg-white p-8">
-        
-        <h4 className="font-medium text-[28px] text-gray-700">Details</h4>
-        <p className="text-[#404041]">
-          This section provides an overview of key information, including foundational data and specifics about the process, project, or entity being addressed.
-        </p>
-        {/* Insert Details Card */}
-        <DetailsCard data={recordData.details} />
+      <div className="flex flex-col gap-4 w-full h-full bg-gray-100 p-8">
+        <div className="bg-white p-8 rounded-md shadow-lg">
+          <h4 className="font-medium text-[28px] text-gray-700">Details</h4>
+          <p className="text-[#404041]">
+            This section provides an overview of key information, including foundational data and specifics about the process, project, or entity being addressed.
+          </p>
+            <DetailsCard data={recordData.details} />
+        </div>
         <Separator />
-        <h4 className="font-medium text-[28px] text-gray-700">Permits</h4>
-        <p className="text-[#404041]">
-          The Permits section manages required approvals and licenses necessary to proceed with operations, ensuring compliance with regulatory standards.
-        </p>
-        {/* Insert Permits Card */}
-        <PermitsCard permits={recordData.permits} />
+
+        <div className="bg-white p-8 rounded-md shadow-lg">
+          <h4 className="font-medium text-[28px] text-gray-700">Permits</h4>
+          <p className="text-[#404041]">
+            The Permits section manages required approvals and licenses necessary to proceed with operations, ensuring compliance with regulatory standards.
+          </p>
+          <PermitsCard permits={recordData.permits} />
+        </div>
         <Separator />
-        <h4 className="font-medium text-[28px] text-gray-700">Reporting</h4>
-        <p className="text-[#404041]">
-          This section includes tools and templates for tracking, summarizing, and analyzing data to monitor progress and performance.
-        </p>
-        {/* Insert Reporting Card */}
-        <ReportingCard />
+
+        <div className="bg-white p-8 rounded-md shadow-lg">
+          <h4 className="font-medium text-[28px] text-gray-700">Reporting</h4>
+          <p className="text-[#404041]">
+            This section includes tools and templates for tracking, summarizing, and analyzing data to monitor progress and performance.
+          </p>
+          <div className="bg-white">
+            <ReportingCard />
+          </div>
+        </div>
 
         <Separator />
-        <h4 className="font-medium text-[28px] text-gray-700">Compliance</h4>
-        <p className="text-[#404041]">
-          The Compliance section ensures adherence to industry regulations, internal policies, and legal standards, with resources for maintaining accountability.
-        </p>
-        {/* Insert Compliance Card */}
-        <ComplianceCard />
-
+        <div className="bg-white p-8 rounded-md shadow-lg">
+          <h4 className="font-medium text-[28px] text-gray-700">Compliance</h4>
+          <p className="text-[#404041]">
+            The Compliance section ensures adherence to industry regulations, internal policies, and legal standards, with resources for maintaining accountability.
+          </p>
+          <ComplianceCard />
+        </div>
         <Separator />
       </div>
     </div>
