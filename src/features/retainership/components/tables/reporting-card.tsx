@@ -1,6 +1,6 @@
 import { useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
-import { ArrowDown, ArrowLeft, ArrowUp, Check, FileCode, Plus, XCircle } from "lucide-react";
+import { ArrowDown, ArrowLeft, ArrowUp, Check, ChevronDown, ChevronUp, FileCode, Plus, XCircle } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
 import DragNdrop from "@/features/others/drag-drop";
 import axios from "axios";
@@ -206,7 +206,7 @@ const ReportingCard: React.FC = () => {
                           ? "CMR"
                           : "ICR"}
                       </h3>
-                      {isOpen ? <ArrowUp size={20} /> : <ArrowDown size={20} />}
+                      {isOpen ? <ChevronUp size={20} /> : <ChevronDown size={20} />}
                     </div>
 
                     {/* Collapsible Content */}
