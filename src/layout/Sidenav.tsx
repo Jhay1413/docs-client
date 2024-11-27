@@ -154,14 +154,45 @@ export const SideNav = () => {
           <li className="relative inline-block text-left px-2">
             <NavLink
               to={`/dashboard/transactions/inbox/${id}`}
-              className={({ isActive }) =>
-                `justify-start items-center flex w-full p-2 space-x-4 text-lg rounded-md hover:bg-[#DCFCe74D] ${
-                  isActive ? "bg-green-100/30 text-white" : ""
-                }`
-              }
+              className={({ isActive }) => {
+                return `justify-start items-center flex w-full p-2 space-x-4 text-lg  rounded-md ${isActive ? "bg-green-100/30 text-white" : ""}`;
+              }}  
             >
-              <LibraryBig />
-              <h1 className="text-base">Inbox</h1>
+              <div className="relative">
+                {notification?.inbox !== 0 && (
+                  <span className="absolute top-0 right-0 transform translate-x-1/2 -translate-y-1/2 flex items-center justify-center text-white text-[14px] font-extrabold rounded-full w-5 h-5 bg-red-700">
+                    {notification?.inbox}
+                  </span>
+                )}
+                <LibraryBig />
+              </div>
+              
+              <div className="flex gap-2">
+                <h1 className="text-base">Inbox</h1>
+                {/* {notification?.inbox !== 0 && <span className="text-red-700 text-sm font-extrabold">{notification?.inbox}</span>} */}
+              </div>
+            </NavLink>
+          </li>
+          <li className="relative inline-block text-left px-2">
+            <NavLink
+              to={`/dashboard/transactions/incoming-transaction/${id}`}
+              className={({ isActive }) => {
+                return `justify-start items-center flex w-full p-2 space-x-4 text-lg  rounded-md ${isActive ? "bg-green-100/30 text-white" : ""}`;
+              }}
+            >
+              <div className="relative">
+                {notification?.incoming !== 0 && (
+                  <span className="absolute top-0 right-0 transform translate-x-1/2 -translate-y-1/2 flex items-center justify-center text-white text-[14px] font-extrabold rounded-full w-5 h-5 bg-red-700">
+                    {notification?.incoming }
+                  </span>
+                )}
+                <ClipboardList />
+              </div>
+              
+              <div className="flex gap-2">
+                <h1 className="text-base">Incoming files</h1>
+                {/* {notification?.incoming !== 0 && <span className="text-red-700 text-sm font-extrabold">{notification?.incoming}</span>} */}
+              </div>
             </NavLink>
           </li>
         </CollapsibleSection>
@@ -238,21 +269,19 @@ export const SideNav = () => {
         </CollapsibleSection>
 
         <CollapsibleSection label="RETAINERSHIP">
-        <ul className="flex flex-col  space-y-4 w-full   mx-2 ">
-             <li className="relative inline-block text-left px-2 ">
-               <NavLink
-                 to={`/dashboard/retainership/list`}
-                 className={({ isActive }) => {
-                   return `justify-start items-center flex w-full p-2 space-x-4 text-lg  rounded-md hover:bg-[#DCFCe74D] ${isActive ? "bg-green-100/30 text-white" : ""}`;
-                 }}
-               >
-                 <WalletCards />
-                 <div className="flex gap-2">
-                   <h1 className="text-base">Retainership</h1>
-                 </div>
-               </NavLink>
-             </li>
-           </ul>
+          <li className="relative inline-block text-left px-2 ">
+            <NavLink
+              to={`/dashboard/retainership/list`}
+              className={({ isActive }) => {
+                return `justify-start items-center flex w-full p-2 space-x-4 text-lg  rounded-md hover:bg-[#DCFCe74D] ${isActive ? "bg-green-100/30 text-white" : ""}`;
+              }}
+            >
+              <WalletCards />
+              <div className="flex gap-2">
+                <h1 className="text-base">Retainership</h1>
+              </div>
+            </NavLink>
+          </li>
         </CollapsibleSection>
 
         <CollapsibleSection label="ARCHIVES">
@@ -265,9 +294,23 @@ export const SideNav = () => {
              >
                <FileCode />
                <div className="flex gap-2">
-                 <h1 className="text-base">Archives</h1>
+                 <h1 className="text-base">Archived Transactions</h1>
                </div>
              </NavLink>
+          </li>
+
+          <li className="relative inline-block text-left px-2 ">
+            <NavLink
+              to={`/dashboard/tickets/resolved-tickets`}
+              className={({ isActive }) => {
+                return `justify-start items-center flex w-full p-2 space-x-4 text-lg  rounded-md hover:bg-[#DCFCe74D] ${isActive ? "bg-green-100/30 text-white" : ""}`;
+              }}
+            >
+              <BookCheck />
+              <div className="flex gap-2">
+                <h1 className="text-base">Resolved Tickets</h1>
+              </div>
+            </NavLink>
           </li>
         </CollapsibleSection>
 
