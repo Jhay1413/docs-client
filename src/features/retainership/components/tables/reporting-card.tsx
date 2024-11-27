@@ -175,7 +175,7 @@ const ReportingCard: React.FC = () => {
               {quarters.map((quarter) => (
                 <button
                   key={quarter}
-                  className={`text-base font-bold border shadow-md rounded-lg w-full p-1 ${
+                  className={`text-base font-bold border shadow-md rounded-full w-full p-1 ${
                     selectedQuarter === quarter? "border-b-4 border-b-green-500" : ""
                   }`}
                   onClick={() => setSelectedQuarter(quarter)}
@@ -213,18 +213,19 @@ const ReportingCard: React.FC = () => {
                     {isOpen && (
                       <div className="p-4 bg-white space-y-4">
                         {/* Year, Quarter, and Report Type */}
-                        <h4 className="font-medium">
-                          Upload Files for {selectedYear} {selectedQuarter} -{" "}
+                        <h4 className="font-normal">
+                          {selectedYear} {selectedQuarter} {" "}
                           {type === View.SMR
                             ? "SMR"
                             : type === View.CMR
                             ? "CMR"
-                            : "ICR"}
+                            : "ICR"} -{" "}
+                            Report Files
                         </h4>
 
                         {/* File Upload */}
                         <div>
-                          <h5 className="text-base font-medium">Upload Report File</h5>
+                          <h5 className="text-base font-normal">Upload Report File</h5>
                           <input
                             type="file"
                             onChange={(e) =>
@@ -236,7 +237,7 @@ const ReportingCard: React.FC = () => {
 
                         {/* Drag and Drop for Supporting Documents */}
                         <div>
-                          <h5 className="text-base font-medium">
+                          <h5 className="text-base font-normal">
                             Upload Supporting Documents
                           </h5>
                           <DragNdrop

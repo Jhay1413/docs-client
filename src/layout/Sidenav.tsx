@@ -30,10 +30,10 @@ const CollapsibleSection = ({ label, children }: { label: string; children: Reac
   return (
     <>
       <div
-        className="cursor-pointer px-2 flex justify-between items-center gap-4 pb-2 hover:border-b-2"
+        className="cursor-pointer px-2 flex justify-between items-center gap-4 pb-2 border-b-2 border-transparent hover:border-b-white"
         onClick={() => setIsExpanded((prev) => !prev)}
       >
-        <Label className="text-[#DCFF8E] font-medium flex w-full text-sm">{label}</Label>
+        <Label className="text-[#DCFF8E] pl-2 font-medium flex w-full text-sm">{label}</Label>
         <span className="text-sm pr-4">
           {isExpanded ? "▲" : "▼"}
         </span>
