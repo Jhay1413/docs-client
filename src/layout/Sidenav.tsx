@@ -67,7 +67,7 @@ const CompaniesItemWithRole = withRole(CompaniesMenu);
 export const SideNav = () => {
   const notification = useNotificationStore((state) => state.notification);
   const ticketNotification = useTicketNotificationStore((state) => state.ticketNotification);
-
+  const [selectedModule, setSelectedModule] = useState();
   const id = getCurrentUserId();
 
   return (

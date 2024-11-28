@@ -70,8 +70,8 @@ const ReportsByYear: React.FC<ReportsByYearProps> = ({ year, quarters }) => {
         {quarters.map((quarter) => (
           <button
             key={quarter}
-            className={`text-base font-bold border shadow-md rounded-full w-full p-1 bg-gray-200 ${
-              selectedQuarter === quarter ? "border-b-4 border-b-green-500 bg-white" : ""
+            className={`text-base font-bold border shadow-md rounded-full w-full p-1 bg-white ${
+              selectedQuarter === quarter ? "border-b-4 border-b-green-500 " : "bg-gray-200"
             }`}
             onClick={() => setSelectedQuarter(quarter)}
           >
