@@ -29,7 +29,7 @@ export const TicketList = () => {
   const [searchParams, setSearchParams] = useSearchParams({
     currentPage: "1",
     search: "",
-    sortOrder: "asc",
+    sortOrder: "desc",
     projectId: "",
     transactionId: "",
     priority: "",
@@ -39,7 +39,7 @@ export const TicketList = () => {
 
   const searchQuery = searchParams.get("search") || "";
   const page = searchParams.get("currentPage") || "1";
-  const sortOrder = searchParams.get("sortOrder") || "asc";
+  const sortOrder = searchParams.get("sortOrder") || "desc";
   const projectId = searchParams.get("projectId") || "";
   const transactionId = searchParams.get("transactionId") || "";
   const priority = searchParams.get("priority") || "";
@@ -71,7 +71,7 @@ export const TicketList = () => {
   // Toggle sort order between 'asc' and 'desc'
   const toggleSortOrder = () => {
     setSearchParams((prev) => {
-      const newSortOrder = sortOrder === "asc" ? "desc" : "asc";
+      const newSortOrder = sortOrder === "desc" ? "asc" : "desc";
       prev.set("sortOrder", newSortOrder);
       prev.set("currentPage", "1"); // Reset to first page on sort change
       return prev;

@@ -13,6 +13,31 @@ export const pendingTicketsColumn: ColumnDef<z.infer<typeof ticketingTableSchema
   {
     header: () => <span className="font-bold text-nowrap">Ticket ID</span>,
     accessorKey: "ticketId",
+    cell: ({ row }) => {
+      const ticketInfo = row.original;
+      const current = new Date();
+      const currentDate = new Date(current.getFullYear(), current.getMonth(), current.getDate()); // Create a date object for the current date
+      const dueDate = new Date(ticketInfo.dueDate); // Convert dueDate to a Date object
+      const ticketId = ticketInfo.ticketId;
+      
+      return (
+        <div className="flex gap-2 items-center w-auto text-nowrap">
+          <span>{ticketId}</span>
+          {
+            ticketInfo.status !== "RESOLVED" && currentDate.getTime() > dueDate.getTime() ? (
+              <span title="Overdue">
+                <CircleAlert size={20} className="text-red-500" />
+              </span>
+            ) : ticketInfo.status !== "RESOLVED" && currentDate.getTime() === dueDate.getTime() ? (
+              <span title="Due Today">
+                <CircleAlert size={20} className="text-yellow-500" />
+              </span>
+            ) : null
+          }
+        </div>
+      );
+
+    },
   },
   {
     header: () => <span className="font-bold text-nowrap">Transaction ID</span>,
@@ -132,28 +157,10 @@ export const pendingTicketsColumn: ColumnDef<z.infer<typeof ticketingTableSchema
     accessorKey: "dueDate",
     cell: ({ row }) => {
       const ticketInfo = row.original;
-      const current = new Date();
-      const currentDate = new Date(current.getFullYear(), current.getMonth(), current.getDate()); // Create a date object for the current date
       const dueDate = new Date(ticketInfo.dueDate); // Convert dueDate to a Date object
       
       return (
-        <div className="flex gap-1 items-center w-24">
-          <span>{dueDate.toDateString()}</span>
-          {
-            ticketInfo.status !== "RESOLVED" && currentDate.getTime() > dueDate.getTime() ? (
-              <span title="Overdue">
-                <CircleAlert size={20} className="text-red-500" />
-              </span>
-            ) : ticketInfo.status !== "RESOLVED" && currentDate.getTime() === dueDate.getTime() ? (
-              <span title="Due Today">
-                <CircleAlert size={20} className="text-yellow-500" />
-              </span>
-            ) : null
-          }
-
-
-
-        </div>
+        <span className="text-nowrap">{dueDate.toDateString()}</span>
       );
     },
   },

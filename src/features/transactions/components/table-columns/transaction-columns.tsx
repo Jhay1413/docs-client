@@ -34,11 +34,26 @@ export const transColumns: ColumnDef<TransactionInfo>[] = [
     },
     accessorKey: "transactionId",
     cell: ({ row }) => {
-      const data = row.original;
-
+      const transactionInfo = row.original;
+      const current = new Date();
+      const currentDate = new Date(current.getFullYear(), current.getMonth(), current.getDate()); // Create a date object for the current date
+      const dueDate = new Date(transactionInfo.dueDate); // Convert dueDate to a Date object
+      const transactionId = transactionInfo.transactionId;
+      
       return (
-        <div className="text-center">
-          <h1>{data.transactionId}</h1>
+        <div className="flex gap-2 items-center w-auto text-nowrap">
+          <span className="">{transactionId}</span> {/* Set a fixed width and align text to the right */}
+          {
+            transactionInfo.status !== "ARCHIVED" && transactionInfo.status !== "DROP" && currentDate.getTime() > dueDate.getTime() ? (
+              <span title="Overdue">
+                <CircleAlert size={20} className="text-red-500" />
+              </span>
+            ) : transactionInfo.status !== "ARCHIVED" && transactionInfo.status !== "DROP" && currentDate.getTime() === dueDate.getTime() ? (
+              <span title="Due Today">
+                <CircleAlert size={20} className="text-yellow-500" />
+              </span>
+            ) : null
+          }
         </div>
       );
     },
@@ -174,25 +189,10 @@ export const transColumns: ColumnDef<TransactionInfo>[] = [
     accessorKey: "dueDate",
     cell: ({ row }) => {
       const transactionInfo = row.original;
-      const current = new Date();
-      const currentDate = new Date(current.getFullYear(), current.getMonth(), current.getDate()); // Create a date object for the current date
       const dueDate = new Date(transactionInfo.dueDate); // Convert dueDate to a Date object
       
       return (
-        <div className="flex gap-1 items-center w-24">
-          <span>{dueDate.toDateString()}</span>
-          {
-            transactionInfo.status !== "ARCHIVED" && currentDate.getTime() > dueDate.getTime() ? (
-              <span title="Overdue">
-                <CircleAlert size={20} className="text-red-500" />
-              </span>
-            ) : transactionInfo.status !== "ARCHIVED" && currentDate.getTime() === dueDate.getTime() ? (
-              <span title="Due Today">
-                <CircleAlert size={20} className="text-yellow-500" />
-              </span>
-            ) : null
-          }
-        </div>
+        <span className="text-nowrap">{dueDate.toDateString()}</span>
       );
     },
   },
