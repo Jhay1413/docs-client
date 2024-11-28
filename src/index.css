@@ -108,3 +108,38 @@
       align-items: center;
     }
   }
+
+  .tab-container {
+    display: flex;
+    justify-content: space-between;
+    border-top: 2px solid #ccc; /* Notebook-like border on top */
+    border-left: 2px solid #ccc;
+    border-right: 2px solid #ccc;
+    border-radius: 5px 5px 0 0; /* Rounded top corners */
+  }
+  
+  .tab {
+    flex: 1;
+    text-align: center;
+    padding: 10px 0;
+    font-size: 1rem;
+    font-weight: bold;
+    background-color: #f8f9fa; /* Default tab background */
+    border: 2px solid transparent; /* Border reset */
+    border-top: 2px solid transparent; /* Matches container border */
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .tab.selected {
+    background-color: #ffffff; /* Highlight the selected tab */
+    color: #333; /* Text color for the selected tab */
+    border-top: 2px solid #007bff; /* Selected tab top border color */
+    border-left: 2px solid #ccc; /* Left border matching container */
+    border-right: 2px solid #ccc; /* Right border matching container */
+  }
+  
+  .tab:hover {
+    background-color: #e9ecef; /* Hover effect */
+  }
+  

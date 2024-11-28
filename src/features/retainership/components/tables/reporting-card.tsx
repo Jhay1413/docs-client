@@ -17,33 +17,35 @@ const ReportingCard: React.FC = () => {
     }
 
     setYears((prevYears) => [...prevYears, year].sort());
-    setSelectedYear(year); // Automatically select the new year
+    setSelectedYear(year);
   };
 
   return (
     <div className="p-8 shadow-md">
       <div className="space-y-6">
         {/* Year Selector */}
-        <div className="flex gap-4 items-center">
+        <div className="flex items-center">
           {years.map((year) => (
             <button
               key={year}
               onClick={() => setSelectedYear(year)}
               className={`text-xl font-bold px-4 py-2 rounded-lg ${
                 selectedYear === year
-                  ? "bg-white text-gray-600 border-b-4 border-b-green-500 shadow-md"
-                  : "bg-gray-200 text-gray-600 hover:bg-gray-300"
+                  ? "bg-white text-gray-600 border-t border-l border-r rounded-b-none " 
+                  : "border-t border-l border-r rounded-b-none border-gray-300 bg-gray-200 text-gray-600 hover:bg-gray-300"
               }`}
             >
               {year}
             </button>
           ))}
-          <button
-            onClick={() => setIsModalOpen(true)}
-            className="flex items-center justify-center w-8 h-8 text-gray-600 bg-gray-200 rounded-full hover:bg-gray-300"
-          >
-            <Plus size={18} />
-          </button>
+          <div className="pl-4">
+            <button
+              onClick={() => setIsModalOpen(true)}
+              className="flex items-center justify-center w-8 h-8 text-gray-600 bg-gray-200 rounded-full hover:bg-gray-300"
+            >
+              <Plus size={18} />
+            </button>
+          </div>
         </div>
 
         {/* Add Year Modal */}

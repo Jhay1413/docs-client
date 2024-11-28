@@ -6,11 +6,7 @@ import { toast } from "react-toastify";
 interface AddReportProps {
   isOpen: boolean;
   onClose: () => void;
-  onAddYear: (year: string, quarter: string, reportType: string) => {
-    year: string;
-    quarter: string;
-    reportType: string;
-  };
+  onAddYear: (year: string, quarter: string, reportType: string) => void;
 }
 
 const AddReportFormModal: React.FC<AddReportProps> = ({ isOpen, onClose, onAddYear }) => {

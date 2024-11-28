@@ -71,7 +71,7 @@ export const SideNav = () => {
   const id = getCurrentUserId();
 
   return (
-    <div className="flex flex-col gap-4 w-full min-h-full pb-8 ">
+    <div className="flex flex-col gap-4 w-full min-h-full pb-8">
       <div className="flex items-center justify-center h-32">
         <Link to={`/dashboard/overview`}>
           <img src="/Logov6.png" className="h-[32px] w-[151px]" alt="Logo" />
