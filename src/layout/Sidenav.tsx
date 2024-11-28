@@ -19,6 +19,8 @@ import {
   BookKey,
   BookType,
   Mailbox,
+  ChevronDown,
+  ChevronUp,
 } from "lucide-react";
 import { Label } from "@/components/ui/label";
 import withRole from "@/components/HOC/component-permission";
@@ -35,7 +37,7 @@ const CollapsibleSection = ({ label, children }: { label: string; children: Reac
       >
         <Label className="text-[#DCFF8E] pl-2 font-medium flex w-full text-sm">{label}</Label>
         <span className="text-sm pr-4">
-          {isExpanded ? "▲" : "▼"}
+          {isExpanded ? <ChevronUp /> : <ChevronDown />}
         </span>
       </div>
       {isExpanded && <ul className="flex flex-col space-y-4 w-full ">{children}</ul>}
