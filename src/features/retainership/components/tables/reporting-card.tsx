@@ -1,6 +1,6 @@
 import { useState } from "react";
 import ReportsByYear from "../forms/reports-by-year";
-import AddYearModal from "../forms/add-year-modal";
+import AddReportFormModal from "../forms/add-report-modal";
 import { Plus } from "lucide-react";
 import { toast } from "react-toastify";
 
@@ -47,7 +47,7 @@ const ReportingCard: React.FC = () => {
         </div>
 
         {/* Add Year Modal */}
-        <AddYearModal
+        <AddReportFormModal
           isOpen={isModalOpen}
           onClose={() => setIsModalOpen(false)}
           onAddYear={handleAddYear}

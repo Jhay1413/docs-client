@@ -100,36 +100,37 @@ const ReportsByYear: React.FC<ReportsByYearProps> = ({ year, quarters }) => {
               {isOpen && (
                 <div className="p-4 bg-white space-y-4">
                   <h4 className="font-normal">
+                    <div>
+                        <h5 className="text-base font-bold">Report Details</h5>
+                    </div>
                     {year} {selectedQuarter} {type === View.SMR ? "SMR" : type === View.CMR ? "CMR" : "ICIR"} - Report
                     Files
                   </h4>
                   <div>
-                    <h5 className="text-base font-normal">Upload Report File</h5>
-                    <input
-                      type="file"
-                      onChange={(e) => handleFileUpload(Array.from(e.target.files || []))}
-                      className="mt-2 p-2 border border-gray-300 rounded"
-                    />
+                    <h5 className="text-base font-normal">Actual Report Document:</h5>
+                    <a
+                    href="https://example.com/ecc"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-blue-500 hover:underline"
+                  >
+                    DTS-Envicomm-Report/{selectedQuarter}-{type === View.SMR ? "SMR" : type === View.CMR ? "CMR" : "ICIR"}
+                  </a>
                   </div>
-
-                  <DragNdrop onFilesSelected={(newFiles) => handleFileUpload(newFiles)} width="100%" height="100%" />
-
+                  
                   <ScrollArea className="w-full min-h-full max-h-48 p-4 rounded-md">
-                    {showProgress &&
-                      files.map((file, index) => (
-                        <div key={index} className="flex items-center gap-2 bg-blue-300 p-2 rounded-md">
-                          <FileCode size={32} />
-                          <div className="flex-1">{file.name}</div>
-                          <Progress value={file.loading} className="w-1/3 h-4" />
-                        </div>
-                      ))}
-                    {uploadedFile.map((file, index) => (
-                      <div key={index} className="flex items-center gap-2 bg-blue-300 p-2 rounded-md">
-                        <FileCode size={32} />
-                        <div className="flex-1">{file.name}</div>
-                        <XCircle size={28} className="cursor-pointer hover:text-red-500" onClick={() => handleRemoveFile(index)} />
-                      </div>
-                    ))}
+                    <table className="table-auto w-full border-collapse border border-white">
+                        <thead>
+                            <tr className="bg-lime-500/70 text-center rounded-lg">
+                                <th className="border border-white p-2">Date</th>
+                                <th className="border border-white p-2">Subject</th>
+                                <th className="border border-white p-2">Attachment</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+
+                        </tbody>
+                    </table>
                   </ScrollArea>
                 </div>
               )}
