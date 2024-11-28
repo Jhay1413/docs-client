@@ -3,7 +3,7 @@ import { useDebounce } from "use-debounce";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Plus, Search } from "lucide-react";
-import { Link, useNavigate, useSearchParams } from "react-router-dom";
+import { Link, useLocation, useNavigate, useSearchParams } from "react-router-dom";
 import { ticketsColumn } from "./ticket-column";
 import { tsr } from "@/services/tsr";
 import { keepPreviousData } from "@tanstack/react-query";
@@ -15,6 +15,13 @@ export const TicketResolved = () => {
     search: "",
   });
   const navigate = useNavigate();
+  const location = useLocation(); // Get the current location
+  
+  const handleOnClickRow = (data: any) => {
+    // Navigate to ticket details page when a row is clicked
+    navigate(`/dashboard/tickets/details/${data.id}`, { state: { from: location.pathname } }); // Pass the current location as state
+  };
+  
   const searchQuery = searchParams.get("search") || "";
   const page = searchParams.get("currentPage") || "1";
   const intPage = parseInt(page, 10);
@@ -53,10 +60,6 @@ export const TicketResolved = () => {
     }
   };
 
-  const handleOnClickRow = (data: any) => {
-    // Navigate to ticket details page when a row is clicked
-    navigate(`/dashboard/tickets/details/${data.id}`);
-  };
 
   return (
     <div className="min-h-full flex flex-col w-full items-center p-4 bg-white rounded-lg ">
