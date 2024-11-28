@@ -18,6 +18,7 @@ export type NotificationState = {
   setRefetchAll: (refetchFn: () => void) => void;
   setRefetch: (refetchFn: () => void) => void;
 };
+
 export const useNotificationStore = create<NotificationState>((set) => ({
   notification: null,
   numOfUnreadNotif: 0,
@@ -28,7 +29,7 @@ export const useNotificationStore = create<NotificationState>((set) => ({
   setNotification: (notification) => set({ notification }),
   setRefetch: (refetchFn) => set({ refetch: refetchFn }),
 }));
-
+  
 export type TicketNotificationType = {
   incomingTickets: number,
   inboxTickets: number,

@@ -69,7 +69,7 @@ export const SideNav = () => {
   const ticketNotification = useTicketNotificationStore((state) => state.ticketNotification);
 
   const id = getCurrentUserId();
-
+  console.log("TicketNotification from Sidenav:", ticketNotification)
   return (
     <div className="flex flex-col gap-4 w-full min-h-full pb-8 ">
       <div className="flex items-center justify-center h-32">
