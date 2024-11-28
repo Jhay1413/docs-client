@@ -55,9 +55,7 @@ export const ticketsInboxColumn: ColumnDef<z.infer<typeof ticketingTableSchema>>
   },
   {
     header: () => (
-      <div className="w-full font-bold text-nowrap items-center flex justify-center">
-        <h1>Status</h1>
-      </div>
+      <span className="font-bold text-nowrap">Status</span>
     ),
     accessorKey: "status",
     cell: ({ row }) => {
@@ -85,9 +83,7 @@ export const ticketsInboxColumn: ColumnDef<z.infer<typeof ticketingTableSchema>>
   },
   {
     header: () => (
-      <div className="w-full font-bold text-nowrap items-center flex justify-center">
-        <h1>Date Created</h1>
-      </div>
+      <span className="font-bold text-nowrap">Date Created</span>
     ),
     accessorKey: "createdAt",
     cell: ({ row }) => {
@@ -97,9 +93,7 @@ export const ticketsInboxColumn: ColumnDef<z.infer<typeof ticketingTableSchema>>
   },
   {
     header: () => (
-      <div className="w-full font-bold text-nowrap items-center flex justify-center">
-        <h1>Date Forwarded</h1>
-      </div>
+    <span className="font-bold text-nowrap">Date Forwarded</span>
     ),
     accessorKey: "dateForwarded",
     cell: ({ row }) => {
@@ -109,9 +103,7 @@ export const ticketsInboxColumn: ColumnDef<z.infer<typeof ticketingTableSchema>>
   },
   {
     header: () => (
-      <div className="w-full font-bold text-nowrap items-center flex justify-center">
-        <h1>Sender</h1>
-      </div>
+      <span className="font-bold text-nowrap">Sender</span>
     ),
     accessorKey: "sender",
     cell: ({ row }) => {
@@ -122,9 +114,7 @@ export const ticketsInboxColumn: ColumnDef<z.infer<typeof ticketingTableSchema>>
   },
   {
     header: () => (
-      <div className="w-full font-bold text-nowrap items-center flex justify-center">
-        <h1>Date Received</h1>
-      </div>
+      <span className="font-bold text-nowrap">Date Received</span>
     ),
     accessorKey: "dateReceived",
     cell: ({ row }) => {
@@ -134,9 +124,7 @@ export const ticketsInboxColumn: ColumnDef<z.infer<typeof ticketingTableSchema>>
   },
   {
     header: () => (
-      <div className="w-full font-bold text-nowrap items-center flex justify-center">
-        <h1>Remarks</h1>
-      </div>
+      <span className="font-bold text-nowrap">Remarks</span>
     ),
     accessorKey: "remarks",
     cell: ({ row }) => {
@@ -158,10 +146,10 @@ export const ticketsInboxColumn: ColumnDef<z.infer<typeof ticketingTableSchema>>
       const navigate = useNavigate();
       const ticket = row.original;
       const handleOnClickRow = () => {
-        navigate(`/dashboard/tickets/details/${ticket.id}`); // Navigate to ticket details page
+        navigate(`/dashboard/tickets/details/${ticket.id}`);
       };
       const routeToForwardTicket = () => {
-        navigate(`/dashboard/tickets/forward-ticket/${ticket.id}`); // Navigate to ticket details page
+        navigate(`/dashboard/tickets/forward-ticket/${ticket.id}`);
       };
   
       return (

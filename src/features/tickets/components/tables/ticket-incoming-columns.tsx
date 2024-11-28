@@ -3,7 +3,7 @@ import { z } from "zod";
 import { ticketingTableSchema } from "shared-contract"; // Adjust the import based on your project structure
 import { toPascalCase } from "../ticket.utils"; // Adjust the import based on your project structure
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
-import { Dot, MoreHorizontal } from "lucide-react";
+import { Dot, MailOpen, MoreHorizontal } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 type IncomingColumn = z.infer<typeof ticketingTableSchema>;
@@ -38,9 +38,9 @@ export function ticketsIncomingColumn(mutateAsync: MutateAsyncFunction): ColumnD
     },
     {
       header: () => (
-        <div className="w-full font-bold text-nowrap items-center flex justify-center">
+        <span className="font-bold text-nowrap">
           <h1>Status</h1>
-        </div>
+        </span>
       ),
       accessorKey: "status",
       cell: ({ row }) => {
@@ -132,7 +132,11 @@ export function ticketsIncomingColumn(mutateAsync: MutateAsyncFunction): ColumnD
     },
   
     {
-      header: () => <span className="font-bold text-nowrap">Actions</span>,
+      header: () => (
+        <div className="w-full font-bold text-nowrap items-center flex justify-center">
+          <h1>Actions</h1>
+        </div>
+      ),
       accessorKey: "actions",
       id: "actions",
       cell: ({ row }) => {
@@ -142,23 +146,27 @@ export function ticketsIncomingColumn(mutateAsync: MutateAsyncFunction): ColumnD
           await mutateAsync({ params: { id: ticket.id! }, body: { dateReceived: new Date().toISOString() } });
         };
         return (
+        <div className="flex items-center justify-center gap-2 text-gray-700">
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="ghost" className="h-8 w-8 p-0">
+              <Button variant="ghost" className="h-8 w-8 p-0 flex items-center justify-center">
                 <span className="sr-only">Open menu</span>
-                <MoreHorizontal className="h-4 w-4" />
+                <MailOpen />
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
-              <DropdownMenuLabel>Actions</DropdownMenuLabel>
-  
+              <div className="flex justify-center">
+                <DropdownMenuLabel>Actions</DropdownMenuLabel>
+              </div>
+              
               <DropdownMenuItem>
-                <button className="w-full" onClick = { updateDateReceived}>
-                  Recieve
+                <button className="w-full" onClick={updateDateReceived}>
+                  Receive
                 </button>
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
+        </div>
         );
       },
     },

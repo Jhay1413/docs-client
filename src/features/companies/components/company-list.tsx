@@ -34,7 +34,7 @@ export const CompanyList = () => {
         <h1 className="text-[#404041] font-medium text-[28px]">
           List of Companies
         </h1>
-        <p className="text-muted-foreground text-[12px]">
+        <p className="text-muted-foreground text-[12px] truncate">
           Explore and manage company profiles. Access detailed information and
           perform necessary actions for each company.
         </p>

@@ -10,6 +10,8 @@ import { Button } from "@/components/ui/button";
 import { Search, SquareChevronDown, SquareChevronUp } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { FilterOptions } from "../filter-options";
+import { ClipLoader } from "react-spinners";
+
 
 export const IncomingTicketComponent = () => {
   const tsrQueryClient = tsr.useQueryClient();
@@ -33,7 +35,7 @@ export const IncomingTicketComponent = () => {
   const status = searchParams.get("status") || "";
   const senderId = searchParams.get("senderId") || "";
 
-  const { data, isError, error, refetch } = tsr.ticketing.getTickets.useQuery({
+  const { data, isError, error, refetch, isFetching } = tsr.ticketing.getTickets.useQuery({
     queryKey: ["tickets-incoming", page, debouncedSearchQuery, sortOrder],
     queryData: {
       query: {
@@ -110,7 +112,7 @@ export const IncomingTicketComponent = () => {
         <div className="flex justify-between items-center w-full pb-4">
           <div className="flex justify-start w-full flex-col">
             <h1 className="text-[#404041] font-medium text-[28px]">Incoming Tickets</h1>
-            <p className="text-muted-foreground text-[12px]">All your new tickets will appear here. Stay informed and don't miss any updates.</p>
+            <p className="text-muted-foreground text-[12px] truncate">All your new tickets will appear here. Stay informed and don't miss any updates.</p>
           </div>
           <div className="flex items-center justify-end w-full">
             <div className="flex m-1 text-gray-700 gap-1">
@@ -123,7 +125,7 @@ export const IncomingTicketComponent = () => {
               >
                 {sortOrder === "asc" ? <SquareChevronUp /> : <SquareChevronDown />}
               </Button>
-              <FilterOptions setSearchParams={setSearchParams} refetch={refetch} />
+              <FilterOptions setSearchParams={setSearchParams} refetch={refetch} isSubmitting={isFetching}/>
             </div>
             <Input
               placeholder="Search ...."
@@ -146,7 +148,16 @@ export const IncomingTicketComponent = () => {
           </div>
         </div>
 
-        <DataTable columns={incomingColumns} data={data ? data.body.data : []} />
+        <div className="w-full">
+          {isFetching ? (
+            <div className="flex justify-center items-center py-10">
+              <ClipLoader size={30} color="#4a90e2" />
+            </div>
+          ) : (
+            <DataTable columns={incomingColumns} data={data ? data.body.data : []} isSticky={true} />
+          )}
+        </div>
+
         <div className="w-full flex justify-between items-center">
           <div className="text-muted-foreground">
             <h1>Number of Tickets: {data?.body.numOfTickets}</h1>
