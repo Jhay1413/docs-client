@@ -26,8 +26,8 @@ import { Label } from "@/components/ui/label";
 import withRole from "@/components/HOC/component-permission";
 import { getCurrentUserId } from "@/hooks/use-user-hook";
 
-const CollapsibleSection = ({ label, children }: { label: string; children: React.ReactNode }) => {
-  const [isExpanded, setIsExpanded] = useState(false);
+const CollapsibleSection = ({ label, children, defaultExpanded = false }: { label: string; children: React.ReactNode, defaultExpanded?: boolean; }) => {
+  const [isExpanded, setIsExpanded] = useState(defaultExpanded);
 
   return (
     <>
@@ -78,7 +78,8 @@ export const SideNav = () => {
         </Link>
       </div>
       <div className="flex flex-col  w-full min-h-full gap-6 pb-2">
-        <CollapsibleSection label="MENU">
+        {/* Make this automatically expanded by default (afetr login) */}
+        <CollapsibleSection label="MENU" defaultExpanded={true}>
           <li className="relative inline-block text-left px-2">
             <NavLink
               to={`/dashboard/overview`}
