@@ -39,10 +39,28 @@ export const transColumns: ColumnDef<TransactionInfo>[] = [
       const currentDate = new Date(current.getFullYear(), current.getMonth(), current.getDate()); // Create a date object for the current date
       const dueDate = new Date(transactionInfo.dueDate); // Convert dueDate to a Date object
       const transactionId = transactionInfo.transactionId;
+      // const createdDate = new Date(transactionInfo.); // no createdAt
+
+      
+      // Function to check if two dates are the same day
+      const isSameDay = (date1:any, date2:any) => {
+        return (
+          date1.getDate() === date2.getDate() &&
+          date1.getMonth() === date2.getMonth() &&
+          date1.getFullYear() === date2.getFullYear()
+        );
+      };
       
       return (
         <div className="flex gap-2 items-center w-auto text-nowrap">
-          <span className="">{transactionId}</span> {/* Set a fixed width and align text to the right */}
+          <span>{transactionId}</span>
+          {/* {
+            isSameDay(createdDate, currentDate) ? (
+              <span className=" bg-green-500 text-white text-xs px-1 rounded mb-4 " title="New Ticket">
+                New
+              </span>
+            ) : null
+          } */}
           {
             transactionInfo.status !== "ARCHIVED" && transactionInfo.status !== "DROP" && currentDate.getTime() > dueDate.getTime() ? (
               <span title="Overdue">

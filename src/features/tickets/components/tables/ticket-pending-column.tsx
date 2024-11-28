@@ -18,11 +18,28 @@ export const pendingTicketsColumn: ColumnDef<z.infer<typeof ticketingTableSchema
       const current = new Date();
       const currentDate = new Date(current.getFullYear(), current.getMonth(), current.getDate()); // Create a date object for the current date
       const dueDate = new Date(ticketInfo.dueDate); // Convert dueDate to a Date object
+      const createdDate = new Date(ticketInfo.createdAt!); // Convert createdAt to a Date object
       const ticketId = ticketInfo.ticketId;
+      
+      // Function to check if two dates are the same day
+      const isSameDay = (date1:any, date2:any) => {
+        return (
+          date1.getDate() === date2.getDate() &&
+          date1.getMonth() === date2.getMonth() &&
+          date1.getFullYear() === date2.getFullYear()
+        );
+      };
       
       return (
         <div className="flex gap-2 items-center w-auto text-nowrap">
-          <span>{ticketId}</span>
+          <span>{ticketId}</span> {/* Set a fixed width and align text to the right */}
+          {
+            isSameDay(createdDate, currentDate) ? (
+              <span className=" bg-green-500 text-white text-xs px-1 rounded mb-4 " title="New Ticket">
+                New
+              </span>
+            ) : null
+          }
           {
             ticketInfo.status !== "RESOLVED" && currentDate.getTime() > dueDate.getTime() ? (
               <span title="Overdue">
