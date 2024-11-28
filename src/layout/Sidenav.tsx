@@ -125,19 +125,20 @@ export const SideNav = () => {
         </CollapsibleSection>
 
         <CollapsibleSection label="ADMIN">
-        <li className="relative inline-block text-left px-2 ">
-          <NavLink
-            to={`/dashboard/admin/request`}
-            className={({ isActive }) => {
-              return `justify-start items-center flex w-full p-2 space-x-4 text-lg  rounded-md hover:bg-[#DCFCe74D] ${isActive ? "bg-green-100/30 text-white" : ""}`;
-            }}
-          >
-            <FilePen />
-            <div className="flex gap-2">
-              <h1 className="text-base">Request Forms</h1>
-            </div>
-          </NavLink>
-        </li></CollapsibleSection>
+          <li className="relative inline-block text-left px-2 ">
+            <NavLink
+              to={`/dashboard/admin/request`}
+              className={({ isActive }) => {
+                return `justify-start items-center flex w-full p-2 space-x-4 text-lg  rounded-md hover:bg-[#DCFCe74D] ${isActive ? "bg-green-100/30 text-white" : ""}`;
+              }}
+            >
+              <FilePen />
+              <div className="flex gap-2">
+                <h1 className="text-base">Request Forms</h1>
+              </div>
+            </NavLink>
+          </li>
+        </CollapsibleSection>
 
         <CollapsibleSection label="TRANSACTIONS">
           <li className="relative inline-block text-left px-2">
