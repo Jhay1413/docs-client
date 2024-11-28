@@ -39,8 +39,6 @@ export const ticketsColumn: ColumnDef<z.infer<typeof ticketingTableSchema>>[] = 
   
       return (
         <div className="flex gap-2 items-center w-auto text-nowrap">
-
-
           <span>{ticketId}</span>
           {
             isSameDay(createdDate, currentDate) ? (
@@ -134,16 +132,16 @@ export const ticketsColumn: ColumnDef<z.infer<typeof ticketingTableSchema>>[] = 
   //   },
   // },
   
-  // {
-  //   header: () => <span className="font-bold text-nowrap">Forwarded To</span>,
-  //   accessorKey: "receiver",
-  //   cell: ({ row }) => {
-  //     const transactionInfo = row.original;
-  //     const name = (`${transactionInfo.receiver?.firstName} ${transactionInfo.receiver?.lastName}`).toLocaleLowerCase();
-  //     const new_name = toPascalCase(name);
-  //     return <span>{new_name}</span>;
-  //   },
-  // },
+  {
+    header: () => <span className="font-bold text-nowrap">Forwarded To</span>,
+    accessorKey: "receiver",
+    cell: ({ row }) => {
+      const transactionInfo = row.original;
+      const name = (`${transactionInfo.receiver?.firstName} ${transactionInfo.receiver?.lastName}`).toLocaleLowerCase();
+      const new_name = toPascalCase(name);
+      return <span>{new_name}</span>;
+    },
+  },
   {
     header: () => <span className="font-bold text-nowrap">Remarks</span>,
     accessorKey: "remarks",

@@ -90,8 +90,8 @@ export const pendingTicketsColumn: ColumnDef<z.infer<typeof ticketingTableSchema
   //   header: () => <span className="font-bold text-nowrap">Request Details</span>,
   //   accessorKey: "requestDetails",
   //   cell: ({ row }) => {
-  //     const transactionInfo = row.original;
-  //     const requestDetails = transactionInfo.requestDetails || "";
+  //     const ticketInfo = row.original;
+  //     const requestDetails = ticketInfo.requestDetails || "";
   //     return <span>{requestDetails.length > maxLength ? `${requestDetails.substring(0, maxLength)}...` : requestDetails}</span>;
   //   },
   // },
@@ -117,7 +117,16 @@ export const pendingTicketsColumn: ColumnDef<z.infer<typeof ticketingTableSchema
     header: () => <span className="font-bold text-nowrap">Priority</span>,
     accessorKey: "priority",
   },
-
+  {
+    header: () => <span className="font-bold text-nowrap">Forwarded To</span>,
+    accessorKey: "receiver",
+    cell: ({ row }) => {
+      const ticketInfo = row.original;
+      const name = (`${ticketInfo.receiver?.firstName} ${ticketInfo.receiver?.lastName}`).toLocaleLowerCase();
+      const new_name = toPascalCase(name);
+      return <span>{new_name}</span>;
+    },
+  },
   // {
   //   header: () => (
   //     <div className="w-full font-bold text-nowrap items-center flex justify-center">
@@ -163,8 +172,8 @@ export const pendingTicketsColumn: ColumnDef<z.infer<typeof ticketingTableSchema
     ),
     accessorKey: "remarks",
     cell: ({ row }) => {
-      const transactionInfo = row.original;
-      const remarks = transactionInfo.remarks || "";
+      const ticketInfo = row.original;
+      const remarks = ticketInfo.remarks || "";
 
       return <span>{remarks.length > maxLength ? `${remarks.substring(0, maxLength)}...` : remarks}</span>;
     },
