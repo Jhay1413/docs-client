@@ -23,6 +23,48 @@ export function ticketsIncomingColumn(mutateAsync: MutateAsyncFunction): ColumnD
     {
       header: () => <span className="font-bold text-nowrap">Ticket ID</span>,
       accessorKey: "ticketId",
+      cell: ({ row }) => {
+        const ticketInfo = row.original;
+        const current = new Date();
+        const currentDate = new Date(current.getFullYear(), current.getMonth(), current.getDate()); // Create a date object for the current date
+        const dueDate = new Date(ticketInfo.dueDate); // Convert dueDate to a Date object
+        const createdDate = new Date(ticketInfo.createdAt!); // Convert createdAt to a Date object
+        const ticketId = ticketInfo.ticketId;
+        
+        // Function to check if two dates are the same day
+        const isSameDay = (date1:any, date2:any) => {
+          return (
+            date1.getDate() === date2.getDate() &&
+            date1.getMonth() === date2.getMonth() &&
+            date1.getFullYear() === date2.getFullYear()
+          );
+        };
+        
+        return (
+          <div className="flex gap-2 items-center w-auto text-nowrap">
+            <span>{ticketId}</span> {/* Set a fixed width and align text to the right */}
+            {
+              isSameDay(createdDate, currentDate) ? (
+                <span className=" bg-green-500 text-white text-xs px-1 rounded mb-4 " title="New Ticket">
+                  New
+                </span>
+              ) : null
+            }
+            {
+              ticketInfo.status !== "RESOLVED" && currentDate.getTime() > dueDate.getTime() ? (
+                <span title="Overdue">
+                  <CircleAlert size={20} className="text-red-500" />
+                </span>
+              ) : ticketInfo.status !== "RESOLVED" && currentDate.getTime() === dueDate.getTime() ? (
+                <span title="Due Today">
+                  <CircleAlert size={20} className="text-yellow-500" />
+                </span>
+              ) : null
+            }
+          </div>
+        );
+  
+      },
     },
     {
       header: () => <span className="font-bold text-nowrap">Subject</span>,
@@ -47,8 +89,8 @@ export function ticketsIncomingColumn(mutateAsync: MutateAsyncFunction): ColumnD
         const ticketInfo = row.original;
         const statusInPascalCase = toPascalCase(ticketInfo.status || "");
         return (
-          <div className="flex  gap-1 items-center w-24">
-            {ticketInfo.status === "ON_GOING" && <Dot size={32} className="text-green-500" />}
+          <div className="w-auto text-nowrap">
+            {ticketInfo.status === "ON_GOING" && <Dot size={36} className="inline-block text-green-500" />}
             <span>{statusInPascalCase}</span>
           </div>
         );
@@ -78,28 +120,10 @@ export function ticketsIncomingColumn(mutateAsync: MutateAsyncFunction): ColumnD
       accessorKey: "dueDate",
       cell: ({ row }) => {
         const ticketInfo = row.original;
-        const current = new Date();
-        const currentDate = new Date(current.getFullYear(), current.getMonth(), current.getDate()); // Create a date object for the current date
         const dueDate = new Date(ticketInfo.dueDate); // Convert dueDate to a Date object
         
         return (
-          <div className="flex gap-1 items-center w-24">
-            <span>{dueDate.toDateString()}</span>
-            {
-              ticketInfo.status !== "RESOLVED" && currentDate.getTime() > dueDate.getTime() ? (
-                <span title="Overdue">
-                  <CircleAlert size={20} className="text-red-500" />
-                </span>
-              ) : ticketInfo.status !== "RESOLVED" && currentDate.getTime() === dueDate.getTime() ? (
-                <span title="Due Today">
-                  <CircleAlert size={20} className="text-yellow-500" />
-                </span>
-              ) : null
-            }
-  
-  
-  
-          </div>
+          <span className="text-nowrap">{dueDate.toDateString()}</span>
         );
       },
     },

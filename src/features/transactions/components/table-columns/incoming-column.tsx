@@ -32,9 +32,28 @@ export function useColumns(mutateAsync: MutateAsyncFunction): ColumnDef<Incoming
       },
       accessorKey: "transactionId",
       cell: ({ row }) => {
-        const data = row.original;
-
-        return <h1>{data.transactionId}</h1>;
+        const transactionInfo = row.original;
+        const current = new Date();
+        const currentDate = new Date(current.getFullYear(), current.getMonth(), current.getDate()); // Create a date object for the current date
+        const dueDate = new Date(transactionInfo.dueDate); // Convert dueDate to a Date object
+        const transactionId = transactionInfo.transactionId;
+        
+        return (
+          <div className="flex gap-2 items-center w-auto text-nowrap">
+            <span className="">{transactionId}</span> {/* Set a fixed width and align text to the right */}
+            {
+              transactionInfo.status !== "ARCHIVED" && transactionInfo.status !== "DROP" && currentDate.getTime() > dueDate.getTime() ? (
+                <span title="Overdue">
+                  <CircleAlert size={20} className="text-red-500" />
+                </span>
+              ) : transactionInfo.status !== "ARCHIVED" && transactionInfo.status !== "DROP" && currentDate.getTime() === dueDate.getTime() ? (
+                <span title="Due Today">
+                  <CircleAlert size={20} className="text-yellow-500" />
+                </span>
+              ) : null
+            }
+          </div>
+        );
       },
     },
     {
@@ -84,29 +103,21 @@ export function useColumns(mutateAsync: MutateAsyncFunction): ColumnDef<Incoming
       accessorKey: "priority",
     },
     {
-      header: "Due Date", // Corrected header name
-      accessorKey: "dueDate",
-      cell: ({ row }: { row: { original: IncomingColumn } }) => { // Specify the type of row here
-        const transactionInfo = row.original;
-        const current = new Date();
-        const currentDate = new Date(current.getFullYear(), current.getMonth(), current.getDate()); // Create a date object for the current date
-        const dueDate = new Date(transactionInfo.dueDate); // Convert dueDate to a Date object
-    
+      header: ({ column }) => {
         return (
-          <div className="flex gap-1 items-center w-24">
-            <span>{dueDate.toDateString()}</span>
-            {
-              transactionInfo.status !== "ARCHIVED" && currentDate.getTime() > dueDate.getTime() ? (
-                <span title="Overdue">
-                  <CircleAlert size={20} className="text-red-500" />
-                </span>
-              ) : transactionInfo.status !== "ARCHIVED" && currentDate.getTime() === dueDate.getTime() ? (
-                <span title="Due Today">
-                  <CircleAlert size={20} className="text-yellow-500" />
-                </span>
-              ) : null
-            }
-          </div>
+          <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>
+            Due Date
+            <ArrowUpDown className="ml-2 h-4 w-4" />
+          </Button>
+        );
+      },
+      accessorKey: "dueDate",
+      cell: ({ row }) => {
+        const transactionInfo = row.original;
+        const dueDate = new Date(transactionInfo.dueDate); // Convert dueDate to a Date object
+        
+        return (
+          <span className="text-nowrap">{dueDate.toDateString()}</span>
         );
       },
     },
