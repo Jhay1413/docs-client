@@ -3,7 +3,7 @@ import { Search, SquareChevronDown, SquareChevronUp } from "lucide-react";
 import { pendingTicketsColumn } from "./ticket-pending-column";
 import { Button } from "@/components/ui/button";
 import { getCurrentUserId } from "@/hooks/use-user-hook";
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
 import { useDebounce } from "use-debounce";
 import { tsr } from "@/services/tsr";
 import { keepPreviousData } from "@tanstack/react-query";
@@ -78,6 +78,12 @@ export const PendingTickets = () => {
     });
   };
 
+  const location = useLocation();
+  const handleOnClickRow = (data: any) => {
+    // Navigate to ticket details page when a row is clicked
+    navigate(`/dashboard/tickets/details/${data.id}`, { state: { from: location.pathname } }); // Pass the current location as state
+  };
+
   return (
     <div className="min-h-full flex flex-col w-full items-center p-4 bg-white rounded-lg ">
       <div className="flex flex-col w-full items-center justify-center p-4 bg-white rounded-lg">
@@ -126,7 +132,7 @@ export const PendingTickets = () => {
                 <ClipLoader size={30} color="#4a90e2" />
               </div>
             ) : (
-            <DataTable columns={pendingTicketsColumn} data={data ? data.body.data : []} isSticky={true}/>
+            <DataTable columns={pendingTicketsColumn} data={data ? data.body.data : []} callbackFn={handleOnClickRow} isSticky={true}/>
           )}
         </div>
         <div className="w-full flex justify-between items-center">
