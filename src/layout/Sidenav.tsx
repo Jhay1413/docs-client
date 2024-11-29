@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { NavLink, Link } from "react-router-dom";
+import { NavLink, Link, useLocation } from "react-router-dom";
 import { useNotificationStore, useTicketNotificationStore } from "@/global-states/notification-store";
 import {
   Factory,
@@ -67,7 +67,12 @@ export const SideNav = () => {
   const ticketNotification = useTicketNotificationStore((state) => state.ticketNotification);
 
   const id = getCurrentUserId();
+  const location = useLocation(); // Get the current location
+  const previousPath = location.state?.from; // Get the previous path from state
+  console.log("previous = ", previousPath)
+  console.log("current location = ", location.pathname)
 
+  
   return (
     <div className="flex flex-col gap-4 w-full min-h-full pb-8 ">
       <div className="flex items-center justify-center h-32">
@@ -80,10 +85,10 @@ export const SideNav = () => {
           <li className="relative inline-block text-left px-2">
             <NavLink
               to={`/dashboard/overview`}
-              className={({ isActive }) =>
-                `justify-start items-center flex w-full p-2 space-x-4 text-lg rounded-md hover:bg-[#DCFCe74D] ${
-                  isActive ? "bg-green-100/30 text-white" : ""
-                }`
+              className={({ isActive }) => {
+                return `justify-start items-center flex w-full p-2 space-x-4 text-lg rounded-md hover:bg-[#DCFCe74D] ${
+                  isActive || previousPath === `/dashboard/overview` ? "bg-green-100/30 text-white" : ""}`;
+                }
               }
             >
               <LayoutDashboard size={28} />
@@ -97,10 +102,10 @@ export const SideNav = () => {
           <li className="relative inline-block text-left px-2">
             <NavLink
               to="/dashboard/users/users-list"
-              className={({ isActive }) =>
-                `justify-start items-center flex w-full p-2 space-x-4 text-lg rounded-md hover:bg-[#DCFCe74D] ${
-                  isActive ? "bg-green-100/30 text-white" : ""
-                }`
+              className={({ isActive }) => {
+                return `justify-start items-center flex w-full p-2 space-x-4 text-lg rounded-md hover:bg-[#DCFCe74D] ${
+                  isActive || previousPath === `/dashboard/users/users-list` ? "bg-green-100/30 text-white" : ""}`;
+                }
               }
             >
               <Users />
@@ -110,10 +115,10 @@ export const SideNav = () => {
           <li className="relative inline-block text-left px-2">
             <NavLink
               to="/dashboard/users/userAccount"
-              className={({ isActive }) =>
-                `justify-start items-center flex w-full p-2 space-x-4 text-lg rounded-md hover:bg-[#DCFCe74D] ${
-                  isActive ? "bg-green-100/30 text-white" : ""
-                }`
+              className={({ isActive }) => {
+                return `justify-start items-center flex w-full p-2 space-x-4 text-lg rounded-md hover:bg-[#DCFCe74D] ${
+                  isActive || previousPath === `/dashboard/users/userAccount` ? "bg-green-100/30 text-white" : ""}`;
+                }
               }
             >
               <UserSearch />
@@ -127,8 +132,10 @@ export const SideNav = () => {
           <NavLink
             to={`/dashboard/admin/request`}
             className={({ isActive }) => {
-              return `justify-start items-center flex w-full p-2 space-x-4 text-lg  rounded-md hover:bg-[#DCFCe74D] ${isActive ? "bg-green-100/30 text-white" : ""}`;
-            }}
+              return `justify-start items-center flex w-full p-2 space-x-4 text-lg rounded-md hover:bg-[#DCFCe74D] ${
+                isActive || previousPath === `/dashboard/admin/request` ? "bg-green-100/30 text-white" : ""}`;
+              }
+            }
           >
             <FilePen />
             <div className="flex gap-2">
@@ -141,10 +148,10 @@ export const SideNav = () => {
           <li className="relative inline-block text-left px-2">
             <NavLink
               to="/dashboard/transactions/list"
-              className={({ isActive }) =>
-                `justify-start items-center flex w-full p-2 space-x-4 text-lg rounded-md hover:bg-[#DCFCe74D] ${
-                  isActive ? "bg-green-100/30 text-white" : ""
-                }`
+              className={({ isActive }) => {
+                return `justify-start items-center flex w-full p-2 space-x-4 text-lg rounded-md hover:bg-[#DCFCe74D] ${
+                  isActive || previousPath === `/dashboard/transactions/list` ? "bg-green-100/30 text-white" : ""}`;
+                }
               }
             >
               <FileText />
@@ -155,8 +162,10 @@ export const SideNav = () => {
             <NavLink
               to={`/dashboard/transactions/inbox/${id}`}
               className={({ isActive }) => {
-                return `justify-start items-center flex w-full p-2 space-x-4 text-lg  rounded-md ${isActive ? "bg-green-100/30 text-white" : ""}`;
-              }}  
+                return `justify-start items-center flex w-full p-2 space-x-4 text-lg rounded-md hover:bg-[#DCFCe74D] ${
+                  isActive || previousPath === `/dashboard/transactions/inbox/${id}` ? "bg-green-100/30 text-white" : ""}`;
+                }
+              }
             >
               <div className="relative">
                 {notification?.inbox !== 0 && (
@@ -177,8 +186,10 @@ export const SideNav = () => {
             <NavLink
               to={`/dashboard/transactions/incoming-transaction/${id}`}
               className={({ isActive }) => {
-                return `justify-start items-center flex w-full p-2 space-x-4 text-lg  rounded-md ${isActive ? "bg-green-100/30 text-white" : ""}`;
-              }}
+                return `justify-start items-center flex w-full p-2 space-x-4 text-lg rounded-md hover:bg-[#DCFCe74D] ${
+                  isActive || previousPath === `/dashboard/transactions/incoming-transaction/${id}` ? "bg-green-100/30 text-white" : ""}`;
+                }
+              }
             >
               <div className="relative">
                 {notification?.incoming !== 0 && (
@@ -198,25 +209,30 @@ export const SideNav = () => {
         </CollapsibleSection>
 
         <CollapsibleSection label="TICKETS">
-        <li className="relative inline-block text-left px-2">
-             <NavLink
-               to={`/dashboard/tickets/list`}
-               className={({ isActive }) => {
-                 return `justify-start items-center flex w-full p-2 space-x-4 text-lg rounded-md hover:bg-[#DCFCe74D] ${isActive ? "bg-green-100/30 text-white" : ""}`;
-               }}
-             >
-               <Ticket />
-               <div className="flex gap-2">
-                 <h1 className="text-base">Tickets</h1>
-               </div>
-             </NavLink>
-           </li>
+          <li className="relative inline-block text-left px-2">
+            <NavLink
+              to={`/dashboard/tickets/list`}
+              className={({ isActive }) => {
+                return `justify-start items-center flex w-full p-2 space-x-4 text-lg rounded-md hover:bg-[#DCFCe74D] ${
+                  isActive || previousPath === `/dashboard/tickets/list` ? "bg-green-100/30 text-white" : ""}`;
+              }
+            }
+            >
+              <Ticket />
+              <div className="flex gap-2">
+                <h1 className="text-base">Tickets</h1>
+              </div>
+            </NavLink>
+          </li>
            <li className="relative inline-block text-left px-2 ">
              <NavLink
                to={`/dashboard/tickets/inbox/${id}`}
                className={({ isActive }) => {
-                 return `justify-start items-center flex w-full p-2 space-x-4 text-lg  rounded-md hover:bg-[#DCFCe74D] ${isActive ? "bg-green-100/30 text-white" : ""}`;
-               }}
+                 return `justify-start items-center flex w-full p-2 space-x-4 text-lg  rounded-md hover:bg-[#DCFCe74D] ${
+                  isActive || previousPath === `/dashboard/tickets/inbox/${id}` || location.pathname.includes(`/dashboard/tickets/forward-ticket`) 
+                  ?"bg-green-100/30 text-white" : ""}`;
+                }
+                }
              >
                <div className="relative">
                  {ticketNotification?.inboxTickets !== 0 && (
@@ -236,7 +252,8 @@ export const SideNav = () => {
              <NavLink
                to={`/dashboard/tickets/incoming/${id}`}
                className={({ isActive }) => {
-                 return `justify-start items-center flex w-full p-2 space-x-4 text-lg  rounded-md hover:bg-[#DCFCe74D] ${isActive ? "bg-green-100/30 text-white" : ""}`;
+                 return `justify-start items-center flex w-full p-2 space-x-4 text-lg  rounded-md hover:bg-[#DCFCe74D] ${
+                  isActive || previousPath === `/dashboard/tickets/incoming/${id}` ? "bg-green-100/30 text-white" : ""}`;
                }}
              >
                <div className="relative">
@@ -257,7 +274,8 @@ export const SideNav = () => {
              <NavLink
                to={`/dashboard/tickets/pending-tickets/${id}`}
                className={({ isActive }) => {
-                 return `justify-start items-center flex w-full p-2 space-x-4 text-lg  rounded-md hover:bg-[#DCFCe74D] ${isActive ? "bg-green-100/30 text-white" : ""}`;
+                 return `justify-start items-center flex w-full p-2 space-x-4 text-lg  rounded-md hover:bg-[#DCFCe74D] ${
+                  isActive || previousPath === `/dashboard/tickets/pending-tickets/${id}` ? "bg-green-100/30 text-white" : ""}`;
                }}
              >
                <TicketPercent />
@@ -273,8 +291,10 @@ export const SideNav = () => {
             <NavLink
               to={`/dashboard/retainership/list`}
               className={({ isActive }) => {
-                return `justify-start items-center flex w-full p-2 space-x-4 text-lg  rounded-md hover:bg-[#DCFCe74D] ${isActive ? "bg-green-100/30 text-white" : ""}`;
-              }}
+                return `justify-start items-center flex w-full p-2 space-x-4 text-lg rounded-md hover:bg-[#DCFCe74D] ${
+                  isActive || previousPath === `/dashboard/retainership/list` ? "bg-green-100/30 text-white" : ""}`;
+                }
+              }
             >
               <WalletCards />
               <div className="flex gap-2">
@@ -289,8 +309,10 @@ export const SideNav = () => {
              <NavLink
                to={`/dashboard/transactions/archived`}
                className={({ isActive }) => {
-                 return `justify-start items-center flex w-full p-2 space-x-4 text-lg  rounded-md hover:bg-[#DCFCe74D] ${isActive ? "bg-green-100/30 text-white" : ""}`;
-               }}
+                return `justify-start items-center flex w-full p-2 space-x-4 text-lg rounded-md hover:bg-[#DCFCe74D] ${
+                  isActive || previousPath === `/dashboard/transactions/archived` ? "bg-green-100/30 text-white" : ""}`;
+                }
+              }
              >
                <FileCode />
                <div className="flex gap-2">
@@ -303,8 +325,10 @@ export const SideNav = () => {
             <NavLink
               to={`/dashboard/tickets/resolved-tickets`}
               className={({ isActive }) => {
-                return `justify-start items-center flex w-full p-2 space-x-4 text-lg  rounded-md hover:bg-[#DCFCe74D] ${isActive ? "bg-green-100/30 text-white" : ""}`;
-              }}
+                return `justify-start items-center flex w-full p-2 space-x-4 text-lg rounded-md hover:bg-[#DCFCe74D] ${
+                  isActive || previousPath === `/dashboard/tickets/resolved-tickets` ? "bg-green-100/30 text-white" : ""}`;
+                }
+              }
             >
               <BookCheck />
               <div className="flex gap-2">
@@ -319,8 +343,10 @@ export const SideNav = () => {
              <NavLink
                to={`/dashboard/manuals/ticket-manual`}
                className={({ isActive }) => {
-                 return `justify-start items-center flex w-full p-2 space-x-4 text-lg  rounded-md hover:bg-[#DCFCe74D] ${isActive ? "bg-green-100/30 text-white" : ""}`;
-               }}
+                return `justify-start items-center flex w-full p-2 space-x-4 text-lg rounded-md hover:bg-[#DCFCe74D] ${
+                  isActive || previousPath === `/dashboard/manuals/ticket-manual` ? "bg-green-100/30 text-white" : ""}`;
+                }
+              }
              >
                <BookKey />
                <div className="flex gap-2">
@@ -332,8 +358,10 @@ export const SideNav = () => {
              <NavLink
                to={`/dashboard/manuals/transaction-manual`}
                className={({ isActive }) => {
-                 return `justify-start items-center flex w-full p-2 space-x-4 text-lg  rounded-md hover:bg-[#DCFCe74D] ${isActive ? "bg-green-100/30 text-white" : ""}`;
-               }}
+                return `justify-start items-center flex w-full p-2 space-x-4 text-lg rounded-md hover:bg-[#DCFCe74D] ${
+                  isActive || previousPath === `/dashboard/manuals/transaction-manual` ? "bg-green-100/30 text-white" : ""}`;
+                }
+              }
              >
                <BookType />
                <div className="flex gap-2">

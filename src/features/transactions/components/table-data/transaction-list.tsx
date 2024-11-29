@@ -29,6 +29,11 @@ const AddTransactionBtnWithRole = withRole(addTransactionBtn);
 export const TransactionList = () => {
   const navigate = useNavigate();
   const location = useLocation(); // Get the current location
+  const handleOnClickRow = (data: any) => {
+    // Navigate to ticket details page when a row is clicked
+    navigate(`/dashboard/transactions/history/${data.id}`, { state: { from: location.pathname } }); // Pass the current location as state
+  };
+  
   const [searchParams, setSearchParams] = useSearchParams({
     currentPage: "1",
     search: "",
@@ -71,10 +76,7 @@ export const TransactionList = () => {
     }
   };
 
-  const handleOnClickRow = (data: any) => {
-    // Navigate to ticket details page when a row is clicked
-    navigate(`/dashboard/transactions/history/${data.id}`, { state: { from: location.pathname } }); // Pass the current location as state
-  };
+
 
 
   return (
