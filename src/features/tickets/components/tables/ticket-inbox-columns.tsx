@@ -1,22 +1,63 @@
 import { ColumnDef } from "@tanstack/react-table";
 import { z } from "zod";
-import { ticketingTableSchema } from "shared-contract"; // Adjust the import based on your project structure
-import { toPascalCase } from "../ticket.utils"; // Adjust the import based on your project structure
+import { ticketingTableSchema } from "shared-contract";
+import { toPascalCase } from "../ticket.utils";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
-import { CircleArrowRight, Dot, Eye, Forward, Minus, MoreHorizontal, Pencil, View } from "lucide-react";
+import { CircleAlert, CircleArrowRight, Dot, Eye, Forward, Minus, MoreHorizontal, Pencil, View } from "lucide-react";
 import { InboxUpdateForm } from "../forms/inbox-update-form";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 const maxLength = 20;
 export const ticketsInboxColumn: ColumnDef<z.infer<typeof ticketingTableSchema>>[] = [
   {
     header: () => <span className="font-bold text-nowrap">Ticket ID</span>,
     accessorKey: "ticketId",
+    cell: ({ row }) => {
+      const ticketInfo = row.original;
+      const current = new Date();
+      const currentDate = new Date(current.getFullYear(), current.getMonth(), current.getDate());
+      const dueDate = new Date(ticketInfo.dueDate);
+      const createdDate = new Date(ticketInfo.createdAt!);
+      const ticketId = ticketInfo.ticketId;
+      
+      const isSameDay = (date1:any, date2:any) => {
+        return (
+          date1.getDate() === date2.getDate() &&
+          date1.getMonth() === date2.getMonth() &&
+          date1.getFullYear() === date2.getFullYear()
+        );
+      };
+
+      return (
+        <div className="flex gap-2 items-center w-auto text-nowrap">
+          <span>{ticketId}</span>
+          {
+            isSameDay(createdDate, currentDate) ? (
+              <span className=" bg-green-500 text-white text-xs px-1 rounded mb-4 " title="New Ticket">
+                New
+              </span>
+            ) : null
+          }
+          {
+            ticketInfo.status !== "RESOLVED" && currentDate.getTime() > dueDate.getTime() ? (
+              <span title="Overdue">
+                <CircleAlert size={20} className="text-red-500" />
+              </span>
+            ) : ticketInfo.status !== "RESOLVED" && currentDate.getTime() === dueDate.getTime() ? (
+              <span title="Due Today">
+                <CircleAlert size={20} className="text-yellow-500" />
+              </span>
+            ) : null
+          }
+        </div>
+      );
+
+    },
   },
   {
     header: () => <span className="font-bold text-nowrap">Transaction ID</span>,
-    accessorKey: "transactionId", // Still keep this for consistency
+    accessorKey: "transactionId",
     cell: ({ row }) => {
       const ticketInfo = row.original;
       const transactionId = ticketInfo.transaction?.transactionId ?? ticketInfo.transaction?.transactionId ?? (
@@ -29,7 +70,7 @@ export const ticketsInboxColumn: ColumnDef<z.infer<typeof ticketingTableSchema>>
   },
   {
     header: () => <span className="font-bold text-nowrap">Project ID</span>,
-    accessorKey: "project.projectId", // Still keep this for consistency
+    accessorKey: "project.projectId",
     cell: ({ row }) => {
       const ticketInfo = row.original;
       const projectId = ticketInfo.project?.projectId ?? ticketInfo.project?.projectId ?? (
@@ -45,15 +86,6 @@ export const ticketsInboxColumn: ColumnDef<z.infer<typeof ticketingTableSchema>>
     accessorKey: "subject",
   },
   {
-    header: () => <span className="font-bold text-nowrap">Request Detais</span>,
-    accessorKey: "requestDetails",
-    cell: ({ row }) => {
-      const transactionInfo = row.original;
-      const requestDetails = transactionInfo.requestDetails || "";
-      return <span>{requestDetails.length > maxLength ? `${requestDetails.substring(0, maxLength)}...` : requestDetails}</span>;
-    },
-  },
-  {
     header: () => (
       <span className="font-bold text-nowrap">Status</span>
     ),
@@ -62,8 +94,8 @@ export const ticketsInboxColumn: ColumnDef<z.infer<typeof ticketingTableSchema>>
       const ticketInfo = row.original;
       const statusInPascalCase = toPascalCase(ticketInfo.status || "");
       return (
-        <div className="flex  gap-1 items-center w-24">
-          {ticketInfo.status === "ON_GOING" && <Dot size={32} className="text-green-500" />}
+        <div className="w-auto text-nowrap">
+          {ticketInfo.status === "ON_GOING" && <Dot size={36} className="inline-block text-green-500" />}
           <span>{statusInPascalCase}</span>
         </div>
       );
@@ -72,34 +104,6 @@ export const ticketsInboxColumn: ColumnDef<z.infer<typeof ticketingTableSchema>>
   {
     header: () => <span className="font-bold text-nowrap">Priority</span>,
     accessorKey: "priority",
-  },
-  {
-    header: () => <span className="font-bold text-nowrap">Due Date</span>,
-    accessorKey: "dueDate",
-    cell: ({ row }) => {
-      const ticketInfo = row.original;
-      return <span>{new Date(ticketInfo.dueDate).toLocaleDateString()}</span>;
-    },
-  },
-  {
-    header: () => (
-      <span className="font-bold text-nowrap">Date Created</span>
-    ),
-    accessorKey: "createdAt",
-    cell: ({ row }) => {
-      const ticketInfo = row.original;
-      return <span>{new Date(ticketInfo.createdAt!).toLocaleDateString()}</span>;
-    },
-  },
-  {
-    header: () => (
-    <span className="font-bold text-nowrap">Date Forwarded</span>
-    ),
-    accessorKey: "dateForwarded",
-    cell: ({ row }) => {
-      const ticketInfo = row.original;
-      return <span>{new Date(ticketInfo.dateForwarded).toLocaleDateString()}</span>;
-    },
   },
   {
     header: () => (
@@ -114,16 +118,6 @@ export const ticketsInboxColumn: ColumnDef<z.infer<typeof ticketingTableSchema>>
   },
   {
     header: () => (
-      <span className="font-bold text-nowrap">Date Received</span>
-    ),
-    accessorKey: "dateReceived",
-    cell: ({ row }) => {
-      const ticketInfo = row.original;
-      return <span>{ticketInfo.dateReceived ? new Date(ticketInfo.dateReceived).toLocaleDateString() : "Not received yet"}</span>;
-    },
-  },
-  {
-    header: () => (
       <span className="font-bold text-nowrap">Remarks</span>
     ),
     accessorKey: "remarks",
@@ -132,6 +126,30 @@ export const ticketsInboxColumn: ColumnDef<z.infer<typeof ticketingTableSchema>>
       const remarks = transactionInfo.remarks || "";
 
       return <span>{remarks.length > maxLength ? `${remarks.substring(0, maxLength)}...` : remarks}</span>;
+    },
+  },
+  
+  {
+    header: () => (
+      <span className="font-bold text-nowrap">Date Received</span>
+    ),
+    accessorKey: "dateReceived",
+    cell: ({ row }) => {
+      const ticketInfo = row.original;
+      return <span className="text-nowrap">{ticketInfo.dateReceived ? new Date(ticketInfo.dateReceived).toLocaleDateString() : "Not received yet"}</span>;
+    },
+  },
+
+  {
+    header: () => <span className="font-bold text-nowrap">Due Date</span>,
+    accessorKey: "dueDate",
+    cell: ({ row }) => {
+      const ticketInfo = row.original;
+      const dueDate = new Date(ticketInfo.dueDate);
+      
+      return (
+          <span className="text-nowrap">{dueDate.toDateString()}</span>
+      );
     },
   },
   {
@@ -145,11 +163,12 @@ export const ticketsInboxColumn: ColumnDef<z.infer<typeof ticketingTableSchema>>
     cell: ({ row }) => {
       const navigate = useNavigate();
       const ticket = row.original;
-      const handleOnClickRow = () => {
-        navigate(`/dashboard/tickets/details/${ticket.id}`);
+      const location = useLocation();
+      const handleOnClickRow = (data: any) => {
+        navigate(`/dashboard/tickets/details/${ticket.id}`, { state: { from: location.pathname } }); // Pass the current location as state
       };
       const routeToForwardTicket = () => {
-        navigate(`/dashboard/tickets/forward-ticket/${ticket.id}`);
+        navigate(`/dashboard/tickets/forward-ticket/${ticket.id}`, { state: { from: location.pathname } }); // Pass the current location as state
       };
   
       return (

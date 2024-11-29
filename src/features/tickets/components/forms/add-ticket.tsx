@@ -10,8 +10,7 @@ import { useState } from "react";
 import { tsr } from "@/services/tsr";
 import { toast } from "react-toastify";
 import { useMutation } from "react-query";
-import { useNavigate } from "react-router-dom";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { useLocation, useNavigate } from "react-router-dom";
 
 export const AddTicketComponent = () => {
   const userId = getCurrentUserId();
@@ -21,6 +20,8 @@ export const AddTicketComponent = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [selectectedType, setSelectedType] = useState("");
   const navigate = useNavigate();
+  const location = useLocation();
+  const previousPath = location.state?.from || `/dashboard/tickets/list`;
 
   const { mutate,isPending } = tsr.ticketing.createTickets.useMutation({
     onMutate: () => {},
