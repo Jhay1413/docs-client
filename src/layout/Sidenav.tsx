@@ -275,7 +275,7 @@ export const SideNav = () => {
               to={`/dashboard/transactions/archived`}
               className={({ isActive }) => {
                 return `justify-start items-center flex w-full p-2 space-x-4 text-lg rounded-md hover:bg-[#DCFCe74D] ${
-                  isActive || previousPath === `/dashboard/transactions/archived` ? "bg-green-100/30 text-white" : ""}`;
+                  isActive || location.pathname.includes(`/dashboard/transactions/update`) || previousPath === `/dashboard/transactions/archived` ? "bg-green-100/30 text-white" : ""}`;
                 }
               }
             >
