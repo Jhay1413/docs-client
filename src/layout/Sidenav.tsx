@@ -40,7 +40,7 @@ const CollapsibleSection = ({ label, children, defaultExpanded = false }: { labe
           {isExpanded ? <ChevronUp /> : <ChevronDown />}
         </span>
       </div>
-      {isExpanded && <ul className="flex flex-col space-y-4 w-full ">{children}</ul>}
+      {isExpanded && <ul className="flex flex-col space-y-4 w-full">{children}</ul>}
     </>
     
   );
@@ -78,7 +78,7 @@ export const SideNav = () => {
           <img src="/Logov6.png" className="h-[32px] w-[151px]" alt="Logo" />
         </Link>
       </div>
-      <div className="flex flex-col  w-full min-h-full gap-6 pb-2">
+      <div className="flex flex-col  w-full min-h-full gap-4 pb-2">
         <CollapsibleSection label="MENU" defaultExpanded={true}>
           <li className="relative inline-block text-left px-2">
             <NavLink
