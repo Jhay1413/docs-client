@@ -4,7 +4,7 @@ import { useDebounce } from "use-debounce";
 import { tsr } from "@/services/tsr";
 import { Input } from "@/components/ui/input";
 import { Search } from "lucide-react";
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { z } from "zod";
 import { transactionQueryData, transactionTable } from "shared-contract";
@@ -15,6 +15,12 @@ export const ArchivedList = () => {
     search: "",
   });
   const navigate = useNavigate();
+  const location = useLocation(); // Get the current location
+  const handleOnClickRow = (data: any) => {
+    // Navigate to ticket details page when a row is clicked
+    navigate(`/dashboard/transactions/history/${data.id}`, { state: { from: location.pathname } }); // Pass the current location as state
+  };
+
   const searchQuery = searchParams.get("search") || "";
   const page = searchParams.get("currentPage") || "1";
 
@@ -51,9 +57,7 @@ export const ArchivedList = () => {
       });
     }
   };
-  const handleOnClickRow = (data: z.infer<typeof transactionTable>) => {
-    navigate(`/dashboard/transactions/history/${data.id}`);
-  };
+
   return (
     <div className="min-h-full flex flex-col w-full items-center p-4 bg-white rounded-lg ">
       <div className="flex flex-col w-full items-center justify-center p-4 bg-white rounded-lg">

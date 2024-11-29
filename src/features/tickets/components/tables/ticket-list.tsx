@@ -26,6 +26,12 @@ const AddTicketBtn = () => (
 export const TicketList = () => {
   const navigate = useNavigate();
   const location = useLocation(); // Get the current location
+  
+  const handleOnClickRow = (data: any) => {
+    // Navigate to ticket details page when a row is clicked
+    navigate(`/dashboard/tickets/details/${data.id}`, { state: { from: location.pathname } }); // Pass the current location as state
+  };
+  
   const [searchParams, setSearchParams] = useSearchParams({
     currentPage: "1",
     search: "",
@@ -96,10 +102,6 @@ export const TicketList = () => {
     }
   };
 
-  const handleOnClickRow = (data: any) => {
-    // Navigate to ticket details page when a row is clicked
-    navigate(`/dashboard/tickets/details/${data.id}`, { state: { from: location.pathname } }); // Pass the current location as state
-  };
 
   return (
     <div className="min-h-full flex flex-col w-full items-center p-4 bg-white rounded-lg">
