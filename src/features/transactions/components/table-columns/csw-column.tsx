@@ -13,7 +13,7 @@ import { ColumnDef } from "@tanstack/react-table";
 import { MoreHorizontal } from "lucide-react";
 import { completeStaffWork, transactionLogsData } from "../../schema/TransactionSchema";
 import { getSignUrlForView } from "../../services/getSignedUrl";
-import { completeStaffWorkQuerySchema } from "shared-contract/dist/schema/transactions/query-schema";
+import { completeStaffWorkQuerySchema } from "shared-contract";
 
 type Csw = z.infer<typeof completeStaffWorkQuerySchema>;
 
