@@ -26,6 +26,7 @@ const TicketFormEPD = ({ isForwarding }: Props) => {
   const [searchtTransaction, setSearchTransaction] = useState("");
   const [debouncedSearchTransaction] = useDebounce(searchtTransaction, 500);
   const [selectedTransaction, setSelectedTransaction] = useState("");
+  const [selectedProjectId, setSelectedProjectId] = useState("");
   if (!control) {
     return <div>Error: No form context found!</div>;
   }
@@ -45,9 +46,10 @@ const TicketFormEPD = ({ isForwarding }: Props) => {
   });
 
   const { data: transactions } = tsr.transaction.searchTransactionById.useQuery({
-    queryKey: ["transactions-query", debouncedSearchTransaction],
+    queryKey: ["transactions-query", debouncedSearchTransaction, selectedProjectId],
     queryData: {
       query: {
+        projectId: selectedProjectId,
         transactionId: debouncedSearchTransaction,
       },
     },
@@ -88,6 +90,7 @@ const TicketFormEPD = ({ isForwarding }: Props) => {
                             onSelect={() => {
                               setValue("projectId", data.id);
                               setSelectedProject(data.projectName);
+                              setSelectedProjectId(data.id);
                             }}
                           >
                             <Check className={cn("mr-2 h-4 w-4", data.id === field.value ? "opacity-100" : "opacity-0")} />
