@@ -10,7 +10,7 @@ import { Button } from "@/components/ui/button";
 import { useRef } from "react";
 import { useReactToPrint } from "react-to-print";
 import { useCurrentUserFirstName } from "@/hooks/use-user-hook";
-import { completeStaffWorkQuerySchema } from "shared-contract/dist/schema/transactions/query-schema";
+import { completeStaffWorkQuerySchema } from "shared-contract";
 import { AttachmentOnPrint } from "../attachments-print";
 
 type Props = {
