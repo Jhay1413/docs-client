@@ -3,7 +3,7 @@ import { useDebounce } from "use-debounce";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Plus, Search, SquareChevronDown, SquareChevronUp } from "lucide-react";
-import { Link, useNavigate, useSearchParams } from "react-router-dom";
+import { Link, useLocation, useNavigate, useSearchParams } from "react-router-dom";
 import { ticketsColumn } from "./ticket-column";
 import { tsr } from "@/services/tsr";
 import { keepPreviousData } from "@tanstack/react-query";
@@ -25,10 +25,16 @@ const AddTicketBtn = () => (
 
 export const TicketList = () => {
   const navigate = useNavigate();
+  const location = useLocation();
+  
+  const handleOnClickRow = (data: any) => {
+    navigate(`/dashboard/tickets/details/${data.id}`, { state: { from: location.pathname } }); // Pass the current location as state
+  };
+  
   const [searchParams, setSearchParams] = useSearchParams({
     currentPage: "1",
     search: "",
-    sortOrder: "asc",
+    sortOrder: "desc",
     projectId: "",
     transactionId: "",
     priority: "",
@@ -38,7 +44,7 @@ export const TicketList = () => {
 
   const searchQuery = searchParams.get("search") || "";
   const page = searchParams.get("currentPage") || "1";
-  const sortOrder = searchParams.get("sortOrder") || "asc";
+  const sortOrder = searchParams.get("sortOrder") || "desc";
   const projectId = searchParams.get("projectId") || "";
   const transactionId = searchParams.get("transactionId") || "";
   const priority = searchParams.get("priority") || "";
@@ -67,12 +73,11 @@ export const TicketList = () => {
     placeholderData: keepPreviousData,
   });
 
-  // Toggle sort order between 'asc' and 'desc'
   const toggleSortOrder = () => {
     setSearchParams((prev) => {
-      const newSortOrder = sortOrder === "asc" ? "desc" : "asc";
+      const newSortOrder = sortOrder === "desc" ? "asc" : "desc";
       prev.set("sortOrder", newSortOrder);
-      prev.set("currentPage", "1"); // Reset to first page on sort change
+      prev.set("currentPage", "1");
       return prev;
     });
   };
@@ -95,10 +100,6 @@ export const TicketList = () => {
     }
   };
 
-  const handleOnClickRow = (data: any) => {
-    // Navigate to ticket details page when a row is clicked
-    navigate(`/dashboard/tickets/details/${data.id}`);
-  };
 
   return (
     <div className="min-h-full flex flex-col w-full items-center p-4 bg-white rounded-lg">
@@ -153,7 +154,7 @@ export const TicketList = () => {
               <ClipLoader size={30} color="#4a90e2" />
             </div>
           ) : (
-            <DataTable columns={ticketsColumn} data={data ? data.body.data : []} callbackFn={handleOnClickRow}/>
+            <DataTable columns={ticketsColumn} data={data ? data.body.data : []} callbackFn={handleOnClickRow} isSticky={true}/>
           )}
         </div>
 

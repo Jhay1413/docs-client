@@ -58,4 +58,3 @@ export const useTicketNotificationStore = create<TicketNotificationState>((set) 
   setTicketNotification: (ticketNotification) => set({ ticketNotification }),
   setRefetch: (refetchFn) => set({ refetch: refetchFn }),
 }));
-  
